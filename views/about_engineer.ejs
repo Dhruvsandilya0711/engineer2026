@@ -1,17 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="./src/output.css" rel="stylesheet">
+    <style>
+        #carousalContentContainer {
+            /* transform: translate(50%, 100%); */
+            
+        }
+
+        #card-two {
+            /* transform:translateX(11rem) translateY(5rem) translateZ(-13px) rotateY(57deg); */
+
+        }
+
+        #card-three {
+            /* transform: translateX(16rem) translateY(11rem) translateZ(-63px) rotateY(87deg) */
+
+        }
+    </style>
 
 </head>
+
 <body>
-    <section class="w-full h-full z-11 relative bg-[url('/images/dna.png')] bg-no-repeat bg-fixed bg-contain bg-center" >
- <div class="">llijosgj</div>
-    
+    <section id="carousalWrapper" class="w-full h-full z-11 relative   perspective-[1000px] overflow-auto ">
+
+        <div id="carousalContentContainer"
+            class="flex  justify-center items-center w-full h-full  gap-5 transform-3d transition-all duration-850   ease-in-out">
+            <!-- bg image -->
+            <div
+                class="bg-[url('/images/dna.png')] bg-no-repeat bg-fixed bg-contain bg-center absolute w-full h-full z-13">
+            </div>
+
+
+            <div id="cardOne" class=" absolute border border-red-400 w-50  h-30 ">card one </div>
+            <div id="cardTwo" class=" absolute border border-red-400 w-50  h-30  ">card two </div>
+            <div id="cardThree" class=" absolute border border-red-400 w-50  h-30 ">card three</div>
+
+
+        </div>
+
     </section>
-   
+    <!-- 
+transform: translateX(87px) translateY(-22px) translateZ(-13px) rotateY(57deg);
+}
+transform: translateX(65px) translateY(-58px) translateZ(-63px) rotateY(87deg);
+}    
+-->
+    <script>
+        const carousalContentContainer = document.querySelector("#carousalContentContainer")
+        const carousalWrapper = document.querySelector("#carousalWrapper")
+        const cardOne = document.querySelector("#cardOne")
+        const cardTwo = document.querySelector("#cardTwo")
+        const cardThree = document.querySelector("#cardThree")
+        const landingPage = document.querySelector("#landingPageWrapper")
+        const cardArray = [cardOne, cardTwo, cardThree]
+        let scrollRotation = 0;
+        let ScrollDistanceUptoWrapper = 0;
+        let radius = 500;
+        let isAboutPageReached = false
+        //about techfest carousal effect scroll
+
+
+        // const obs = new IntersectionObserver(entries => {
+        //     console.log("hatey")
+        // },{
+        //     threshold:1
+        // });
+
+        // obs.observe(carousalWrapper);
+
+
+
+        
+        function updatePosition() {
+            cardArray.forEach((card, index) => {
+                let angle = (360 / cardArray.length) * index + scrollRotation;
+                let radian = angle * Math.PI / 180;
+                let x = Math.sin(radian) * radius;
+                let z = Math.cos(radian) * radius;
+ 
+                card.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${angle}deg) `
+
+
+            })
+
+        }
+        updatePosition()
+
+        landingPage.addEventListener("scroll", () => {
+
+            if (!isAboutPageReached) {
+                const ob = new IntersectionObserver((enteries) => {
+                    enteries.forEach((entry) => {
+
+                        if (entry.isIntersecting) {
+
+                            ScrollDistanceUptoWrapper = landingPage.scrollTop
+                            console.log(landingPage.scrollTop)
+                            console.log('hello')
+
+
+                        } else {
+
+                        }
+                    })
+                },
+                    {
+                        threshold: 0.2
+                    })
+                ob.observe(carousalWrapper)
+                isAboutPageReached = true
+            }
+
+            // console.log("landing page yeah..")
+            // console.log(landingPage.scrollTop * 0.2)
+            scrollRotation = landingPage.scrollTop * 0.5 - ScrollDistanceUptoWrapper
+
+            updatePosition()
+
+
+        })
+    </script>
 </body>
+
 </html>

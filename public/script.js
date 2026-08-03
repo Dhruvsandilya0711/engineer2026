@@ -19,7 +19,7 @@ const tabletDisplayContent = document.querySelector('#tablet-display-content')
 const signInNavBtn = document.querySelector('#signInNavBtn')
 const getStartedBtn = document.querySelector("#getStartedBtn")
 
-//tablet screen turning on screen logic
+//welcome page tablet screen turning on screen logic
 const observer = new IntersectionObserver((enteries) => {
     enteries.forEach((entry) => {
 
@@ -43,7 +43,7 @@ const observer = new IntersectionObserver((enteries) => {
     })
 
 
-observer.observe(tabletDisplay)
+// observer.observe(tabletDisplay)
 
 
 // navbar hover effects
@@ -131,42 +131,4 @@ if (document.prerendering) {
     runIntroAnimation();
 }
 
-// logic for  landing page tablet carousel
-let currentIndex = 0;
-let tabletDisplayContentChildrenLength = tabletDisplayContent.children.length
-const tabNextButton = document.querySelector("#nextButton")
-const tabPreviousButton = document.querySelector("#previousButton")
-
-tabNextButton.addEventListener("click", (e) => {
-    e.preventDefault()
-    if (currentIndex < tabletDisplayContentChildrenLength) {
-        currentIndex++;
-    }
-    updateLandingPageTabCarousel()
-})
-
-tabPreviousButton.addEventListener("click", (e) => {
-
-    e.preventDefault()
-    if (currentIndex > 0) {
-        currentIndex--;
-    }
-    updateLandingPageTabCarousel()
-
-})
-function updateLandingPageTabCarousel() {
-
-    if (currentIndex === 0) {
-        tabPreviousButton.disabled = true;
-    }else{
-        tabPreviousButton.disabled = false;
-    }
-    if (currentIndex === tabletDisplayContentChildrenLength - 1) {
-        tabNextButton.disabled = true;
-    }else{
-        tabNextButton.disabled = false;
-
-    }
-    tabletDisplayContent.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-}
+ 
