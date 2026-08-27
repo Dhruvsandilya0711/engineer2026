@@ -1,0 +1,33 @@
+<!-- ==========================================================================
+     EVENTS PREVIEW — data-driven from data/events.json (the real event
+     names/images already in this repo). No fabricated dates, prizes, or
+     descriptions — see data/events.json's own "note" field.
+     ========================================================================== -->
+<section id="events" class="relative section-y px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12" data-reveal>
+      <div>
+        <p class="eyebrow text-cyan mb-4">ENGINEER's event ecosystem</p>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl">Selected events</h2>
+      </div>
+      <a href="/events" class="font-mono text-xs tracking-[0.1em] uppercase text-[var(--paper-dim)] hover:text-paper transition-colors whitespace-nowrap">
+        All <%= events.all.length %> events →
+      </a>
+    </div>
+
+    <div id="events-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <% events.featured.forEach(function(evt, i){ %>
+      <a href="/events/<%= evt.slug %>" class="card-bracket group overflow-hidden block" data-reveal id="<%= evt.slug %>">
+        <div class="aspect-[4/3] overflow-hidden bg-charcoal">
+          <img src="<%= evt.image %>" alt="<%= evt.name %>" loading="lazy"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        </div>
+        <div class="p-5">
+          <p class="font-mono text-[0.65rem] tracking-[0.14em] uppercase text-[var(--paper-faint)] mb-2"><%= evt.category %></p>
+          <h3 class="font-display font-medium text-lg"><%= evt.name %></h3>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+</section>

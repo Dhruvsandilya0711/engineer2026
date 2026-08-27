@@ -1,49 +1,714 @@
 @import "tailwindcss";
-/* font family */
-@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
 
-:root{
-    --common-font : "Google Sans", sans-serif;
-    --dot-font : "Bitcount Grid Double", system-ui;
+/* ==========================================================================
+   ENGINEER '26 — "The Impossible Machine" design tokens
+   Source of truth: approved design-system spec (color / type / radius).
+   Tailwind v4 CSS-first theme — generates bg-void, text-paper, font-display, etc.
+   ========================================================================== */
+@theme {
+  --color-void: #030306;
+  --color-charcoal: #100d17;
+  --color-charcoal-2: #1a1522;
+  --color-paper: #edebf2;
+  --color-cyan: #34d8e8;
+  --color-violet: #7b5cfa;
+  --color-magenta: #e23fd1;
+  --color-amber: #e8923c;
+  --color-amber-dim: #a5641f;
+  --color-success: #3fbf8f;
+  --color-warning: #e8a63c;
+  --color-error: #e8688a;
+
+  --font-display: "Unbounded", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+}
+
+:root {
+  --hairline: rgba(237, 235, 242, 0.11);
+  --hairline-strong: rgba(237, 235, 242, 0.22);
+  --paper-dim: rgba(237, 235, 242, 0.64);
+  --paper-faint: rgba(237, 235, 242, 0.38);
+
+  /* ENGINEER logo identity — never used for the Cognitrixx neural layer */
+  --gradient-impossible: linear-gradient(115deg, var(--color-cyan) 0%, #4c8ef2 38%, var(--color-violet) 68%, var(--color-magenta) 100%);
+  /* Cognitrixx neural/energy identity — never used to recolor the logo */
+  --gradient-cognitrixx: linear-gradient(120deg, var(--color-amber-dim) 0%, var(--color-amber) 55%, #ffd58a 100%);
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 600ms;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
-}
-body{
-    font-family:var(--common-font);
-}
-#logo-text-wrapper-wlc-page{
-    font-family: var(--dot-font);
-}
-@keyframes impactGlitch {
-  0% { transform: translate(0) skew(0deg); filter: brightness(1) hue-rotate(0deg); }
-  10% { transform: translate(-5px, 3px) skew(-6deg); filter: brightness(1.8) hue-rotate(90deg); }
-  20% { transform: translate(5px, -2px) skew(4deg); filter: brightness(1.5) invert(0.1); }
-  30% { transform: translate(-3px, -3px) skew(-2deg); filter: hue-rotate(180deg); }
-  40% { transform: translate(4px, 2px) skew(6deg); filter: brightness(2); }
-  50% { transform: translate(-2px, 4px) skew(-4deg); filter: none; }
-  60% { transform: translate(3px, -1px) skew(2deg); }
-  70% { transform: translate(-4px, -2px) skew(-1deg); }
-  80% { transform: translate(1px, 2px) skew(0deg); }
-  100% { transform: translate(0) skew(0deg); filter: none; }
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-void);
+    color: var(--color-paper);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-violet);
+    color: var(--color-void);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
+  }
 }
 
-.effect-glitch {
-  animation: impactGlitch 0.3s linear;
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
- 
-  .glow-card {
-    
-    
-    color: white;
-    background: linear-gradient(to right, rgb(0 155 255 / 47%), #0000007a);
-    border-radius: 24px;
-    border: 2px solid rgb(131, 161, 209);
-    background-color: rgb(49 107 207 / 70%);
-    backdrop-filter: blur(4px);
-    box-shadow: 0px 2px 20px 7px rgba(0, 102, 255, 0.4), inset 0 0 18px 4px rgba(0, 162, 255, 0.8);
+/* ==========================================================================
+   Shared component classes.
+   These MUST live in @layer components: Tailwind emits utilities in a later
+   layer, so a utility like `hidden` correctly overrides `.btn`'s
+   display:inline-flex. Declared as plain CSS they would come after the
+   utilities in source order and silently win instead — which is exactly how
+   the nav's `hidden sm:inline-flex` CTA leaked onto mobile.
+   ========================================================================== */
+
+@layer components {
+
+.hairline { border-color: var(--hairline); }
+.hairline-strong { border-color: var(--hairline-strong); }
+
+.text-gradient-impossible {
+  background: var(--gradient-impossible);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-#engineer-text-landing-page {
-  font-family: var(--dot-font);
+.bg-grain {
+  background-image:
+    linear-gradient(var(--hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.05;
 }
 
+/* CRT scanlines — sitewide cyberpunk texture. Kept extremely low contrast so
+   it reads as screen-surface grain, not a novelty filter. */
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(237, 235, 242, 0.030) 0px,
+    rgba(237, 235, 242, 0.030) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* Vignette that keeps the ambient field from competing with body copy. */
+.field-vignette {
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, var(--color-void) 92%);
+  opacity: 0.55;
+}
+
+/* ------------------------------------------------------------------
+   Hero aura: a soft violet/magenta bloom behind the Penrose object so
+   it reads as an illuminated body inside the network rather than a
+   sticker on black. Sits behind the canvas (::before is the frame's
+   first painted child) and the canvas's screen blend lifts it.
+   ------------------------------------------------------------------ */
+.hero-logo-frame::before {
+  content: "";
+  position: absolute;
+  inset: -34%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(123, 92, 250, 0.30) 0%,
+    rgba(226, 63, 209, 0.13) 40%,
+    transparent 68%
+  );
+}
+
+/* Fires when a network signal actually reaches the logo (see
+   neural-network.js onSignalArrive) — a rewire, not a random glitch. */
+@keyframes logoRewire {
+  0%   { transform: translate(0); filter: none; }
+  22%  { transform: translate(-2px, 1px); filter: hue-rotate(14deg) saturate(1.25); }
+  55%  { transform: translate(2px, -1px); filter: hue-rotate(-11deg) brightness(1.12); }
+  100% { transform: translate(0); filter: none; }
+}
+.hero-logo-frame.is-rewiring { animation: logoRewire 240ms var(--ease-standard); }
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo-frame.is-rewiring { animation: none; }
+}
+
+/* label / eyebrow */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 20px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+/* buttons */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform var(--dur-fast) var(--ease-emphasized),
+    background var(--dur-base) var(--ease-standard),
+    border-color var(--dur-base) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-standard),
+    color var(--dur-base) var(--ease-standard);
+}
+.btn-primary {
+  background: var(--color-paper);
+  color: var(--color-void);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--color-violet), 0 10px 30px -10px rgba(123, 92, 250, 0.55);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--color-paper);
+  border-color: var(--hairline-strong);
+}
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+}
+[data-js="magnetic"] { will-change: transform; }
+
+/* cards: hairline rest state, corner brackets on hover — no glow, no glass */
+.card-bracket {
+  position: relative;
+  border: 1px solid var(--hairline);
+  transition: border-color var(--dur-base) var(--ease-standard);
+}
+.card-bracket::before,
+.card-bracket::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid transparent;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-standard);
+}
+.card-bracket::before {
+  top: -1px;
+  left: -1px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-top-color: var(--color-cyan);
+  border-left-color: var(--color-cyan);
+}
+.card-bracket::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-bottom-color: var(--color-magenta);
+  border-right-color: var(--color-magenta);
+}
+/* Brackets sit faintly visible at rest so cards read as HUD instrumentation,
+   then lock on at full strength when engaged — a viewfinder acquiring. */
+.card-bracket::before,
+.card-bracket::after {
+  opacity: 0.32;
+}
+.card-bracket:hover {
+  border-color: var(--hairline-strong);
+}
+.card-bracket:hover::before,
+.card-bracket:hover::after {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------
+   Section rhythm.
+   One shared vertical measure for every homepage section, so boundaries
+   can't drift per-partial. Deliberately tighter than the old
+   py-28/sm:py-36 (112/144px each side, i.e. up to 288px of dead space
+   between two sections) — this clamps to 64–104px a side.
+   ------------------------------------------------------------------ */
+.section-y { padding-block: clamp(4rem, 7.5vh, 6.5rem); }
+.section-y-lg { padding-block: clamp(5rem, 9vh, 8rem); }
+
+/* reveal-on-scroll target */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  /* Longer and gentler than before, and opacity leads transform slightly so
+     things fade in rather than sliding into place abruptly. */
+  transition:
+    opacity 900ms var(--ease-emphasized),
+    transform 1050ms var(--ease-emphasized);
+  will-change: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* entry sequence overlay */
+#entry-sequence {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--color-void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 500ms var(--ease-standard), visibility 500ms;
+}
+#entry-sequence.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#entry-sequence .stage {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 600;
+  opacity: 0;
+  text-align: center;
+}
+#entry-sequence .stage.is-active {
+  opacity: 1;
+  transition: opacity 220ms var(--ease-standard);
+}
+
+/* glitch — reserved for state-change moments only (never idle/hover) */
+@keyframes rewireGlitch {
+  0% { transform: translate(0); filter: none; }
+  20% { transform: translate(-2px, 1px); filter: hue-rotate(20deg); }
+  40% { transform: translate(2px, -1px); filter: hue-rotate(-15deg); }
+  60% { transform: translate(-1px, 0); filter: none; }
+  100% { transform: translate(0); filter: none; }
+}
+.glitch-pulse { animation: rewireGlitch 220ms var(--ease-standard); }
+@media (prefers-reduced-motion: reduce) {
+  .glitch-pulse { animation: none; }
+}
+
+/* countdown */
+.countdown-digit {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* neural-network canvas host */
+canvas[data-canvas] {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------
+   Hero composition.
+   The hero must fit one screen: brand, CTAs and countdown all visible
+   without scrolling. So the logo is sized against viewport HEIGHT (not
+   a fixed max-width), and the stack uses a single clamped flex gap
+   rather than stacked per-element margins that can't respond to height.
+   ------------------------------------------------------------------ */
+.hero-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.6rem, 1.9vh, 1.6rem);
+  padding-top: clamp(4rem, 9vh, 6rem);   /* clears the fixed nav */
+  padding-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+.hero-logo-frame {
+  width: min(68vw, 30vh, 400px);
+  aspect-ratio: 1;
+  flex: none;
+}
+
+/* transformation section — stacked, crossfading stage labels */
+[data-js="transform-stages"] { text-align: center; }
+.transform-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+}
+.transform-stage.is-active { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .transform-stage { transition: none; }
+}
+.dot {
+  border-radius: 999px;
+  background: var(--hairline-strong);
+  transition: background var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard);
+}
+.dot.is-active {
+  background: var(--color-amber);
+  transform: scale(1.6);
+}
+
+/* ==================================================================
+   EVENT PLATFORM
+   ================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* category chips */
+.cat-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 15px;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  color: var(--paper-dim);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-standard),
+              border-color var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
+}
+.cat-chip:hover {
+  color: var(--color-paper);
+  border-color: var(--hairline-strong);
+}
+.cat-chip.is-active {
+  color: var(--color-void);
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+}
+
+/* registration status — colour AND text, never colour alone */
+.status-pill {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.status-pill--idle   { color: var(--paper-faint); }
+.status-pill--live   { color: var(--color-success); }
+.status-pill--warn   { color: var(--color-warning); }
+.status-pill--closed { color: var(--paper-faint); opacity: 0.7; }
+
+/* ---- the event index ----
+   A numbered technical index rather than a card grid. Rows are wide,
+   typographic and asymmetric; the picture is a hover extra, never the
+   carrier of information. */
+.event-index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--hairline);
+}
+.event-row { border-bottom: 1px solid var(--hairline); }
+.event-row[hidden] { display: none; }
+
+/* Mobile: everything stacks in one readable column beside the thumbnail.
+   The status pill gets its own row — sharing a row with the name pushed it
+   past the viewport edge and clipped it. */
+.event-row__link {
+  display: grid;
+  grid-template-columns: auto 64px minmax(0, 1fr);
+  grid-template-areas:
+    "idx thumb name"
+    "idx thumb meta"
+    "idx thumb status";
+  align-items: center;
+  gap: 4px 14px;
+  padding: 16px 8px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  transition: background var(--dur-base) var(--ease-standard),
+              padding-left var(--dur-base) var(--ease-emphasized);
+}
+/* A single cyan rule wipes in from the left — the "signal" reaching the row. */
+.event-row__link::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--gradient-impossible);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-base) var(--ease-emphasized);
+}
+.event-row__link:hover,
+.event-row__link:focus-visible {
+  background: rgba(237, 235, 242, 0.028);
+  padding-left: 18px;
+}
+.event-row__link:hover::before,
+.event-row__link:focus-visible::before {
+  transform: scaleY(1);
+  transform-origin: 50% 0%;
+}
+
+.event-row__idx {
+  grid-area: idx;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--paper-faint);
+  font-variant-numeric: tabular-nums;
+  align-self: center;
+}
+.event-row__thumb { grid-area: thumb; }
+.event-row__thumb img {
+  width: 64px; height: 44px;
+  object-fit: cover;
+  border: 1px solid var(--hairline);
+}
+.event-row__name {
+  grid-area: name;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2.4vw, 1.55rem);
+  line-height: 1.15;
+}
+.event-row__cat {
+  grid-area: meta;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+.event-row .status-pill {
+  grid-area: status;
+  justify-self: start;
+  margin-top: 5px;
+}
+.event-row__go {
+  display: none;
+  font-family: var(--font-mono);
+  color: var(--paper-faint);
+  transition: transform var(--dur-base) var(--ease-emphasized), color var(--dur-base) var(--ease-standard);
+}
+.event-row__link:hover .event-row__go { transform: translateX(4px); color: var(--color-cyan); }
+
+@media (min-width: 768px) {
+  .event-row__link {
+    grid-template-columns: 56px minmax(0, 1fr) 150px 190px 24px;
+    grid-template-areas: "idx name meta go arrow";
+    align-items: center;
+    gap: 20px;
+    padding: 22px 8px;
+  }
+  .event-row__cat { grid-area: meta; }
+  .event-row .status-pill { grid-area: go; justify-self: start; margin-top: 0; }
+  .event-row__go { grid-area: arrow; display: block; justify-self: end; }
+}
+
+/* floating hover preview (desktop only, decorative) */
+.event-preview {
+  position: fixed;
+  top: 0; left: 0;
+  width: 260px; height: 176px;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-standard);
+  border: 1px solid var(--hairline-strong);
+  overflow: hidden;
+  background: var(--color-charcoal);
+}
+.event-preview.is-visible { opacity: 1; }
+.event-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 1023px) { .event-preview { display: none; } }
+
+/* ---- event detail ---- */
+.detail-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  border: 1px solid var(--hairline);
+}
+.detail-meta > div {
+  padding: 16px 18px;
+  border-right: 1px solid var(--hairline);
+}
+.detail-meta > div:last-child { border-right: none; }
+.detail-meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  margin-bottom: 6px;
+}
+.detail-meta dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--color-paper);
+}
+.detail-meta dd.is-tba { color: var(--paper-faint); }
+
+/* ---- schedule ----
+   A timeline spine with a node per slot: the old vertical rail motif from the
+   original build, repurposed here as orientation (design-system §07). */
+.schedule-track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--hairline);
+  margin-left: 6px;
+}
+.schedule-slot {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 18px;
+  padding: 16px 0 16px 22px;
+  position: relative;
+}
+.schedule-slot::before { /* the node on the spine */
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 24px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-cyan);
+  box-shadow: 0 0 0 3px var(--color-void);
+}
+.schedule-slot + .schedule-slot { border-top: 1px solid var(--hairline); }
+.schedule-slot__time {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-paper);
+  padding-top: 1px;
+}
+.schedule-slot__body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.schedule-slot__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.02rem;
+  color: var(--color-paper);
+  text-decoration: none;
+}
+.schedule-slot__meta {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+@media (max-width: 640px) {
+  .schedule-slot { grid-template-columns: 1fr; gap: 6px; padding-left: 18px; }
+}
+
+/* ---- team ----
+   Portrait grid with editorial restraint. Per design-system §14 this is the
+   page where glow is essentially absent — the people carry it, not effects. */
+.team-card { display: flex; flex-direction: column; }
+.team-card__portrait {
+  aspect-ratio: 3 / 4;
+  background: var(--color-charcoal);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--dur-base) var(--ease-standard);
+}
+.team-card:hover .team-card__portrait { border-color: var(--hairline-strong); }
+.team-card__portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.team-card__monogram {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.4rem;
+  color: var(--paper-faint);
+}
+.team-card__name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.98rem;
+  margin: 14px 0 2px;
+}
+.team-card__role {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+  margin: 0;
+}
+.team-card__links {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+.team-card__links a { color: var(--paper-dim); text-decoration: none; }
+.team-card__links a:hover { color: var(--color-cyan); }
+
+} /* end @layer components */

@@ -1,0 +1,32 @@
+{
+  "_note": "Schedule structure for ENGINEER '26. The three days are real (23—25 October 2026, as given in the fest brief). Every `slots` array is intentionally EMPTY: no event in this repo has a confirmed time or venue, and inventing them would put wrong information in front of attendees. Fill slots in as the organising team confirms them — the /schedule page renders whatever is here, so no code change is needed.",
+  "_slotShape": {
+    "time": "string, e.g. '10:00' (24h) — required",
+    "endTime": "string or null",
+    "event": "event slug from data/events.json, or null for non-event items (breaks, ceremonies)",
+    "title": "string — required; for event slots use the event's real name",
+    "venue": "string or null",
+    "track": "string or null — e.g. 'Main Arena', used to group parallel sessions"
+  },
+  "_weekdayNote": "Weekday is DERIVED from `date` at render time — never stored here, so it can't contradict the date if dates change.",
+  "days": [
+    {
+      "id": "day-0",
+      "label": "Day 0",
+      "date": "2026-10-23",
+      "slots": []
+    },
+    {
+      "id": "day-1",
+      "label": "Day 1",
+      "date": "2026-10-24",
+      "slots": []
+    },
+    {
+      "id": "day-2",
+      "label": "Day 2",
+      "date": "2026-10-25",
+      "slots": []
+    }
+  ]
+}

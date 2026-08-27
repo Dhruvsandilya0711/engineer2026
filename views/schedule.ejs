@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="The ENGINEER '26 schedule — three days at NITK Surathkal, <%= festDates.display %>.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <canvas data-canvas="neural" data-tone="ambient" class="absolute inset-0"></canvas>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'schedule' }) %>
+
+  <main class="relative z-10 pt-32 pb-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <header class="mb-14">
+        <p class="eyebrow text-cyan mb-5">Cognitrixx / timetable</p>
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          <h1 class="font-display font-extrabold text-[clamp(2.4rem,6vw,4.2rem)] leading-[0.95]">
+            Three days.<br><span class="text-gradient-impossible">One sequence.</span>
+          </h1>
+          <p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase lg:text-right shrink-0">
+            <span class="text-paper"><%= days.length %></span> days ·
+            <span class="text-paper"><%= totalSlots %></span> sessions scheduled<br>
+            <span class="text-[var(--paper-faint)]"><%= festDates.display %> · NITK Surathkal</span>
+          </p>
+        </div>
+      </header>
+
+      <!-- Day tabs. Without JS every day renders stacked below, so the tabs are
+           an enhancement rather than a requirement for reaching content. -->
+      <div class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filter by day" data-js="day-tabs">
+        <button type="button" class="cat-chip is-active" data-day="all" aria-pressed="true">All days</button>
+        <% days.forEach(function(day){ %>
+        <button type="button" class="cat-chip" data-day="<%= day.id %>" aria-pressed="false">
+          <%= day.label %> · <%= new Date(day.date).getDate() %> Oct
+        </button>
+        <% }); %>
+      </div>
+
+      <!-- ============ DAYS ============ -->
+      <% days.forEach(function(day){ %>
+      <section class="mb-14" data-js="day-block" data-day="<%= day.id %>" aria-labelledby="<%= day.id %>-heading">
+        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-6">
+          <h2 id="<%= day.id %>-heading" class="font-display font-semibold text-xl">
+            <%= day.label %>
+            <span class="font-mono text-xs tracking-[0.12em] uppercase text-amber ml-3"><%= day.weekday %></span>
+          </h2>
+          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">
+            <%= new Date(day.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+          </p>
+        </div>
+
+        <% if (day.slots.length) { %>
+        <ol class="schedule-track">
+          <% day.slots.forEach(function(slot){ %>
+          <li class="schedule-slot">
+            <span class="schedule-slot__time"><%= slot.time %><% if (slot.endTime) { %><span class="block text-[var(--paper-faint)]"><%= slot.endTime %></span><% } %></span>
+            <span class="schedule-slot__body">
+              <% if (slot.linkedEvent) { %>
+                <a href="/events/<%= slot.linkedEvent.slug %>" class="schedule-slot__title hover:text-cyan transition-colors"><%= slot.title %></a>
+                <span class="schedule-slot__meta"><%= slot.linkedEvent.category %></span>
+              <% } else { %>
+                <span class="schedule-slot__title"><%= slot.title %></span>
+              <% } %>
+              <% if (slot.venue) { %><span class="schedule-slot__meta"><%= slot.venue %></span><% } %>
+              <% if (slot.track) { %><span class="schedule-slot__meta text-cyan"><%= slot.track %></span><% } %>
+            </span>
+          </li>
+          <% }); %>
+        </ol>
+        <% } else { %>
+        <!-- Honest empty day: nothing is scheduled, so nothing is shown. -->
+        <div class="border border-dashed border-[var(--hairline)] py-12 px-6 text-center">
+          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-amber mb-3">Not yet scheduled</p>
+          <p class="text-sm text-[var(--paper-dim)] max-w-md mx-auto">
+            Sessions for <%= day.label %> publish here once times and venues are confirmed.
+          </p>
+        </div>
+        <% } %>
+      </section>
+      <% }); %>
+
+      <!-- ============ AWAITING SCHEDULING ============
+           Real events that exist but have no slot yet. Listing them is more
+           useful than hiding them, and avoids implying the line-up is thin. -->
+      <% if (unscheduled.length) { %>
+      <section class="mt-20" aria-labelledby="unscheduled-heading">
+        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-6">
+          <h2 id="unscheduled-heading" class="font-display font-semibold text-xl">Awaiting a slot</h2>
+          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= unscheduled.length %> events</p>
+        </div>
+        <p class="text-sm text-[var(--paper-dim)] mb-6 max-w-2xl">
+          These events are confirmed for ENGINEER '26 but haven't been assigned a day and time yet.
+          They'll move into the timetable above as scheduling is finalised.
+        </p>
+        <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
+          <% unscheduled.forEach(function(evt){ %>
+          <li>
+            <a href="/events/<%= evt.slug %>"
+               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
+              <%= evt.name %>
+              <span class="text-[var(--paper-faint)]">/ <%= evt.category %></span>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+      <% } %>
+
+      <aside class="mt-16 border-l-2 border-amber/50 pl-5 py-2">
+        <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-amber mb-2">Status</p>
+        <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
+          The ENGINEER '26 timetable is still being built. Nothing above is a placeholder time —
+          slots appear only once the organising team confirms them.
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <%- include('partials/_footer') %>
+
+  <script type="module" src="/js/page.js"></script>
+  <script type="module" src="/js/schedule.js"></script>
+</body>
+</html>

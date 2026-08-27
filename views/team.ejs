@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="The team behind ENGINEER '26 at NITK Surathkal.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <canvas data-canvas="neural" data-tone="ambient" class="absolute inset-0"></canvas>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'team' }) %>
+
+  <main class="relative z-10 pt-32 pb-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <header class="mb-14">
+        <p class="eyebrow text-magenta mb-5">Cognitrixx / the people</p>
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          <h1 class="font-display font-extrabold text-[clamp(2.4rem,6vw,4.2rem)] leading-[0.95]">
+            The network<br><span class="text-gradient-impossible">behind it.</span>
+          </h1>
+          <% if (totalMembers) { %>
+          <p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase lg:text-right shrink-0">
+            <span class="text-paper"><%= totalMembers %></span> members ·
+            <span class="text-paper"><%= groups.length %></span> teams<br>
+            <span class="text-[var(--paper-faint)]">ENGINEER '26 · NITK Surathkal</span>
+          </p>
+          <% } %>
+        </div>
+        <p class="text-[var(--paper-dim)] max-w-xl mt-6">
+          Cognitrixx is a network of intelligent minds — and the ones that built it are students
+          at NITK Surathkal who run ENGINEER every year.
+        </p>
+      </header>
+
+      <% if (totalMembers) { %>
+        <!-- ============ ROSTER ============
+             Renders whatever data/team.json holds. Groups are derived from the
+             members themselves, so no empty section can ever appear. -->
+        <% groups.forEach(function(g){ %>
+        <section class="mb-16" aria-labelledby="group-<%= g.group.replace(/\W+/g,'-').toLowerCase() %>">
+          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+            <h2 id="group-<%= g.group.replace(/\W+/g,'-').toLowerCase() %>" class="font-display font-semibold text-xl"><%= g.group %></h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= g.members.length %></p>
+          </div>
+
+          <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 list-none p-0 m-0">
+            <% g.members.forEach(function(m){ %>
+            <li class="team-card">
+              <div class="team-card__portrait">
+                <% if (m.image) { %>
+                  <img src="<%= m.image %>" alt="<%= m.name %>" loading="lazy">
+                <% } else { %>
+                  <!-- Typographic monogram rather than a stock silhouette. -->
+                  <span class="team-card__monogram" aria-hidden="true"><%= m.name.trim().charAt(0).toUpperCase() %></span>
+                <% } %>
+              </div>
+              <p class="team-card__name"><%= m.name %></p>
+              <p class="team-card__role"><%= m.role %></p>
+              <% if (m.email || m.linkedin) { %>
+              <p class="team-card__links">
+                <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
+                <% if (m.linkedin) { %><a href="<%= m.linkedin %>" rel="noopener noreferrer" target="_blank" aria-label="<%= m.name %> on LinkedIn">LinkedIn</a><% } %>
+              </p>
+              <% } %>
+            </li>
+            <% }); %>
+          </ul>
+        </section>
+        <% }); %>
+
+      <% } else { %>
+        <!-- ============ EMPTY ROSTER ============
+             No team data exists in this codebase. A team page names real people
+             in real roles, so nothing is shown rather than inventing a
+             committee. The grid above renders automatically once names land in
+             data/team.json. -->
+        <section class="border border-dashed border-[var(--hairline-strong)] py-20 px-6 text-center">
+          <p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-magenta mb-4">Roster pending</p>
+          <h2 class="font-display font-semibold text-2xl mb-4">The team publishes here</h2>
+          <p class="text-[var(--paper-dim)] text-sm max-w-md mx-auto mb-8">
+            Names and roles go live once the ENGINEER '26 organising committee is confirmed.
+            We'd rather show nothing than credit the wrong people.
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center">
+            <a href="/events" class="btn btn-secondary">Browse events</a>
+            <a href="/#footer" class="btn btn-secondary">Get in touch</a>
+          </div>
+        </section>
+
+        <!-- Structural preview of what the grid becomes, clearly marked. -->
+        <section class="mt-16" aria-hidden="true">
+          <p class="font-mono text-[0.68rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-5">
+            Layout preview — no real people shown
+          </p>
+          <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 list-none p-0 m-0 opacity-40">
+            <% for (let i = 0; i < 4; i++) { %>
+            <li class="team-card">
+              <div class="team-card__portrait"></div>
+              <div class="h-3 w-3/5 bg-[var(--hairline-strong)] mt-4"></div>
+              <div class="h-2.5 w-2/5 bg-[var(--hairline)] mt-2"></div>
+            </li>
+            <% } %>
+          </ul>
+        </section>
+      <% } %>
+
+      <aside class="mt-16 border-l-2 border-magenta/50 pl-5 py-2">
+        <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-magenta mb-2">Status</p>
+        <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
+          <% if (totalMembers) { %>
+            Roster is live. Corrections go to the ENGINEER '26 organising team.
+          <% } else { %>
+            No team members are listed yet — the roster is empty in the data layer rather than
+            filled with placeholders.
+          <% } %>
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <%- include('partials/_footer') %>
+
+  <script type="module" src="/js/page.js"></script>
+</body>
+</html>

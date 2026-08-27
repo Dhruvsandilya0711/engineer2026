@@ -2,23 +2,183 @@ import express from 'express';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import path from 'path'
+import {readFileSync} from 'fs';
+import {networkInterfaces} from 'os';
 
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = dirname(__fileName)
 
 const app = express();
-const port = 3000;
+// HOST defaults to 0.0.0.0 so the site is reachable from other devices on the
+// same network (phones, teammates' laptops) — not just this machine.
+// Set HOST=127.0.0.1 to keep it private to localhost.
+const port = Number(process.env.PORT) || 3000;
+const host = process.env.HOST || '0.0.0.0';
+
+// ENGINEER '26 is happening 23–25 October 2026 (as given in the brief) —
+// single source of truth for the hero countdown and the date shown in copy.
+const FEST_DATES = { start: '2026-10-23', end: '2026-10-25', display: '23—25 OCTOBER 2026' };
+
+const eventData = JSON.parse(readFileSync(path.join(__dirname, 'data/events.json'), 'utf-8'));
+const allEvents = eventData.events;
+
+// Categories are DERIVED from the actual event data — never a hand-written
+// list, so the filter bar can only ever offer categories that exist.
+const categories = [...new Set(allEvents.map(e => e.category))].sort();
+
+// Registration copy lives server-side so every surface (listing, detail,
+// homepage) describes the same state in the same words.
+const REGISTRATION_STATES = {
+  not_open:      { label: 'Registration not open',  tone: 'idle',   actionable: false },
+  opening_soon:  { label: 'Opening soon',           tone: 'idle',   actionable: false },
+  open:          { label: 'Registration open',      tone: 'live',   actionable: true  },
+  closing_soon:  { label: 'Closing soon',           tone: 'warn',   actionable: true  },
+  closed:        { label: 'Registration closed',    tone: 'closed', actionable: false },
+  full:          { label: 'Event full',             tone: 'closed', actionable: false },
+  completed:     { label: 'Completed',              tone: 'closed', actionable: false },
+};
+const regState = (e) => REGISTRATION_STATES[e.registration] || REGISTRATION_STATES.not_open;
+
+const events = {
+  all: allEvents,
+  featured: allEvents.filter(e => e.featured),
+  categories,
+};
+
+const schedule = JSON.parse(readFileSync(path.join(__dirname, 'data/schedule.json'), 'utf-8'));
+const teamData = JSON.parse(readFileSync(path.join(__dirname, 'data/team.json'), 'utf-8'));
+
+// Slots reference events by slug; resolve them once so views never have to.
+function resolvedDays() {
+  return schedule.days.map(day => ({
+    ...day,
+    // Derived, never stored — a hand-written weekday could contradict the date.
+    weekday: new Date(`${day.date}T00:00:00`).toLocaleDateString('en-GB', { weekday: 'long' }),
+    slots: [...day.slots]
+      .sort((a, b) => String(a.time).localeCompare(String(b.time)))
+      .map(slot => ({ ...slot, linkedEvent: slot.event ? allEvents.find(e => e.slug === slot.event) || null : null })),
+  }));
+}
+
+// Events that exist but haven't been given a slot yet — shown honestly rather
+// than being quietly dropped or assigned a made-up time.
+function unscheduledEvents() {
+  const scheduled = new Set(schedule.days.flatMap(d => d.slots.map(s => s.event).filter(Boolean)));
+  return allEvents.filter(e => !scheduled.has(e.slug));
+}
+
+// Groups are DERIVED from the roster, so an empty roster yields no groups and
+// the page can never advertise a section that has nobody in it.
+function teamGroups() {
+  const members = (teamData.members || []).filter(m => m && m.name && m.role);
+  const order = [...new Set(members.map(m => m.group || 'Team'))];
+  return order.map(group => ({ group, members: members.filter(m => (m.group || 'Team') === group) }));
+}
 
 app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
+// Serve the browser (ESM) builds of three.js and gsap directly — no bundler
+// in this project, so these are mounted as static vendor assets instead.
+app.use('/vendor/three', express.static(path.join(__dirname, 'node_modules/three/build')));
+app.use('/vendor/gsap', express.static(path.join(__dirname, 'node_modules/gsap')));
 
 app.get('/', (req, res) => {
-  res.render('index', {foo: 'FOO'});
+  res.render('index', { festDates: FEST_DATES, events, scheduleDays: resolvedDays() });
 });
 
+// Event discovery. Filtering runs server-side off query params so search and
+// category filters work with JavaScript disabled; public/js/events-filter.js
+// then layers instant client-side filtering on top as a progressive
+// enhancement (14 events — no need to round-trip for every keystroke).
+app.get('/events', (req, res) => {
+  const q = (req.query.q || '').toString().trim();
+  const category = (req.query.category || '').toString().trim();
 
+  const needle = q.toLowerCase();
+  const results = allEvents.filter(e => {
+    const matchesQuery = !needle
+      || e.name.toLowerCase().includes(needle)
+      || e.category.toLowerCase().includes(needle);
+    const matchesCategory = !category || category === 'All' || e.category === category;
+    return matchesQuery && matchesCategory;
+  });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  res.render('events', {
+    festDates: FEST_DATES,
+    events,
+    results,
+    query: q,
+    activeCategory: category || 'All',
+    regState,
+  });
+});
+
+app.get('/schedule', (req, res) => {
+  const days = resolvedDays();
+  res.render('schedule', {
+    festDates: FEST_DATES,
+    days,
+    unscheduled: unscheduledEvents(),
+    totalSlots: days.reduce((n, d) => n + d.slots.length, 0),
+    regState,
+  });
+});
+
+app.get('/team', (req, res) => {
+  const groups = teamGroups();
+  res.render('team', {
+    festDates: FEST_DATES,
+    groups,
+    totalMembers: groups.reduce((n, g) => n + g.members.length, 0),
+  });
+});
+
+app.get('/events/:slug', (req, res, next) => {
+  const event = allEvents.find(e => e.slug === req.params.slug);
+  if (!event) return next(); // falls through to the 404 handler
+
+  const related = allEvents
+    .filter(e => e.category === event.category && e.slug !== event.slug)
+    .slice(0, 3);
+
+  res.render('event-detail', {
+    festDates: FEST_DATES,
+    event,
+    related,
+    regState,
+    index: allEvents.indexOf(event) + 1,
+    canonical: `${req.protocol}://${req.get('host')}/events/${event.slug}`,
+  });
+});
+
+app.use((req, res) => {
+  res.status(404).render('404', { url: req.originalUrl });
+});
+
+// Every non-internal IPv4 address, so the startup log prints a URL that can
+// actually be shared rather than just "localhost".
+function lanAddresses() {
+  return Object.entries(networkInterfaces())
+    .flatMap(([name, addrs]) => (addrs || []).map(a => ({ ...a, name })))
+    .filter(a => a.family === 'IPv4' && !a.internal)
+    .map(a => ({ name: a.name, address: a.address }));
+}
+
+app.listen(port, host, () => {
+  console.log(`\n  ENGINEER '26 — Cognitrixx\n`);
+  console.log(`  Local:    http://localhost:${port}`);
+  if (host === '0.0.0.0') {
+    for (const { name, address } of lanAddresses()) {
+      console.log(`  Network:  http://${address}:${port}   (${name})`);
+    }
+    console.log(`\n  Share a Network URL with anyone on the same Wi-Fi/LAN.`);
+    console.log(`  If Windows Firewall prompts, allow Node.js on the profile this`);
+    console.log(`  network actually uses (check with: Get-NetConnectionProfile).`);
+    console.log(`  Note: many campus/guest networks isolate clients, which blocks`);
+    console.log(`  device-to-device access regardless of firewall settings.`);
+  } else {
+    console.log(`  (bound to ${host} — this machine only)`);
+  }
+  console.log('');
 });

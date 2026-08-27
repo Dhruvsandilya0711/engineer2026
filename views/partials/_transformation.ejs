@@ -1,0 +1,35 @@
+<!-- ==========================================================================
+     COGNITRIXX TRANSFORMATION — a conceptual progression, not six literal
+     animations (per brief: "the conceptual progression is more important
+     than literal animation"). One pinned section, one canvas that drifts
+     from amber neural-network toward structured circuit traces as the
+     visitor scrolls, and six stage labels crossfading in step. Driven by
+     GSAP ScrollTrigger (scrub) in public/js/main.js — initTransformation().
+     ========================================================================== -->
+<!-- 200vh (was 300vh): one pinned viewport plus one of scroll travel. At 300vh
+     the six stages were spread over ~1600px of otherwise empty scrolling, which
+     read as dead space rather than pacing. -->
+<section id="transformation" class="relative" data-js="transformation" style="height:200vh;">
+  <div class="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+    <canvas data-canvas="neural" data-tone="transform" class="absolute inset-0 -z-10" aria-hidden="true"></canvas>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-void via-transparent to-void"></div>
+
+    <p class="font-mono text-xs tracking-[0.3em] uppercase text-[var(--paper-faint)] mb-8">Cognitrixx / transformation</p>
+    <div class="relative h-24 sm:h-28 flex items-center justify-center w-full" data-js="transform-stages">
+      <span class="transform-stage is-active font-display font-bold text-3xl sm:text-6xl" data-stage="0">Neural Network</span>
+      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl" data-stage="1">Information</span>
+      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl text-magenta" data-stage="2">Rewire</span>
+      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl" data-stage="3">Engineering</span>
+      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl" data-stage="4">Impossible Geometry</span>
+      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl text-gradient-impossible" data-stage="5">New Reality</span>
+    </div>
+    <div class="flex gap-2 mt-10" data-js="transform-dots" aria-hidden="true">
+      <span class="w-1.5 h-1.5 dot" data-dot="0"></span>
+      <span class="w-1.5 h-1.5 dot" data-dot="1"></span>
+      <span class="w-1.5 h-1.5 dot" data-dot="2"></span>
+      <span class="w-1.5 h-1.5 dot" data-dot="3"></span>
+      <span class="w-1.5 h-1.5 dot" data-dot="4"></span>
+      <span class="w-1.5 h-1.5 dot" data-dot="5"></span>
+    </div>
+  </div>
+</section>

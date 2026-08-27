@@ -1,0 +1,273 @@
+<% const st = regState(event); %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO from the event's own real data only — no invented copy. -->
+  <title><%= event.name %> — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="<%= event.description ? event.description : event.name + ' — a ' + event.category + ' event at ENGINEER \'26, NITK Surathkal, ' + festDates.display + '.' %>">
+  <link rel="canonical" href="<%= canonical %>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= event.name %> — ENGINEER '26">
+  <meta property="og:description" content="<%= event.description ? event.description : event.category + ' · ENGINEER \'26, NITK Surathkal' %>">
+  <meta property="og:url" content="<%= canonical %>">
+  <meta property="og:image" content="<%= event.image %>">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <canvas data-canvas="neural" data-tone="ambient" class="absolute inset-0"></canvas>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'events' }) %>
+
+  <main class="relative z-10 pt-28 pb-24">
+
+    <!-- ============ HERO ============
+         Uses the event's own image. No Penrose logo here — that mark belongs
+         to ENGINEER itself, not to individual events. -->
+    <header class="px-6 mb-14">
+      <div class="max-w-5xl mx-auto">
+        <a href="/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-8">
+          ← Event index
+        </a>
+
+        <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+          <div>
+            <p class="font-mono text-[0.7rem] tracking-[0.18em] uppercase text-[var(--paper-faint)] mb-4">
+              Event <%= String(index).padStart(2, '0') %> / <span class="text-amber"><%= event.category %></span>
+            </p>
+            <h1 class="font-display font-extrabold text-[clamp(2.2rem,5.5vw,3.8rem)] leading-[0.98] mb-6">
+              <%= event.name %>
+            </h1>
+            <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
+          </div>
+
+          <figure class="relative border border-[var(--hairline)] overflow-hidden">
+            <img src="<%= event.image %>" alt="<%= event.name %> at ENGINEER '26"
+              class="w-full aspect-[4/3] object-cover">
+            <!-- subtle Cognitrixx corner annotation -->
+            <figcaption class="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-2 bg-void/80 font-mono text-[0.6rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">
+              <span><%= event.slug %></span>
+              <span class="text-cyan">ENGI/26</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ META STRIP ============
+         Always rendered so the structure is legible, but unknown values say
+         TBA rather than inventing a date, time or venue. -->
+    <section class="px-6 mb-16" aria-label="Event details">
+      <div class="max-w-5xl mx-auto">
+        <dl class="detail-meta">
+          <div>
+            <dt>Date</dt>
+            <dd class="<%= event.date ? '' : 'is-tba' %>"><%= event.date || 'TBA' %></dd>
+          </div>
+          <div>
+            <dt>Time</dt>
+            <dd class="<%= event.time ? '' : 'is-tba' %>"><%= event.time || 'TBA' %></dd>
+          </div>
+          <div>
+            <dt>Venue</dt>
+            <dd class="<%= event.venue ? '' : 'is-tba' %>"><%= event.venue || 'TBA' %></dd>
+          </div>
+          <div>
+            <dt>Category</dt>
+            <dd><%= event.category %></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="px-6">
+      <div class="max-w-5xl mx-auto grid lg:grid-cols-[1fr_320px] gap-12 items-start">
+
+        <!-- ============ CONTENT ============
+             Every block below renders only when that event actually has the
+             data. Nothing is fabricated and no empty section is shown. -->
+        <div>
+          <% if (event.description) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">About</h2>
+            <p class="text-[var(--paper-dim)] leading-relaxed"><%= event.description %></p>
+          </section>
+          <% } %>
+
+          <% if (event.rules && event.rules.length) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">Rules</h2>
+            <ul class="flex flex-col gap-2 text-[var(--paper-dim)] text-sm list-none p-0 m-0">
+              <% event.rules.forEach(function(rule, i){ %>
+              <li class="flex gap-3">
+                <span class="font-mono text-[0.7rem] text-cyan shrink-0 pt-1"><%= String(i+1).padStart(2,'0') %></span>
+                <span><%= rule %></span>
+              </li>
+              <% }); %>
+            </ul>
+          </section>
+          <% } %>
+
+          <% if (event.timeline && event.timeline.length) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">Timeline</h2>
+            <ol class="border-l border-[var(--hairline)] pl-5 flex flex-col gap-4 m-0">
+              <% event.timeline.forEach(function(t){ %>
+              <li>
+                <p class="font-mono text-[0.7rem] text-amber tracking-[0.1em] uppercase"><%= t.when %></p>
+                <p class="text-sm text-[var(--paper-dim)]"><%= t.what %></p>
+              </li>
+              <% }); %>
+            </ol>
+          </section>
+          <% } %>
+
+          <% if (event.prizes) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">Prizes</h2>
+            <p class="text-[var(--paper-dim)]"><%= event.prizes %></p>
+          </section>
+          <% } %>
+
+          <% if (event.eligibility) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">Eligibility</h2>
+            <p class="text-[var(--paper-dim)]"><%= event.eligibility %></p>
+          </section>
+          <% } %>
+
+          <% if (event.teamSize) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">Team requirements</h2>
+            <p class="text-[var(--paper-dim)]"><%= event.teamSize %></p>
+          </section>
+          <% } %>
+
+          <% if (event.faq && event.faq.length) { %>
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">FAQ</h2>
+            <div class="flex flex-col">
+              <% event.faq.forEach(function(item){ %>
+              <details class="border-b border-[var(--hairline)] py-4">
+                <summary class="cursor-pointer font-display font-medium text-base"><%= item.q %></summary>
+                <p class="text-sm text-[var(--paper-dim)] mt-3"><%= item.a %></p>
+              </details>
+              <% }); %>
+            </div>
+          </section>
+          <% } %>
+
+          <%
+            // Nothing beyond name/category/image is confirmed for this event yet.
+            const hasAnyDetail = event.description || (event.rules && event.rules.length)
+              || (event.timeline && event.timeline.length) || event.prizes
+              || event.eligibility || event.teamSize || (event.faq && event.faq.length);
+          %>
+          <% if (!hasAnyDetail) { %>
+          <section class="border border-dashed border-[var(--hairline-strong)] p-8">
+            <p class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-amber mb-3">Awaiting brief</p>
+            <h2 class="font-display font-semibold text-xl mb-3">Full details publish here</h2>
+            <p class="text-sm text-[var(--paper-dim)] max-w-lg">
+              The rules, timeline, prizes, eligibility and team requirements for <%= event.name %> go live
+              once the organising team confirms them. Nothing is listed above because nothing is confirmed yet.
+            </p>
+          </section>
+          <% } %>
+        </div>
+
+        <!-- ============ REGISTRATION PANEL ============ -->
+        <aside class="lg:sticky lg:top-28">
+          <div class="border border-[var(--hairline)] bg-charcoal p-6">
+            <p class="font-mono text-[0.65rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-4">Registration</p>
+            <p class="font-display font-medium text-lg mb-2"><%= st.label %></p>
+
+            <% if (st.actionable) { %>
+              <p class="text-sm text-[var(--paper-dim)] mb-6">Entries are being accepted for this event.</p>
+              <a href="/events/<%= event.slug %>/register" class="btn btn-primary w-full justify-center">Register</a>
+            <% } else { %>
+              <p class="text-sm text-[var(--paper-dim)] mb-6">
+                <% if (event.registration === 'completed') { %>
+                  This event has finished.
+                <% } else if (event.registration === 'full') { %>
+                  All places for this event have been taken.
+                <% } else if (event.registration === 'closed') { %>
+                  Registration for this event has closed.
+                <% } else { %>
+                  The ENGINEER '26 registration portal isn't live yet. When it opens,
+                  you'll be able to enter <%= event.name %> from this panel.
+                <% } %>
+              </p>
+              <button type="button" class="btn btn-secondary w-full justify-center" disabled aria-disabled="true">
+                <%= event.registration === 'completed' || event.registration === 'closed' || event.registration === 'full' ? 'Unavailable' : 'Not open yet' %>
+              </button>
+            <% } %>
+
+            <% if (event.registrationDeadline) { %>
+            <p class="font-mono text-[0.65rem] text-[var(--paper-faint)] mt-4 tracking-[0.1em] uppercase">
+              Closes <%= event.registrationDeadline %>
+            </p>
+            <% } %>
+          </div>
+
+          <% if (event.coordinators && event.coordinators.length) { %>
+          <div class="border border-[var(--hairline)] p-6 mt-4">
+            <p class="font-mono text-[0.65rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-4">Coordinators</p>
+            <ul class="list-none p-0 m-0 flex flex-col gap-3">
+              <% event.coordinators.forEach(function(c){ %>
+              <li>
+                <p class="text-sm text-paper"><%= c.name %></p>
+                <% if (c.contact) { %><p class="font-mono text-xs text-[var(--paper-faint)]"><%= c.contact %></p><% } %>
+              </li>
+              <% }); %>
+            </ul>
+          </div>
+          <% } %>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============ RELATED ============ -->
+    <% if (related.length) { %>
+    <section class="px-6 mt-24">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-6">
+          More in <%= event.category %>
+        </h2>
+        <ol class="event-index">
+          <% related.forEach(function(rel, i){ const rst = regState(rel); %>
+          <li class="event-row">
+            <a href="/events/<%= rel.slug %>" class="event-row__link" data-img="<%= rel.image %>">
+              <span class="event-row__idx"><%= String(i + 1).padStart(2, '0') %></span>
+              <span class="event-row__thumb md:hidden">
+                <img src="<%= rel.image %>" alt="" loading="lazy" aria-hidden="true">
+              </span>
+              <span class="event-row__name"><%= rel.name %></span>
+              <span class="event-row__cat"><%= rel.category %></span>
+              <span class="status-pill status-pill--<%= rst.tone %>"><%= rst.label %></span>
+              <span class="event-row__go" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <% }); %>
+        </ol>
+      </div>
+    </section>
+    <% } %>
+  </main>
+
+  <%- include('partials/_footer') %>
+
+  <script type="module" src="/js/page.js"></script>
+</body>
+</html>

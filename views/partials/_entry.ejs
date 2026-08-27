@@ -1,0 +1,18 @@
+<!-- ==========================================================================
+     Entry sequence — "a system initializing", not a splash screen.
+     Text-only stages driven by public/js/main.js (initEntrySequence).
+     Target: ~1.2s total, then removed from the DOM entirely.
+     Respects prefers-reduced-motion (main.js skips straight to hidden).
+     ========================================================================== -->
+<div id="entry-sequence" role="status" aria-live="polite" aria-label="Loading ENGINEER '26">
+  <svg class="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1="30" x2="100" y2="30" stroke="var(--hairline-strong)" stroke-width="0.15" />
+    <line x1="0" y1="70" x2="100" y2="70" stroke="var(--hairline-strong)" stroke-width="0.15" />
+    <line x1="20" y1="0" x2="20" y2="100" stroke="var(--hairline-strong)" stroke-width="0.15" />
+    <line x1="80" y1="0" x2="80" y2="100" stroke="var(--hairline-strong)" stroke-width="0.15" />
+  </svg>
+  <p class="stage font-mono text-xs tracking-[0.2em] uppercase text-cyan" data-stage="0">Initializing system</p>
+  <h1 class="stage font-display font-bold text-4xl sm:text-6xl" data-stage="1">ENGINEER '26</h1>
+  <h2 class="stage font-display font-medium text-2xl sm:text-4xl text-gradient-impossible" data-stage="2">COGNITRIXX</h2>
+  <p class="stage font-mono text-sm sm:text-base tracking-[0.3em] uppercase text-[var(--paper-dim)]" data-stage="3">Rewire Reality</p>
+</div>

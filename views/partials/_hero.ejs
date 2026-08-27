@@ -1,0 +1,73 @@
+<!-- ==========================================================================
+     HERO — the visual centerpiece. The Penrose logo is the dominant object;
+     text is secondary hierarchy around it (see design-system: ENGINEER '26
+     = brand weight, COGNITRIXX = theme weight, REWIRE REALITY = tagline).
+
+     public/js/hero-scene.js mounts a Three.js textured-plane scene using the
+     ACTUAL logo asset (public/images/engineer26logo.png) if WebGL is
+     available and the visitor hasn't asked for reduced motion — the plain
+     <img> below is the fallback in every other case (no-WebGL, load error,
+     prefers-reduced-motion). The source file ships on a black canvas, so it
+     is composited with mix-blend-mode: screen so only the glowing triangle
+     reads against the void background, not a black square.
+     ========================================================================== -->
+<section id="top" class="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden px-6">
+  <canvas data-canvas="neural" data-tone="amber" class="absolute inset-0 z-0" aria-hidden="true"></canvas>
+  <div class="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-void pointer-events-none"></div>
+
+  <div class="hero-stack relative z-10 w-full">
+  <div class="flex flex-col items-center text-center gap-2" data-reveal>
+    <p class="eyebrow text-cyan justify-center">NITK Surathkal</p>
+    <p class="font-mono text-xs tracking-[0.2em] uppercase text-[var(--paper-faint)]"><%= festDates.display %></p>
+  </div>
+
+  <div class="hero-logo-frame relative" data-js="hero-logo">
+    <div class="absolute inset-0 flex items-center justify-center border border-dashed border-[var(--hairline-strong)]" data-js="hero-logo-placeholder" style="display:none;">
+      <div class="text-center px-6">
+        <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)]">Logo asset pending</p>
+        <p class="font-mono text-[0.6rem] text-[var(--paper-faint)] mt-2">public/images/engineer26logo.png</p>
+      </div>
+    </div>
+    <img
+      src="/images/engineer26logo.png"
+      alt="ENGINEER '26 — the impossible Penrose object"
+      class="relative w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_70px_rgba(123,92,250,0.28)]"
+      data-js="hero-logo-img"
+      onerror="this.style.display='none'; this.parentElement.querySelector('[data-js=hero-logo-placeholder]').style.display='flex';"
+    >
+  </div>
+
+  <div class="flex flex-col items-center text-center gap-2" data-reveal>
+    <h1 class="font-display font-extrabold text-[clamp(2.4rem,7vw,4.5rem)] leading-[0.95]">ENGINEER&nbsp;'26</h1>
+    <p class="font-display font-medium text-[clamp(1.05rem,2.6vw,1.85rem)] text-gradient-impossible">COGNITRIXX</p>
+    <p class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase text-[var(--paper-dim)]">Rewire Reality</p>
+  </div>
+
+  <div class="flex flex-col sm:flex-row items-center gap-4" data-reveal>
+    <a href="/events" class="btn btn-primary" data-js="magnetic">Enter Cognitrixx</a>
+    <a href="#events" class="btn btn-secondary">Explore Events</a>
+  </div>
+
+  <div class="flex items-start gap-5 sm:gap-8" data-js="countdown" data-target="<%= festDates.start %>T00:00:00+05:30" aria-live="polite" aria-label="Countdown to ENGINEER '26">
+    <div class="text-center">
+      <span class="countdown-digit block text-2xl sm:text-4xl" data-unit="days">00</span>
+      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Days</span>
+    </div>
+    <span class="countdown-digit text-2xl sm:text-4xl text-[var(--paper-faint)] mt-0">:</span>
+    <div class="text-center">
+      <span class="countdown-digit block text-2xl sm:text-4xl" data-unit="hours">00</span>
+      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Hrs</span>
+    </div>
+    <span class="countdown-digit text-2xl sm:text-4xl text-[var(--paper-faint)]">:</span>
+    <div class="text-center">
+      <span class="countdown-digit block text-2xl sm:text-4xl" data-unit="minutes">00</span>
+      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Min</span>
+    </div>
+    <span class="countdown-digit text-2xl sm:text-4xl text-[var(--paper-faint)]">:</span>
+    <div class="text-center">
+      <span class="countdown-digit block text-2xl sm:text-4xl text-magenta" data-unit="seconds">00</span>
+      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Sec</span>
+    </div>
+  </div>
+  </div>
+</section>

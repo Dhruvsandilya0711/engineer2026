@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="The ENGINEER '26 event index. <%= events.all.length %> events across <%= events.categories.length %> categories at NITK Surathkal, <%= festDates.display %>.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <canvas data-canvas="neural" data-tone="ambient" class="absolute inset-0"></canvas>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'events' }) %>
+
+  <main class="relative z-10 pt-32 pb-28 px-6">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- page head -->
+      <header class="mb-14">
+        <p class="eyebrow text-amber mb-5">Cognitrixx / event index</p>
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          <h1 class="font-display font-extrabold text-[clamp(2.4rem,6vw,4.2rem)] leading-[0.95]">
+            Every event.<br><span class="text-gradient-impossible">One system.</span>
+          </h1>
+          <p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase lg:text-right shrink-0">
+            <span class="text-paper"><%= events.all.length %></span> events ·
+            <span class="text-paper"><%= events.categories.length %></span> categories<br>
+            <span class="text-[var(--paper-faint)]"><%= festDates.display %> · NITK Surathkal</span>
+          </p>
+        </div>
+      </header>
+
+      <!-- search + filters. A real <form> so this works with JS disabled;
+           events-filter.js upgrades it to instant filtering. -->
+      <form method="get" action="/events" class="mb-12" data-js="event-filter-form">
+        <div class="relative mb-6">
+          <label for="event-search" class="sr-only">Search events</label>
+          <input
+            id="event-search" type="search" name="q" value="<%= query %>"
+            placeholder="Search events or categories…"
+            autocomplete="off"
+            data-js="event-search"
+            class="w-full bg-transparent border border-[var(--hairline-strong)] rounded-md px-4 py-3.5 pl-11 font-mono text-sm text-paper placeholder:text-[var(--paper-faint)] focus:border-cyan focus:outline-none transition-colors">
+          <span aria-hidden="true" class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-[var(--paper-faint)]">⌕</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+          <button type="submit" name="category" value="All" data-js="cat-chip" data-cat="All"
+            class="cat-chip <%= activeCategory === 'All' ? 'is-active' : '' %>"
+            aria-pressed="<%= activeCategory === 'All' %>">All</button>
+          <% events.categories.forEach(function(cat){ %>
+          <button type="submit" name="category" value="<%= cat %>" data-js="cat-chip" data-cat="<%= cat %>"
+            class="cat-chip <%= activeCategory === cat ? 'is-active' : '' %>"
+            aria-pressed="<%= activeCategory === cat %>"><%= cat %></button>
+          <% }); %>
+        </div>
+        <noscript><p class="font-mono text-[0.7rem] text-[var(--paper-faint)] mt-3">Press Enter to search.</p></noscript>
+      </form>
+
+      <!-- result count, announced for screen readers when filtering live -->
+      <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-6" aria-live="polite" data-js="result-count">
+        <span data-js="count-num"><%= results.length %></span> shown
+      </p>
+
+      <!-- ============ THE INDEX ============
+           Deliberately not a card grid: a numbered technical index, with the
+           visual preview surfacing on hover (desktop) or inline (mobile).
+           Name, category and status are always in the DOM — hover only ever
+           adds the picture, never information. -->
+      <ol class="event-index" data-js="event-list">
+        <% results.forEach(function(evt, i){ const st = regState(evt); %>
+        <li class="event-row" data-js="event-item"
+            data-name="<%= evt.name.toLowerCase() %>" data-cat="<%= evt.category %>">
+          <a href="/events/<%= evt.slug %>" class="event-row__link" data-img="<%= evt.image %>">
+            <span class="event-row__idx"><%= String(i + 1).padStart(2, '0') %></span>
+
+            <span class="event-row__thumb md:hidden">
+              <img src="<%= evt.image %>" alt="" loading="lazy" aria-hidden="true">
+            </span>
+
+            <span class="event-row__name"><%= evt.name %></span>
+
+            <span class="event-row__cat"><%= evt.category %></span>
+
+            <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
+
+            <span class="event-row__go" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <% }); %>
+      </ol>
+
+      <!-- empty state -->
+      <% if (results.length === 0) { %>
+      <div class="border border-dashed border-[var(--hairline-strong)] py-20 px-6 text-center" data-js="empty-state">
+        <p class="font-mono text-xs tracking-[0.2em] uppercase text-amber mb-4">No match</p>
+        <h2 class="font-display font-semibold text-2xl mb-3">Nothing in the index for that</h2>
+        <p class="text-[var(--paper-dim)] text-sm max-w-sm mx-auto mb-8">
+          <% if (query) { %>No event matches “<%= query %>”<%= activeCategory !== 'All' ? ' in ' + activeCategory : '' %>.<% } else { %>No events in <%= activeCategory %> yet.<% } %>
+        </p>
+        <a href="/events" class="btn btn-secondary">Reset filters</a>
+      </div>
+      <% } %>
+
+      <!-- client-side empty state (hidden until live filtering empties the list) -->
+      <div class="border border-dashed border-[var(--hairline-strong)] py-20 px-6 text-center hidden" data-js="empty-live">
+        <p class="font-mono text-xs tracking-[0.2em] uppercase text-amber mb-4">No match</p>
+        <h2 class="font-display font-semibold text-2xl mb-3">Nothing in the index for that</h2>
+        <p class="text-[var(--paper-dim)] text-sm max-w-sm mx-auto mb-8">Try a different search or category.</p>
+        <button type="button" class="btn btn-secondary" data-js="reset-live">Reset filters</button>
+      </div>
+
+      <!-- Honest note: registration genuinely does not exist yet. -->
+      <aside class="mt-16 border-l-2 border-amber/50 pl-5 py-2">
+        <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-amber mb-2">Status</p>
+        <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
+          Event schedules, venues, rules and prizes publish here as they're confirmed.
+          Registration opens once the ENGINEER '26 portal goes live — no event is accepting entries yet.
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Desktop hover preview. Decorative only (aria-hidden): it never carries
+       information that isn't already in the row. -->
+  <div class="event-preview" data-js="event-preview" aria-hidden="true">
+    <img alt="" data-js="event-preview-img">
+  </div>
+
+  <%- include('partials/_footer') %>
+
+  <script type="module" src="/js/page.js"></script>
+  <script type="module" src="/js/events-filter.js"></script>
+</body>
+</html>

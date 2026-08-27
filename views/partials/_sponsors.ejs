@@ -1,0 +1,24 @@
+<!-- ==========================================================================
+     SPONSORS — no sponsor data exists yet. Tier structure only; slots stay
+     visibly empty rather than filled with placeholder logos/names. Wire a
+     real `sponsors` array (by tier) server-side once confirmed.
+     ========================================================================== -->
+<section id="sponsors" class="relative section-y px-6">
+  <div class="max-w-5xl mx-auto text-center">
+    <p class="eyebrow text-[var(--paper-faint)] justify-center mb-6" data-reveal>Sponsors</p>
+    <h2 class="font-display font-bold text-3xl sm:text-5xl mb-12" data-reveal>Powering the system</h2>
+
+    <% ['Title', 'Gold', 'Silver'].forEach(function(tier, ti){ %>
+    <div class="mb-10" data-reveal>
+      <p class="font-mono text-[0.65rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mb-5"><%= tier %> partner</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <% for (let i = 0; i < (ti === 0 ? 2 : 4); i++) { %>
+        <div class="aspect-[3/2] border border-dashed border-[var(--hairline-strong)] flex items-center justify-center">
+          <span class="font-mono text-[0.6rem] text-[var(--paper-faint)] uppercase tracking-[0.1em]">Open slot</span>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</section>

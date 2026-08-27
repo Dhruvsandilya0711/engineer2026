@@ -1,154 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
-        rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENGINEER '26 — Cognitrixx: Rewire Reality</title>
+  <meta name="description" content="ENGINEER '26 — NITK Surathkal's technical festival. Cognitrixx: Rewire Reality. 23—25 October 2026.">
 
-    <link href="./src/output.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link href="/src/output.css" rel="stylesheet">
 </head>
+<body class="bg-void text-paper font-body antialiased">
+  <!-- Sitewide atmosphere. One fixed, low-density neural field runs behind the
+       whole page (the hero and transformation sections layer their own,
+       purpose-built fields on top), plus circuit grid, CRT scanlines and a
+       vignette that keeps all of it off the body copy. -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <canvas data-canvas="neural" data-tone="ambient" class="absolute inset-0"></canvas>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
 
-<body class="bg-black">
+  <%- include('partials/_entry') %>
+  <%- include('partials/_nav') %>
 
-    <section id="welcomePageWrapper"
-        class="transition-all duration-900 ease-in flex items-center justify-center w-screen h-screen relative overflow-hidden  ">
-        <!-- background looping -->
-        <video id="wlcPageLooping" class=" h-full w-full absolute inset-0 z-0 object-cover" autoplay loop muted
-            playsinline>
-            <source src="./looping_vid/wlc_bg_looping.mp4" type="video/mp4">
-        </video>
-        <!-- glitchy effect -->
-        <video id="overlayWlcPageLooping" class=" h-full w-full absolute inset-0 z-0 object-cover opacity-0" autoplay
-            loop muted playsinline>
-            <source src="./looping_vid/glitching_effect_overlay_looping.mp4" type="video/mp4">
-        </video>
+  <main class="relative z-10">
+    <%- include('partials/_hero', { festDates }) %>
+    <%- include('partials/_cognitrixx-intro') %>
+    <%- include('partials/_transformation') %>
+    <%- include('partials/_events-preview', { events }) %>
+    <%- include('partials/_nitk') %>
+    <%- include('partials/_speakers') %>
+    <%- include('partials/_schedule-preview', { scheduleDays }) %>
+    <%- include('partials/_legacy') %>
+    <%- include('partials/_sponsors') %>
+    <%- include('partials/_final-cta') %>
+  </main>
 
-        <!-- tablet wrapper -->
-        <div class="w-3/5  aspect-video relative flex items-center justify-center">
+  <%- include('partials/_footer') %>
 
-            <video autoplay muted loop playsinline id="tablet-border-looping"
-                class="transition-all duration-700 ease-in absolute z-2 mix-blend-screen w-full h-full inset-0 object-contain  ">
-                <source src="./looping_vid/tablet_border.mp4" type="video/mp4">
-            </video>
-
-            <!-- tablet screen -->
-            <div class="transition-all duration-700 ease-in bg-black z-1 w-[71%] h-[81%] rounded-[13%] absolute "
-                id="tabletBlackScreen">
-            </div>
-            <!-- tablet logo text content -->
-            <div id="tablet-content-logo-text"
-                class="transition-all duration-700 ease-in z-4 w-[71%] h-[81%] rounded-[13%] absolute text-white flex flex-row   items-center justify-center gap-10 overflow-hidden ">
-                <figure
-                    class=" transition-all duration-700 ease-[cubic-bezier(.06,1.43,1,.97)]  -translate-x-full flex justify-end w-full "
-                    id="logo-image-wlc-page">
-                    <img src="images/techfest_logo.png" alt="tech_fest_logo" class="w-50">
-                </figure>
-                <div id="logo-text-wrapper-wlc-page"
-                    class=" transition-all duration-700 ease-[cubic-bezier(.06,1.43,1,.97)] w-full translate-x-full  flex flex-col items-start  h-fit justify-between  gap-2 ">
-                    <h1 class="text-6xl font-light w-full">NITK</h1>
-                    <p class="text-3xl font-light">Engineer 26 </p>
-                </div>
-
-            </div>
-
-
-        </div>
-    </section>
-
-    <section id="landingPageWrapper"
-        class="w-screen h-screen transition-all duration-500 ease-in relative z-1 overflow-y-auto  hidden opacity-0">
-
-
-        <video id="landingPageLoopingVideo" class=" h-screen w-screen fixed inset-0 z-0 object-cover" autoplay loop
-            muted>
-            <source src="./looping_vid/home_bg_loop.mp4" type="video/mp4">
-        </video>
-
-
-
-        <nav class="glow-card fixed top-1/2 -translate-y-1/2 z-10 w-fit h-fit  ml-10 overflow-hidden transition-all ease-in duration-150"
-            id="navbar">
-            <p class="border-b px-4 py-3  w-full border-teal-50 text-center flex flex-row items-center justify-start gap-5 hover:cursor-pointer hover:bg-blue-500/30 "
-                id="homeNavBar">
-                <img src="images/home_icon.png" alt="" class="w-10 drop-shadow-[2px_4px_2px_black] ">
-                <span
-                    class="text-xl hidden opacity-0 -translate-x-full transition-all ease-in duration-150 ">Home</span>
-            </p>
-            <p class="border-b border-t-3 border-t-blue-950 px-4 py-3  w-full border-white text-center flex flex-row items-center justify-start hover:cursor-pointer hover:bg-blue-500/30 gap-5 "
-                id="eventsNavBar">
-                <img src="images/event_icon.png" alt="" class="w-10 drop-shadow-[2px_4px_2px_black]">
-                <span
-                    class="text-xl hidden opacity-0 -translate-x-full transition-all ease-in duration-150">Events</span>
-            </p>
-            <p class="border-b  border-t-3 border-t-blue-950 px-4 py-3  w-full border-white text-center flex flex-row items-center justify-start hover:cursor-pointer hover:bg-blue-500/30 gap-5 "
-                id="scheduleNavBar">
-                <img src="images/schedule_icon.png" alt="" class="w-10 drop-shadow-[2px_4px_2px_black]">
-                <span
-                    class="text-xl hidden opacity-0 -translate-x-full transition-all ease-in duration-150">Schedule</span>
-            </p>
-            <p class="border-b border-t-3 border-t-blue-950 px-4 py-3  w-full border-white text-center flex flex-row items-center justify-start hover:cursor-pointer hover:bg-blue-500/30 gap-5 "
-                id="teamNavBar">
-                <img src="images/teams_icon.png" alt="" class="w-10 drop-shadow-[2px_4px_2px_black]">
-                <span class="text-xl hidden opacity-0 -translate-x-full transition-all ease-in duration-150">Team</span>
-            </p>
-            <p class=" px-4 py-3  border-t-3 border-t-blue-950 w-full   text-center flex flex-row items-center justify-start hover:cursor-pointer hover:bg-blue-500/30 gap-5 "
-                id="sponsorNavBar">
-                <img src="images/sponsor_icon.png" alt="" class="w-10 drop-shadow-[2px_4px_2px_black]">
-                <span
-                    class="text-xl  hidden opacity-0 -translate-x-full  transition-all ease-in duration-150">Sponsors</span>
-            </p>
-
-        </nav>
-
-        <!-- main homescreen content -->
-        <article class="z-5  relative text-white   w-full h-full pt-10 ">
-
-            <div class=" w-full h-full flex flex-col items-center justify-start gap-15">
-                <figure class="w-50">
-                    <img src="images/techfest_logo.png" alt="logo">
-                </figure>
-                <p class="text-8xl text-white text-shadow-[0px_5px_black] bg-transparent backdrop-blur-sm p-5 rounded-2xl border border-b-gray-400 border-r-gray-400 border-t-gray-500 border-l-gray-500 text-shadow-2xl "
-                    id="engineer-text-landing-page">
-                    Engineer '26
-                </p>
-                <p
-                    class="text-3xl text-white bg-gray-400/40 backdrop-blur-sm p-5 rounded-2xl text-shadow-[1px_9px_8px_var(--tw-text-shadow-color,black)] ">
-                    The Annual Technical Fest of NIT Karnataka <br> - Where Innovation Meets Inspiration
-                </p>
-            </div>
-
-           
-            <div class="w-full h-full text-white flex justify-center items-center">
-              <%- include('carousal_events.ejs') %>
-            </div>
-
-            <div class="w-full h-full  text-white flex justify-center items-center">
-                <div class="bg-black bg-[url(./images/dna.png)] h-4/5 w-full ">
-  
-                    <%- include('about_engineer.ejs') %>
-                </div>
-
-            </div>
-            <div class="w-full h-full  text-white flex justify-center items-center">
-                
-  
-                   hell the next page
-               
-
-            </div>
-
-        </article>
-    </section>
-
-    <script src="script.js"></script>
- 
-
+  <script type="module" src="/js/main.js"></script>
 </body>
-
 </html>

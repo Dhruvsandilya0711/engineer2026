@@ -1,0 +1,37 @@
+<!-- ==========================================================================
+     SCHEDULE PREVIEW — reads the same data/schedule.json the /schedule page
+     does, so the two can never drift. Days are real (23—25 Oct 2026); slots
+     are empty until the organising team confirms times and venues.
+     ========================================================================== -->
+<section id="schedule" class="relative section-y px-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12" data-reveal>
+      <div>
+        <p class="eyebrow text-cyan mb-4">Three days</p>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl">Schedule</h2>
+      </div>
+      <a href="/schedule" class="font-mono text-xs tracking-[0.1em] uppercase text-[var(--paper-dim)] hover:text-paper transition-colors whitespace-nowrap">
+        Full schedule →
+      </a>
+    </div>
+
+    <div class="border border-[var(--hairline)]" data-reveal>
+      <div class="grid grid-cols-[90px_1fr_auto] font-mono text-[0.65rem] tracking-[0.1em] uppercase text-[var(--paper-faint)] border-b border-[var(--hairline)] px-5 py-3">
+        <span>Day</span><span>Date</span><span>Sessions</span>
+      </div>
+      <% scheduleDays.forEach(function(day){ %>
+      <a href="/schedule?day=<%= day.id %>"
+         class="grid grid-cols-[90px_1fr_auto] items-center px-5 py-4 border-b border-[var(--hairline)] last:border-b-0 font-mono text-sm hover:bg-[rgba(237,235,242,0.03)] transition-colors">
+        <span class="text-paper"><%= day.label %></span>
+        <span class="text-[var(--paper-dim)]">
+          <%= new Date(day.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) %>
+          <span class="text-[var(--paper-faint)]">· <%= day.weekday %></span>
+        </span>
+        <span class="<%= day.slots.length ? 'text-cyan' : 'text-[var(--paper-faint)]' %>">
+          <%= day.slots.length ? day.slots.length + ' scheduled' : 'TBA' %>
+        </span>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+</section>

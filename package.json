@@ -7,12 +7,17 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js",
+    "build:css": "tailwindcss -i ./public/src/input.css -o ./public/src/output.css --minify",
+    "watch:css": "tailwindcss -i ./public/src/input.css -o ./public/src/output.css --watch"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.3.3",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
-    "tailwindcss": "^4.3.3"
+    "gsap": "^3.15.0",
+    "tailwindcss": "^4.3.3",
+    "three": "^0.185.1"
   }
 }

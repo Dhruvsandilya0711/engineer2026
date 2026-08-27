@@ -1,0 +1,20 @@
+{
+  "_note": "Team roster for ENGINEER '26. `members` is intentionally EMPTY. No team data exists anywhere in this repository, and team pages name real people in real roles — inventing placeholder names, photos or titles would attribute positions to people who may not hold them. Add real members here and the /team page groups and renders them automatically; no code change needed.",
+  "_memberShape": {
+    "name": "string — required, the person's real name",
+    "role": "string — required, e.g. 'Convenor', 'Technical Head'",
+    "group": "string — required; groups are DERIVED from this field, so only groups that actually have members will ever appear",
+    "image": "string path or null — falls back to a typographic monogram tile when null",
+    "email": "string or null",
+    "linkedin": "string URL or null"
+  },
+  "_exampleMember": {
+    "name": "",
+    "role": "",
+    "group": "",
+    "image": null,
+    "email": null,
+    "linkedin": null
+  },
+  "members": []
+}
