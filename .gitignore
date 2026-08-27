@@ -1,2 +1,15 @@
 node_modules
 screenshots/
+
+# Registration submissions contain personal data (names, roll numbers,
+# emails) — the local file store must never be committed.
+data/registrations.json
+
+# Secrets: DBURL and any Razorpay keys live here, never in the repo.
+.env
+.env.*
+!.env.example
+
+# Build/working artifacts
+*.zip
+screenshots$num-*.png

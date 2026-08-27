@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="Register for ENGINEER '26 at NITK Surathkal, <%= festDates.display %>.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <!-- Registration is a task, not a spectacle: one quiet field, no pinned
+       scroll, no scrubbed animation. Design-system §14. -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="register" data-density="0.5" data-tone="engi" data-signals="3" data-spread="11" class="absolute inset-0 opacity-40"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'register' }) %>
+
+  <main class="relative z-10 pt-32 pb-28 px-6">
+    <div class="max-w-xl mx-auto">
+
+      <header class="mb-10">
+        <p class="eyebrow text-cyan mb-5">Join the system</p>
+        <h1 class="font-display font-extrabold text-[clamp(2rem,5vw,3.2rem)] leading-[1] mb-4">
+          Register for<br><span class="text-gradient-impossible">ENGINEER&nbsp;'26</span>
+        </h1>
+        <p class="text-[var(--paper-dim)] text-sm">
+          <%= festDates.display %> · NITK Surathkal. One entry per event.
+        </p>
+      </header>
+
+      <% if (status === 'success') { %>
+        <div class="border border-[rgba(63,191,143,.45)] bg-charcoal p-7 mb-8" role="status">
+          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-success mb-3">Registered</p>
+          <h2 class="font-display font-semibold text-xl mb-3">You're in.</h2>
+          <p class="text-sm text-[var(--paper-dim)] mb-6">
+            Your registration is recorded. Event details and timings are published on the event pages
+            as the organising team confirms them.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/events" class="btn btn-secondary">Browse events</a>
+            <a href="/register" class="btn btn-secondary">Register for another</a>
+          </div>
+        </div>
+      <% } %>
+
+      <% if (status === 'error') { %>
+        <div class="border border-[rgba(232,104,138,.45)] bg-charcoal p-5 mb-8" role="alert">
+          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-error mb-2">Could not save</p>
+          <p class="text-sm text-[var(--paper-dim)]">Something failed on our side. Nothing was recorded — please try again.</p>
+        </div>
+      <% } %>
+
+      <% if (status !== 'success') { %>
+      <form method="post" action="/register" novalidate class="flex flex-col gap-5" data-js="register-form">
+
+        <div>
+          <label for="userName" class="form-label">Full name</label>
+          <input id="userName" name="userName" type="text" required autocomplete="name"
+            value="<%= (values.userName || '') %>"
+            aria-invalid="<%= errors.userName ? 'true' : 'false' %>"
+            <%= errors.userName ? 'aria-describedby="err-userName"' : '' %>
+            class="form-input <%= errors.userName ? 'has-error' : '' %>">
+          <% if (errors.userName) { %><p id="err-userName" class="form-error"><%= errors.userName %></p><% } %>
+        </div>
+
+        <div>
+          <label for="userRollNumber" class="form-label">Roll number</label>
+          <input id="userRollNumber" name="userRollNumber" type="text" required
+            value="<%= (values.userRollNumber || '') %>"
+            aria-invalid="<%= errors.userRollNumber ? 'true' : 'false' %>"
+            <%= errors.userRollNumber ? 'aria-describedby="err-userRollNumber"' : '' %>
+            class="form-input <%= errors.userRollNumber ? 'has-error' : '' %>">
+          <% if (errors.userRollNumber) { %><p id="err-userRollNumber" class="form-error"><%= errors.userRollNumber %></p><% } %>
+        </div>
+
+        <div>
+          <label for="userMail" class="form-label">Email</label>
+          <input id="userMail" name="userMail" type="email" required autocomplete="email"
+            value="<%= (values.userMail || '') %>"
+            aria-invalid="<%= errors.userMail ? 'true' : 'false' %>"
+            <%= errors.userMail ? 'aria-describedby="err-userMail"' : '' %>
+            class="form-input <%= errors.userMail ? 'has-error' : '' %>">
+          <% if (errors.userMail) { %><p id="err-userMail" class="form-error"><%= errors.userMail %></p><% } %>
+        </div>
+
+        <div>
+          <label for="userEvent" class="form-label">Event</label>
+          <select id="userEvent" name="userEvent" required
+            aria-invalid="<%= errors.userEvent ? 'true' : 'false' %>"
+            <%= errors.userEvent ? 'aria-describedby="err-userEvent"' : '' %>
+            class="form-input <%= errors.userEvent ? 'has-error' : '' %>">
+            <option value="">Select an event…</option>
+            <% events.all.forEach(function(evt){ %>
+            <option value="<%= evt.name %>" <%= values.userEvent === evt.name ? 'selected' : '' %>><%= evt.name %> — <%= evt.category %></option>
+            <% }); %>
+          </select>
+          <% if (errors.userEvent) { %><p id="err-userEvent" class="form-error"><%= errors.userEvent %></p><% } %>
+        </div>
+
+        <button type="submit" class="btn btn-primary justify-center mt-2">Complete registration</button>
+
+        <p class="font-mono text-[0.66rem] text-[var(--paper-faint)] leading-relaxed">
+          We store your name, roll number, email and chosen event so the organising team can contact you.
+          No payment is taken and no pass is issued.
+        </p>
+      </form>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('partials/_footer') %>
+  <script type="module" src="/js/page.js"></script>
+</body>
+</html>

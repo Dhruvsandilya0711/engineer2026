@@ -1,9 +1,11 @@
 import express from 'express';
+import 'dotenv/config';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import path from 'path'
 import {readFileSync} from 'fs';
 import {networkInterfaces} from 'os';
+import {initRegistrationStore, validate, saveRegistration, storeMode} from './lib/registration.js';
 
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = dirname(__fileName)
@@ -45,6 +47,10 @@ const events = {
   categories,
 };
 
+// Gallery is DERIVED from the real event photographs already in the repo —
+// no separate gallery dataset is invented.
+const gallery = allEvents.filter(e => e.image).map(e => ({ image: e.image, caption: e.name, slug: e.slug }));
+
 const schedule = JSON.parse(readFileSync(path.join(__dirname, 'data/schedule.json'), 'utf-8'));
 const teamData = JSON.parse(readFileSync(path.join(__dirname, 'data/team.json'), 'utf-8'));
 
@@ -82,9 +88,14 @@ app.use(express.static('public'));
 // in this project, so these are mounted as static vendor assets instead.
 app.use('/vendor/three', express.static(path.join(__dirname, 'node_modules/three/build')));
 app.use('/vendor/gsap', express.static(path.join(__dirname, 'node_modules/gsap')));
+app.use('/vendor/lenis', express.static(path.join(__dirname, 'node_modules/lenis/dist')));
+
+// Form posts for registration.
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.render('index', { festDates: FEST_DATES, events, scheduleDays: resolvedDays() });
+  res.render('index', { festDates: FEST_DATES, events, scheduleDays: resolvedDays(), gallery, regState });
 });
 
 // Event discovery. Filtering runs server-side off query params so search and
@@ -152,6 +163,50 @@ app.get('/events/:slug', (req, res, next) => {
   });
 });
 
+
+// ---------------------------------------------------------------- register
+// Registration ONLY. No passes, tickets, QR or payment — see lib/registration.js.
+app.get('/register', (req, res) => {
+  res.render('register', {
+    festDates: FEST_DATES,
+    events,
+    values: { userName: '', userRollNumber: '', userEvent: req.query.event || '', userMail: '' },
+    errors: {},
+    status: null,
+  });
+});
+
+app.post('/register', async (req, res) => {
+  const { valid, errors, value } = validate(req.body || {});
+
+  if (!valid) {
+    return res.status(400).render('register', {
+      festDates: FEST_DATES, events, values: req.body || {}, errors, status: 'invalid',
+    });
+  }
+
+  const result = await saveRegistration(value);
+
+  if (result.duplicate) {
+    return res.status(409).render('register', {
+      festDates: FEST_DATES, events, values: req.body,
+      errors: { userMail: 'This email is already registered for that event.' },
+      status: 'duplicate',
+    });
+  }
+  if (!result.ok) {
+    return res.status(500).render('register', {
+      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error',
+    });
+  }
+
+  res.render('register', {
+    festDates: FEST_DATES, events,
+    values: { userName: '', userRollNumber: '', userEvent: '', userMail: '' },
+    errors: {}, status: 'success',
+  });
+});
+
 app.use((req, res) => {
   res.status(404).render('404', { url: req.originalUrl });
 });
@@ -164,6 +219,10 @@ function lanAddresses() {
     .filter(a => a.family === 'IPv4' && !a.internal)
     .map(a => ({ name: a.name, address: a.address }));
 }
+
+const storeInfo = await initRegistrationStore();
+console.log(`
+  Registration store: ${storeMode()} — ${storeInfo.reason}`);
 
 app.listen(port, host, () => {
   console.log(`\n  ENGINEER '26 — Cognitrixx\n`);

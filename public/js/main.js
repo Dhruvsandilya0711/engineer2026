@@ -1,109 +1,83 @@
 // ==========================================================================
-// ENGINEER '26 — homepage orchestration.
-// Shared behaviour (nav, reveals, magnetic CTAs, countdown, ambient field)
-// lives in site.js. This file adds only what is unique to the homepage: the
-// entry sequence, the focus-aware hero field, the Three.js Penrose scene and
-// the scroll-scrubbed transformation section.
+// ENGINEER '26 homepage orchestration.
+//
+// Shared chrome (nav, magnetic CTAs, countdown) lives in site.js.
+// Scroll ownership lives in scroll.js. 3D lives in cognitrixx-3d.js.
+// This file only sequences homepage-specific moments.
 // ==========================================================================
 
-import { initNeuralCanvas } from '/js/neural-network.js';
 import { initHeroScene } from '/js/hero-scene.js';
+import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import {
-  REDUCED_MOTION, initNav, initMagneticButtons, initCountdown, initReveal, initAmbientField,
-} from '/js/site.js';
+  initScroll, registerReveals, registerSeams, registerParallax,
+  scrollTo, stopScroll, startScroll, REDUCED_MOTION, IS_TOUCH,
+} from '/js/scroll.js';
+import { initNav, initMagneticButtons, initCountdown } from '/js/site.js';
 
 // -- Entry sequence --------------------------------------------------------
-// "A system initializing" — text-only stages, ~1.2s, then gone from the DOM.
 function initEntrySequence() {
   const el = document.getElementById('entry-sequence');
-  if (!el) return;
+  if (!el) return Promise.resolve();
+  if (REDUCED_MOTION) { el.remove(); return Promise.resolve(); }
 
-  if (REDUCED_MOTION) {
-    el.remove();
-    return;
-  }
-
+  stopScroll();
   document.documentElement.style.overflow = 'hidden';
+
   const stages = el.querySelectorAll('.stage');
-  const timings = [0, 260, 560, 850]; // ms — matches stages 0..3 in _entry.ejs
+  [0, 260, 560, 850].forEach((t, i) => setTimeout(() => stages[i]?.classList.add('is-active'), t));
+  setTimeout(() => el.classList.add('glitch-pulse'), 560);
 
-  stages.forEach((stage, i) => {
-    setTimeout(() => stage.classList.add('is-active'), timings[i]);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      el.classList.add('is-hidden');
+      document.documentElement.style.overflow = '';
+      startScroll();
+      setTimeout(() => { el.remove(); resolve(); }, 550);
+    }, 1200);
   });
-  setTimeout(() => el.classList.add('glitch-pulse'), timings[2]);
-
-  setTimeout(() => {
-    el.classList.add('is-hidden');
-    document.documentElement.style.overflow = '';
-    setTimeout(() => el.remove(), 550);
-  }, 1200);
 }
 
-// -- Hero field ------------------------------------------------------------
-// Aimed at the Penrose logo. Its signal pulses trigger the logo's rewire —
-// glitch on arrival, never at random.
-function initHeroField() {
-  const canvas = document.querySelector('canvas[data-canvas="neural"][data-tone="amber"]');
-  const logoFrame = document.querySelector('[data-js="hero-logo"]');
-  if (!canvas) return null;
+// -- Hero: the Penrose hands off to the nav mark instead of just scrolling away
+function registerHeroHandoff(ctx) {
+  if (!ctx || IS_TOUCH) return;
+  const { gsap } = ctx;
+  const frame = document.querySelector('[data-js="hero-logo"]');
+  const hero = document.querySelector('#top');
+  if (!frame || !hero) return;
 
-  let lastRewire = 0;
-  const rewireLogo = () => {
-    if (!logoFrame) return;
-    const now = performance.now();
-    if (now - lastRewire < 1900) return;
-    lastRewire = now;
-    logoFrame.classList.add('is-rewiring');
-    setTimeout(() => logoFrame.classList.remove('is-rewiring'), 260);
-  };
-
-  const controller = initNeuralCanvas(canvas, {
-    tone: 'amber',
-    density: 0.8,
-    alphaScale: 0.85,
-    focusEl: logoFrame,
-    onSignalArrive: rewireLogo,
+  gsap.to(frame, {
+    scale: 0.28,
+    yPercent: -38,
+    opacity: 0.15,
+    ease: 'none',
+    scrollTrigger: { trigger: hero, start: 'center center', end: 'bottom top', scrub: 0.6 },
   });
-
-  // The logo's box only settles once fonts and the 3D scene have laid out.
-  setTimeout(() => controller?.remeasure?.(), 1600);
-  return controller;
 }
 
-// -- Cognitrixx transformation (pinned scroll storytelling) --------------
-async function initTransformation() {
+// -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
+function registerNarrative(ctx, fields) {
   const section = document.getElementById('transformation');
   const stages = section?.querySelectorAll('.transform-stage');
   const dots = section?.querySelectorAll('.dot');
   if (!section || !stages?.length) return;
 
-  const canvas = section.querySelector('canvas[data-tone="transform"]');
-  const field = canvas ? initNeuralCanvas(canvas, { tone: 'transform' }) : null;
+  const field = fields.transformation;
 
-  const setStage = (index) => {
-    stages.forEach(s => s.classList.toggle('is-active', Number(s.dataset.stage) === index));
-    dots?.forEach(d => d.classList.toggle('is-active', Number(d.dataset.dot) === index));
+  const setStage = (i) => {
+    stages.forEach(s => s.classList.toggle('is-active', Number(s.dataset.stage) === i));
+    dots?.forEach(d => d.classList.toggle('is-active', Number(d.dataset.dot) === i));
   };
 
-  if (REDUCED_MOTION) {
+  if (!ctx) {
+    // Static fallback must still be readable, not an empty pinned void.
     section.style.height = 'auto';
     section.querySelector('.sticky')?.classList.remove('sticky', 'h-screen');
-    setStage(5);
+    setStage(0);
     field?.setProgress(1);
     return;
   }
 
-  let gsap, ScrollTrigger;
-  try {
-    ({ gsap } = await import('/vendor/gsap/index.js'));
-    ({ ScrollTrigger } = await import('/vendor/gsap/ScrollTrigger.js'));
-  } catch (e) {
-    setStage(0); // vendor bundle unavailable — static, still legible
-    return;
-  }
-  gsap.registerPlugin(ScrollTrigger);
-
-  ScrollTrigger.create({
+  ctx.ScrollTrigger.create({
     trigger: section,
     start: 'top top',
     end: 'bottom bottom',
@@ -115,18 +89,94 @@ async function initTransformation() {
   });
 }
 
-// -- Boot ----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  initEntrySequence();
+// -- Events rail: vertical scroll drives horizontal travel -----------------
+function registerEventsRail(ctx) {
+  const section = document.querySelector('[data-js="events-rail"]');
+  const track = section?.querySelector('[data-js="rail-track"]');
+  const viewport = section?.querySelector('[data-js="rail-viewport"]');
+  const items = section?.querySelectorAll('[data-js="rail-item"]');
+  const label = section?.querySelector('[data-js="rail-index"]');
+  const prev = section?.querySelector('[data-js="rail-prev"]');
+  const next = section?.querySelector('[data-js="rail-next"]');
+  if (!section || !track || !items?.length) return;
+
+  const setLabel = (i) => { if (label) label.textContent = String(Math.min(items.length, i + 1)).padStart(2, '0'); };
+
+  // Touch + reduced motion + no-GSAP: a plain horizontal scroller. The arrows
+  // still work, so the whole set is reachable without a pointer or a wheel.
+  const nativeScroller = () => {
+    section.classList.add('is-native');
+    let index = 0;
+    const go = (dir) => {
+      index = Math.max(0, Math.min(items.length - 1, index + dir));
+      items[index].scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+      setLabel(index);
+    };
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+    viewport?.addEventListener('scroll', () => {
+      const i = Math.round(viewport.scrollLeft / (items[0].offsetWidth + 24));
+      setLabel(i);
+    }, { passive: true });
+  };
+
+  if (!ctx || IS_TOUCH || REDUCED_MOTION) { nativeScroller(); return; }
+
+  const { gsap } = ctx;
+  section.classList.add('is-pinned');
+
+  const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+
+  const tween = gsap.to(track, {
+    x: () => -distance(),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: () => '+=' + distance(),
+      pin: true,
+      scrub: 0.8,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+      onUpdate(self) { setLabel(Math.round(self.progress * (items.length - 1))); },
+    },
+  });
+
+  // Arrow buttons map to positions along the pinned scroll range, so keyboard
+  // users get the same coverage as someone scrolling.
+  const st = tween.scrollTrigger;
+  const jump = (dir) => {
+    const span = st.end - st.start;
+    const step = span / (items.length - 1 || 1);
+    scrollTo(Math.round(st.scroll() + dir * step), { immediate: false });
+  };
+  prev?.addEventListener('click', () => jump(-1));
+  next?.addEventListener('click', () => jump(1));
+}
+
+// -- Boot ------------------------------------------------------------------
+(async function boot() {
   initNav();
   initMagneticButtons();
   initCountdown();
-  initReveal();
 
-  initAmbientField();
-  initHeroField();
-  initTransformation();
+  const entryDone = initEntrySequence();
+  const ctx = await initScroll();
 
-  const heroLogoMount = document.querySelector('[data-js="hero-logo"]');
-  if (heroLogoMount) initHeroScene(heroLogoMount);
-});
+  // Mount every declared 3D moment. Skipped wholesale without WebGL — the page
+  // is still complete, just without the fields.
+  const fields = hasWebGL() ? mountFields() : {};
+
+  registerReveals(ctx);
+  registerParallax(ctx);
+  registerSeams(ctx);
+  registerHeroHandoff(ctx);
+  registerNarrative(ctx, fields);
+  registerEventsRail(ctx);
+
+  const heroMount = document.querySelector('[data-js="hero-logo"]');
+  if (heroMount) initHeroScene(heroMount);
+
+  await entryDone;
+  ctx?.ScrollTrigger.refresh();
+})();

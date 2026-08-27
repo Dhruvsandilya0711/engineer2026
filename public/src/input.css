@@ -347,12 +347,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* neural-network canvas host */
-canvas[data-canvas] {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 
 /* ------------------------------------------------------------------
    Hero composition.
@@ -710,5 +704,175 @@ canvas[data-canvas] {
 }
 .team-card__links a { color: var(--paper-dim); text-decoration: none; }
 .team-card__links a:hover { color: var(--color-cyan); }
+
+
+/* ==================================================================
+   COGNITRIXX 3D field hosts
+   ================================================================== */
+[data-field] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+[data-field] canvas { display: block; width: 100%; height: 100%; }
+
+/* ==================================================================
+   EVENTS RAIL — vertical scroll drives horizontal travel
+   ================================================================== */
+.rail-pin {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+/* The pin container is a flex row, so its child would otherwise size to the
+   track's full width and leave nothing for the horizontal scroll to travel.
+   Constrain it explicitly. */
+.rail-pin > * { flex: 1 1 100%; width: 100%; min-width: 0; }
+.rail-viewport { width: 100%; max-width: 100%; min-width: 0; overflow: hidden; }
+.rail-track {
+  display: flex;
+  gap: 24px;
+  padding: 0 24px;
+  margin: 0;
+  list-style: none;
+  will-change: transform;
+}
+/* Touch / reduced-motion / no-GSAP: a plain horizontal scroller with snap. */
+.is-native .rail-viewport {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.is-native .rail-viewport::-webkit-scrollbar { display: none; }
+.is-native .rail-item { scroll-snap-align: center; }
+
+.rail-item { flex: 0 0 auto; width: min(78vw, 420px); }
+.rail-item--end { width: min(72vw, 330px); }
+
+.rail-card {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--hairline);
+  background: var(--color-charcoal);
+  overflow: hidden;
+  transition: border-color var(--dur-base) var(--ease-standard),
+              transform var(--dur-base) var(--ease-emphasized);
+}
+.rail-card:hover,
+.rail-card:focus-visible { border-color: var(--hairline-strong); transform: translateY(-4px); }
+
+.rail-card__num {
+  position: absolute; top: 12px; left: 14px; z-index: 2;
+  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em;
+  color: var(--color-paper); text-shadow: 0 1px 6px rgba(0,0,0,.8);
+}
+.rail-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.rail-card__media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 700ms var(--ease-emphasized);
+}
+.rail-card:hover .rail-card__media img { transform: scale(1.05); }
+.rail-card__scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(3,3,6,.92) 0%, rgba(3,3,6,.15) 55%, transparent 100%);
+}
+.rail-card__body { padding: 18px 20px 22px; }
+.rail-card__cat {
+  font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--color-amber); margin: 0 0 8px;
+}
+.rail-card__title {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(1.3rem, 3vw, 1.9rem); line-height: 1.05; margin: 0 0 14px;
+}
+.rail-end {
+  display: flex; flex-direction: column; justify-content: center;
+  height: 100%; min-height: 300px; padding: 28px;
+  border: 1px dashed var(--hairline-strong); text-decoration: none; color: inherit;
+  transition: border-color var(--dur-base) var(--ease-standard);
+}
+.rail-end:hover { border-color: var(--color-cyan); }
+
+.rail-btn {
+  width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--hairline-strong); background: transparent; color: var(--paper-dim);
+  font-family: var(--font-mono); cursor: pointer; border-radius: 6px;
+  transition: color var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);
+}
+.rail-btn:hover { color: var(--color-cyan); border-color: var(--color-cyan); }
+
+/* ==================================================================
+   GALLERY mosaic — varied spans so it never reads as a uniform grid
+   ================================================================== */
+.gallery-mosaic {
+  list-style: none; margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 768px) { .gallery-mosaic { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
+.gallery-tile { position: relative; }
+@media (min-width: 768px) {
+  .gallery-tile.is-wide { grid-column: span 2; }
+  .gallery-tile.is-tall { grid-row: span 2; }
+}
+.gallery-tile__link {
+  position: relative; display: block; height: 100%; min-height: 150px;
+  overflow: hidden; border: 1px solid var(--hairline); text-decoration: none;
+  transition: border-color var(--dur-base) var(--ease-standard);
+}
+.gallery-tile__link:hover { border-color: var(--color-magenta); }
+.gallery-tile__link img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(0.75) contrast(1.05);
+  transition: filter var(--dur-slow) var(--ease-standard), transform 800ms var(--ease-emphasized);
+}
+.gallery-tile__link:hover img { filter: none; transform: scale(1.04); }
+.gallery-tile__cap {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 20px 12px 10px;
+  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--color-paper);
+  background: linear-gradient(to top, rgba(3,3,6,.9), transparent);
+  opacity: 0; transition: opacity var(--dur-base) var(--ease-standard);
+}
+.gallery-tile__link:hover .gallery-tile__cap,
+.gallery-tile__link:focus-visible .gallery-tile__cap { opacity: 1; }
+@media (hover: none) { .gallery-tile__cap { opacity: 1; } }
+
+/* ==================================================================
+   FORMS (registration)
+   ================================================================== */
+.form-label {
+  display: block;
+  font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--paper-dim); margin-bottom: 8px;
+}
+.form-input {
+  width: 100%;
+  background: rgba(237,235,242,.03);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 6px;
+  padding: 13px 15px;
+  color: var(--color-paper);
+  font-family: var(--font-body); font-size: 0.95rem;
+  transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
+}
+.form-input:focus {
+  outline: none; border-color: var(--color-cyan); background: rgba(237,235,242,.055);
+}
+.form-input.has-error { border-color: var(--color-error); }
+select.form-input { appearance: none; cursor: pointer; }
+select.form-input option { background: var(--color-charcoal); color: var(--color-paper); }
+.form-error {
+  margin: 7px 0 0;
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--color-error);
+}
 
 } /* end @layer components */

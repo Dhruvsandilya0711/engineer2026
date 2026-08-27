@@ -20,11 +20,12 @@
       <a href="/events" class="<%= navClass('events') %> hover:text-paper transition-colors">Events</a>
       <a href="/schedule" class="<%= navClass('schedule') %> hover:text-paper transition-colors">Schedule</a>
       <a href="/team" class="<%= navClass('team') %> hover:text-paper transition-colors">Team</a>
+      <a href="/register" class="<%= navClass('register') %> hover:text-paper transition-colors">Register</a>
       <a href="/#footer" class="text-[var(--paper-dim)] hover:text-paper transition-colors">Contact</a>
     </nav>
 
     <div class="flex items-center gap-4">
-      <a href="/events" class="btn btn-primary !py-2.5 !px-5 hidden sm:inline-flex">Enter Cognitrixx</a>
+      <a href="/register" class="btn btn-primary !py-2.5 !px-5 hidden sm:inline-flex" data-js="magnetic">Register</a>
       <button type="button" class="md:hidden w-10 h-10 flex items-center justify-center border border-[var(--hairline-strong)]"
         data-js="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
         <span class="font-mono text-sm">☰</span>
@@ -47,7 +48,8 @@
     <a href="/events" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Events</a>
     <a href="/schedule" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Schedule</a>
     <a href="/team" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Team</a>
+    <a href="/register" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Register</a>
     <a href="/#footer" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Contact</a>
-    <a href="/events" class="btn btn-primary mt-8 justify-center" data-js="drawer-link">Enter Cognitrixx</a>
+    <a href="/register" class="btn btn-primary mt-8 justify-center" data-js="drawer-link">Register</a>
   </nav>
 </div>

@@ -1,0 +1,72 @@
+<!-- ==========================================================================
+     EVENTS RAIL — vertical scroll drives horizontal movement.
+     Same data/events.json as /events and the detail pages; no second event
+     system. The /events index remains the keyboard/no-JS route, and this rail
+     is additionally keyboard-operable via its own arrow controls.
+     ========================================================================== -->
+<section id="events" class="relative" data-js="events-rail">
+  <div class="rail-pin">
+    <div class="absolute inset-0 pointer-events-none" data-field="events" data-density="0.5"
+         data-tone="amber" data-signals="5" data-spread="14" data-rotate="0.015" aria-hidden="true"></div>
+
+    <div class="relative z-10 h-full flex flex-col justify-center">
+
+      <div class="px-6 mb-8">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div>
+            <p class="eyebrow text-amber mb-4">The programme</p>
+            <h2 class="font-display font-bold text-3xl sm:text-5xl">Events</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase hidden sm:block">
+              <span data-js="rail-index">01</span> / <%= String(events.featured.length).padStart(2,'0') %>
+            </p>
+            <div class="flex gap-2">
+              <button type="button" class="rail-btn" data-js="rail-prev" aria-label="Previous event">←</button>
+              <button type="button" class="rail-btn" data-js="rail-next" aria-label="Next event">→</button>
+            </div>
+            <a href="/events" class="font-mono text-xs tracking-[0.1em] uppercase text-[var(--paper-dim)] hover:text-paper transition-colors whitespace-nowrap ml-2">
+              All <%= events.all.length %> →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- The track. On desktop GSAP translates it horizontally as the section
+           is pinned; on touch it is a native horizontal scroll container. -->
+      <div class="rail-viewport" data-js="rail-viewport">
+        <ol class="rail-track" data-js="rail-track">
+          <% events.featured.forEach(function(evt, i){ const st = regState(evt); %>
+          <li class="rail-item" data-js="rail-item">
+            <a href="/events/<%= evt.slug %>" class="rail-card group">
+              <span class="rail-card__num"><%= String(i + 1).padStart(2, '0') %></span>
+              <div class="rail-card__media">
+                <img src="<%= evt.image %>" alt="<%= evt.name %>" loading="lazy" decoding="async">
+                <span class="rail-card__scrim"></span>
+              </div>
+              <div class="rail-card__body">
+                <p class="rail-card__cat"><%= evt.category %></p>
+                <h3 class="rail-card__title"><%= evt.name %></h3>
+                <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
+              </div>
+            </a>
+          </li>
+          <% }); %>
+
+          <li class="rail-item rail-item--end">
+            <a href="/events" class="rail-end">
+              <p class="font-mono text-[0.66rem] tracking-[0.16em] uppercase text-cyan mb-3">Full index</p>
+              <p class="font-display font-semibold text-2xl mb-3">All <%= events.all.length %> events</p>
+              <p class="text-sm text-[var(--paper-dim)] mb-6">Search, filter by category, and open any event.</p>
+              <span class="btn btn-secondary">Open the index →</span>
+            </a>
+          </li>
+        </ol>
+      </div>
+
+      <p class="px-6 mt-6 font-mono text-[0.62rem] tracking-[0.14em] uppercase text-[var(--paper-faint)] text-center lg:hidden">
+        Swipe to explore
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,13 +1,21 @@
-// Inner pages (/events, /events/:slug). Everything these need is shared —
-// no hero WebGL scene and no scroll-scrubbed transformation section, so no
-// three.js or gsap is loaded on these routes at all.
+// Inner pages (/events, /events/:slug, /schedule, /team, /register).
+// Same scroll and 3D systems as the homepage, but only the light moments:
+// no pinned narrative, no events rail, no hero WebGL scene.
 
-import { initNav, initMagneticButtons, initReveal, initAmbientField, initCountdown } from '/js/site.js';
+import { initNav, initMagneticButtons, initCountdown } from '/js/site.js';
+import { initScroll, registerReveals, registerParallax } from '/js/scroll.js';
+import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+(async function boot() {
   initNav();
   initMagneticButtons();
-  initReveal();
   initCountdown();
-  initAmbientField();
-});
+
+  const ctx = await initScroll();
+  if (hasWebGL()) mountFields();
+
+  registerReveals(ctx);
+  registerParallax(ctx);
+
+  ctx?.ScrollTrigger.refresh();
+})();

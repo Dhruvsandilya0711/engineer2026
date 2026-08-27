@@ -23,7 +23,7 @@
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <canvas data-canvas="neural" data-tone="ambient" class="absolute inset-0"></canvas>
+    <div data-field="ambient" data-density="0.45" data-tone="mixed" data-signals="4" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
     <div class="bg-grain absolute inset-0"></div>
     <div class="scanlines absolute inset-0"></div>
     <div class="field-vignette absolute inset-0"></div>
@@ -194,8 +194,12 @@
             <p class="font-display font-medium text-lg mb-2"><%= st.label %></p>
 
             <% if (st.actionable) { %>
-              <p class="text-sm text-[var(--paper-dim)] mb-6">Entries are being accepted for this event.</p>
-              <a href="/events/<%= event.slug %>/register" class="btn btn-primary w-full justify-center">Register</a>
+              <p class="text-sm text-[var(--paper-dim)] mb-6">
+                Registration for ENGINEER '26 is open. Sign up for <%= event.name %> and the
+                organising team will contact you with details as they are confirmed.
+              </p>
+              <a href="/register?event=<%= encodeURIComponent(event.name) %>"
+                 class="btn btn-primary w-full justify-center" data-js="magnetic">Register for this event</a>
             <% } else { %>
               <p class="text-sm text-[var(--paper-dim)] mb-6">
                 <% if (event.registration === 'completed') { %>
