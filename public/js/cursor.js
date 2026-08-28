@@ -57,11 +57,23 @@ export function initCursor() {
   let visible = false;
   let idleTimer = null;
 
+  // Wake the cursor and re-arm the idle timer. A genuinely parked pointer
+  // should not leave a static bloom — but only the GLOW is the blob, so idle
+  // fades that layer alone (via .is-idle) and leaves the precision dot and
+  // reticle in place. Previously idle removed .is-visible, which faded the
+  // whole cursor away; combined with `cursor: none` that left no pointer at
+  // all whenever the mouse sat still.
+  function wake() {
+    if (!visible) { visible = true; root.classList.add('is-visible'); }
+    root.classList.remove('is-idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => root.classList.add('is-idle'), 4000);
+  }
+
   function onMove(e) {
     t.x = e.clientX;
     t.y = e.clientY;
-
-    if (!visible) { visible = true; root.classList.add('is-visible'); }
+    wake();
 
     // Restore the native caret over anything you type into.
     const overText = e.target instanceof Element && e.target.closest(TEXTUAL);
@@ -70,10 +82,13 @@ export function initCursor() {
 
     const hot = e.target instanceof Element && e.target.closest(INTERACTIVE);
     root.classList.toggle('is-hot', !!hot);
+  }
 
-    // Hide after a pause so a parked cursor doesn't leave a glowing blob.
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => root.classList.remove('is-visible'), 4000);
+  // Scrolling is activity even when the mouse is still. Wheel / trackpad /
+  // Lenis scrolling emits no pointermove, so on a long page (the deck) the
+  // cursor used to fade out mid-scroll and only return on a mouse jiggle.
+  function onScroll() {
+    if (visible) wake();
   }
 
   function loop() {
@@ -99,6 +114,7 @@ export function initCursor() {
   window.addEventListener('pointermove', onMove, { passive: true });
   window.addEventListener('pointerdown', onDown, { passive: true });
   window.addEventListener('pointerup', onUp, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true });
   document.addEventListener('pointerleave', onLeave);
   document.addEventListener('pointerenter', onEnter);
 
@@ -116,6 +132,7 @@ export function initCursor() {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onDown);
       window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('pointerleave', onLeave);
       document.removeEventListener('pointerenter', onEnter);
       root.remove();

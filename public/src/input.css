@@ -864,6 +864,10 @@ html.cx-native .cx-ring { opacity: 0; }
   transition: opacity 300ms var(--ease-standard);
 }
 .cx-cursor.is-visible { opacity: 1; }
+/* A parked pointer should not leave a static bloom — but the bloom is only
+   the glow, so idle fades that one layer and keeps the precision dot and
+   reticle on screen (they used to fade with the whole cursor). */
+.cx-cursor.is-idle .cx-glow { opacity: 0; }
 
 .cx-cursor > * {
   position: fixed;
