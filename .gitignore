@@ -13,3 +13,4 @@ data/registrations.json
 # Build/working artifacts
 *.zip
 screenshots$num-*.png
+public/.DS_Store
