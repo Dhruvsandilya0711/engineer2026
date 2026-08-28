@@ -1,0 +1,42 @@
+<!-- ==========================================================================
+     REGISTER (deck card 06) — the deck's closer, and the new home of the
+     primary CTA that used to sit in the hero.
+
+     Registration only: no passes, tickets, QR or payment (lib/registration.js).
+     The claims here are the ones /register itself makes — dates, place, and
+     one entry per event — so the two cannot drift.
+     ========================================================================== -->
+<section id="register" class="relative">
+  <div class="max-w-4xl">
+    <p class="eyebrow text-magenta mb-5" data-reveal>Join the system</p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      Register for<br><span class="text-gradient-impossible">ENGINEER&nbsp;'26</span>
+    </h2>
+
+    <p class="text-[var(--paper-dim)] max-w-xl mt-5 text-sm sm:text-base leading-relaxed" data-reveal>
+      <%= events.all.length %> events across three days at NITK Surathkal. Entry is per event, so
+      register for each one you want — it takes a name, a roll number and an email.
+    </p>
+
+    <div class="grid grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)] mt-6" data-reveal>
+      <div class="bg-void p-3 sm:p-5">
+        <p class="font-mono text-[0.62rem] tracking-[0.16em] uppercase text-magenta mb-2">Dates</p>
+        <p class="font-display font-semibold text-sm sm:text-lg"><%= festDates.display.replace(' OCTOBER 2026', '') %> Oct</p>
+      </div>
+      <div class="bg-void p-3 sm:p-5">
+        <p class="font-mono text-[0.62rem] tracking-[0.16em] uppercase text-cyan mb-2">Place</p>
+        <p class="font-display font-semibold text-sm sm:text-lg">NITK Surathkal</p>
+      </div>
+      <div class="bg-void p-3 sm:p-5">
+        <p class="font-mono text-[0.62rem] tracking-[0.16em] uppercase text-amber mb-2">Entry</p>
+        <p class="font-display font-semibold text-sm sm:text-lg">One per event</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4 mt-6" data-reveal>
+      <a href="/register" class="btn btn-primary" data-js="magnetic">Register now</a>
+      <a href="/events" class="btn btn-secondary">Browse events &rarr;</a>
+    </div>
+  </div>
+</section>

@@ -22,7 +22,7 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 
 const AMBER   = new THREE.Color('#e8923c');
 const CYAN    = new THREE.Color('#34d8e8');
-const VIOLET  = new THREE.Color('#7b5cfa');
+const VIOLET  = new THREE.Color('#5f79f2');
 const MAGENTA = new THREE.Color('#e23fd1');
 const ENGI = [CYAN, VIOLET, MAGENTA];
 
@@ -157,7 +157,7 @@ export function createNeuralField(host, opts = {}) {
   function resize() {
     const r = host.getBoundingClientRect();
     width = Math.max(1, r.width); height = Math.max(1, r.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.5 : 2));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -303,21 +303,49 @@ export function createNeuralField(host, opts = {}) {
   };
 }
 
+// This site is mobile-forward, and WebGL contexts are the scarce resource on a
+// phone: each one holds GPU memory, drains battery, and mobile Safari will
+// silently drop the oldest once a handful are live. So small screens mount only
+// the highest-priority moments and everything else degrades to a CSS wash.
+const MOBILE_CONTEXT_BUDGET = 2;
+
 /**
- * Mount every [data-field] element on the page as a neural moment, reading its
- * configuration from data attributes. Returns a slug -> controller map so
- * scroll code can scrub specific fields.
+ * Mount [data-field] elements as neural moments, reading configuration from
+ * data attributes. `data-priority` (1 = essential … 3 = decorative) decides
+ * what survives the mobile budget. Returns a slug -> controller map so scroll
+ * code can scrub specific fields; skipped hosts are absent from the map and
+ * marked `.is-static` for the CSS fallback.
  */
 export function mountFields() {
   const out = {};
-  if (!hasWebGL()) return out;
+  if (!hasWebGL()) {
+    document.querySelectorAll('[data-field]').forEach(h => h.classList.add('is-static'));
+    return out;
+  }
 
-  document.querySelectorAll('[data-field]').forEach((host) => {
+  const hosts = [...document.querySelectorAll('[data-field]')];
+  const isSmall = window.innerWidth < 768;
+
+  let allowed = hosts;
+  if (isSmall) {
+    allowed = [...hosts]
+      .sort((a, b) => (parseInt(a.dataset.priority || '3', 10) - parseInt(b.dataset.priority || '3', 10)))
+      .slice(0, MOBILE_CONTEXT_BUDGET);
+  }
+  const allowedSet = new Set(allowed);
+
+  hosts.forEach((host) => {
+    if (!allowedSet.has(host)) { host.classList.add('is-static'); return; }
+
+    // Phones also get a thinner field inside the moments they do keep.
+    const density = (parseFloat(host.dataset.density) || 1) * (isSmall ? 0.7 : 1);
+    const signals = parseInt(host.dataset.signals || '6', 10);
+
     out[host.dataset.field] = createNeuralField(host, {
-      density: parseFloat(host.dataset.density) || 1,
+      density,
       spread: parseFloat(host.dataset.spread) || 9,
       tone: host.dataset.tone || 'mixed',
-      signals: parseInt(host.dataset.signals || '6', 10),
+      signals: isSmall ? Math.min(signals, 4) : signals,
       rotate: parseFloat(host.dataset.rotate || '0.035'),
       depth: parseFloat(host.dataset.depth || '16'),
     });

@@ -95,7 +95,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.render('index', { festDates: FEST_DATES, events, scheduleDays: resolvedDays(), gallery, regState });
+  // The homepage deck's TEAM card shows counts only when there is a real
+  // roster (data/team.json ships empty on purpose), so it needs the same
+  // derived groups /team uses rather than a second source of truth.
+  const groups = teamGroups();
+  res.render('index', {
+    festDates: FEST_DATES,
+    events,
+    scheduleDays: resolvedDays(),
+    gallery,
+    regState,
+    teamTotal: groups.reduce((n, g) => n + g.members.length, 0),
+    teamGroupCount: groups.length,
+  });
 });
 
 // Event discovery. Filtering runs server-side off query params so search and

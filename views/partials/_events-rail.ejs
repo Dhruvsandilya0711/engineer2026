@@ -6,13 +6,13 @@
      ========================================================================== -->
 <section id="events" class="relative" data-js="events-rail">
   <div class="rail-pin">
-    <div class="absolute inset-0 pointer-events-none" data-field="events" data-density="0.5"
+    <div class="absolute inset-0 pointer-events-none" data-field="events" data-priority="3" data-density="0.5"
          data-tone="amber" data-signals="5" data-spread="14" data-rotate="0.015" aria-hidden="true"></div>
 
     <div class="relative z-10 h-full flex flex-col justify-center">
 
-      <div class="px-6 mb-8">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+      <div class="mb-7">
+        <div class="max-w-6xl flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
             <p class="eyebrow text-amber mb-4">The programme</p>
             <h2 class="font-display font-bold text-3xl sm:text-5xl">Events</h2>
@@ -25,9 +25,6 @@
               <button type="button" class="rail-btn" data-js="rail-prev" aria-label="Previous event">←</button>
               <button type="button" class="rail-btn" data-js="rail-next" aria-label="Next event">→</button>
             </div>
-            <a href="/events" class="font-mono text-xs tracking-[0.1em] uppercase text-[var(--paper-dim)] hover:text-paper transition-colors whitespace-nowrap ml-2">
-              All <%= events.all.length %> →
-            </a>
           </div>
         </div>
       </div>
@@ -64,7 +61,7 @@
         </ol>
       </div>
 
-      <p class="px-6 mt-6 font-mono text-[0.62rem] tracking-[0.14em] uppercase text-[var(--paper-faint)] text-center lg:hidden">
+      <p class="mt-6 font-mono text-[0.62rem] tracking-[0.14em] uppercase text-[var(--paper-faint)] text-center lg:hidden">
         Swipe to explore
       </p>
     </div>

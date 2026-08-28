@@ -6,32 +6,52 @@
    Tailwind v4 CSS-first theme — generates bg-void, text-paper, font-display, etc.
    ========================================================================== */
 @theme {
-  --color-void: #030306;
-  --color-charcoal: #100d17;
-  --color-charcoal-2: #1a1522;
-  --color-paper: #edebf2;
-  --color-cyan: #34d8e8;
-  --color-violet: #7b5cfa;
-  --color-magenta: #e23fd1;
+  --breakpoint-xs: 400px;
+
+  /* Design-handoff tokens (design_handoff_engineer26_homepage/README.md).
+     These supersede the earlier palette: same cyan -> violet -> magenta idea,
+     but the handoff's exact values, plus its slate text ramp. */
+  --color-void: #000000;
+  --color-panel: #05060a;
+  --color-paper: #f1f5f9;
+  --color-strong: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-dim: #64748b;
+  --color-faint: #475569;
+
+  --color-cyan: #22d3ee;
+  --color-indigo: #6366f1;
+  --color-violet-mid: #6c7cf2;
+  --color-violet: #8a9cf4;
+  --color-orchid: #d676e0;
+  --color-magenta: #e879f9;
+
+  --color-charcoal: #05060a;
+  --color-charcoal-2: #0b0d16;
   --color-amber: #e8923c;
-  --color-amber-dim: #a5641f;
   --color-success: #3fbf8f;
   --color-warning: #e8a63c;
-  --color-error: #e8688a;
+  --color-error: #f87186;
 
-  --font-display: "Unbounded", system-ui, sans-serif;
-  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  /* Chakra Petch (display, 700 + italic) and Space Mono for everything else. */
+  --font-display: "Chakra Petch", system-ui, sans-serif;
+  --font-body: "Space Mono", ui-monospace, monospace;
+  --font-mono: "Space Mono", ui-monospace, monospace;
 }
 
 :root {
-  --hairline: rgba(237, 235, 242, 0.11);
-  --hairline-strong: rgba(237, 235, 242, 0.22);
-  --paper-dim: rgba(237, 235, 242, 0.64);
-  --paper-faint: rgba(237, 235, 242, 0.38);
+  --hairline: rgba(148, 163, 184, 0.18);
+  --hairline-strong: rgba(148, 163, 184, 0.35);
+  --paper-dim: #94a3b8;      /* text-muted */
+  --paper-faint: #64748b;    /* text-dim  */
+  --rule: rgba(148, 163, 184, 0.35);
+
+  --glow-violet: rgba(80, 104, 238, 0.7);
+  --glow-blue: rgba(29, 45, 120, 0.35);
+  --glow-purple: rgba(30, 26, 86, 0.42);
 
   /* ENGINEER logo identity — never used for the Cognitrixx neural layer */
-  --gradient-impossible: linear-gradient(115deg, var(--color-cyan) 0%, #4c8ef2 38%, var(--color-violet) 68%, var(--color-magenta) 100%);
+  --gradient-impossible: linear-gradient(90deg, #22d3ee, #6366f1 45%, #e879f9);
   /* Cognitrixx neural/energy identity — never used to recolor the logo */
   --gradient-cognitrixx: linear-gradient(120deg, var(--color-amber-dim) 0%, var(--color-amber) 55%, #ffd58a 100%);
 
@@ -136,35 +156,26 @@
 }
 
 /* ------------------------------------------------------------------
-   Hero aura: a soft violet/magenta bloom behind the Penrose object so
-   it reads as an illuminated body inside the network rather than a
-   sticker on black. Sits behind the canvas (::before is the frame's
-   first painted child) and the canvas's screen blend lifts it.
+   Hero is typography-led: no Penrose object, no reticle, no bloom.
+   The scroll cue below is the only decorative element in the landing view.
+   (The reticle + logo-frame styles were removed with the object; the
+   .hero-logo-frame / .hero-rings markup no longer exists.)
    ------------------------------------------------------------------ */
-.hero-logo-frame::before {
-  content: "";
-  position: absolute;
-  inset: -34%;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(123, 92, 250, 0.30) 0%,
-    rgba(226, 63, 209, 0.13) 40%,
-    transparent 68%
-  );
+.scroll-cue {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(to bottom, var(--color-cyan), transparent);
+  opacity: 0.55;
+  animation: scrollCue 2.4s var(--ease-standard) infinite;
+  transform-origin: 50% 0%;
 }
-
-/* Fires when a network signal actually reaches the logo (see
-   neural-network.js onSignalArrive) — a rewire, not a random glitch. */
-@keyframes logoRewire {
-  0%   { transform: translate(0); filter: none; }
-  22%  { transform: translate(-2px, 1px); filter: hue-rotate(14deg) saturate(1.25); }
-  55%  { transform: translate(2px, -1px); filter: hue-rotate(-11deg) brightness(1.12); }
-  100% { transform: translate(0); filter: none; }
+@keyframes scrollCue {
+  0%   { transform: scaleY(0); opacity: 0; }
+  35%  { transform: scaleY(1); opacity: 0.55; }
+  100% { transform: scaleY(1); opacity: 0; }
 }
-.hero-logo-frame.is-rewiring { animation: logoRewire 240ms var(--ease-standard); }
 @media (prefers-reduced-motion: reduce) {
-  .hero-logo-frame.is-rewiring { animation: none; }
+  .scroll-cue { animation: none; opacity: 0.4; }
 }
 
 /* label / eyebrow */
@@ -210,7 +221,7 @@
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 0 1px var(--color-violet), 0 10px 30px -10px rgba(123, 92, 250, 0.55);
+  box-shadow: 0 0 0 1px var(--color-violet), 0 10px 30px -10px rgba(95, 121, 242, 0.55);
 }
 .btn-secondary {
   background: transparent;
@@ -300,33 +311,6 @@
   [data-reveal] { opacity: 1; transform: none; }
 }
 
-/* entry sequence overlay */
-#entry-sequence {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: var(--color-void);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 500ms var(--ease-standard), visibility 500ms;
-}
-#entry-sequence.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-#entry-sequence .stage {
-  position: absolute;
-  font-family: var(--font-display);
-  font-weight: 600;
-  opacity: 0;
-  text-align: center;
-}
-#entry-sequence .stage.is-active {
-  opacity: 1;
-  transition: opacity 220ms var(--ease-standard);
-}
 
 /* glitch — reserved for state-change moments only (never idle/hover) */
 @keyframes rewireGlitch {
@@ -347,28 +331,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-
-/* ------------------------------------------------------------------
-   Hero composition.
-   The hero must fit one screen: brand, CTAs and countdown all visible
-   without scrolling. So the logo is sized against viewport HEIGHT (not
-   a fixed max-width), and the stack uses a single clamped flex gap
-   rather than stacked per-element margins that can't respond to height.
-   ------------------------------------------------------------------ */
-.hero-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: clamp(0.6rem, 1.9vh, 1.6rem);
-  padding-top: clamp(4rem, 9vh, 6rem);   /* clears the fixed nav */
-  padding-bottom: clamp(1.5rem, 4vh, 3rem);
-}
-.hero-logo-frame {
-  width: min(68vw, 30vh, 400px);
-  aspect-ratio: 1;
-  flex: none;
-}
 
 /* transformation section — stacked, crossfading stage labels */
 [data-js="transform-stages"] { text-align: center; }
@@ -873,6 +835,1110 @@ select.form-input option { background: var(--color-charcoal); color: var(--color
 .form-error {
   margin: 7px 0 0;
   font-family: var(--font-mono); font-size: 0.68rem; color: var(--color-error);
+}
+
+
+/* ==================================================================
+   COGNITRIXX CURSOR
+   Three layers at different lag rates (see public/js/cursor.js).
+   Mounted only on fine-pointer devices with motion allowed.
+   ================================================================== */
+html.cx-active,
+html.cx-active * { cursor: none; }
+
+/* Text fields keep the native caret — a hidden I-beam makes forms worse. */
+html.cx-native,
+html.cx-native input,
+html.cx-native textarea,
+html.cx-native select,
+html.cx-native [contenteditable="true"] { cursor: auto; }
+html.cx-native .cx-dot,
+html.cx-native .cx-ring { opacity: 0; }
+
+.cx-cursor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 300ms var(--ease-standard);
+}
+.cx-cursor.is-visible { opacity: 1; }
+
+.cx-cursor > * {
+  position: fixed;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* --- the glow: the light source trailing behind everything else --- */
+.cx-glow {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(52, 216, 232, 0.16) 0%,
+    rgba(95, 121, 242, 0.13) 32%,
+    rgba(226, 63, 209, 0.07) 55%,
+    transparent 72%
+  );
+  transition: width 420ms var(--ease-emphasized),
+              height 420ms var(--ease-emphasized),
+              opacity 300ms var(--ease-standard);
+}
+.is-hot .cx-glow { width: 430px; height: 430px; }
+.is-down .cx-glow { width: 250px; height: 250px; }
+
+/* --- the reticle ring --- */
+.cx-ring {
+  width: 44px;
+  height: 44px;
+  transition: width 260ms var(--ease-emphasized),
+              height 260ms var(--ease-emphasized),
+              opacity 200ms var(--ease-standard);
+}
+.cx-ring svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.cx-ring__circle {
+  stroke: rgba(52, 216, 232, 0.55);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 260ms var(--ease-standard);
+}
+.cx-ring__tick {
+  stroke: rgba(232, 146, 60, 0.75);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 260ms var(--ease-standard);
+}
+/* Slow drift so the reticle feels alive without spinning distractingly. */
+.cx-ring svg { animation: cxDrift 22s linear infinite; }
+@keyframes cxDrift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.is-hot .cx-ring { width: 68px; height: 68px; }
+.is-hot .cx-ring__circle { stroke: rgba(226, 63, 209, 0.85); }
+.is-hot .cx-ring__tick { stroke: rgba(52, 216, 232, 0.95); }
+.is-down .cx-ring { width: 34px; height: 34px; }
+
+/* --- the dot: 1:1 with the real pointer, so precision is never lost --- */
+.cx-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-paper);
+  box-shadow: 0 0 10px 2px rgba(52, 216, 232, 0.65);
+  transition: width 200ms var(--ease-emphasized),
+              height 200ms var(--ease-emphasized),
+              background 260ms var(--ease-standard),
+              opacity 200ms var(--ease-standard);
+}
+.is-hot .cx-dot {
+  width: 4px; height: 4px;
+  background: var(--color-magenta);
+  box-shadow: 0 0 12px 3px rgba(226, 63, 209, 0.8);
+}
+.is-down .cx-dot { width: 10px; height: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cx-cursor { display: none; }
+  html.cx-active, html.cx-active * { cursor: auto; }
+}
+
+
+/* A field skipped by the mobile WebGL budget (or with no WebGL at all) keeps
+   the atmosphere with a static wash — cheap, and never an empty rectangle. */
+[data-field].is-static {
+  background:
+    radial-gradient(ellipse 70% 55% at 22% 18%, rgba(232, 146, 60, 0.08), transparent 62%),
+    radial-gradient(ellipse 60% 50% at 82% 72%, rgba(95, 121, 242, 0.09), transparent 62%);
+}
+[data-field].is-static::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.35;
+}
+
+/* Touch targets. Mobile-forward: everything tappable clears ~44px of height,
+   which text links do not do on their own at these font sizes. */
+@media (max-width: 767px) {
+  .rail-btn { width: 44px; height: 44px; }
+  .cat-chip { padding: 11px 16px; }
+  .event-row__link { padding-top: 18px; padding-bottom: 18px; }
+
+  /* Footer and in-section "more" links: give the hit area real height without
+     changing how they look, by centring the text in a taller box. */
+  footer nav a,
+  footer a.hover\:text-paper,
+  .tap-target {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* The logo lockup in the nav. */
+  #site-nav a[aria-label] { min-height: 44px; min-width: 44px; }
+
+  /* Filter chips (events + schedule day tabs). */
+  .cat-chip { min-height: 44px; padding: 0 16px; }
+
+  /* Schedule "awaiting a slot" event pills — 14 of them, all under-height. */
+  #unscheduled-heading ~ ul a,
+  section[aria-labelledby="unscheduled-heading"] a { min-height: 44px; }
+
+  /* Inline links inside body copy still need a real hit area. */
+  .status-note a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+
+/* ==================================================================
+   DOT DISSOLVE (public/js/dots.js)
+
+   --dots: 0 = solid, 1 = fully dispersed.
+
+   The mask is a tiled radial gradient. When the dot radius is at or above
+   half the tile size the circles overlap and the surface is solid; as the
+   radius shrinks past that point the surface breaks into discrete dots and
+   then disappears. Tile size grows slightly with progress so the dots also
+   read as spreading apart, not just shrinking in place.
+   ================================================================== */
+.dots-target.is-dotting {
+  /* radius: 3.4px (fully covering a 6px tile) down to 0 */
+  --dot-r: calc((1 - var(--dots, 0)) * 3.4px);
+  /* tile: 6px -> 11px as it disperses */
+  --dot-tile: calc(6px + var(--dots, 0) * 5px);
+
+  -webkit-mask-image: radial-gradient(circle, #000 var(--dot-r), transparent calc(var(--dot-r) + 0.6px));
+          mask-image: radial-gradient(circle, #000 var(--dot-r), transparent calc(var(--dot-r) + 0.6px));
+  -webkit-mask-size: var(--dot-tile) var(--dot-tile);
+          mask-size: var(--dot-tile) var(--dot-tile);
+  -webkit-mask-repeat: repeat;
+          mask-repeat: repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+
+  /* A touch of lift and fade so the break-up reads as travel, not just decay. */
+  opacity: calc(1 - var(--dots, 0) * 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots-target.is-dotting {
+    -webkit-mask-image: none;
+            mask-image: none;
+    opacity: 1;
+  }
+}
+
+
+
+
+/* ==================================================================
+   HERO, MOBILE-FIRST
+   The phone layout is composed for the phone, not shrunk from desktop:
+   the wordmark STACKS so it can be ~55% larger than a single line would
+   allow, and the CTAs are width-capped so they stop out-weighing it.
+   ================================================================== */
+
+/* Location line. The generic .eyebrow is 0.72rem at 0.16em tracking, which
+   is legible as a section label but too loose and too small to read
+   comfortably as the hero's first line. Larger, tighter, brighter. */
+.eyebrow-hero {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow-hero::before,
+.eyebrow-hero::after {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+@media (min-width: 640px) { .eyebrow-hero { font-size: 0.78rem; letter-spacing: 0.14em; } }
+
+/* Hero CTAs.
+   A single line of type has less ink than a stacked one, so on phones the
+   buttons have to give ground or they read louder than the wordmark: the
+   primary is capped narrow, and the secondary drops to a plain text link
+   rather than a second filled box. Both keep a 44px hit area. */
+.btn-hero { max-width: 220px; }
+@media (min-width: 640px) { .btn-hero { max-width: none; } }
+@media (max-width: 639px) {
+  .btn-hero { padding-top: 12px; padding-bottom: 12px; font-size: 0.72rem; min-height: 44px; }
+}
+/* At 320-359px the wordmark is at its smallest, so the CTA type has to come
+   down with it or the two read at similar weight. */
+@media (max-width: 359px) {
+  .btn-hero { font-size: 0.66rem; max-width: 200px; }
+  .cta-quiet { font-size: 0.66rem; }
+}
+
+.cta-quiet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline-strong);
+  padding: 0 2px;
+  transition: color var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);
+}
+.cta-quiet:hover { color: var(--color-cyan); border-bottom-color: var(--color-cyan); }
+/* From sm up it becomes a normal secondary button again. */
+@media (min-width: 640px) { .cta-quiet { border-bottom: 0; } }
+
+
+/* ==================================================================
+   SLICED SCANLINE WORDMARK  (handoff → Components → Sliced wordmark)
+
+   Four stacked copies of the same string: a cyan ghost offset up-left, a
+   magenta ghost offset down-right, the main fill, and a scan rule. The
+   main copy is transparent text with a hairline white stroke, filled by a
+   repeating horizontal gradient via background-clip — that scanline fill
+   is what makes it read as punk rather than just italic.
+
+   Mobile-first: offsets and the stroke are set in `em`, so the whole
+   construction scales with the type instead of falling apart on a phone.
+   ================================================================== */
+.wm {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(2.4rem, 12.5vw, 6.75rem);   /* 108px cap = handoff size */
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  isolation: isolate;
+}
+.wm__layer {
+  display: block;
+  grid-area: 1 / 1;
+}
+.wm > .wm__layer:not(.wm__main) {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.wm__ghost-c { color: rgba(34, 211, 238, 0.45); transform: translate(-0.046em, -0.018em); }
+.wm__ghost-m { color: rgba(232, 121, 249, 0.40); transform: translate(0.046em, 0.018em); }
+
+.wm__main {
+  position: relative;
+  color: transparent;
+  -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.9);
+  background-image: repeating-linear-gradient(
+    0deg,
+    #ffffff 0 0.037em,
+    rgba(10, 10, 14, 0.75) 0.037em 0.056em
+  );
+  -webkit-background-clip: text;
+          background-clip: text;
+  filter: drop-shadow(0 0 0.2em rgba(80, 104, 238, 0.5));
+}
+/* Solid-white fallback where background-clip:text is unavailable. */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .wm__main { color: #fff; background-image: none; -webkit-text-stroke: 0; }
+}
+
+.wm__scan {
+  position: absolute;
+  left: 0; right: 0;
+  top: 52%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232,121,249,0.7) 30%, rgba(34,211,238,0.7) 70%, transparent);
+  pointer-events: none;
+}
+
+/* ==================================================================
+   HUD NAV BAYS  (handoff → Components → HUD nav bays)
+
+   Six angular bays. The handoff puts all six in one row at 40px gutters,
+   which is a desktop composition — on a phone that yields ~50px bays with
+   unreadable labels. Mobile-first here: 2 columns, then 3, then all six.
+   ================================================================== */
+.bays {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px 12px 0;
+  list-style: none;
+  margin: 0;
+  width: 100%;
+}
+@media (min-width: 480px) { .bays { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; } }
+@media (min-width: 1024px) { .bays { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; padding: 4px 40px 0; } }
+
+.bay {
+  position: relative;
+  display: block;
+  height: 46px;
+  text-decoration: none;
+  transition: filter 160ms var(--ease-standard), transform 160ms var(--ease-standard);
+}
+.bay:hover, .bay:focus-visible { filter: brightness(1.45); transform: translateY(-2px); }
+
+/* One clip-path shared by the outline and the interior gives a 1px angular
+   hairline border without a border property. */
+.bay__outline,
+.bay__interior,
+.bay__slab {
+  position: absolute;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 42%, 100% 100%, 16px 100%, 0 58%);
+}
+.bay__outline  { inset: 0;   background: rgba(var(--bay-accent), 0.85); }
+.bay__interior { inset: 1px; background: var(--color-panel); }
+.bay__slab {
+  inset: 1px 1px 1px auto;
+  width: var(--bay-slab, 24%);
+  background: repeating-linear-gradient(112deg, rgba(var(--bay-accent), 0.95) 0 7px, transparent 7px 15px);
+}
+.bay__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 100%;
+  padding-left: 14px;
+}
+.bay__idx {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgb(var(--bay-accent));
+}
+.bay__label {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--color-strong);
+  white-space: nowrap;
+}
+@media (min-width: 1024px) { .bay__label { font-size: 14px; } }
+
+/* The register bay is filled rather than outlined. */
+.bay--cta .bay__interior {
+  background: linear-gradient(90deg, rgba(34,211,238,0.95), rgba(232,121,249,0.95));
+}
+.bay--cta .bay__label,
+.bay--cta .bay__idx { color: var(--color-panel); }
+.bay--cta .bay__slab { display: none; }
+.bay--cta:hover { filter: brightness(1.3); }
+
+/* ==================================================================
+   HUD chrome — status bar, kicker, status strip
+   ================================================================== */
+.hud-rule { height: 1px; background: rgba(71, 85, 105, 0.8); flex: none; }
+.hud-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-faint);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 3.2vw, 0.94rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  color: var(--color-cyan);
+  text-transform: uppercase;
+}
+.hero-kicker::before,
+.hero-kicker::after { content: ""; width: 26px; height: 1px; background: currentColor; }
+@media (max-width: 479px) {
+  .hero-kicker { gap: 10px; letter-spacing: 0.3em; text-indent: 0.3em; }
+  .hero-kicker::before, .hero-kicker::after { width: 16px; }
+}
+
+
+/* ==================================================================
+   HERO ATMOSPHERE + CONTROLS  (handoff tokens)
+   ================================================================== */
+.hero-glows {
+  background:
+    radial-gradient(85% 65% at 22% 30%, var(--glow-blue) 0%, transparent 60%),
+    radial-gradient(70% 60% at 80% 60%, var(--glow-purple) 0%, transparent 65%);
+}
+.hero-grid {
+  background-image:
+    linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px),
+    linear-gradient(0deg,  rgba(148,163,184,0.04) 1px, transparent 1px);
+  background-size: 96px 96px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 85%);
+}
+
+/* Primary CTA — square corners, per handoff (radius 0 everywhere). */
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 15px 34px;
+  background: var(--color-paper);
+  color: #05060a;
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 3vw, 0.875rem);
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0;
+  transition: transform 160ms var(--ease-emphasized), box-shadow 160ms var(--ease-standard);
+}
+@media (min-width: 640px) { .cta-primary { padding: 22px 58px; } }
+.cta-primary:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(80,104,238,0.45); }
+
+.cta-explore {
+  font-family: var(--font-mono);
+  font-size: clamp(0.66rem, 2.9vw, 0.8125rem);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  transition: color 160ms var(--ease-standard);
+}
+.cta-explore:hover { color: var(--color-cyan); }
+
+/* With the hero's REGISTER button removed (bay 06 and the deck's own
+   REGISTER card both carry that destination), EXPLORE EVENTS is the only
+   action on the fold — so it stops being a footnote and gets a bracketed
+   frame and a travelling arrow. */
+.cta-explore--lead {
+  position: relative;
+  gap: 14px;
+  padding: 13px clamp(20px, 5vw, 34px);
+  color: var(--color-strong);
+  border: 1px solid var(--rule);
+  background: linear-gradient(90deg, rgba(34,211,238,0.10), rgba(232,121,249,0.10));
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard),
+    box-shadow 160ms var(--ease-standard);
+}
+.cta-explore--lead:hover {
+  color: #fff;
+  border-color: rgba(34,211,238,0.7);
+  box-shadow: 0 0 26px -6px rgba(34,211,238,0.5);
+}
+.cta-explore__arrow {
+  width: 9px;
+  height: 9px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
+  animation: cta-arrow 1.8s var(--ease-standard) infinite;
+}
+@keyframes cta-arrow {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.55; }
+  50%      { transform: rotate(45deg) translate(3px, 3px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .cta-explore__arrow { animation: none; } }
+
+/* Countdown — Chakra Petch numerals, Space Mono labels. */
+.countdown-row {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(10px, 4vw, 26px);
+}
+.cd { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.cd__n {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.65rem, 8vw, 2.875rem);
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.cd__n--sec { color: var(--color-magenta); }
+.cd__l {
+  font-family: var(--font-mono);
+  font-size: clamp(0.56rem, 2.4vw, 0.6875rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.cd__sep {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.1rem, 5vw, 2.125rem);
+  color: var(--color-faint);
+  padding-bottom: clamp(14px, 4vw, 26px);
+}
+
+
+/* Deferred header (homepage): the hero's nav bays are the menu up top; this
+   slides in only once the hero is gone. */
+#site-nav.is-deferred {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+  transition: opacity 260ms var(--ease-standard), transform 320ms var(--ease-emphasized), background 300ms;
+}
+#site-nav.is-deferred.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
+/* Hero main column. The gap is clamped against viewport HEIGHT so the whole
+   composition — wordmark through countdown — stays on one screen from a
+   320x720 phone up to a desktop. */
+.hero-main {
+  gap: clamp(0.4rem, 1.65vh, 1.5rem);
+  padding-top: clamp(0.5rem, 2vh, 2rem);
+  padding-bottom: clamp(0.75rem, 3vh, 3rem);
+}
+/* Short viewports (720-800px tall laptops and small phones) are the tight
+   case — trim the nav gap there too. */
+@media (max-height: 820px) {
+  .bays { gap: 7px; }
+  nav.relative { margin-top: 0.75rem !important; }
+}
+/* The rules either side of the date read as dividers, so they carry a little
+   extra air without reintroducing fixed margins. */
+.hero-main > span[aria-hidden] { margin-block: clamp(0.15rem, 0.8vh, 0.7rem); }
+
+
+/* ==================================================================
+   DECK — the six nav destinations as a stack of sticky cards.
+
+   The six bays in the hero (01 ABOUT … 06 REGISTER) are the page's
+   table of contents; the deck is that same list dealt out as cards.
+   Each card parks a little lower than the one before, so what you end
+   up looking at is a stack with every dealt card's accent edge still
+   showing — the hero's bay row, rebuilt in depth.
+
+   Sticky does the stacking on its own: all six share the deck as their
+   containing block, so each one parks and stays until the whole deck
+   scrolls past, and later cards paint over earlier ones. GSAP only adds
+   the scale + dim as a card is covered (see registerDeck in main.js) —
+   without it the stack still works, just flat.
+   ================================================================== */
+.deck {
+  position: relative;
+  /* Park below the fixed nav bar (h-20) once it reveals. */
+  --deck-top: clamp(72px, 10vh, 104px);
+  /* How much lower each card parks than the one before it. */
+  --deck-step: clamp(6px, 1.1vw, 11px);
+  /* Wide enough at every width to clear the fixed scroll rail on the left;
+     kept symmetric so the cards stay centred rather than nudged. */
+  --deck-gutter: clamp(28px, 4.5vw, 72px);
+  padding-bottom: clamp(3rem, 12vh, 9rem);
+}
+
+.deck-item {
+  position: sticky;
+  top: calc(var(--deck-top) + var(--i) * var(--deck-step));
+  /* The runway. Each card owns a viewport of scroll before the next one
+     starts climbing over it. */
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-start;
+  padding-inline: var(--deck-gutter);
+  /* DOM order already stacks positioned siblings this way; stating it
+     means no later z-index elsewhere can quietly invert the deal. */
+  z-index: calc(1 + var(--i));
+}
+
+/* The hairline is a gradient, so it cannot be a border — the card is a
+   1px-padded gradient plate with the dark interior clipped inside it,
+   the same construction as the hero's nav bays. */
+.deck-card {
+  --bevel: clamp(14px, 3.4vw, 28px);
+  --deck-clip: polygon(
+    0 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% 100%,
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel))
+  );
+  position: relative;
+  width: 100%;
+  /* Every card is the SAME size, not merely capped. Cards of different
+     heights leave the shorter ones' bottom edges poking out below the card
+     on top, so the end of the deck read as a pile of empty black boxes
+     rather than one plate covering another. */
+  height: calc(100svh - var(--deck-top) - var(--deck-gutter));
+  /* Flex column, so the interior is a flex ITEM the cap can actually squeeze.
+     As a `height: 100%` block it resolved against an indefinite height, laid
+     out to its content and overflowed the cap — the card looked right and the
+     bottom of the longest cards was simply unreachable. */
+  display: flex;
+  flex-direction: column;
+  padding: 1px;
+  clip-path: var(--deck-clip);
+  background: linear-gradient(
+    148deg,
+    rgba(var(--accent), 0.85) 0%,
+    rgba(var(--accent), 0.16) 38%,
+    rgba(148, 163, 184, 0.14) 62%,
+    rgba(var(--accent), 0.55) 100%
+  );
+  transform-origin: 50% 0%;
+  will-change: transform;
+}
+
+.deck-card__inner {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  clip-path: var(--deck-clip);
+  background:
+    radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.10) 0%, transparent 58%),
+    linear-gradient(180deg, #080a12 0%, #04050a 55%, #07080f 100%);
+}
+
+/* Card header — index, name, accent slab, and the route out. Mirrors the
+   bay lockup so a card reads as the same object as its bay. */
+.deck-card__head {
+  display: flex;
+  align-items: center;
+  gap: clamp(9px, 2vw, 16px);
+  flex: 0 0 auto;
+  padding: clamp(11px, 2.1vw, 18px) clamp(14px, 3vw, 30px);
+  border-bottom: 1px solid rgba(var(--accent), 0.2);
+  background: linear-gradient(90deg, rgba(var(--accent), 0.13) 0%, transparent 55%);
+}
+.deck-card__num {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgb(var(--accent));
+}
+.deck-card__name {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.78rem, 2.7vw, 0.95rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-strong);
+  white-space: nowrap;
+}
+.deck-card__slab {
+  width: clamp(30px, 7vw, 78px);
+  height: 11px;
+  flex: 0 0 auto;
+  background: repeating-linear-gradient(112deg, rgba(var(--accent), 0.9) 0 5px, transparent 5px 11px);
+}
+.deck-card__line {
+  flex: 1 1 auto;
+  min-width: 8px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--accent), 0.45), transparent);
+}
+.deck-card__go {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.deck-card__go:hover { color: rgb(var(--accent)); }
+
+.deck-card__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Cards are written to fit their runway; this is the safety valve for
+     the tallest content on the shortest viewport, and it chains into the
+     page scroll at its ends rather than trapping the gesture. */
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--accent), 0.35) transparent;
+  padding: clamp(16px, 3.2vw, 40px) clamp(14px, 3vw, 34px) clamp(20px, 3.6vw, 44px);
+  /* Cards are one size, so short ones (SCHEDULE) would otherwise sit as a
+     lump at the top of a tall empty plate. `safe` keeps the fallback honest:
+     where content does overflow, centring would cut off its top. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+}
+.deck-card__body::-webkit-scrollbar { width: 3px; }
+.deck-card__body::-webkit-scrollbar-thumb { background: rgba(var(--accent), 0.35); }
+
+/* The dim that lands on a card as the next one covers it. Driven by GSAP;
+   at rest it is invisible, so no-JS leaves a clean stack. */
+.deck-card__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(2, 3, 6, 0.55) 0%, rgba(2, 3, 6, 0.9) 100%);
+}
+
+/* Separation between the plates is worth a real shadow, but drop-shadow on
+   a full-viewport element re-rasterises every frame it scales — so it is
+   desktop-only, where there is headroom for it. */
+@media (min-width: 1024px) {
+  .deck-card { filter: drop-shadow(0 26px 44px rgba(0, 0, 0, 0.66)); }
+}
+
+/* ---- content fitted to a card -----------------------------------------
+   The four existing sections keep their own markup; the deck only takes
+   back the vertical padding they used as standalone sections (the card
+   supplies it) and tightens the grids that were sized for a full page. */
+.deck-card__body > section { padding-block: 0; }
+.deck-card__body h2 { font-size: clamp(1.3rem, 5.6vw, 2.6rem); line-height: 1.05; }
+
+/* A phone has ~660px of card to work with. The buttons are what tip the
+   longest card over: at page size two of them wrap to a second row and cost
+   another ~55px, which is most of the overrun. */
+@media (max-width: 639px) {
+  .deck-card__body .btn {
+    padding: 11px 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+  }
+}
+
+/* The rail is no longer pinned — inside a card it is the horizontal
+   scroller that touch devices always got. */
+.deck-card .rail-pin {
+  min-height: 0;
+  display: block;
+  overflow: visible;
+}
+.deck-card .rail-track { padding-inline: 0; gap: clamp(12px, 2.4vw, 24px); }
+.deck-card .rail-item { width: min(70vw, 320px); }
+.deck-card .rail-item--end { width: min(64vw, 280px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-item { position: relative; top: auto; min-height: 0; margin-bottom: 1.5rem; }
+  .deck-card { max-height: none; }
+  .deck-card__body { overflow: visible; }
+}
+
+/* ==================================================================
+   SCROLL RAIL — the word SCROLL set vertically down the left edge,
+   with a bead that runs the track. Becomes TOP, and a real button back
+   to the top, once the page is nearly done.
+   ================================================================== */
+.scroll-rail {
+  position: fixed;
+  left: clamp(4px, 1.4vw, 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 6px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-dim);
+  transition: color var(--dur-base) var(--ease-standard),
+    opacity var(--dur-base) var(--ease-standard);
+}
+.scroll-rail:hover { color: var(--color-cyan); }
+
+.scroll-rail__word {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2vw, 10px);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.scroll-rail__track {
+  position: relative;
+  width: 1px;
+  height: clamp(40px, 8vh, 72px);
+  background: linear-gradient(180deg, transparent, rgba(148, 163, 184, 0.42), transparent);
+  overflow: hidden;
+}
+.scroll-rail__bead {
+  position: absolute;
+  left: -1px;
+  width: 3px;
+  height: 30%;
+  background: currentColor;
+  animation: rail-bead 2.2s var(--ease-standard) infinite;
+}
+@keyframes rail-bead {
+  0%   { top: -32%; opacity: 0; }
+  22%  { opacity: 1; }
+  78%  { opacity: 1; }
+  100% { top: 102%; opacity: 0; }
+}
+/* Near the end of the page the rail reverses and means "back to top". */
+.scroll-rail.is-end { color: var(--color-cyan); }
+.scroll-rail.is-end .scroll-rail__bead { animation-name: rail-bead-up; }
+@keyframes rail-bead-up {
+  0%   { top: 102%; opacity: 0; }
+  22%  { opacity: 1; }
+  78%  { opacity: 1; }
+  100% { top: -32%; opacity: 0; }
+}
+
+/* It is a scroll affordance, so it has nothing to say while the overlay
+   is up or when motion is off — but it stays operable as a button. */
+html.pl-locked .scroll-rail { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-rail__bead { animation: none; top: 35%; }
+}
+/* Below the deck gutter there is genuinely no room beside the cards. */
+@media (max-width: 359px) { .scroll-rail { display: none; } }
+
+
+/* ==================================================================
+   PRELOADER  (handoff §1)
+   ================================================================== */
+html.pl-locked, html.pl-locked body { overflow: hidden; }
+/* Set by the inline gate in _entry.ejs on repeat visits — see the note there. */
+html.pl-skip #preloader { display: none; }
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  /* Transparent: the bands supply the opaque black, so that when they
+     collapse the page beneath is genuinely revealed. */
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  --g: 0;
+  --pl-content: 1;
+}
+#preloader.is-instant { transition: opacity 200ms var(--ease-standard); opacity: 0; }
+
+/* perspective floor grid */
+.pl-glows {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(85% 65% at 30% 42%, rgba(17,26,74,0.55) 0%, transparent 60%),
+    radial-gradient(70% 60% at 76% 58%, rgba(28,20,78,0.60) 0%, transparent 65%);
+  opacity: var(--pl-content);
+  pointer-events: none;
+}
+
+.pl-grid {
+  position: absolute;
+  inset: -10%;
+  opacity: var(--pl-content);
+  background-image: repeating-linear-gradient(0deg, rgba(80,104,238,0.06) 0 1px, transparent 1px 84px);
+  transform-origin: 50% 100%;
+  transform: perspective(900px) rotateX(68deg) translateY(calc(120px + 40px * var(--g))) scale(1.7);
+  pointer-events: none;
+}
+
+.pl-hud {
+  position: absolute;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: rgba(100,116,139,0.9);
+  opacity: var(--pl-content);
+  white-space: nowrap;
+}
+.pl-hud--tl { top: 22px; left: 18px; }
+.pl-hud--tr { top: 22px; right: 18px; }
+.pl-hud--bl { bottom: 22px; left: 18px; }
+.pl-hud--br { bottom: 22px; right: 18px; }
+@media (min-width: 640px) {
+  .pl-hud--tl, .pl-hud--tr { top: 34px; }
+  .pl-hud--bl, .pl-hud--br { bottom: 34px; }
+  .pl-hud--tl, .pl-hud--bl { left: 40px; }
+  .pl-hud--tr, .pl-hud--br { right: 40px; }
+}
+/* On the narrowest screens the four corner labels collide — keep the two
+   that carry information. */
+@media (max-width: 419px) { .pl-hud--tr, .pl-hud--br { display: none; } }
+
+.pl-stack {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(18px, 5vh, 34px);
+  opacity: var(--pl-content);
+  padding: 0 16px;
+  width: 100%;
+}
+
+/* --- shard wordmark --- */
+.pl-wm {
+  position: relative;
+  width: 100%;
+  /* The shard clip-paths are percentages of THIS box, so its height has to
+     track the type size or the diagonals cut the glyphs at different places
+     on every viewport. 130/108 is the handoff ratio. */
+  font-size: clamp(2rem, 11vw, 6.75rem);
+  height: 1.204em;
+}
+.pl-shard {
+  position: absolute;
+  inset: 0;
+  --chroma: 5px;
+}
+.pl-shard--1 { clip-path: polygon(0 0, 100% 0, 100% 40%, 0 54%); }
+.pl-shard--2 { clip-path: polygon(0 54%, 100% 40%, 100% 74%, 0 84%); }
+.pl-shard--3 { clip-path: polygon(0 84%, 100% 74%, 100% 100%, 0 100%); }
+
+/* Each copy fills the shard and centres its own text — without `inset` and
+   the centring the three copies collapse to the shard's top-left corner and
+   the wordmark hangs off the left edge instead of sitting centred. */
+.pl-shard span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: inherit;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.pl-shard__c {
+  color: rgba(34, 211, 238, var(--a-alpha, 0.5));
+  transform: translate(calc(var(--x, 0px) - var(--chroma, 5px)), calc(var(--jy, 0px) - 2px));
+}
+.pl-shard__m {
+  color: rgba(232, 121, 249, var(--b-alpha, 0.45));
+  transform: translate(calc(var(--x, 0px) + var(--chroma, 5px)), calc(var(--jy, 0px) + 2px));
+}
+.pl-shard__w {
+  color: #fff;
+  transform: translate(var(--x, 0px), var(--jy, 0px));
+  text-shadow: 0 0 var(--glow, 14px) rgba(80, 104, 238, var(--glow-alpha, 0.28));
+}
+
+/* Torn slivers share the wordmark's type; JS sets clip-path/colour/offset. */
+.pl-sliver {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: inherit;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* --- readout --- */
+.pl-readout { display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 3.5vh, 34px); width: 100%; }
+.pl-sub {
+  color: rgba(34, 211, 238, var(--sub-alpha, 0.55));
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 4vw, 1.625rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  margin: 0;
+}
+.pl-track {
+  width: min(460px, 86vw);
+  height: 2px;
+  background: rgba(148,163,184,0.18);
+}
+.pl-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22d3ee, #e879f9);
+  box-shadow: 0 0 18px rgba(80,104,238,0.8);
+}
+.pl-status {
+  width: min(460px, 86vw);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 2.6vw, 12px);
+  letter-spacing: 0.3em;
+  color: var(--color-dim);
+}
+.pl-pct { color: var(--color-strong); }
+
+.pl-scan {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: -30px;
+  z-index: 3;
+  opacity: var(--pl-content);
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 4px);
+  pointer-events: none;
+}
+.pl-vignette { position: absolute; inset: 0; z-index: 3; box-shadow: inset 0 0 240px rgba(0,0,0,0.85); pointer-events: none; opacity: var(--pl-content); }
+
+/* --- shutter bands --- */
+.pl-bands { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.pl-band {
+  position: absolute;
+  left: 0; right: 0;
+  height: calc(100% / 9 + 0.2%);
+  background: #000;
+  transform: scaleX(1);
+}
+.pl-band:nth-child(1) { top: 0; }
+.pl-band:nth-child(2) { top: calc(100% / 9 * 1); }
+.pl-band:nth-child(3) { top: calc(100% / 9 * 2); }
+.pl-band:nth-child(4) { top: calc(100% / 9 * 3); }
+.pl-band:nth-child(5) { top: calc(100% / 9 * 4); }
+.pl-band:nth-child(6) { top: calc(100% / 9 * 5); }
+.pl-band:nth-child(7) { top: calc(100% / 9 * 6); }
+.pl-band:nth-child(8) { top: calc(100% / 9 * 7); }
+.pl-band:nth-child(9) { top: calc(100% / 9 * 8); }
+/* odd index (0-based) anchors right, matching `i % 2 ? right : left` */
+.pl-band:nth-child(odd)  { transform-origin: left center; }
+.pl-band:nth-child(even) { transform-origin: right center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-grid { transform: none; }
+  .pl-band { transform: scaleX(0); }
 }
 
 } /* end @layer components */

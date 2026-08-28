@@ -65,8 +65,14 @@ export function initScroll() {
 
 /** Programmatic scrolling that respects Lenis when it is running. */
 export function scrollTo(target, opts = {}) {
-  if (lenis) lenis.scrollTo(target, { offset: -80, duration: 1.1, ...opts });
-  else document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
+  if (lenis) return lenis.scrollTo(target, { offset: -80, duration: 1.1, ...opts });
+  // Lenis absent: honour a numeric target too, so callers that scroll to a
+  // position (the scroll rail) work on the native path as well as a selector.
+  if (typeof target === 'number') {
+    window.scrollTo({ top: target + (opts.offset ?? 0), behavior: 'smooth' });
+    return;
+  }
+  document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
 }
 
 export function stopScroll() { lenis?.stop(); }
@@ -96,7 +102,12 @@ export function registerReveals(ctx) {
         duration: 0.9,
         ease: 'power3.out',
         delay: Math.min(n, 5) * 0.07,
-        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+        // Inside the deck the element's own document position is the wrong
+        // clock: the card is sticky, so it parks in view long before that
+        // position reaches the trigger line, and its contents would still be
+        // at opacity 0 while the card is sitting there being read. The card
+        // is what actually arrives, so the card is what triggers.
+        scrollTrigger: { trigger: el.closest('.deck-item') || el, start: 'top 92%', once: true },
         onStart: () => el.classList.add('is-visible'),
       });
   });

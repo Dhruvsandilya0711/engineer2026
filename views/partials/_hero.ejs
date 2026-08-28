@@ -1,73 +1,120 @@
 <!-- ==========================================================================
-     HERO — the visual centerpiece. The Penrose logo is the dominant object;
-     text is secondary hierarchy around it (see design-system: ENGINEER '26
-     = brand weight, COGNITRIXX = theme weight, REWIRE REALITY = tagline).
+     HERO — design handoff (design_handoff_engineer26_homepage).
 
-     public/js/hero-scene.js mounts a Three.js textured-plane scene using the
-     ACTUAL logo asset (public/images/engineer26logo.png) if WebGL is
-     available and the visitor hasn't asked for reduced motion — the plain
-     <img> below is the fallback in every other case (no-WebGL, load error,
-     prefers-reduced-motion). The source file ships on a black canvas, so it
-     is composited with mix-blend-mode: screen so only the glowing triangle
-     reads against the void background, not a black square.
+     Order per spec: HUD status bar → nav bays → kicker → sliced wordmark →
+     status strip → COGNITRIXX → tagline → rule → date → CTA → countdown.
+
+     The handoff is authored at desktop (108px wordmark, six bays in one row,
+     40px gutters). This site is mobile-forward, so the composition is rebuilt
+     for the phone and grows into the desktop layout: bays go 2 → 3 → 6 across,
+     the wordmark is clamped, and the HUD chrome sheds its side labels where
+     there is no room for them.
      ========================================================================== -->
-<section id="top" class="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden px-6">
-  <div data-field="hero" data-density="1" data-tone="mixed" data-signals="8" data-spread="10" data-rotate="0.03" class="absolute inset-0 z-0" aria-hidden="true"></div>
-  <div class="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-void pointer-events-none"></div>
+<section id="top" class="relative min-h-[100svh] flex flex-col overflow-hidden">
 
-  <div class="hero-stack relative z-10 w-full">
-  <div class="flex flex-col items-center text-center gap-2" data-reveal>
-    <p class="eyebrow text-cyan justify-center">NITK Surathkal</p>
-    <p class="font-mono text-xs tracking-[0.2em] uppercase text-[var(--paper-faint)]"><%= festDates.display %></p>
-  </div>
+  <div data-field="hero" data-priority="1" data-density="0.5" data-tone="mixed"
+       data-signals="3" data-spread="12" data-rotate="0.015"
+       class="absolute inset-0 z-0" aria-hidden="true"></div>
 
-  <div class="hero-logo-frame relative" data-js="hero-logo">
-    <div class="absolute inset-0 flex items-center justify-center border border-dashed border-[var(--hairline-strong)]" data-js="hero-logo-placeholder" style="display:none;">
-      <div class="text-center px-6">
-        <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)]">Logo asset pending</p>
-        <p class="font-mono text-[0.6rem] text-[var(--paper-faint)] mt-2">public/images/engineer26logo.png</p>
-      </div>
+  <!-- twin radial glows + square grid, both inert -->
+  <div class="hero-glows absolute inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
+  <div class="hero-grid absolute inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
+
+  <!-- ============ HUD STATUS BAR ============ -->
+  <div class="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-6 sm:pt-8">
+    <div class="flex items-center gap-3">
+      <img src="/images/engineer26logo.png" alt="ENGINEER '26"
+           class="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+           style="filter: drop-shadow(0 0 12px rgba(124,58,237,0.7));">
+      <span class="hud-label">NITK</span>
     </div>
-    <img
-      src="/images/engineer26logo.png"
-      alt="ENGINEER '26 — the impossible Penrose object"
-      class="relative w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_70px_rgba(123,92,250,0.28)]"
-      data-js="hero-logo-img"
-      onerror="this.style.display='none'; this.parentElement.querySelector('[data-js=hero-logo-placeholder]').style.display='flex';"
-    >
-  </div>
-
-  <div class="flex flex-col items-center text-center gap-2" data-reveal>
-    <h1 class="font-display font-extrabold text-[clamp(2.4rem,7vw,4.5rem)] leading-[0.95]">ENGINEER&nbsp;'26</h1>
-    <p class="font-display font-medium text-[clamp(1.05rem,2.6vw,1.85rem)] text-gradient-impossible">COGNITRIXX</p>
-    <p class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase text-[var(--paper-dim)]">Rewire Reality</p>
-  </div>
-
-  <div class="flex flex-col sm:flex-row items-center gap-4" data-reveal>
-    <a href="/register" class="btn btn-primary" data-js="magnetic">Register now</a>
-    <a href="#events" class="btn btn-secondary">Explore Events</a>
-  </div>
-
-  <div class="flex items-start gap-5 sm:gap-8" data-js="countdown" data-target="<%= festDates.start %>T00:00:00+05:30" aria-live="polite" aria-label="Countdown to ENGINEER '26">
-    <div class="text-center">
-      <span class="countdown-digit block text-2xl sm:text-4xl" data-unit="days">00</span>
-      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Days</span>
-    </div>
-    <span class="countdown-digit text-2xl sm:text-4xl text-[var(--paper-faint)] mt-0">:</span>
-    <div class="text-center">
-      <span class="countdown-digit block text-2xl sm:text-4xl" data-unit="hours">00</span>
-      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Hrs</span>
-    </div>
-    <span class="countdown-digit text-2xl sm:text-4xl text-[var(--paper-faint)]">:</span>
-    <div class="text-center">
-      <span class="countdown-digit block text-2xl sm:text-4xl" data-unit="minutes">00</span>
-      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Min</span>
-    </div>
-    <span class="countdown-digit text-2xl sm:text-4xl text-[var(--paper-faint)]">:</span>
-    <div class="text-center">
-      <span class="countdown-digit block text-2xl sm:text-4xl text-magenta" data-unit="seconds">00</span>
-      <span class="block text-[0.6rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mt-1 font-mono">Sec</span>
+    <div class="flex items-center gap-3">
+      <span class="hud-label hidden xs:inline">Session 26.0</span>
+      <span class="hud-rule w-[34px] hidden xs:block"></span>
+      <span class="hud-label" style="color: var(--color-cyan);">Online</span>
     </div>
   </div>
+
+  <!-- ============ NAV BAYS ============ -->
+  <nav aria-label="Primary" class="relative z-10 mt-5 sm:mt-6">
+    <ul class="bays">
+      <% const bays = [
+           { n: '01', label: 'About',    href: '/#about',    accent: '34,211,238',  slab: '30%' },
+           { n: '02', label: 'Events',   href: '/#events',   accent: '99,102,241',  slab: '24%' },
+           { n: '03', label: 'Schedule', href: '/#schedule', accent: '108,124,244', slab: '20%' },
+           { n: '04', label: 'Speakers', href: '/#speakers', accent: '128,146,246', slab: '24%' },
+           { n: '05', label: 'Team',     href: '/#team',     accent: '214,118,226', slab: '28%' },
+           { n: '06', label: 'Register', href: '/register',  accent: '232,121,249', slab: '100%', cta: true }
+         ]; %>
+      <% bays.forEach(function(b){ %>
+      <li>
+        <a href="<%= b.href %>" class="bay <%= b.cta ? 'bay--cta' : '' %>"
+           style="--bay-accent: <%= b.accent %>; --bay-slab: <%= b.slab %>;">
+          <span class="bay__outline"></span>
+          <span class="bay__interior"></span>
+          <% if (!b.cta) { %><span class="bay__slab"></span><% } %>
+          <span class="bay__row">
+            <span class="bay__idx"><%= b.n %></span>
+            <span class="bay__label"><%= b.label %></span>
+          </span>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <!-- One clamped gap rather than per-element margins: margins cannot respond
+       to viewport HEIGHT, which is what pushed the countdown off-screen. -->
+  <div class="hero-main relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6">
+
+    <p class="hero-kicker" data-reveal>NITK Surathkal</p>
+
+    <h1 class="wm" data-reveal aria-label="ENGINEER '26">
+      <span class="wm__layer wm__ghost-c" aria-hidden="true">ENGINEER'26</span>
+      <span class="wm__layer wm__ghost-m" aria-hidden="true">ENGINEER'26</span>
+      <span class="wm__layer wm__main">ENGINEER'26</span>
+      <span class="wm__scan" aria-hidden="true"></span>
+    </h1>
+
+    <!-- status strip: the middle item drops on the narrowest screens -->
+    <div class="flex items-center gap-3 sm:gap-[18px] flex-wrap justify-center" data-reveal>
+      <span class="hud-label">SYS/OK</span>
+      <span class="hud-rule w-[30px] sm:w-[46px]"></span>
+      <span class="hud-label">V26.0</span>
+      <span class="hud-rule w-[30px] sm:w-[46px] hidden xs:block"></span>
+      <span class="hud-label hidden xs:inline">No root no rules</span>
+    </div>
+
+    <p class="font-display font-bold text-gradient-impossible text-[clamp(1.6rem,7vw,2.5rem)] tracking-[0.06em]" data-reveal>COGNITRIXX</p>
+
+    <p class="font-mono text-[clamp(0.72rem,3.2vw,0.94rem)] tracking-[0.44em] text-[var(--color-muted)] uppercase" data-reveal>Rewire Reality</p>
+
+    <span class="block h-px bg-[var(--rule)] w-[120px]" aria-hidden="true" data-reveal></span>
+
+    <p class="font-mono text-[clamp(0.72rem,3.2vw,0.94rem)] tracking-[0.34em] text-[var(--color-muted)] uppercase"
+       data-reveal><%= festDates.display %></p>
+
+    <!-- One action. REGISTER already sits on this screen as bay 06, and the
+         deck closes on a full REGISTER card, so a third copy of the same
+         destination was the only thing the old primary CTA added. What the
+         fold actually needs is the way *into* the page. -->
+    <a href="#deck" class="cta-explore cta-explore--lead" data-js="magnetic" data-reveal>
+      <span>Explore events</span>
+      <span class="cta-explore__arrow" aria-hidden="true"></span>
+    </a>
+    <span class="block h-px bg-[var(--rule)] w-[min(230px,70vw)]" aria-hidden="true"></span>
+
+    <div class="countdown-row" data-js="countdown"
+         data-target="<%= festDates.start %>T00:00:00+05:30" aria-live="polite"
+         aria-label="Countdown to ENGINEER '26">
+      <div class="cd"><span class="cd__n" data-unit="days">00</span><span class="cd__l">Days</span></div>
+      <span class="cd__sep">:</span>
+      <div class="cd"><span class="cd__n" data-unit="hours">00</span><span class="cd__l">Hrs</span></div>
+      <span class="cd__sep">:</span>
+      <div class="cd"><span class="cd__n" data-unit="minutes">00</span><span class="cd__l">Min</span></div>
+      <span class="cd__sep">:</span>
+      <div class="cd"><span class="cd__n cd__n--sec" data-unit="seconds">00</span><span class="cd__l">Sec</span></div>
+    </div>
   </div>
 </section>

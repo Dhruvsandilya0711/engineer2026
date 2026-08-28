@@ -5,6 +5,10 @@
 // this file deliberately owns neither, so there is one implementation of each.
 // ==========================================================================
 
+export { initCursor } from '/js/cursor.js';
+
+import { scrollTo } from '/js/scroll.js';
+
 export const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function initNav() {
@@ -14,7 +18,18 @@ export function initNav() {
   const drawer = document.getElementById('mobile-drawer');
   if (!header) return;
 
+  // On the homepage the hero carries its own nav bays, so the fixed header
+  // would duplicate them. It stays hidden until the hero has scrolled past —
+  // the handoff drops the header entirely, but a long page (especially on a
+  // phone) still needs navigation within reach.
+  const deferred = header.hasAttribute('data-deferred');
+  const heroEl = document.querySelector('#top');
+
   const onScroll = () => {
+    if (deferred) {
+      const past = window.scrollY > (heroEl ? heroEl.offsetHeight - 120 : 400);
+      header.classList.toggle('is-revealed', past);
+    }
     const scrolled = window.scrollY > 80;
     header.classList.toggle('bg-charcoal/90', scrolled);
     header.classList.toggle('backdrop-blur-md', scrolled);
@@ -77,4 +92,42 @@ export function initCountdown() {
     tick();
     setInterval(tick, 1000);
   });
+}
+
+/**
+ * SCROLL RAIL — the vertical SCROLL / TOP marker on the left edge.
+ *
+ * It is one control with two meanings, decided by how much page is left:
+ * a cue to keep going, then a way back once there is nothing below. Reading
+ * scroll position on every event is cheap (no layout is forced — scrollY and
+ * the cached document height only), so it stays passive.
+ */
+export function initScrollRail() {
+  const rail = document.querySelector('[data-js="scroll-rail"]');
+  if (!rail) return;
+
+  const word = rail.querySelector('[data-js="scroll-rail-word"]');
+  let atEnd = false;
+
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    // "Nearly done" rather than "done": the flip has to happen while the
+    // rail is still useful, not on the last pixel of travel.
+    const next = max > 0 && window.scrollY > max - window.innerHeight * 0.75;
+    if (next === atEnd) return;
+
+    atEnd = next;
+    rail.classList.toggle('is-end', atEnd);
+    rail.setAttribute('aria-label', atEnd ? 'Back to top' : 'Scroll down');
+    if (word) word.textContent = atEnd ? 'Top' : 'Scroll';
+  };
+
+  rail.addEventListener('click', () => {
+    if (atEnd) scrollTo(0, { offset: 0 });
+    else scrollTo(Math.round(window.scrollY + window.innerHeight * 0.9), { offset: 0 });
+  });
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
 }

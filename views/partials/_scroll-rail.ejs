@@ -1,0 +1,12 @@
+<!-- ==========================================================================
+     SCROLL RAIL — the word SCROLL set vertically down the left edge, with a
+     bead running the track beside it.
+
+     Included from _nav.ejs so every page gets it. Near the bottom it flips to
+     TOP and runs the bead upward; it is a real <button> throughout, so the
+     affordance is also the control (public/js/site.js → initScrollRail).
+     ========================================================================== -->
+<button type="button" class="scroll-rail" data-js="scroll-rail" aria-label="Scroll down">
+  <span class="scroll-rail__word" data-js="scroll-rail-word">Scroll</span>
+  <span class="scroll-rail__track" aria-hidden="true"><span class="scroll-rail__bead"></span></span>
+</button>

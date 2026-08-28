@@ -1,18 +1,67 @@
 <!-- ==========================================================================
-     Entry sequence — "a system initializing", not a splash screen.
-     Text-only stages driven by public/js/main.js (initEntrySequence).
-     Target: ~1.2s total, then removed from the DOM entirely.
-     Respects prefers-reduced-motion (main.js skips straight to hidden).
+     PRELOADER / boot sequence — design handoff §1.
+
+     LOAD → BURST → WIPE → DONE, driven by public/js/preloader.js.
+
+     The hero renders in the DOM *underneath* this overlay (never behind a
+     JS gate), so nothing SEO-relevant is hidden. First visit only
+     (sessionStorage); prefers-reduced-motion skips straight to a 200ms fade.
      ========================================================================== -->
-<div id="entry-sequence" role="status" aria-live="polite" aria-label="Loading ENGINEER '26">
-  <svg class="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-    <line x1="0" y1="30" x2="100" y2="30" stroke="var(--hairline-strong)" stroke-width="0.15" />
-    <line x1="0" y1="70" x2="100" y2="70" stroke="var(--hairline-strong)" stroke-width="0.15" />
-    <line x1="20" y1="0" x2="20" y2="100" stroke="var(--hairline-strong)" stroke-width="0.15" />
-    <line x1="80" y1="0" x2="80" y2="100" stroke="var(--hairline-strong)" stroke-width="0.15" />
-  </svg>
-  <p class="stage font-mono text-xs tracking-[0.2em] uppercase text-cyan" data-stage="0">Initializing system</p>
-  <h1 class="stage font-display font-bold text-4xl sm:text-6xl" data-stage="1">ENGINEER '26</h1>
-  <h2 class="stage font-display font-medium text-2xl sm:text-4xl text-gradient-impossible" data-stage="2">COGNITRIXX</h2>
-  <p class="stage font-mono text-sm sm:text-base tracking-[0.3em] uppercase text-[var(--paper-dim)]" data-stage="3">Rewire Reality</p>
+<%# The nine bands are opaque black and are server-rendered, so they cover the
+    viewport from first paint until preloader.js can take them down — and that
+    module sits behind main.js's whole graph (three, gsap, lenis). On a repeat
+    visit, where there is no sequence to play, that is a black screen for as
+    long as the bundle takes. This parser-blocking gate runs before the overlay
+    element even exists, so the skip costs nothing. Same for JS-off, where
+    nothing would ever remove the overlay. %>
+<script>
+  try { if (sessionStorage.getItem('engi26.loaded') === '1') document.documentElement.classList.add('pl-skip'); } catch (e) {}
+</script>
+<noscript><style>#preloader { display: none; }</style></noscript>
+<div id="preloader" role="status" aria-live="polite" aria-label="Loading ENGINEER '26">
+  <!-- The nine shutter bands ARE the opaque backdrop: they sit behind the
+       overlay's content and collapse during WIPE to reveal the page. They must
+       not paint on top, or they black out the sequence they are meant to end. -->
+  <div class="pl-bands" data-js="pl-bands" aria-hidden="true">
+    <% for (var b = 0; b < 9; b++) { %><span class="pl-band"></span><% } %>
+  </div>
+  <div class="pl-glows" aria-hidden="true"></div>
+  <div class="pl-grid" aria-hidden="true"></div>
+
+  <!-- HUD corners -->
+  <div class="pl-hud pl-hud--tl">NITK SURATHKAL</div>
+  <div class="pl-hud pl-hud--tr">23—25 OCT 2026</div>
+  <div class="pl-hud pl-hud--bl" data-js="pl-boot">BOOTING INTERFACE</div>
+  <div class="pl-hud pl-hud--br">SCANLINE 60HZ</div>
+
+  <div class="pl-stack">
+    <!-- Shard-built wordmark: three diagonal slices, each with cyan/magenta
+         chroma copies, so it can come apart during the burst. -->
+    <div class="pl-wm" data-js="pl-wm" aria-hidden="true">
+      <% for (var i = 1; i <= 3; i++) { %>
+      <div class="pl-shard pl-shard--<%= i %>">
+        <span class="pl-shard__c">ENGINEER'26</span>
+        <span class="pl-shard__m">ENGINEER'26</span>
+        <span class="pl-shard__w">ENGINEER'26</span>
+      </div>
+      <% } %>
+      <!-- Torn slivers: thin sheared bands that tear off during the burst.
+           Pre-rendered and hidden; preloader.js drives clip-path/offset. -->
+      <% for (var v = 0; v < 5; v++) { %>
+      <span class="pl-sliver" style="display:none;">ENGINEER'26</span>
+      <% } %>
+    </div>
+
+    <div class="pl-readout">
+      <p class="pl-sub" data-js="pl-sub">COGNITRIXX</p>
+      <div class="pl-track"><span class="pl-fill" data-js="pl-fill"></span></div>
+      <div class="pl-status">
+        <span data-js="pl-msg">REWIRING REALITY</span>
+        <span class="pl-pct" data-js="pl-pct">000%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pl-scan" aria-hidden="true"></div>
+  <div class="pl-vignette" aria-hidden="true"></div>
 </div>
