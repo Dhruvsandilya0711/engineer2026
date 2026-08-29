@@ -61,7 +61,18 @@ export function createNeuralField(host, opts = {}) {
   const {
     density = 1, spread = 9, tone = 'mixed',
     signals: signalCount = 6, rotate = 0.035, depth = 16,
+    scroll = null, journey = false,
   } = opts;
+
+  // JOURNEY — the continuous "spine". The camera holds still while the whole
+  // node cloud FLOWS toward it as the page scrolls, wrapping at the corridor
+  // ends, so scrolling reads as travelling forward through the network.
+  // Velocity adds momentum to the signals and lights the connections; the
+  // camera drifts along a gentle curved path (no constant spin). Off entirely
+  // under reduced motion (the field renders one static frame as before).
+  const JOURNEY = !!(journey && scroll && !REDUCED_MOTION);
+  const CORRIDOR = 52;   // world depth of the tunnel the cloud loops through
+  const TRAVEL = 150;    // world units the cloud flows over one full page scroll
 
   const scene = new THREE.Scene();
   // Depth fog: with additive blending, fading fragments toward near-black as
@@ -124,6 +135,22 @@ export function createNeuralField(host, opts = {}) {
   const points = new THREE.Points(nodeGeo, nodeMat);
   group.add(points);
 
+  // Recast the volume as a deep corridor for the journey: camera at the mouth
+  // (z=0) looking down -z, every node in front of it, spread over CORRIDOR of
+  // depth. Fog is measured in distance from the camera, so the far end fades.
+  if (JOURNEY) {
+    camera.position.set(0, 0, 0);
+    scene.fog = new THREE.Fog(0x03040c, 9, CORRIDOR * 1.02);
+    const pz = nodeGeo.attributes.position.array;
+    for (let i = 0; i < count; i++) {
+      pz[i * 3]     = rand(-spread, spread);
+      pz[i * 3 + 1] = rand(-spread * 0.7, spread * 0.7);
+      pz[i * 3 + 2] = rand(-CORRIDOR - 2, -2);
+      velocities[i].set(rand(-0.004, 0.004), rand(-0.004, 0.004), 0);
+    }
+    nodeGeo.attributes.position.needsUpdate = true;
+  }
+
   // ---- links -------------------------------------------------------------
   // One LineSegments for every connection, rebuilt in place each frame. Cheaper
   // than a mesh per link by orders of magnitude.
@@ -168,6 +195,7 @@ export function createNeuralField(host, opts = {}) {
   let raf = null, running = false, visible = true;
   let width = 0, height = 0;
   let progress = 0;      // external scrub 0..1
+  let flowAccum = 0;     // journey: smoothed cloud position along the corridor
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
   function resize() {
@@ -208,6 +236,58 @@ export function createNeuralField(host, opts = {}) {
   function step(time) {
     const pos = nodeGeo.attributes.position.array;
     const col = nodeGeo.attributes.color.array;
+
+    // ---- JOURNEY: fly the cloud past a fixed camera, driven by scroll -------
+    if (JOURNEY) {
+      // Scrub the cloud toward the scroll target; the easing IS the inertia,
+      // so a hard stop settles instead of snapping. `delta` is this frame's
+      // travel — its magnitude is the effective scroll velocity.
+      const target = scroll.progress * TRAVEL;
+      const delta = (target - flowAccum) * 0.1;
+      flowAccum += delta;
+      const speed = Math.min(2.6, Math.abs(delta) * 7);
+
+      for (let i = 0; i < count; i++) {
+        const ix = i * 3;
+        pos[ix + 2] += delta;                    // flow toward the camera
+        const v = velocities[i];
+        pos[ix] += v.x; pos[ix + 1] += v.y;      // faint lateral shimmer
+        if (Math.abs(pos[ix]) > spread) v.x *= -1;
+        if (Math.abs(pos[ix + 1]) > spread * 0.7) v.y *= -1;
+        if (pos[ix + 2] > -2) pos[ix + 2] -= CORRIDOR;            // wrap behind -> far
+        else if (pos[ix + 2] < -CORRIDOR - 2) pos[ix + 2] += CORRIDOR; // (scrolling up)
+      }
+      nodeGeo.attributes.position.needsUpdate = true;
+
+      // Gentle curved path: the camera drifts on x/y (plus pointer parallax)
+      // but keeps looking down the corridor — no constant rotation.
+      pointer.x += (pointer.tx - pointer.x) * 0.05;
+      pointer.y += (pointer.ty - pointer.y) * 0.05;
+      camera.position.x += ((Math.sin(scroll.progress * Math.PI * 3) * 1.7) + pointer.x * 1.3 - camera.position.x) * 0.05;
+      camera.position.y += ((Math.cos(scroll.progress * Math.PI * 2) * 1.1) - pointer.y * 0.9 - camera.position.y) * 0.05;
+      camera.lookAt(0, 0, -20);
+
+      // Connections brighten with scroll speed; signals accelerate.
+      linkMat.opacity = 0.2 + Math.min(0.24, speed * 0.14);
+      rebuildLinks();
+      for (let s = 0; s < travellers.length; s++) {
+        const tr = travellers[s];
+        tr.t += tr.speed * (1 + speed * 1.8);
+        if (tr.t >= 1) { tr.t = 0; tr.a = tr.b; tr.b = (Math.random() * count) | 0; }
+        const ax = tr.a * 3, bx = tr.b * 3, o = s * 3;
+        sigPos[o]     = pos[ax]     + (pos[bx]     - pos[ax])     * tr.t;
+        sigPos[o + 1] = pos[ax + 1] + (pos[bx + 1] - pos[ax + 1]) * tr.t;
+        sigPos[o + 2] = pos[ax + 2] + (pos[bx + 2] - pos[ax + 2]) * tr.t;
+        const c = tr.col;
+        sigCol[o] = c.r; sigCol[o + 1] = c.g; sigCol[o + 2] = c.b;
+      }
+      if (travellers.length) {
+        sigGeo.attributes.position.needsUpdate = true;
+        sigGeo.attributes.color.needsUpdate = true;
+      }
+      renderer.render(scene, camera);
+      return;
+    }
 
     if (!REDUCED_MOTION) {
       for (let i = 0; i < count; i++) {
@@ -333,7 +413,8 @@ const MOBILE_CONTEXT_BUDGET = 2;
  * code can scrub specific fields; skipped hosts are absent from the map and
  * marked `.is-static` for the CSS fallback.
  */
-export function mountFields() {
+export function mountFields(opts = {}) {
+  const scroll = opts.scroll || null;
   const out = {};
   if (!hasWebGL()) {
     document.querySelectorAll('[data-field]').forEach(h => h.classList.add('is-static'));
@@ -342,12 +423,17 @@ export function mountFields() {
 
   const hosts = [...document.querySelectorAll('[data-field]')];
   const isSmall = window.innerWidth < 768;
+  const isSpine = (h) => h.dataset.field === 'ambient';
 
   let allowed = hosts;
   if (isSmall) {
-    allowed = [...hosts]
-      .sort((a, b) => (parseInt(a.dataset.priority || '3', 10) - parseInt(b.dataset.priority || '3', 10)))
-      .slice(0, MOBILE_CONTEXT_BUDGET);
+    // The ambient field IS the continuous spine, so it must survive the mobile
+    // budget — it becomes the whole spatial experience on a phone. Keep it
+    // first, then fill the remaining budget by priority.
+    const spine = hosts.find(isSpine);
+    const rest = hosts.filter(h => h !== spine)
+      .sort((a, b) => (parseInt(a.dataset.priority || '3', 10) - parseInt(b.dataset.priority || '3', 10)));
+    allowed = [spine, ...rest].filter(Boolean).slice(0, MOBILE_CONTEXT_BUDGET);
   }
   const allowedSet = new Set(allowed);
 
@@ -365,6 +451,10 @@ export function mountFields() {
       signals: isSmall ? Math.min(signals, 4) : signals,
       rotate: parseFloat(host.dataset.rotate || '0.035'),
       depth: parseFloat(host.dataset.depth || '16'),
+      // The ambient field becomes the scroll-driven spine; everything else
+      // stays a fixed accent moment.
+      scroll,
+      journey: isSpine(host),
     });
   });
   return out;

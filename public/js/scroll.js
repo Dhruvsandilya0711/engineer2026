@@ -13,6 +13,12 @@
 export const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const IS_TOUCH = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
+// Live scroll telemetry, read every frame by the spatial layer (the neural
+// spine in cognitrixx-3d.js) so scroll position and velocity drive the camera
+// journey. One source, updated from the single Lenis instance below — never a
+// second scroll listener that could disagree with Lenis.
+export const scrollState = { progress: 0, velocity: 0 };
+
 let lenis = null;
 let gsap = null;
 let ScrollTrigger = null;
@@ -50,11 +56,30 @@ export function initScroll() {
       });
 
       // One clock: Lenis advances inside GSAP's ticker so both agree on time.
-      lenis.on('scroll', ScrollTrigger.update);
+      // The same scroll event feeds ScrollTrigger AND the spine telemetry.
+      lenis.on('scroll', (e) => {
+        ScrollTrigger.update();
+        scrollState.progress = e.progress ?? (e.limit ? e.scroll / e.limit : 0);
+        scrollState.velocity = e.velocity ?? 0;
+      });
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
     } catch {
       lenis = null; // native scrolling; ScrollTrigger still works
+    }
+
+    // Native fallback (Lenis unavailable): keep the spine telemetry alive so
+    // the journey still tracks scroll, without a second smooth-scroll system.
+    if (!lenis) {
+      let lastY = window.scrollY, lastT = performance.now();
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const now = performance.now();
+        scrollState.progress = max > 0 ? y / max : 0;
+        scrollState.velocity = (y - lastY) / Math.max(1, now - lastT) * 16;
+        lastY = y; lastT = now;
+      }, { passive: true });
     }
 
     return { gsap, ScrollTrigger, lenis };
@@ -95,10 +120,27 @@ export function registerReveals(ctx) {
     const n = perParent.get(parent) || 0;
     perParent.set(parent, n + 1);
 
+    // Direction from the element's own position, so the page reads as content
+    // converging through space rather than a column of identical slide-ups:
+    // left-of-centre enters from the left, right-of-centre from the right,
+    // centred content approaches from depth (scale). Explicit override via
+    // data-reveal="up|left|right|depth". Transient x-offsets are clipped by
+    // the body's overflow-x:hidden, so they never add a scrollbar.
+    const rect = el.getBoundingClientRect();
+    const mid = rect.left + rect.width / 2;
+    const dir = el.dataset.reveal
+      || (rect.width > innerWidth * 0.7 ? 'depth'
+        : mid < innerWidth * 0.42 ? 'left'
+        : mid > innerWidth * 0.58 ? 'right' : 'depth');
+    const from = dir === 'left'  ? { x: -46, y: 0, scale: 1 }
+      : dir === 'right' ? { x: 46, y: 0, scale: 1 }
+      : dir === 'up'    ? { x: 0, y: 24, scale: 1 }
+      : { x: 0, y: 30, scale: 0.965 }; // depth
+
     gsap.fromTo(el,
-      { opacity: 0, y: 18 },
+      { opacity: 0, ...from },
       {
-        opacity: 1, y: 0,
+        opacity: 1, x: 0, y: 0, scale: 1,
         duration: 0.9,
         ease: 'power3.out',
         delay: Math.min(n, 5) * 0.07,

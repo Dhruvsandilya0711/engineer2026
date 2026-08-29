@@ -770,43 +770,177 @@
 .rail-btn:hover { color: var(--color-cyan); border-color: var(--color-cyan); }
 
 /* ==================================================================
-   GALLERY mosaic — varied spans so it never reads as a uniform grid
+   GALLERY — COGNITRIXX neural archive stream. A continuous horizontal flow
+   of event photographs travelling through the neural field; motion driven by
+   Lenis velocity in public/js/gallery-flow.js, depth by CSS 3D. Distinct in
+   personality from the deliberate Events rail: this one never stops flowing.
    ================================================================== */
-.gallery-mosaic {
-  list-style: none; margin: 0; padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+.gflow {
+  --flow-in: 0;
+  position: relative;
+  padding-block: clamp(2.5rem, 6vh, 4.5rem);
+  overflow: hidden;               /* clip the horizontal stream to the page */
 }
-@media (min-width: 768px) { .gallery-mosaic { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
-.gallery-tile { position: relative; }
-@media (min-width: 768px) {
-  .gallery-tile.is-wide { grid-column: span 2; }
-  .gallery-tile.is-tall { grid-row: span 2; }
+.gflow__head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  max-width: 90rem;
+  margin: 0 auto clamp(1.4rem, 3vh, 2.4rem);
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
 }
-.gallery-tile__link {
-  position: relative; display: block; height: 100%; min-height: 150px;
-  overflow: hidden; border: 1px solid var(--hairline); text-decoration: none;
-  transition: border-color var(--dur-base) var(--ease-standard);
+.gflow__meta {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-faint);
 }
-.gallery-tile__link:hover { border-color: var(--color-magenta); }
-.gallery-tile__link img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: saturate(0.75) contrast(1.05);
-  transition: filter var(--dur-slow) var(--ease-standard), transform 800ms var(--ease-emphasized);
+
+/* --- the curved moving field (a 3D cylinder of frames) ------------------ */
+.gflow__stage {
+  --radius: 560px;                 /* cylinder radius (JS reads this) */
+  --card-w: 210px;
+  --card-h: 300px;
+  position: relative;
+  height: clamp(340px, 56vh, 480px);
+  overflow: hidden;
+  perspective: 1200px;
+  perspective-origin: calc(50% + var(--pox, 0) * 1%) calc(50% + var(--poy, 0) * 1%);
+  /* Let the page keep scrolling vertically; horizontal drags come to JS to
+     turn the ring (that is the mobile scrub). */
+  touch-action: pan-y;
 }
-.gallery-tile__link:hover img { filter: none; transform: scale(1.04); }
-.gallery-tile__cap {
+
+/* Manual scroll controls — desktop only; mobile scrubs by swipe. Angular HUD
+   buttons that push the stream while pressed. */
+.gflow__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 8, 14, 0.68);
+  border: 1px solid var(--hairline-strong);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  color: var(--color-strong);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard),
+    background 160ms var(--ease-standard);
+}
+.gflow__nav:hover, .gflow__nav:focus-visible {
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+  background: rgba(6, 8, 14, 0.92);
+  outline: none;
+}
+.gflow__nav::before {
+  content: "";
+  width: 11px; height: 11px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}
+.gflow__nav--prev { left: clamp(10px, 3vw, 34px); }
+.gflow__nav--prev::before { transform: rotate(135deg); margin-left: 4px; }
+.gflow__nav--next { right: clamp(10px, 3vw, 34px); }
+.gflow__nav--next::before { transform: rotate(-45deg); margin-right: 4px; }
+@media (max-width: 767px) { .gflow__nav { display: none; } }
+/* The ring holds every card on the surface of the cylinder; JS rotates it on
+   Y to flow the frames. Pushed back by one radius so the front card sits at
+   the screen plane. */
+.gflow__ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--card-w); height: var(--card-h);
+  margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
+  transform-style: preserve-3d;
+  transform: translateZ(calc(-1 * var(--radius))) rotateY(0deg);
+  will-change: transform;
+}
+.gflow__card {
+  position: absolute;
+  inset: 0;
+  /* each frame sits at its own angle around the cylinder, facing outward */
+  transform: rotateY(var(--rot)) translateZ(var(--radius));
+  backface-visibility: hidden;
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  background: #05060c;
+  box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.8);
+}
+.gflow__link { position: relative; display: block; width: 100%; height: 100%; text-decoration: none; }
+.gflow__card img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  filter: saturate(0.82) contrast(1.05) brightness(0.94);
+  transition: filter var(--dur-slow) var(--ease-standard), transform 900ms var(--ease-emphasized);
+}
+.gflow__link:hover img { filter: none; transform: scale(1.05); }
+
+/* restrained grain / scanline treatment; premium, not noisy */
+.gflow__grain {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay; opacity: 0.5;
+}
+.gflow__frame {
+  position: absolute; top: 8px; left: 9px;
+  font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(34,211,238,0.9);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+.gflow__cap {
   position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 20px 12px 10px;
-  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+  padding: 22px 12px 9px;
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--color-paper);
-  background: linear-gradient(to top, rgba(3,3,6,.9), transparent);
+  background: linear-gradient(to top, rgba(3,3,6,0.92), transparent);
   opacity: 0; transition: opacity var(--dur-base) var(--ease-standard);
 }
-.gallery-tile__link:hover .gallery-tile__cap,
-.gallery-tile__link:focus-visible .gallery-tile__cap { opacity: 1; }
-@media (hover: none) { .gallery-tile__cap { opacity: 1; } }
+.gflow__link:hover .gflow__cap,
+.gflow__link:focus-visible .gflow__cap { opacity: 1; }
+@media (hover: none) { .gflow__cap { opacity: 0.9; } }
+
+/* signal paths behind the stream — the "connections" the frames ride along */
+.gflow__lines { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.gflow__lines span {
+  position: absolute; left: -5%; right: -5%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34,211,238,0.5) 20%, rgba(232,121,249,0.4) 80%, transparent);
+  opacity: calc(0.25 + 0.55 * var(--flow-in));
+}
+.gflow__lines span:nth-child(1) { top: 32%; }
+.gflow__lines span:nth-child(2) { top: 54%; background: linear-gradient(90deg, transparent, rgba(99,102,241,0.45), transparent); }
+.gflow__lines span:nth-child(3) { top: 74%; }
+
+.gflow__tag {
+  position: absolute; right: clamp(14px, 4vw, 40px); bottom: 12px; z-index: 2;
+  font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--color-faint);
+  opacity: calc(0.4 + 0.6 * var(--flow-in));
+}
+
+/* Mobile: keep the curved flow but tighten the cylinder — smaller frames, a
+   smaller radius so a few sit in the arc, gentler perspective. Still a curved
+   stream, never a vertical grid. */
+@media (max-width: 767px) {
+  .gflow__stage {
+    --radius: 360px;
+    --card-w: 138px;
+    --card-h: 198px;
+    perspective: 760px;
+    height: clamp(260px, 44vh, 340px);
+  }
+}
 
 /* ==================================================================
    FORMS (registration)

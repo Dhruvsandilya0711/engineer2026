@@ -3,7 +3,7 @@
 // no pinned narrative, no events rail, no hero WebGL scene.
 
 import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail } from '/js/site.js';
-import { initScroll, registerReveals, registerParallax } from '/js/scroll.js';
+import { initScroll, registerReveals, registerParallax, scrollState } from '/js/scroll.js';
 import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import { initDots } from '/js/dots.js';
 
@@ -15,7 +15,7 @@ import { initDots } from '/js/dots.js';
   initScrollRail();
 
   const ctx = await initScroll();
-  if (hasWebGL()) mountFields();
+  if (hasWebGL()) mountFields({ scroll: scrollState });
 
   registerReveals(ctx);
   registerParallax(ctx);

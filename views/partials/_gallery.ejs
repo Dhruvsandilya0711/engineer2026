@@ -1,34 +1,50 @@
 <!-- ==========================================================================
-     GALLERY — built from the real event photographs already in this repo
-     (server derives `gallery` from data/events.json). No stock imagery and no
-     invented captions: every caption is the event the photo belongs to.
+     GALLERY — COGNITRIXX neural archive. A continuous CURVED image stream: the
+     event photographs sit on a large 3D cylinder and flow horizontally through
+     the neural field. Because a cylinder is a closed loop, the flow is
+     seamless with no duplicated DOM and only the real images ever loaded.
+
+     Motion is driven by the global Lenis velocity with inertia
+     (public/js/gallery-flow.js); depth is CSS 3D (perspective + rotateY), so no
+     extra WebGL canvas — the neural spine already flows behind. Distinct in
+     personality from the deliberate Events rail: this one never stops turning.
+
+     Built from the real event images (server derives `gallery`).
      ========================================================================== -->
-<section id="gallery" class="relative section-y px-6 overflow-hidden" data-seam>
-  <div class="relative max-w-6xl mx-auto" data-seam-inner>
-    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10" data-reveal>
-      <div>
-        <p class="eyebrow text-magenta mb-4">From the floor</p>
-        <h2 class="font-display font-bold text-3xl sm:text-5xl">Gallery</h2>
-      </div>
-      <p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">
-        <%= gallery.length %> frames
-      </p>
+<% const N = gallery.length || 1; %>
+<section id="gallery" class="gflow" data-js="gallery" aria-label="ENGINEER '26 gallery">
+  <div class="gflow__head">
+    <div data-reveal>
+      <p class="eyebrow text-magenta mb-3">From the floor</p>
+      <h2 class="font-display font-bold text-3xl sm:text-5xl">Gallery</h2>
+    </div>
+    <p class="gflow__meta" data-reveal>
+      <span class="text-paper">ENGINEER&nbsp;'26</span> · <%= N %> frames · neural archive
+    </p>
+  </div>
+
+  <div class="gflow__stage" data-js="gflow-stage">
+    <div class="gflow__lines" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <div class="gflow__ring" data-js="gflow-ring">
+      <% gallery.forEach(function (g, i) { %>
+      <figure class="gflow__card" style="--rot: <%= (i * 360 / N).toFixed(4) %>deg;" data-a="<%= (i * 360 / N).toFixed(4) %>">
+        <a href="/events/<%= g.slug %>" class="gflow__link">
+          <img src="<%= g.image %>" alt="<%= g.caption %>" loading="lazy" decoding="async">
+          <span class="gflow__grain" aria-hidden="true"></span>
+          <span class="gflow__frame">FRAME <%= String(i + 1).padStart(2, '0') %></span>
+          <span class="gflow__cap"><%= g.caption %></span>
+        </a>
+      </figure>
+      <% }); %>
     </div>
 
-    <!-- Mosaic with varied spans so it doesn't read as a uniform card grid.
-         Each tile parallaxes very slightly at a depth set by its index. -->
-    <ul class="gallery-mosaic">
-      <% gallery.forEach(function(g, i){
-           const big = i % 7 === 0;
-           const tall = i % 5 === 3; %>
-      <li class="gallery-tile <%= big ? 'is-wide' : '' %> <%= tall ? 'is-tall' : '' %>" data-reveal>
-        <a href="/events/<%= g.slug %>" class="gallery-tile__link">
-          <img src="<%= g.image %>" alt="<%= g.caption %>" loading="lazy" decoding="async"
-               data-parallax="<%= (i % 3) * 4 + 4 %>">
-          <span class="gallery-tile__cap"><%= g.caption %></span>
-        </a>
-      </li>
-      <% }); %>
-    </ul>
+    <span class="gflow__tag" aria-hidden="true">COGNITRIXX / ARCHIVE STREAM</span>
+
+    <!-- Manual controls: push the stream (hold to keep scrolling); the ring
+         also responds to horizontal drag / swipe. These add to the flow, they
+         do not snap to a "next slide". -->
+    <button type="button" class="gflow__nav gflow__nav--prev" data-js="gflow-prev" aria-label="Scroll gallery left"></button>
+    <button type="button" class="gflow__nav gflow__nav--next" data-js="gflow-next" aria-label="Scroll gallery right"></button>
   </div>
 </section>

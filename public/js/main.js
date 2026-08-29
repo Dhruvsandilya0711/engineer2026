@@ -14,10 +14,11 @@
 import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import {
   initScroll, registerReveals, registerSeams, registerParallax,
-  REDUCED_MOTION, IS_TOUCH,
+  scrollState, REDUCED_MOTION, IS_TOUCH,
 } from '/js/scroll.js';
 import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail } from '/js/site.js';
 import { initDots } from '/js/dots.js';
+import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initPreloader } from '/js/preloader.js';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
@@ -150,7 +151,7 @@ function registerDeck(ctx) {
 
   // Mount every declared 3D moment. Skipped wholesale without WebGL — the page
   // is still complete, just without the fields.
-  const fields = hasWebGL() ? mountFields() : {};
+  const fields = hasWebGL() ? mountFields({ scroll: scrollState }) : {};
 
   registerReveals(ctx);
   registerParallax(ctx);
@@ -158,6 +159,7 @@ function registerDeck(ctx) {
   registerNarrative(ctx, fields);
   registerEventsRail();
   registerDeck(ctx);
+  initGalleryFlow();
   initDots(ctx);
 
   await entryDone;
