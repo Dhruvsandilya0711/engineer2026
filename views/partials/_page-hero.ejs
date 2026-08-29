@@ -1,0 +1,40 @@
+<!-- ==========================================================================
+     PAGE HERO — framed inner-page header in the homepage deck-card idiom.
+
+     Reuses the deck-card head (num / name / slab / line / go) on top of a
+     .hud-frame plate, so every inner page opens with the same angular HUD
+     instrument the homepage deck cards use.
+
+     Locals:
+       accent   "r,g,b"          accent for the frame + head
+       num      "01"             index chip
+       nav      "Events"         short name chip (matches the nav label)
+       kicker   "Cognitrixx / …" eyebrow line
+       title    HTML             the <h1> inner (may include a gradient span)
+       meta     HTML (optional)  right-aligned meta block
+       go       {href,label}     (optional) head link, label may be HTML
+     ========================================================================== -->
+<header class="hud-frame" style="--accent: <%= accent %>">
+  <div class="hud-frame__inner">
+    <div class="deck-card__head">
+      <span class="deck-card__num"><%= num %></span>
+      <span class="deck-card__name"><%= nav %></span>
+      <span class="deck-card__slab" aria-hidden="true"></span>
+      <span class="deck-card__line" aria-hidden="true"></span>
+      <% if (typeof go !== 'undefined' && go) { %>
+      <a class="deck-card__go" href="<%= go.href %>"><%- go.label %></a>
+      <% } %>
+    </div>
+    <div class="page-hero__body">
+      <p class="eyebrow mb-4" style="color: rgb(<%= accent %>)"><%= kicker %></p>
+      <%# On a narrow frame (a max-w-xl page) title + meta can't share a row —
+          pass stack:true so the meta drops below instead of overflowing. %>
+      <div class="flex flex-col gap-5 <%= (typeof stack !== 'undefined' && stack) ? '' : 'lg:flex-row lg:items-end lg:justify-between' %>">
+        <h1 class="page-hero__title"><%- title %></h1>
+        <% if (typeof meta !== 'undefined' && meta) { %>
+        <div class="shrink-0 <%= (typeof stack !== 'undefined' && stack) ? '' : 'lg:text-right' %>"><%- meta %></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</header>

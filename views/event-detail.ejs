@@ -23,7 +23,7 @@
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <div data-field="ambient" data-priority="2" data-density="0.45" data-tone="mixed" data-signals="4" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div data-field="ambient" data-priority="2" data-density="0.72" data-tone="nebula" data-signals="6" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
     <div class="bg-grain absolute inset-0"></div>
     <div class="scanlines absolute inset-0"></div>
     <div class="field-vignette absolute inset-0"></div>
@@ -38,30 +38,41 @@
          to ENGINEER itself, not to individual events. -->
     <header class="px-6 mb-14">
       <div class="max-w-5xl mx-auto">
-        <a href="/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-8">
+        <a href="/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
           ← Event index
         </a>
 
-        <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
-          <div>
-            <p class="font-mono text-[0.7rem] tracking-[0.18em] uppercase text-[var(--paper-faint)] mb-4">
-              Event <%= String(index).padStart(2, '0') %> / <span class="text-amber"><%= event.category %></span>
-            </p>
-            <h1 class="font-display font-extrabold text-[clamp(2.2rem,5.5vw,3.8rem)] leading-[0.98] mb-6">
-              <%= event.name %>
-            </h1>
-            <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
-          </div>
+        <!-- framed hero, in the homepage deck-card idiom -->
+        <div class="hud-frame" style="--accent: 99,102,241">
+          <div class="hud-frame__inner">
+            <div class="deck-card__head">
+              <span class="deck-card__num"><%= String(index).padStart(2, '0') %></span>
+              <span class="deck-card__name"><%= event.category %></span>
+              <span class="deck-card__slab" aria-hidden="true"></span>
+              <span class="deck-card__line" aria-hidden="true"></span>
+              <a class="deck-card__go" href="/events">Index &rarr;</a>
+            </div>
+            <div class="hud-frame__body">
+              <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+                <div>
+                  <h1 class="font-display font-extrabold text-[clamp(2.2rem,5.5vw,3.8rem)] leading-[0.98] mb-6">
+                    <%= event.name %>
+                  </h1>
+                  <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
+                </div>
 
-          <figure class="relative border border-[var(--hairline)] overflow-hidden">
-            <img src="<%= event.image %>" alt="<%= event.name %> at ENGINEER '26"
-              class="w-full aspect-[4/3] object-cover">
-            <!-- subtle Cognitrixx corner annotation -->
-            <figcaption class="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-2 bg-void/80 font-mono text-[0.6rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">
-              <span><%= event.slug %></span>
-              <span class="text-cyan">ENGI/26</span>
-            </figcaption>
-          </figure>
+                <figure class="relative border border-[var(--hairline)] overflow-hidden">
+                  <img src="<%= event.image %>" alt="<%= event.name %> at ENGINEER '26"
+                    class="w-full aspect-[4/3] object-cover">
+                  <!-- subtle Cognitrixx corner annotation -->
+                  <figcaption class="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-2 bg-void/80 font-mono text-[0.6rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">
+                    <span><%= event.slug %></span>
+                    <span class="text-cyan">ENGI/26</span>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>

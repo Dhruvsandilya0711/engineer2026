@@ -24,15 +24,15 @@
   <main class="relative z-10 pt-32 pb-28 px-6">
     <div class="max-w-xl mx-auto">
 
-      <header class="mb-10">
-        <p class="eyebrow text-cyan mb-5">Join the system</p>
-        <h1 class="font-display font-extrabold text-[clamp(2rem,5vw,3.2rem)] leading-[1] mb-4">
-          Register for<br><span class="text-gradient-impossible">ENGINEER&nbsp;'26</span>
-        </h1>
-        <p class="text-[var(--paper-dim)] text-sm">
-          <%= festDates.display %> · NITK Surathkal. One entry per event.
-        </p>
-      </header>
+      <%
+        const regTitle = `Register for<br><span class="text-gradient-impossible">ENGINEER&nbsp;'26</span>`;
+        const regMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
+          + `${festDates.display}<br><span class="text-[var(--paper-faint)]">NITK Surathkal &middot; one entry per event</span></p>`;
+      %>
+      <%- include('partials/_page-hero', { accent: '232,121,249', num: '06', nav: 'Register', kicker: 'Cognitrixx / join the system', title: regTitle, meta: regMeta, stack: true }) %>
+
+      <div class="hud-frame mt-6" style="--accent: 232,121,249">
+        <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <% if (status === 'success') { %>
         <div class="border border-[rgba(63,191,143,.45)] bg-charcoal p-7 mb-8" role="status">
@@ -111,6 +111,7 @@
         </p>
       </form>
       <% } %>
+        </div></div></div>
     </div>
   </main>
 

@@ -16,12 +16,12 @@
     <nav aria-label="Primary" class="hidden md:flex items-center gap-8 font-mono text-xs tracking-[0.08em] uppercase">
       <% const nav = typeof activeNav !== 'undefined' ? activeNav : ''; %>
       <% const navClass = (id) => id === nav ? 'text-paper border-b border-cyan pb-1' : 'text-[var(--paper-dim)]'; %>
-      <a href="/#cognitrixx" class="text-[var(--paper-dim)] hover:text-paper transition-colors">About</a>
+      <a href="/" class="text-[var(--paper-dim)] hover:text-paper transition-colors">Home</a>
+      <a href="/#about" class="text-[var(--paper-dim)] hover:text-paper transition-colors">About</a>
       <a href="/events" class="<%= navClass('events') %> hover:text-paper transition-colors">Events</a>
       <a href="/schedule" class="<%= navClass('schedule') %> hover:text-paper transition-colors">Schedule</a>
       <a href="/team" class="<%= navClass('team') %> hover:text-paper transition-colors">Team</a>
-      <a href="/register" class="<%= navClass('register') %> hover:text-paper transition-colors">Register</a>
-      <a href="/#footer" class="text-[var(--paper-dim)] hover:text-paper transition-colors">Contact</a>
+      <a href="/#sponsors" class="text-[var(--paper-dim)] hover:text-paper transition-colors">Sponsors</a>
     </nav>
 
     <div class="flex items-center gap-4">
@@ -48,12 +48,12 @@
     </button>
   </div>
   <nav aria-label="Mobile" class="flex flex-col px-6 mt-6 gap-1">
-    <a href="/#cognitrixx" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">About</a>
+    <a href="/" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Home</a>
+    <a href="/#about" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">About</a>
     <a href="/events" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Events</a>
     <a href="/schedule" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Schedule</a>
     <a href="/team" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Team</a>
-    <a href="/register" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Register</a>
-    <a href="/#footer" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Contact</a>
+    <a href="/#sponsors" class="font-display text-3xl py-4 border-b border-[var(--hairline)]" data-js="drawer-link">Sponsors</a>
     <a href="/register" class="btn btn-primary mt-8 justify-center" data-js="drawer-link">Register</a>
   </nav>
 </div>

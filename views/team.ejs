@@ -13,7 +13,7 @@
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <div data-field="ambient" data-priority="2" data-density="0.45" data-tone="mixed" data-signals="4" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div data-field="ambient" data-priority="2" data-density="0.72" data-tone="nebula" data-signals="6" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
     <div class="bg-grain absolute inset-0"></div>
     <div class="scanlines absolute inset-0"></div>
     <div class="field-vignette absolute inset-0"></div>
@@ -24,25 +24,24 @@
   <main class="relative z-10 pt-32 pb-28 px-6">
     <div class="max-w-5xl mx-auto">
 
-      <header class="mb-14">
-        <p class="eyebrow text-magenta mb-5">Cognitrixx / the people</p>
-        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-          <h1 class="font-display font-extrabold text-[clamp(2.4rem,6vw,4.2rem)] leading-[0.95]">
-            The network<br><span class="text-gradient-impossible">behind it.</span>
-          </h1>
-          <% if (totalMembers) { %>
-          <p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase lg:text-right shrink-0">
-            <span class="text-paper"><%= totalMembers %></span> members ·
-            <span class="text-paper"><%= groups.length %></span> teams<br>
-            <span class="text-[var(--paper-faint)]">ENGINEER '26 · NITK Surathkal</span>
-          </p>
-          <% } %>
-        </div>
-        <p class="text-[var(--paper-dim)] max-w-xl mt-6">
-          Cognitrixx is a network of intelligent minds — and the ones that built it are students
-          at NITK Surathkal who run ENGINEER every year.
-        </p>
-      </header>
+      <%
+        const teamTitle = `The network<br><span class="text-gradient-impossible">behind it.</span>`;
+        const teamMeta = totalMembers
+          ? `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
+            + `<span class="text-paper">${totalMembers}</span> members &middot; `
+            + `<span class="text-paper">${groups.length}</span> teams<br>`
+            + `<span class="text-[var(--paper-faint)]">ENGINEER '26 &middot; NITK Surathkal</span></p>`
+          : '';
+      %>
+      <%- include('partials/_page-hero', { accent: '128,146,246', num: '04', nav: 'Team', kicker: 'Cognitrixx / the people', title: teamTitle, meta: teamMeta }) %>
+
+      <p class="text-[var(--paper-dim)] max-w-xl mt-6">
+        Cognitrixx is a network of intelligent minds — and the ones that built it are students
+        at NITK Surathkal who run ENGINEER every year.
+      </p>
+
+      <div class="hud-frame mt-6" style="--accent: 128,146,246">
+        <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <% if (totalMembers) { %>
         <!-- ============ ROSTER ============
@@ -127,6 +126,7 @@
           <% } %>
         </p>
       </aside>
+        </div></div></div>
     </div>
   </main>
 

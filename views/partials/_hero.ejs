@@ -12,8 +12,8 @@
      ========================================================================== -->
 <section id="top" class="relative min-h-[100svh] flex flex-col overflow-hidden">
 
-  <div data-field="hero" data-priority="1" data-density="0.5" data-tone="mixed"
-       data-signals="3" data-spread="12" data-rotate="0.015"
+  <div data-field="hero" data-priority="1" data-density="0.66" data-tone="nebula"
+       data-signals="5" data-spread="12" data-rotate="0.015"
        class="absolute inset-0 z-0" aria-hidden="true"></div>
 
   <!-- twin radial glows + square grid, both inert -->
@@ -39,12 +39,12 @@
   <nav aria-label="Primary" class="relative z-10 mt-5 sm:mt-6">
     <ul class="bays">
       <% const bays = [
-           { n: '01', label: 'About',    href: '/#about',    accent: '34,211,238',  slab: '30%' },
-           { n: '02', label: 'Events',   href: '/#events',   accent: '99,102,241',  slab: '24%' },
-           { n: '03', label: 'Schedule', href: '/#schedule', accent: '108,124,244', slab: '20%' },
-           { n: '04', label: 'Speakers', href: '/#speakers', accent: '128,146,246', slab: '24%' },
+           { n: '01', label: 'Home',     href: '#top',       accent: '34,211,238',  slab: '26%' },
+           { n: '02', label: 'About',    href: '/#about',    accent: '80,150,242',  slab: '30%' },
+           { n: '03', label: 'Events',   href: '/#events',   accent: '108,124,244', slab: '24%' },
+           { n: '04', label: 'Schedule', href: '/#schedule', accent: '128,146,246', slab: '20%' },
            { n: '05', label: 'Team',     href: '/#team',     accent: '214,118,226', slab: '28%' },
-           { n: '06', label: 'Register', href: '/register',  accent: '232,121,249', slab: '100%', cta: true }
+           { n: '06', label: 'Sponsors', href: '/#sponsors', accent: '232,121,249', slab: '24%' }
          ]; %>
       <% bays.forEach(function(b){ %>
       <li>
@@ -70,21 +70,13 @@
 
     <p class="hero-kicker" data-reveal>NITK Surathkal</p>
 
-    <h1 class="wm" data-reveal aria-label="ENGINEER '26">
-      <span class="wm__layer wm__ghost-c" aria-hidden="true">ENGINEER'26</span>
-      <span class="wm__layer wm__ghost-m" aria-hidden="true">ENGINEER'26</span>
-      <span class="wm__layer wm__main">ENGINEER'26</span>
-      <span class="wm__scan" aria-hidden="true"></span>
+    <!-- Official ENGINEER'26 logotype — the custom angular lettering, extracted
+         from the supplied artwork to a transparent PNG (planet/tagline/HUD
+         removed) so it sits as clean type over the hero. -->
+    <h1 class="wm-img" data-reveal aria-label="ENGINEER '26">
+      <img src="/images/engineer26-wordmark.png?v=2" width="1796" height="314"
+           alt="ENGINEER '26" fetchpriority="high">
     </h1>
-
-    <!-- status strip: the middle item drops on the narrowest screens -->
-    <div class="flex items-center gap-3 sm:gap-[18px] flex-wrap justify-center" data-reveal>
-      <span class="hud-label">SYS/OK</span>
-      <span class="hud-rule w-[30px] sm:w-[46px]"></span>
-      <span class="hud-label">V26.0</span>
-      <span class="hud-rule w-[30px] sm:w-[46px] hidden xs:block"></span>
-      <span class="hud-label hidden xs:inline">No root no rules</span>
-    </div>
 
     <p class="font-display font-bold text-gradient-impossible text-[clamp(1.6rem,7vw,2.5rem)] tracking-[0.06em]" data-reveal>COGNITRIXX</p>
 

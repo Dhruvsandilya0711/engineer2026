@@ -13,7 +13,7 @@
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <div data-field="ambient" data-priority="2" data-density="0.45" data-tone="mixed" data-signals="4" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div data-field="ambient" data-priority="2" data-density="0.72" data-tone="nebula" data-signals="6" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
     <div class="bg-grain absolute inset-0"></div>
     <div class="scanlines absolute inset-0"></div>
     <div class="field-vignette absolute inset-0"></div>
@@ -24,19 +24,17 @@
   <main class="relative z-10 pt-32 pb-28 px-6">
     <div class="max-w-5xl mx-auto">
 
-      <header class="mb-14">
-        <p class="eyebrow text-cyan mb-5">Cognitrixx / timetable</p>
-        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-          <h1 class="font-display font-extrabold text-[clamp(2.4rem,6vw,4.2rem)] leading-[0.95]">
-            Three days.<br><span class="text-gradient-impossible">One sequence.</span>
-          </h1>
-          <p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase lg:text-right shrink-0">
-            <span class="text-paper"><%= days.length %></span> days ·
-            <span class="text-paper"><%= totalSlots %></span> sessions scheduled<br>
-            <span class="text-[var(--paper-faint)]"><%= festDates.display %> · NITK Surathkal</span>
-          </p>
-        </div>
-      </header>
+      <%
+        const schedTitle = `Three days.<br><span class="text-gradient-impossible">One sequence.</span>`;
+        const schedMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
+          + `<span class="text-paper">${days.length}</span> days &middot; `
+          + `<span class="text-paper">${totalSlots}</span> sessions scheduled<br>`
+          + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
+      %>
+      <%- include('partials/_page-hero', { accent: '108,124,244', num: '03', nav: 'Schedule', kicker: 'Cognitrixx / timetable', title: schedTitle, meta: schedMeta }) %>
+
+      <div class="hud-frame mt-6" style="--accent: 108,124,244">
+        <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <!-- Day tabs. Without JS every day renders stacked below, so the tabs are
            an enhancement rather than a requirement for reaching content. -->
@@ -126,6 +124,7 @@
           slots appear only once the organising team confirms them.
         </p>
       </aside>
+        </div></div></div>
     </div>
   </main>
 

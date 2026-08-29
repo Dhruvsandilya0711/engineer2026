@@ -1122,13 +1122,32 @@ html.cx-native .cx-ring { opacity: 0; }
    Mobile-first: offsets and the stroke are set in `em`, so the whole
    construction scales with the type instead of falling apart on a phone.
    ================================================================== */
+/* Image logotype — the supplied ENGINEER'26 banner. Screen blend drops the
+   near-black backdrop; the box is height-capped so the whole hero composition
+   still lands on one screen despite the banner's 3:2 ratio. */
+.wm-img {
+  display: block;
+  margin: 0;
+  line-height: 0;
+  width: 100%;
+  text-align: center;
+}
+.wm-img img {
+  display: inline-block;
+  width: min(940px, 92vw);
+  height: auto;
+  /* Transparent PNG already carries the neon glow; a soft blue drop-shadow
+     just seats it on the dark hero. */
+  filter: drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
+}
+
 .wm {
   position: relative;
   display: inline-block;
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-style: italic;
-  font-size: clamp(2.4rem, 12.5vw, 6.75rem);   /* 108px cap = handoff size */
+  font-size: clamp(2.7rem, 13.8vw, 7.6rem);   /* nudged up from the 108px handoff size */
   line-height: 1;
   letter-spacing: -0.02em;
   white-space: nowrap;
@@ -1183,19 +1202,23 @@ html.cx-native .cx-ring { opacity: 0; }
 .bays {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  padding: 4px 12px 0;
+  gap: 14px 12px;
+  padding: 4px 14px 0;
   list-style: none;
   margin: 0;
   width: 100%;
 }
-@media (min-width: 480px) { .bays { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; } }
-@media (min-width: 1024px) { .bays { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; padding: 4px 40px 0; } }
+@media (min-width: 480px) { .bays { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } }
+/* Desktop: a centred, content-width cluster rather than a full-bleed six-column
+   bar — narrower, lighter, less toolbar, more instrument. */
+@media (min-width: 1024px) {
+  .bays { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; padding: 4px 40px 0; }
+}
 
 .bay {
   position: relative;
   display: block;
-  height: 46px;
+  height: 36px;
   text-decoration: none;
   transition: filter 160ms var(--ease-standard), transform 160ms var(--ease-standard);
 }
@@ -1207,7 +1230,7 @@ html.cx-native .cx-ring { opacity: 0; }
 .bay__interior,
 .bay__slab {
   position: absolute;
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 42%, 100% 100%, 16px 100%, 0 58%);
+  clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 42%, 100% 100%, 13px 100%, 0 58%);
 }
 .bay__outline  { inset: 0;   background: rgba(var(--bay-accent), 0.85); }
 .bay__interior { inset: 1px; background: var(--color-panel); }
@@ -1220,25 +1243,37 @@ html.cx-native .cx-ring { opacity: 0; }
   position: relative;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   height: 100%;
-  padding-left: 14px;
+  /* A right gutter leaves room for the diagonal slab + the corner bevel now
+     that the bay is only as wide as its label. */
+  padding: 0 26px 0 12px;
 }
 .bay__idx {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
   color: rgb(var(--bay-accent));
 }
 .bay__label {
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.14em;
+  font-size: 12px;
+  letter-spacing: 0.13em;
   color: var(--color-strong);
   white-space: nowrap;
 }
-@media (min-width: 1024px) { .bay__label { font-size: 14px; } }
+/* Desktop bay sizing. Placed AFTER the base .bay rules so these win (equal
+   specificity → later source order decides). */
+@media (min-width: 1024px) {
+  /* Wider, taller buttons on desktop. min-width gives each bay a uniform,
+     generous width (label left, diagonal slab filling the right) instead of
+     shrinking to fit the label. */
+  .bay { height: 42px; min-width: 172px; }
+  .bay__row { gap: 10px; padding: 0 44px 0 22px; }
+  .bay__idx { font-size: 9px; }
+  .bay__label { font-size: 14px; letter-spacing: 0.14em; }
+}
 
 /* The register bay is filled rather than outlined. */
 .bay--cta .bay__interior {
@@ -1420,10 +1455,11 @@ html.cx-native .cx-ring { opacity: 0; }
   padding-top: clamp(0.5rem, 2vh, 2rem);
   padding-bottom: clamp(0.75rem, 3vh, 3rem);
 }
-/* Short viewports (720-800px tall laptops and small phones) are the tight
-   case — trim the nav gap there too. */
-@media (max-height: 820px) {
-  .bays { gap: 7px; }
+/* Short *laptops* (720-800px tall) are the tight case — trim the nav gap
+   there. Guarded to min-width 700px so tall phones (e.g. 375x812) are NOT
+   caught by it and keep their roomier grid spacing. */
+@media (max-height: 820px) and (min-width: 700px) {
+  .bays { gap: 9px; }
   nav.relative { margin-top: 0.75rem !important; }
 }
 /* The rules either side of the date read as dividers, so they carry a little
@@ -1726,6 +1762,53 @@ html.pl-locked .scroll-rail { opacity: 0; pointer-events: none; }
 }
 /* Below the deck gutter there is genuinely no room beside the cards. */
 @media (max-width: 359px) { .scroll-rail { display: none; } }
+
+
+/* ==================================================================
+   HUD FRAME — the deck-card plate, generalised so the inner pages wear
+   the same angular instrument framing as the homepage deck. Reuses the
+   deck-card head classes (num / name / slab / line / go), which read
+   --accent from the frame.
+   ================================================================== */
+.hud-frame {
+  --accent: 34, 211, 238;
+  --hf-bevel: clamp(12px, 3vw, 26px);
+  --hf-clip: polygon(
+    0 0,
+    calc(100% - var(--hf-bevel)) 0,
+    100% var(--hf-bevel),
+    100% 100%,
+    var(--hf-bevel) 100%,
+    0 calc(100% - var(--hf-bevel))
+  );
+  position: relative;
+  padding: 1px;
+  clip-path: var(--hf-clip);
+  background: linear-gradient(
+    148deg,
+    rgba(var(--accent), 0.7) 0%,
+    rgba(var(--accent), 0.16) 40%,
+    rgba(148, 163, 184, 0.12) 64%,
+    rgba(var(--accent), 0.5) 100%
+  );
+}
+.hud-frame__inner {
+  position: relative;
+  height: 100%;
+  clip-path: var(--hf-clip);
+  background:
+    radial-gradient(120% 70% at 10% 0%, rgba(var(--accent), 0.09) 0%, transparent 55%),
+    linear-gradient(180deg, #080a12 0%, #05060c 60%, #07080f 100%);
+}
+.hud-frame__body { padding: clamp(20px, 4vw, 44px); }
+
+/* Framed page header (inner-page hero). The head bar is the deck-card head;
+   the body carries the kicker, gradient title and meta line. */
+.page-hero__body { padding: clamp(20px, 4vw, 40px) clamp(18px, 4vw, 44px) clamp(24px, 4vw, 40px); }
+.page-hero__title { font-family: var(--font-display), system-ui, sans-serif; font-weight: 800; font-size: clamp(2.1rem, 6vw, 3.9rem); line-height: 0.96; }
+@media (min-width: 1024px) {
+  .hud-frame { filter: drop-shadow(0 22px 40px rgba(0, 0, 0, 0.5)); }
+}
 
 
 /* ==================================================================

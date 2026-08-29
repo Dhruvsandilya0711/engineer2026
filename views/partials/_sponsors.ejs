@@ -1,24 +1,32 @@
 <!-- ==========================================================================
-     SPONSORS — no sponsor data exists yet. Tier structure only; slots stay
-     visibly empty rather than filled with placeholder logos/names. Wire a
-     real `sponsors` array (by tier) server-side once confirmed.
-     ========================================================================== -->
-<section id="sponsors" class="relative section-y px-6">
-  <div class="max-w-5xl mx-auto text-center">
-    <p class="eyebrow text-[var(--paper-faint)] justify-center mb-6" data-reveal>Sponsors</p>
-    <h2 class="font-display font-bold text-3xl sm:text-5xl mb-12" data-reveal>Powering the system</h2>
+     SPONSORS (deck card 05) — no sponsor data exists yet. Tier structure only;
+     slots stay visibly empty rather than filled with placeholder logos/names.
+     Wire a real `sponsors` array (by tier) server-side once confirmed.
 
-    <% ['Title', 'Gold', 'Silver'].forEach(function(tier, ti){ %>
-    <div class="mb-10" data-reveal>
-      <p class="font-mono text-[0.65rem] tracking-[0.2em] uppercase text-[var(--paper-faint)] mb-5"><%= tier %> partner</p>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <% for (let i = 0; i < (ti === 0 ? 2 : 4); i++) { %>
-        <div class="aspect-[3/2] border border-dashed border-[var(--hairline-strong)] flex items-center justify-center">
-          <span class="font-mono text-[0.6rem] text-[var(--paper-faint)] uppercase tracking-[0.1em]">Open slot</span>
-        </div>
-        <% } %>
+     Card-sized: the deck body supplies the padding and the angular frame.
+     ========================================================================== -->
+<section id="sponsors" class="relative">
+  <div class="max-w-3xl">
+    <p class="eyebrow text-magenta mb-5" data-reveal>Cognitrixx / partners</p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      Powering<br><span class="text-gradient-impossible">the system.</span>
+    </h2>
+
+    <p class="text-sm sm:text-base text-[var(--paper-dim)] mt-5 max-w-xl leading-relaxed" data-reveal>
+      Partnership tiers for ENGINEER '26 are open. Slots fill here as sponsors are confirmed —
+      nothing below is a placeholder logo.
+    </p>
+
+    <div class="grid grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)] mt-8" data-reveal>
+      <% ['Title', 'Gold', 'Silver'].forEach(function(tier){ %>
+      <div class="bg-void p-4 sm:p-5 text-center">
+        <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-magenta mb-2"><%= tier %></p>
+        <p class="font-mono text-[0.6rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">Open slot</p>
       </div>
+      <% }); %>
     </div>
-    <% }); %>
+
+    <a href="/#footer" class="btn btn-secondary mt-8" data-reveal>Partner with us &rarr;</a>
   </div>
 </section>

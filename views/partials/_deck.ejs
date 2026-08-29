@@ -1,12 +1,13 @@
 <!-- ==========================================================================
-     DECK — the six hero nav bays, dealt out as a stack of sticky cards.
+     DECK — the homepage nav destinations, dealt out as a stack of sticky cards.
 
-     Card order, accents and index numbers are the SAME list the hero bays
-     render from (01 ABOUT … 06 REGISTER), so a bay and its card read as one
-     object seen twice. Keep the two in step if either changes.
+     Card order, accents and index numbers mirror the hero nav bays. HOME is
+     the hero itself, so the deck's first CARD is 01 ABOUT. Keep the two in
+     step: bays = Home / About / Events / Schedule / Team / Sponsors; cards =
+     About / Events / Schedule / Team / Sponsors.
 
      Each card is a real section with a real id, so /#about, /#events,
-     /#schedule and /#speakers still resolve and nothing is hidden behind
+     /#schedule, /#team and /#sponsors all resolve and nothing is hidden behind
      JS — the stacking is CSS `position: sticky` (see .deck in input.css) and
      GSAP only adds the scale-and-dim as a card is covered.
      ========================================================================== -->
@@ -68,30 +69,12 @@
     </article>
   </div>
 
-  <!-- 04 SPEAKERS -->
+  <!-- 04 TEAM -->
   <div class="deck-item" style="--i: 3">
     <article class="deck-card" style="--accent: 128,146,246">
       <div class="deck-card__inner">
         <div class="deck-card__head">
           <span class="deck-card__num">04</span>
-          <span class="deck-card__name">Speakers</span>
-          <span class="deck-card__slab" aria-hidden="true"></span>
-          <span class="deck-card__line" aria-hidden="true"></span>
-        </div>
-        <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_speakers') %>
-        </div>
-      </div>
-      <span class="deck-card__scrim" data-js="deck-scrim" aria-hidden="true"></span>
-    </article>
-  </div>
-
-  <!-- 05 TEAM -->
-  <div class="deck-item" style="--i: 4">
-    <article class="deck-card" style="--accent: 214,118,226">
-      <div class="deck-card__inner">
-        <div class="deck-card__head">
-          <span class="deck-card__num">05</span>
           <span class="deck-card__name">Team</span>
           <span class="deck-card__slab" aria-hidden="true"></span>
           <span class="deck-card__line" aria-hidden="true"></span>
@@ -105,19 +88,19 @@
     </article>
   </div>
 
-  <!-- 06 REGISTER — the deck's closer, and where the CTA taken off the hero
-       now lives. -->
-  <div class="deck-item" style="--i: 5">
+  <!-- 05 SPONSORS — the deck's closer. -->
+  <div class="deck-item" style="--i: 4">
     <article class="deck-card" style="--accent: 232,121,249">
       <div class="deck-card__inner">
         <div class="deck-card__head">
-          <span class="deck-card__num">06</span>
-          <span class="deck-card__name">Register</span>
+          <span class="deck-card__num">05</span>
+          <span class="deck-card__name">Sponsors</span>
           <span class="deck-card__slab" aria-hidden="true"></span>
           <span class="deck-card__line" aria-hidden="true"></span>
+          <a class="deck-card__go" href="/#footer">Partner &rarr;</a>
         </div>
         <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_register-preview', { festDates, events }) %>
+          <%- include('_sponsors') %>
         </div>
       </div>
     </article>

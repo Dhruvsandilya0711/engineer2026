@@ -18,7 +18,7 @@
        purpose-built fields on top), plus circuit grid, CRT scanlines and a
        vignette that keeps all of it off the body copy. -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <div data-field="ambient" data-priority="2" data-density="0.45" data-tone="mixed" data-signals="4" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div data-field="ambient" data-priority="2" data-density="0.72" data-tone="nebula" data-signals="6" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
     <div class="bg-grain absolute inset-0"></div>
     <div class="scanlines absolute inset-0"></div>
     <div class="field-vignette absolute inset-0"></div>
@@ -29,9 +29,9 @@
 
   <main class="relative z-10">
     <%# Flow: SYSTEM INTRO -> HERO -> COGNITRIXX / REWIRE -> THE DECK
-        (01 ABOUT / 02 EVENTS / 03 SCHEDULE / 04 SPEAKERS / 05 TEAM /
-        06 REGISTER, stacked) -> NITK -> GALLERY -> SPONSORS
-        -> FINAL REWIRE -> FOOTER %>
+        (01 ABOUT / 02 EVENTS / 03 SCHEDULE / 04 TEAM / 05 SPONSORS,
+        stacked — Sponsors now lives inside the deck, not as its own
+        section) -> NITK -> GALLERY -> FINAL REWIRE -> FOOTER %>
     <%- include('partials/_hero', { festDates }) %>
     <%- include('partials/_cognitrixx-intro') %>
     <%- include('partials/_transformation') %>
@@ -39,7 +39,6 @@
     <%- include('partials/_nitk') %>
     <%- include('partials/_gallery', { gallery }) %>
     <%- include('partials/_legacy') %>
-    <%- include('partials/_sponsors') %>
     <%- include('partials/_final-cta') %>
   </main>
 

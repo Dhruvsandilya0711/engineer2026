@@ -21,10 +21,17 @@ import * as THREE from '/vendor/three/three.module.js';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const AMBER   = new THREE.Color('#e8923c');
-const CYAN    = new THREE.Color('#34d8e8');
-const VIOLET  = new THREE.Color('#5f79f2');
-const MAGENTA = new THREE.Color('#e23fd1');
+const CYAN    = new THREE.Color('#22d3ee');
+const INDIGO  = new THREE.Color('#6366f1');
+const VIOLET  = new THREE.Color('#8b78f6');
+const MAGENTA = new THREE.Color('#e879f9');
 const ENGI = [CYAN, VIOLET, MAGENTA];
+// Cool theme ramp for the sitewide background field, and the deep indigo it
+// dissolves into at depth so the web reads as distance, not a flat wall.
+const NEBULA = [CYAN, INDIGO, VIOLET, MAGENTA];
+const DEEP   = new THREE.Color('#0e1338');
+// Signals get theme colours rather than all-cyan.
+const SIGNAL_HUES = [CYAN, MAGENTA, VIOLET, CYAN];
 
 export function hasWebGL() {
   try {
@@ -57,6 +64,10 @@ export function createNeuralField(host, opts = {}) {
   } = opts;
 
   const scene = new THREE.Scene();
+  // Depth fog: with additive blending, fading fragments toward near-black as
+  // they recede makes distant nodes dissolve. That is what lets the field be
+  // dense up close yet stay soft and off the foreground in the background.
+  scene.fog = new THREE.Fog(0x03040c, depth * 0.35, depth * 2.15);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = depth;
 
@@ -72,7 +83,7 @@ export function createNeuralField(host, opts = {}) {
 
   // ---- nodes -------------------------------------------------------------
   const isSmall = window.innerWidth < 768;
-  const count = Math.round((isSmall ? 42 : 78) * density);
+  const count = Math.round((isSmall ? 46 : 104) * density);
 
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
@@ -88,11 +99,12 @@ export function createNeuralField(host, opts = {}) {
     positions.set([p.x, p.y, p.z], i * 3);
     velocities.push(new THREE.Vector3(rand(-0.006, 0.006), rand(-0.006, 0.006), rand(-0.004, 0.004)));
 
-    // Distance from centre decides how far along the amber -> ENGINEER ramp.
+    // Distance from centre decides how far along the colour ramp each node is.
     const t = Math.min(1, p.length() / spread);
     const engi = ENGI[i % ENGI.length];
     if (tone === 'amber') tmp.copy(AMBER);
     else if (tone === 'engi') tmp.copy(engi);
+    else if (tone === 'nebula') tmp.copy(NEBULA[i % NEBULA.length]).lerp(DEEP, t * 0.78);
     else tmp.copy(engi).lerp(AMBER, t);
     colors.set([tmp.r, tmp.g, tmp.b], i * 3);
   }
@@ -115,8 +127,8 @@ export function createNeuralField(host, opts = {}) {
   // ---- links -------------------------------------------------------------
   // One LineSegments for every connection, rebuilt in place each frame. Cheaper
   // than a mesh per link by orders of magnitude.
-  const LINK_DIST = spread * 0.42;
-  const maxLinks = count * 5;
+  const LINK_DIST = spread * 0.48;
+  const maxLinks = count * 7;
   const linkPos = new Float32Array(maxLinks * 6);
   const linkCol = new Float32Array(maxLinks * 6);
   const linkGeo = new THREE.BufferGeometry();
@@ -145,7 +157,11 @@ export function createNeuralField(host, opts = {}) {
 
   const travellers = [];
   for (let i = 0; i < sigCount; i++) {
-    travellers.push({ a: (Math.random() * count) | 0, b: (Math.random() * count) | 0, t: Math.random(), speed: rand(0.004, 0.011) });
+    travellers.push({
+      a: (Math.random() * count) | 0, b: (Math.random() * count) | 0,
+      t: Math.random(), speed: rand(0.004, 0.011),
+      col: SIGNAL_HUES[i % SIGNAL_HUES.length],
+    });
   }
 
   // ---- loop --------------------------------------------------------------
@@ -231,7 +247,8 @@ export function createNeuralField(host, opts = {}) {
       sigPos[o]     = pos[ax]     + (pos[bx]     - pos[ax])     * tr.t;
       sigPos[o + 1] = pos[ax + 1] + (pos[bx + 1] - pos[ax + 1]) * tr.t;
       sigPos[o + 2] = pos[ax + 2] + (pos[bx + 2] - pos[ax + 2]) * tr.t;
-      sigCol[o] = CYAN.r; sigCol[o + 1] = CYAN.g; sigCol[o + 2] = CYAN.b;
+      const c = tr.col;
+      sigCol[o] = c.r; sigCol[o + 1] = c.g; sigCol[o + 2] = c.b;
     }
     if (travellers.length) {
       sigGeo.attributes.position.needsUpdate = true;
