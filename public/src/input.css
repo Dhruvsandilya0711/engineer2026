@@ -382,8 +382,12 @@
 /* Section rhythm. Tightened from 4-6.5rem / 5-8rem: at desktop heights those
    clamps resolved near their maximum on every section at once, which stacked
    into long empty runs between blocks that each only needed breathing room. */
-.section-y { padding-block: clamp(2.75rem, 5vh, 4.5rem); }
-.section-y-lg { padding-block: clamp(3.25rem, 6vh, 5.5rem); }
+/* Section rhythm. These two numbers meet at every join, so they set the gap
+   between the last line of one section and the first line of the next: at the
+   old values that landed around 270px on a 1080 screen, which reads as the
+   page having lost its place rather than as breathing room. */
+.section-y { padding-block: clamp(2rem, 3.6vh, 3.25rem); }
+.section-y-lg { padding-block: clamp(2.5rem, 4.4vh, 4rem); }
 
 /* reveal-on-scroll target */
 [data-reveal] {
@@ -427,31 +431,43 @@
 
 
 /* ==================================================================
-   TRANSFORMATION — the narration on the left, the subject on the right.
-   The head is a WebGL point cloud (public/js/neural-head.js); everything
-   framing it is HTML, so the HUD stays crisp at any DPR and costs nothing.
+   TRANSFORMATION — narration left, subject right.
+   Two columns of comparable weight inside one measured container, so
+   the pinned viewport reads as a composed spread rather than as two
+   things pushed to opposite edges of a 1920px screen.
    ================================================================== */
 .tf-split {
   position: relative;
   height: 100%;
-  width: min(1500px, calc(100% - 4rem));
+  width: min(1240px, calc(100% - 6rem));
   margin-inline: auto;
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
-  align-items: stretch;
-  gap: clamp(1.5rem, 3.5vw, 4rem);
-  /* Clears the fixed header at the top and the stage dots at the bottom. */
-  padding-block: clamp(4.5rem, 9vh, 6.5rem) clamp(2rem, 5vh, 4rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  column-gap: clamp(2.5rem, 5vw, 5rem);
+  /* Clears the fixed header at the top; the bottom is only breathing room. */
+  padding-block: clamp(4rem, 7vh, 5rem) clamp(1.5rem, 3vh, 2.5rem);
 }
 
-.tf-copy { align-self: center; min-width: 0; }
+/* ---- narration ---------------------------------------------------- */
+.tf-copy { min-width: 0; }
 
-/* Stacked, crossfading stage labels. Left-aligned now, so the whole column
-   shares one edge with the eyebrow, the lede and the dots. */
+.tf-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+/* Stacked, crossfading stage labels. Left-aligned, so the eyebrow, the
+   label, the lede and the dots all share one edge. The box is a fixed
+   height because the labels are absolutely positioned inside it — six
+   different word lengths must not move anything below them. */
 .tf-stages {
   position: relative;
-  margin-top: clamp(1rem, 2.4vh, 1.75rem);
-  height: clamp(6.5rem, 16vh, 10rem);
+  height: clamp(5rem, 10vh, 7rem);
+  margin-top: clamp(0.7rem, 1.4vh, 1.1rem);
 }
 .transform-stage {
   position: absolute;
@@ -459,10 +475,9 @@
   top: 50%;
   transform: translateY(-50%);
   opacity: 0;
-  max-width: 12ch;                     /* two lines at most, by design */
-  font-size: clamp(1.9rem, 2.9vw, 3.15rem);
-  line-height: 1.02;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.9rem, 2.6vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
   transition: opacity var(--dur-slow) var(--ease-standard);
 }
 .transform-stage.is-active { opacity: 1; }
@@ -471,14 +486,14 @@
 }
 
 .tf-lede {
-  margin-top: clamp(1rem, 2.2vh, 1.6rem);
-  max-width: 36ch;
+  margin-top: clamp(0.7rem, 1.4vh, 1.1rem);
+  max-width: 34ch;
   color: var(--paper-dim);
-  font-size: clamp(0.85rem, 1vw, 0.98rem);
+  font-size: clamp(0.85rem, 0.95vw, 0.95rem);
   line-height: 1.7;
 }
 
-.tf-dots { display: flex; gap: 0.5rem; margin-top: clamp(1.5rem, 3.5vh, 2.5rem); }
+.tf-dots { display: flex; gap: 0.5rem; margin-top: clamp(1.25rem, 2.4vh, 1.75rem); }
 .dot {
   width: 6px;
   height: 6px;
@@ -491,103 +506,63 @@
   transform: scale(1.6);
 }
 
-/* ---- the subject ------------------------------------------------- */
-.tf-head { position: relative; min-width: 0; min-height: min(50vh, 400px); }
-.tf-head__scene {
+/* ---- subject ------------------------------------------------------ */
+/* Square, and capped: the mark is as wide as it is tall, so a column-height
+   panel would just surround it with empty canvas — which is what made the
+   first pass feel like a small object lost in a big box. */
+.tf-subject {
+  position: relative;
+  justify-self: center;
+  width: 100%;
+  max-width: min(100%, 640px);
+  aspect-ratio: 1 / 1;
+  max-height: 100%;
+}
+.tf-subject__scene {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* The canvas is a rectangle and the floor grid runs to its edges, so
+     without this the panel reads as a box sitting ON the section rather than
+     as part of it — the same seam the per-section fields solve, and the same
+     fix. Radial rather than linear because all four edges show.
+     Standard property only: hand-writing the -webkit- alias next to it makes
+     the minifier drop the unprefixed one (see .bay). */
+  mask-image: radial-gradient(closest-side at 50% 47%, #000 0 86%, transparent 100%);
   /* Transparent to the page by default: this section is PINNED, so a canvas
      that swallowed touch gestures would trap the visitor inside it. The
-     module opts back in on fine pointers only (.is-grabbable). */
+     module opts back in on fine pointers only (.is-grabbable), where the
+     cursor breaks the mark apart and it reforms behind it. */
   pointer-events: none;
 }
-.tf-head__scene canvas { display: block; width: 100%; height: 100%; }
-.tf-head__scene.is-grabbable { pointer-events: auto; cursor: grab; }
-.tf-head__scene.is-grabbing { cursor: grabbing; }
+.tf-subject__scene canvas { display: block; width: 100%; height: 100%; }
+.tf-subject__scene.is-grabbable { pointer-events: auto; cursor: grab; }
+.tf-subject__scene.is-grabbing { cursor: grabbing; }
 /* No WebGL: a shaped glow rather than an empty panel. */
-.tf-head__scene.is-static {
-  background:
-    radial-gradient(38% 46% at 50% 42%, rgba(138, 156, 244, 0.22), transparent 70%),
-    radial-gradient(22% 26% at 50% 40%, rgba(232, 121, 249, 0.16), transparent 70%);
+.tf-subject__scene.is-static {
+  background: radial-gradient(42% 42% at 50% 46%, rgba(138, 156, 244, 0.20), transparent 70%);
 }
-
-/* ---- HUD frame ---------------------------------------------------- */
-.tf-hud { position: absolute; inset: 0; pointer-events: none; }
-
-.tf-hud__bracket {
-  position: absolute;
-  width: 24px; height: 24px;
-  border: 1px solid rgba(138, 156, 244, 0.40);
-}
-.tf-hud__bracket--tl { top: 4%; left: 3%; border-right: 0; border-bottom: 0; }
-.tf-hud__bracket--tr { top: 4%; right: 3%; border-left: 0; border-bottom: 0; }
-.tf-hud__bracket--bl { bottom: 4%; left: 3%; border-right: 0; border-top: 0; }
-.tf-hud__bracket--br { bottom: 4%; right: 3%; border-left: 0; border-top: 0; }
-
-/* Instrument scale: short ticks throughout, a longer one every third. */
-.tf-hud__ticks {
-  position: absolute;
-  left: 3%; top: 20%;
-  width: 22px; height: 34%;
-  background-image:
-    repeating-linear-gradient(to bottom, rgba(148, 163, 184, 0.42) 0 1px, transparent 1px 15px),
-    repeating-linear-gradient(to bottom, rgba(138, 156, 244, 0.72) 0 1px, transparent 1px 45px);
-  background-size: 10px 100%, 22px 100%;
-  background-repeat: repeat-y;
-}
-.tf-hud__bar {
-  position: absolute;
-  left: 3%; top: 14%;
-  width: 46px; height: 3px;
-  background: linear-gradient(90deg, rgba(226, 232, 240, 0.85), rgba(138, 156, 244, 0.2));
-}
-.tf-hud__box {
-  position: absolute;
-  right: 8%; bottom: 15%;
-  width: 13px; height: 13px;
-  border: 1px solid rgba(148, 163, 184, 0.38);
-}
-/* Anamorphic streak, the one piece of lens language in the frame. */
-.tf-hud__streak {
-  position: absolute;
-  right: -6%; top: 8%;
-  width: 46%; height: 1px;
-  transform: rotate(28deg);
-  transform-origin: right center;
-  background: linear-gradient(90deg, transparent, rgba(200, 190, 255, 0.34) 55%, rgba(232, 121, 249, 0.16));
-}
-.tf-hud__tag {
-  position: absolute;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--paper-faint);
-  white-space: nowrap;
-}
-.tf-hud__tag--top { top: 4%; right: 9%; }
-.tf-hud__tag--bottom { bottom: 4%; left: 9%; color: rgba(138, 156, 244, 0.62); }
 
 /* ---- stacked layout ------------------------------------------------
-   The head leads and the narration reads underneath it. Splitting the
-   pinned viewport into two columns on a phone would leave neither half
-   enough room to be legible. */
+   The mark leads and the narration reads underneath it. Two columns on a
+   phone would leave neither half enough room to be legible. */
 @media (max-width: 900px) {
   .tf-split {
     width: calc(100% - 2.5rem);
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
-    gap: 0.5rem;
-    padding-block: clamp(4rem, 8vh, 5.5rem) clamp(1.5rem, 4vh, 2.5rem);
+    row-gap: clamp(0.25rem, 1vh, 0.75rem);
+    padding-block: clamp(3.5rem, 6vh, 4.5rem) clamp(1rem, 2.5vh, 1.75rem);
   }
-  .tf-copy { align-self: end; text-align: center; }
-  .tf-stages { height: clamp(5rem, 13vh, 7rem); }
-  .transform-stage { left: 50%; transform: translate(-50%, -50%); max-width: 14ch; }
+  /* The subject leads on a phone. `order` rather than a second markup
+     order: the reading order stays narration-then-subject, which is the
+     order the section is actually written in. */
+  .tf-subject { order: -1; align-self: end; justify-self: center; max-width: min(100%, 400px); }
+  .tf-copy { align-self: start; text-align: center; }
+  .tf-stages { height: clamp(3.75rem, 9vh, 5rem); }
+  .transform-stage { left: 50%; transform: translate(-50%, -50%); width: 100%; }
   .tf-lede { margin-inline: auto; }
   .tf-dots { justify-content: center; }
-  .tf-hud__ticks, .tf-hud__bar, .tf-hud__streak { display: none; }
-  .tf-hud__tag { font-size: 0.52rem; }
 }
 
 /* ==================================================================
@@ -1047,7 +1022,7 @@
 .gflow {
   --flow-in: 0;
   position: relative;
-  padding-block: clamp(2.5rem, 6vh, 4.5rem);
+  padding-block: clamp(1.75rem, 4vh, 3.25rem);
   overflow: hidden;               /* clip the horizontal stream to the page */
 }
 /* Centred like every other section heading on the site (the archive meta line
@@ -2383,10 +2358,12 @@ html.cx-native .cx-ring { opacity: 0; }
   align-items: center;
   justify-content: center;
   gap: clamp(1.2rem, 3.2vh, 2.4rem);
-  /* Not a forced full screen: the intro + fan come to ~550px, so 100svh left
-     several hundred pixels of dead space above and below on a desktop. */
-  min-height: 74svh;
-  padding: clamp(2.25rem, 5.5vh, 4rem) clamp(1rem, 4vw, 3rem) clamp(2.75rem, 7vh, 5rem);
+  /* Not a forced full screen: the intro + fan come to ~625px, so 100svh left
+     several hundred pixels of dead space above and below on a desktop, and
+     even 68svh left ~110px of centring slack that showed up as a gap between
+     the deck and the gallery. Sized to the content, not to the viewport. */
+  min-height: 60svh;
+  padding: clamp(1.75rem, 4vh, 3rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 5vh, 3.5rem);
 }
 
 .fandeck__intro { text-align: center; max-width: 40rem; }

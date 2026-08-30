@@ -1,5 +1,11 @@
 // ==========================================================================
-// NEURAL HEAD — the subject of the transformation section.
+// NEURAL HEAD — a point-cloud human face.
+//
+// KEPT BUT NOT MOUNTED. The transformation section's subject is now the
+// ENGINEER '26 mark (public/js/neural-mark.js). This is the alternative
+// subject it was built against; re-adding it means importing
+// mountNeuralHead() in main.js and pointing the section's host at
+// data-js="neural-head".
 //
 // A point-cloud human head: one UV grid (rings around, columns over the
 // crown) drawn twice — as glowing nodes and as the wireframe between them —

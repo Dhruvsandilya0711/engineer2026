@@ -1,15 +1,22 @@
 <!-- ==========================================================================
      COGNITRIXX TRANSFORMATION — a conceptual progression, not six literal
      animations (per brief: "the conceptual progression is more important
-     than literal animation"). One pinned section split in two: the six stage
-     labels crossfade on the left, and on the right stands the subject they
-     describe — a scanned human head rebuilt as a neural point cloud
-     (public/js/neural-head.js).
+     than literal animation").
+
+     One pinned section, split in two: the six stage labels crossfade on the
+     left, and on the right stands the subject they describe — the ENGINEER
+     '26 mark rebuilt as a rotating point cloud, sampled straight from the
+     logo PNG (public/js/neural-mark.js). Run the cursor through it and it
+     breaks apart, then reforms.
+
+     No HUD frame around the mark. The brackets, tick columns and corner
+     marks that were here framed a box far larger than the object inside it,
+     which read as clutter at a random distance rather than as instrumentation.
+     The mark carries the section on its own.
 
      Both halves are driven by the same scrubbed ScrollTrigger in
-     public/js/main.js — initTransformation(): the label steps, and the head
-     warms from cold indigo toward the full cyan/violet/magenta spectrum as
-     the scan intensifies.
+     public/js/main.js — registerNarrative(): the label steps, the mark turns,
+     and its scan sharpens.
      ========================================================================== -->
 <!-- 200vh (was 300vh): one pinned viewport plus one of scroll travel. At 300vh
      the six stages were spread over ~1600px of otherwise empty scrolling, which
@@ -19,9 +26,9 @@
     <div class="transform-scrim absolute inset-0 -z-10" aria-hidden="true"></div>
 
     <div class="tf-split">
-      <!-- ============ COPY ============ -->
+      <!-- ============ NARRATION ============ -->
       <div class="tf-copy">
-        <p class="font-mono text-xs tracking-[0.3em] uppercase text-[var(--paper-faint)]">Cognitrixx / transformation</p>
+        <p class="tf-eyebrow">Cognitrixx / transformation</p>
 
         <div class="tf-stages" data-js="transform-stages">
           <span class="transform-stage is-active font-display font-bold" data-stage="0">Neural Network</span>
@@ -32,7 +39,7 @@
           <span class="transform-stage font-display font-bold text-gradient-impossible" data-stage="5">New Reality</span>
         </div>
 
-        <p class="tf-lede">A mind, resolved node by node. Six stages of rewiring
+        <p class="tf-lede">The mark, resolved node by node — six stages of rewiring
           between the network you arrive with and the one you leave with.</p>
 
         <div class="tf-dots" data-js="transform-dots" aria-hidden="true">
@@ -46,24 +53,8 @@
       </div>
 
       <!-- ============ SUBJECT ============ -->
-      <!-- The canvas host is its own element inside the frame so the HUD marks
-           below never sit inside the WebGL element (they would be wiped on
-           every resize, since the renderer owns that box). -->
-      <div class="tf-head">
-        <div class="tf-head__scene" data-js="neural-head"></div>
-
-        <div class="tf-hud" aria-hidden="true">
-          <span class="tf-hud__bracket tf-hud__bracket--tl"></span>
-          <span class="tf-hud__bracket tf-hud__bracket--tr"></span>
-          <span class="tf-hud__bracket tf-hud__bracket--bl"></span>
-          <span class="tf-hud__bracket tf-hud__bracket--br"></span>
-          <span class="tf-hud__ticks"></span>
-          <span class="tf-hud__bar"></span>
-          <span class="tf-hud__box"></span>
-          <span class="tf-hud__streak"></span>
-          <span class="tf-hud__tag tf-hud__tag--top">SUBJECT / 001</span>
-          <span class="tf-hud__tag tf-hud__tag--bottom">NEURAL MESH · LIVE</span>
-        </div>
+      <div class="tf-subject">
+        <div class="tf-subject__scene" data-js="neural-mark"></div>
       </div>
     </div>
   </div>

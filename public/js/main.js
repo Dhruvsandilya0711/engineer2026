@@ -22,7 +22,7 @@ import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initPreloader } from '/js/preloader.js';
 import { initPageTransition } from '/js/page-transition.js';
-import { mountNeuralHead } from '/js/neural-head.js';
+import { mountNeuralMark } from '/js/neural-mark.js';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
 function registerNarrative(ctx, subject) {
@@ -234,9 +234,9 @@ function initFanDeck() {
   // is still complete, just without the fields.
   if (hasWebGL()) mountFields({ scroll: scrollState });
   // The transformation section's subject: its own scene, not a [data-field]
-  // moment. It carries a face, an assemble and a drag interaction, none of
+  // moment. It samples the mark PNG, assembles, and takes a drag — none of
   // which the shared field vocabulary has any business knowing about.
-  const subject = mountNeuralHead();
+  const subject = mountNeuralMark();
 
   registerReveals(ctx);
   registerParallax(ctx);
