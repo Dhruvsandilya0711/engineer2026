@@ -13,13 +13,16 @@ export const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce
 
 export function initNav() {
   const header = document.getElementById('site-nav');
-  const toggle = document.querySelector('[data-js="nav-toggle"]');
+  // Two handles open the same drawer below the nav bar's breakpoint: the one
+  // in this header, and the hero's HUD button (the header is deferred on the
+  // homepage, so at the top of the page the hero's is the only one on screen).
+  const toggles = document.querySelectorAll('[data-js="nav-toggle"]');
   const close = document.querySelector('[data-js="nav-close"]');
   const drawer = document.getElementById('mobile-drawer');
   if (!header) return;
 
-  // On the homepage the hero carries its own nav bays, so the fixed header
-  // would duplicate them. It stays hidden until the hero has scrolled past —
+  // On the homepage the hero carries its own nav bar, so the fixed header
+  // would duplicate it. It stays hidden until the hero has scrolled past —
   // the handoff drops the header entirely, but a long page (especially on a
   // phone) still needs navigation within reach.
   const deferred = header.hasAttribute('data-deferred');
@@ -39,18 +42,19 @@ export function initNav() {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  if (toggle && drawer) {
+  if (toggles.length && drawer) {
+    const setExpanded = (v) => toggles.forEach(t => t.setAttribute('aria-expanded', String(v)));
     const open = () => {
       drawer.classList.remove('translate-x-full');
-      toggle.setAttribute('aria-expanded', 'true');
+      setExpanded(true);
       document.documentElement.style.overflow = 'hidden';
     };
     const shut = () => {
       drawer.classList.add('translate-x-full');
-      toggle.setAttribute('aria-expanded', 'false');
+      setExpanded(false);
       document.documentElement.style.overflow = '';
     };
-    toggle.addEventListener('click', open);
+    toggles.forEach(t => t.addEventListener('click', open));
     close?.addEventListener('click', shut);
     drawer.querySelectorAll('[data-js="drawer-link"]').forEach(a => a.addEventListener('click', shut));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') shut(); });

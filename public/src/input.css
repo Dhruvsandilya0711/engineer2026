@@ -1372,96 +1372,270 @@ html.cx-native .cx-ring { opacity: 0; }
 }
 
 /* ==================================================================
-   HUD NAV BAYS  (handoff → Components → HUD nav bays)
+   HUD NAV BAR  (handoff → Components → HUD nav bays)
 
-   Six angular bays. The handoff puts all six in one row at 40px gutters,
-   which is a desktop composition — on a phone that yields ~50px bays with
-   unreadable labels. Mobile-first here: 2 columns, then 3, then all six.
+   The six bays are welded into ONE instrument rather than six floating
+   buttons: the bar owns the bevel and the hairline, and the 1px grid gaps
+   let that same hairline through as the internal dividers — border and
+   dividers from a single background, in one pass.
+
+   The hero and the fixed header render the identical component
+   (views/partials/_nav-bays.ejs), so scrolling past the hero swaps in the
+   same instrument instead of a plain text menu.
+
+   Six labelled segments need real width, so the bar is desktop-only — the
+   >=1024px gate lives on its <nav> wrapper. Below that the hamburger
+   drawer is the menu (.hud-menu on the hero, the header's own button).
    ================================================================== */
-.bays {
+.baybar {
+  --bay-bevel: 14px;
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 12px;
-  padding: 4px 14px 0;
-  list-style: none;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
   margin: 0;
-  width: 100%;
+  list-style: none;
+  background: linear-gradient(
+    90deg,
+    rgba(34, 211, 238, 0.62) 0%,
+    rgba(99, 102, 241, 0.5) 38%,
+    rgba(128, 146, 246, 0.5) 62%,
+    rgba(232, 121, 249, 0.62) 100%);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--bay-bevel)) 0,
+    100% var(--bay-bevel),
+    100% 100%,
+    var(--bay-bevel) 100%,
+    0 calc(100% - var(--bay-bevel)));
+  box-shadow:
+    0 14px 40px rgba(2, 4, 12, 0.55),
+    0 0 34px rgba(80, 104, 238, 0.22);
 }
-@media (min-width: 480px) { .bays { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } }
-/* Desktop: a centred, content-width cluster rather than a full-bleed six-column
-   bar — narrower, lighter, less toolbar, more instrument. */
-@media (min-width: 1024px) {
-  .bays { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; padding: 4px 40px 0; }
+/* A slow sheen travelling the length of the instrument. Absolutely positioned,
+   so it is out of flow and never becomes a seventh column. */
+.baybar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 38%, rgba(255, 255, 255, 0.09) 50%, transparent 62%);
+  animation: baybar-sheen 9s ease-in-out infinite;
 }
+@keyframes baybar-sheen {
+  0%, 62% { transform: translateX(-58%); }
+  100%    { transform: translateX(58%); }
+}
+.baybar__cell { display: flex; }
 
 .bay {
   position: relative;
-  display: block;
-  height: 36px;
-  text-decoration: none;
-  transition: filter 160ms var(--ease-standard), transform 160ms var(--ease-standard);
-}
-.bay:hover, .bay:focus-visible { filter: brightness(1.45); transform: translateY(-2px); }
-
-/* One clip-path shared by the outline and the interior gives a 1px angular
-   hairline border without a border property. */
-.bay__outline,
-.bay__interior,
-.bay__slab {
-  position: absolute;
-  clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 42%, 100% 100%, 13px 100%, 0 58%);
-}
-.bay__outline  { inset: 0;   background: rgba(var(--bay-accent), 0.85); }
-.bay__interior { inset: 1px; background: var(--color-panel); }
-.bay__slab {
-  inset: 1px 1px 1px auto;
-  width: var(--bay-slab, 24%);
-  background: repeating-linear-gradient(112deg, rgba(var(--bay-accent), 0.95) 0 7px, transparent 7px 15px);
-}
-.bay__row {
-  position: relative;
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 100%;
-  /* A right gutter leaves room for the diagonal slab + the corner bevel now
-     that the bay is only as wide as its label. */
-  padding: 0 26px 0 12px;
+  overflow: hidden;
+  padding: 0 clamp(12px, 1.3vw, 20px);
+  text-decoration: none;
+  /* Dark glass: a specular top sheen over a translucent plate, so the bar's
+     own accent gradient glows up through each segment rather than the flat
+     panel colour that read as dull. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.015) 42%, transparent 72%),
+    linear-gradient(180deg, rgba(12, 16, 30, 0.74) 0%, rgba(6, 8, 16, 0.8) 100%);
+  /* Standard property only — the build adds the -webkit- alias itself, and
+     hand-writing both makes the minifier drop the unprefixed one. */
+  backdrop-filter: blur(14px) saturate(1.35);
+  transition: background 220ms var(--ease-standard);
+}
+/* Accent bloom rising off the floor of the cell. A segment cannot lift out of
+   a welded bar, so the cell lights up instead of translating. */
+.bay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(115% 150% at 50% 122%,
+    rgba(var(--bay-accent), 0.6) 0%,
+    rgba(var(--bay-accent), 0.18) 44%,
+    transparent 74%);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-standard);
+}
+.bay:hover::before,
+.bay:focus-visible::before { opacity: 1; }
+.bay.is-active::before { opacity: 0.6; }
+
+/* Glowing underline — the current-section indicator, and the hover tell. */
+.bay::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent, rgb(var(--bay-accent)) 20%, rgb(var(--bay-accent)) 80%, transparent);
+  box-shadow: 0 0 14px rgba(var(--bay-accent), 0.9);
+  transform: scaleX(0);
+  transition: transform 320ms var(--ease-emphasized);
+}
+.bay:hover::after,
+.bay:focus-visible::after,
+.bay.is-active::after { transform: scaleX(1); }
+
+/* The diagonal hatch survives as quiet texture, lighting up with the cell. */
+.bay__slab {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 1;
+  width: 18px;
+  background: repeating-linear-gradient(112deg, rgba(var(--bay-accent), 0.95) 0 6px, transparent 6px 13px);
+  opacity: 0.2;
+  transition: opacity 260ms var(--ease-standard);
+  pointer-events: none;
+}
+.bay:hover .bay__slab,
+.bay.is-active .bay__slab { opacity: 0.6; }
+
+.bay__row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding-right: 14px; /* keeps the label clear of the hatch */
 }
 .bay__idx {
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 9px;
   letter-spacing: 0.18em;
   color: rgb(var(--bay-accent));
+  transition: text-shadow 220ms var(--ease-standard);
 }
 .bay__label {
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.13em;
+  font-size: 13px;
+  letter-spacing: 0.14em;
   color: var(--color-strong);
   white-space: nowrap;
+  transition: color 220ms var(--ease-standard), text-shadow 220ms var(--ease-standard);
 }
-/* Desktop bay sizing. Placed AFTER the base .bay rules so these win (equal
-   specificity → later source order decides). */
-@media (min-width: 1024px) {
-  /* Wider, taller buttons on desktop. min-width gives each bay a uniform,
-     generous width (label left, diagonal slab filling the right) instead of
-     shrinking to fit the label. */
-  .bay { height: 42px; min-width: 172px; }
-  .bay__row { gap: 10px; padding: 0 44px 0 22px; }
-  .bay__idx { font-size: 9px; }
-  .bay__label { font-size: 14px; letter-spacing: 0.14em; }
+.bay:hover .bay__label,
+.bay:focus-visible .bay__label,
+.bay.is-active .bay__label {
+  color: #fff;
+  text-shadow: 0 0 16px rgba(var(--bay-accent), 0.8);
+}
+.bay:hover .bay__idx,
+.bay.is-active .bay__idx { text-shadow: 0 0 12px rgba(var(--bay-accent), 0.9); }
+
+@media (prefers-reduced-motion: reduce) {
+  .baybar::after { animation: none; }
 }
 
-/* The register bay is filled rather than outlined. */
-.bay--cta .bay__interior {
-  background: linear-gradient(90deg, rgba(34,211,238,0.95), rgba(232,121,249,0.95));
+/* Hero: a centred, content-width instrument under the HUD bar. */
+.baybar--hero {
+  width: min(1080px, calc(100% - 80px));
+  margin-inline: auto;
 }
-.bay--cta .bay__label,
-.bay--cta .bay__idx { color: var(--color-panel); }
-.bay--cta .bay__slab { display: none; }
-.bay--cta:hover { filter: brightness(1.3); }
+/* Header: the same bar, trimmed to ride inside the 80px fixed row. */
+.baybar--bar {
+  --bay-bevel: 11px;
+  box-shadow:
+    0 8px 26px rgba(2, 4, 12, 0.5),
+    0 0 22px rgba(80, 104, 238, 0.18);
+}
+.baybar--bar .bay { padding: 0 clamp(10px, 1vw, 16px); }
+.baybar--bar .bay__row { min-height: 36px; padding-right: 12px; gap: 7px; }
+.baybar--bar .bay__label { font-size: 12px; letter-spacing: 0.11em; }
+.baybar--bar .bay__slab { width: 15px; }
+
+/* Drawer: the same segments turned on their side — one welded COLUMN, so the
+   phone menu is the same instrument as the desktop bar rather than a text list.
+   The frame gradient runs top-to-bottom to match the new axis. */
+.baybar--drawer {
+  --bay-bevel: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  /* Separate buttons here rather than one welded column: on a phone they read
+     better with air around them. The frame moves to each cell, so every button
+     keeps its own accent bevel. */
+  gap: 10px;
+  padding: 0;
+  background: none;
+  clip-path: none;
+  box-shadow: none;
+}
+.baybar--drawer .baybar__cell {
+  padding: 1px;
+  background: linear-gradient(
+    118deg,
+    rgba(var(--bay-accent), 0.85) 0%,
+    rgba(var(--bay-accent), 0.3) 62%,
+    rgba(var(--bay-accent), 0.55) 100%);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--bay-bevel)) 0,
+    100% var(--bay-bevel),
+    100% 100%,
+    var(--bay-bevel) 100%,
+    0 calc(100% - var(--bay-bevel)));
+  box-shadow: 0 6px 18px rgba(2, 4, 12, 0.45);
+}
+/* The travelling sheen belongs to a continuous bar; across separated buttons it
+   would sweep over the gaps too. */
+.baybar--drawer::after { display: none; }
+.baybar--drawer .bay { padding: 0 20px; }
+.baybar--drawer .bay__row {
+  min-height: 50px; /* 20% shorter, still a comfortable touch target */
+  gap: 14px;
+  padding-right: 26px;
+}
+.baybar--drawer .bay__idx { font-size: 11px; }
+.baybar--drawer .bay__label { font-size: 19px; letter-spacing: 0.12em; }
+.baybar--drawer .bay__slab { width: 26px; opacity: 0.26; }
+/* Vertical stack: the bloom reads better from the leading edge than the floor. */
+.baybar--drawer .bay::before {
+  background: radial-gradient(90% 160% at 0% 50%,
+    rgba(var(--bay-accent), 0.55) 0%,
+    rgba(var(--bay-accent), 0.16) 46%,
+    transparent 76%);
+}
+/* ...and the indicator becomes a leading bar rather than an underline. */
+.baybar--drawer .bay::after {
+  left: 0; right: auto; top: 0; bottom: 0;
+  width: 3px;
+  height: auto;
+  background: rgb(var(--bay-accent));
+  transform: scaleY(0);
+  transition: transform 320ms var(--ease-emphasized);
+}
+.baybar--drawer .bay:hover::after,
+.baybar--drawer .bay:focus-visible::after,
+.baybar--drawer .bay.is-active::after { transform: scaleY(1); }
+
+/* The hero's drawer handle — present exactly where the bar is not. */
+.hud-menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--hairline-strong);
+  background: rgba(8, 10, 18, 0.5);
+  color: var(--color-strong);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 160ms var(--ease-standard), border-color 160ms var(--ease-standard);
+}
+.hud-menu:hover {
+  background: rgba(34, 211, 238, 0.14);
+  border-color: rgba(34, 211, 238, 0.6);
+}
+@media (min-width: 1024px) { .hud-menu { display: none; } }
 
 /* ==================================================================
    HUD chrome — status bar, kicker, status strip
@@ -1638,8 +1812,10 @@ html.cx-native .cx-ring { opacity: 0; }
    there. Guarded to min-width 700px so tall phones (e.g. 375x812) are NOT
    caught by it and keep their roomier grid spacing. */
 @media (max-height: 820px) and (min-width: 700px) {
-  .bays { gap: 9px; }
-  nav.relative { margin-top: 0.75rem !important; }
+  /* The bar's own gaps are structural (they ARE the dividers) — only the
+     space around it gives here. */
+  nav.relative { margin-top: 0.25rem !important; }
+  .baybar--hero .bay__row { min-height: 38px; }
 }
 /* The rules either side of the date read as dividers, so they carry a little
    extra air without reintroducing fixed margins. */

@@ -1,0 +1,53 @@
+<!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       useRoutes  true on inner pages, where Events/Schedule/Team are real
+                  routes. On the homepage the hash targets open the fan-deck
+                  cards instead (public/js/main.js → initFanDeck).
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+<%
+  const bayItems = [
+    { n: '01', label: 'Home',     id: 'home',     hash: '#top',        route: '/',          accent: '34,211,238'  },
+    { n: '02', label: 'About',    id: 'about',    hash: '/#about',     route: '/#about',    accent: '80,150,242'  },
+    { n: '03', label: 'Events',   id: 'events',   hash: '/#events',    route: '/events',    accent: '108,124,244' },
+    { n: '04', label: 'Schedule', id: 'schedule', hash: '/#schedule',  route: '/schedule',  accent: '128,146,246' },
+    { n: '05', label: 'Team',     id: 'team',     hash: '/#team',      route: '/team',      accent: '214,118,226' },
+    { n: '06', label: 'Sponsors', id: 'sponsors', hash: '/#sponsors',  route: '/#sponsors', accent: '232,121,249' },
+  ];
+  const barVariant = typeof variant  !== 'undefined' ? variant : 'hero';
+  const routes     = typeof useRoutes !== 'undefined' && useRoutes;
+  const current    = typeof activeNav !== 'undefined' ? activeNav : '';
+  // In the drawer the segments stack vertically and must also close it.
+  const inDrawer   = typeof drawerLinks !== 'undefined' && drawerLinks;
+%>
+<ul class="baybar baybar--<%= barVariant %>">
+  <% bayItems.forEach(function (b) { const on = current === b.id; %>
+  <%# The accent rides on the CELL so it inherits into the link AND is readable
+      by the cell itself — the drawer draws a per-button frame with it. %>
+  <li class="baybar__cell" style="--bay-accent: <%= b.accent %>;">
+    <a href="<%= routes ? b.route : b.hash %>"
+       class="bay<%= on ? ' is-active' : '' %>"
+       <%- inDrawer ? 'data-js="drawer-link"' : '' %>
+       <%- on ? 'aria-current="page"' : '' %>>
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx"><%= b.n %></span>
+        <span class="bay__label"><%= b.label %></span>
+      </span>
+    </a>
+  </li>
+  <% }); %>
+</ul>

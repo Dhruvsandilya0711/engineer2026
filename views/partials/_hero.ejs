@@ -32,35 +32,18 @@
       <span class="hud-label hidden xs:inline">Session 26.0</span>
       <span class="hud-rule w-[34px] hidden xs:block"></span>
       <span class="hud-label" style="color: var(--color-cyan);">Online</span>
+      <!-- Below the nav bar's breakpoint the six bays would be unreadable, so
+           the menu lives in the drawer — this is its handle on the hero. -->
+      <button type="button" class="hud-menu" data-js="nav-toggle" aria-label="Open menu"
+              aria-expanded="false" aria-controls="mobile-drawer">
+        <span aria-hidden="true">&#9776;</span>
+      </button>
     </div>
   </div>
 
   <!-- ============ NAV BAYS ============ -->
-  <nav aria-label="Primary" class="relative z-10 mt-5 sm:mt-6">
-    <ul class="bays">
-      <% const bays = [
-           { n: '01', label: 'Home',     href: '#top',       accent: '34,211,238',  slab: '26%' },
-           { n: '02', label: 'About',    href: '/#about',    accent: '80,150,242',  slab: '30%' },
-           { n: '03', label: 'Events',   href: '/#events',   accent: '108,124,244', slab: '24%' },
-           { n: '04', label: 'Schedule', href: '/#schedule', accent: '128,146,246', slab: '20%' },
-           { n: '05', label: 'Team',     href: '/#team',     accent: '214,118,226', slab: '28%' },
-           { n: '06', label: 'Sponsors', href: '/#sponsors', accent: '232,121,249', slab: '24%' }
-         ]; %>
-      <% bays.forEach(function(b){ %>
-      <li>
-        <a href="<%= b.href %>" class="bay <%= b.cta ? 'bay--cta' : '' %>"
-           style="--bay-accent: <%= b.accent %>; --bay-slab: <%= b.slab %>;">
-          <span class="bay__outline"></span>
-          <span class="bay__interior"></span>
-          <% if (!b.cta) { %><span class="bay__slab"></span><% } %>
-          <span class="bay__row">
-            <span class="bay__idx"><%= b.n %></span>
-            <span class="bay__label"><%= b.label %></span>
-          </span>
-        </a>
-      </li>
-      <% }); %>
-    </ul>
+  <nav aria-label="Primary" class="relative z-10 mt-1 sm:mt-2 hidden lg:block">
+    <%- include('_nav-bays', { variant: 'hero', useRoutes: false, activeNav: 'home' }) %>
   </nav>
 
   <!-- ============ MAIN ============ -->
@@ -68,7 +51,7 @@
        to viewport HEIGHT, which is what pushed the countdown off-screen. -->
   <div class="hero-main relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6">
 
-    <p class="hero-kicker" data-reveal>NITK Surathkal</p>
+    <p class="hero-kicker" data-reveal>NITK Surathkal&rsquo;s</p>
 
     <!-- Official ENGINEER'26 logotype — the custom angular lettering, extracted
          from the supplied artwork to a transparent PNG (planet/tagline/HUD
