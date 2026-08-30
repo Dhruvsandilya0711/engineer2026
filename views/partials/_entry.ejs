@@ -35,20 +35,20 @@
   <div class="pl-hud pl-hud--br">SCANLINE 60HZ</div>
 
   <div class="pl-stack">
-    <!-- Shard-built wordmark: three diagonal slices, each with cyan/magenta
-         chroma copies, so it can come apart during the burst. -->
+    <!-- Shard-built wordmark: the homepage ENGINEER'26 logotype, sliced into
+         three diagonal shards (each a clipped copy of the same image) so it
+         comes apart during the burst. RGB-split + glow are CSS drop-shadows on
+         the image, driven by the same JS vars the text version used. -->
     <div class="pl-wm" data-js="pl-wm" aria-hidden="true">
       <% for (var i = 1; i <= 3; i++) { %>
       <div class="pl-shard pl-shard--<%= i %>">
-        <span class="pl-shard__c">ENGINEER'26</span>
-        <span class="pl-shard__m">ENGINEER'26</span>
-        <span class="pl-shard__w">ENGINEER'26</span>
+        <img class="pl-shard__img" src="/images/engineer26-wordmark.png?v=2" alt="" decoding="async">
       </div>
       <% } %>
-      <!-- Torn slivers: thin sheared bands that tear off during the burst.
-           Pre-rendered and hidden; preloader.js drives clip-path/offset. -->
+      <!-- Torn slivers: thin sheared bands of the logotype that tear off during
+           the burst. Pre-rendered and hidden; preloader.js drives clip-path/offset. -->
       <% for (var v = 0; v < 5; v++) { %>
-      <span class="pl-sliver" style="display:none;">ENGINEER'26</span>
+      <img class="pl-sliver" src="/images/engineer26-wordmark.png?v=2" alt="" aria-hidden="true" style="display:none;">
       <% } %>
     </div>
 

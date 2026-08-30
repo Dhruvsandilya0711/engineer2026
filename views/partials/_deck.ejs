@@ -1,109 +1,79 @@
 <!-- ==========================================================================
-     DECK — the homepage nav destinations, dealt out as a stack of sticky cards.
+     FANDECK — the homepage nav destinations, dealt as a tilted horizontal fan.
 
-     Card order, accents and index numbers mirror the hero nav bays. HOME is
-     the hero itself, so the deck's first CARD is 01 ABOUT. Keep the two in
-     step: bays = Home / About / Events / Schedule / Team / Sponsors; cards =
-     About / Events / Schedule / Team / Sponsors.
+     The five cards (About → Sponsors) rest overlapping in 3D, all leaning the
+     same way like a fanned hand. Hover lifts a card toward you; clicking one
+     OPENS it — it flies to the centre, straightens, and expands to a full panel
+     showing its real content (a FLIP morph in public/js/main.js → initFanDeck).
+     A scrim closes it, as does Esc or the ✕.
 
-     Each card is a real section with a real id, so /#about, /#events,
-     /#schedule, /#team and /#sponsors all resolve and nothing is hidden behind
-     JS — the stacking is CSS `position: sticky` (see .deck in input.css) and
-     GSAP only adds the scale-and-dim as a card is covered.
+     Card order, accents and index numbers mirror the hero nav bays. HOME is the
+     hero itself, so the fan's first CARD is 01 ABOUT. Each card keeps its real
+     id (#about … #sponsors) so the nav anchors still resolve — and the nav opens
+     the matching card rather than just scrolling to it.
      ========================================================================== -->
-<div class="deck" id="deck">
+<%
+  const cards = [
+    { id: 'about',    i: 0, num: '01', name: 'About',    accent: '34,211,238',
+      teaser: 'The festival, the theme, and the idea behind COGNITRIXX.' },
+    { id: 'events',   i: 1, num: '02', name: 'Events',   accent: '99,102,241',
+      teaser: (events.all.length) + ' flagship events across three days.',
+      go: { href: '/events', label: 'All ' + events.all.length + ' &rarr;' } },
+    { id: 'schedule', i: 2, num: '03', name: 'Schedule', accent: '108,124,244',
+      teaser: 'The full three-day programme, hour by hour.',
+      go: { href: '/schedule', label: 'Full schedule &rarr;' } },
+    { id: 'team',     i: 3, num: '04', name: 'Team',     accent: '128,146,246',
+      teaser: 'The people who build ENGINEER \'26.',
+      go: { href: '/team', label: 'Open &rarr;' } },
+    { id: 'sponsors', i: 4, num: '05', name: 'Sponsors', accent: '232,121,249',
+      teaser: 'Partner with the fest — back the network.',
+      go: { href: '/#footer', label: 'Partner &rarr;' } },
+  ];
+%>
+<section class="fandeck" id="deck" data-js="fandeck" aria-label="Explore ENGINEER '26">
 
-  <!-- 01 ABOUT -->
-  <div class="deck-item" style="--i: 0">
-    <article class="deck-card" style="--accent: 34,211,238">
-      <div class="deck-card__inner">
-        <div class="deck-card__head">
-          <span class="deck-card__num">01</span>
-          <span class="deck-card__name">About</span>
-          <span class="deck-card__slab" aria-hidden="true"></span>
-          <span class="deck-card__line" aria-hidden="true"></span>
-        </div>
-        <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_about-engineer', { festDates }) %>
-        </div>
-      </div>
-      <span class="deck-card__scrim" data-js="deck-scrim" aria-hidden="true"></span>
-    </article>
+  <div class="fandeck__intro" data-reveal>
+    <p class="eyebrow text-cyan mb-3">The system</p>
+    <h2 class="font-display font-bold text-3xl sm:text-5xl">Explore the deck</h2>
+    <p class="fandeck__lead">Hover a card &middot; click to open</p>
   </div>
 
-  <!-- 02 EVENTS -->
-  <div class="deck-item" style="--i: 1">
-    <article class="deck-card" style="--accent: 99,102,241">
-      <div class="deck-card__inner">
-        <div class="deck-card__head">
-          <span class="deck-card__num">02</span>
-          <span class="deck-card__name">Events</span>
-          <span class="deck-card__slab" aria-hidden="true"></span>
-          <span class="deck-card__line" aria-hidden="true"></span>
-          <a class="deck-card__go" href="/events">All <%= events.all.length %> &rarr;</a>
-        </div>
-        <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_events-rail', { events, regState }) %>
-        </div>
-      </div>
-      <span class="deck-card__scrim" data-js="deck-scrim" aria-hidden="true"></span>
-    </article>
-  </div>
+  <div class="fandeck__stage" data-js="fandeck-stage">
+    <% cards.forEach(function (c) { %>
+    <article class="fancard" id="<%= c.id %>" data-card="<%= c.id %>"
+             style="--i: <%= c.i %>; --accent: <%= c.accent %>;">
+      <!-- Transparent hit target: opens the card in the fan state; hidden once
+           open so the real content (links, close, scroll) takes the clicks. -->
+      <button class="fancard__hit" type="button" data-js="fancard-open"
+              aria-expanded="false" aria-label="Open <%= c.name %>"></button>
 
-  <!-- 03 SCHEDULE -->
-  <div class="deck-item" style="--i: 2">
-    <article class="deck-card" style="--accent: 108,124,244">
-      <div class="deck-card__inner">
+      <div class="fancard__plate">
         <div class="deck-card__head">
-          <span class="deck-card__num">03</span>
-          <span class="deck-card__name">Schedule</span>
+          <span class="deck-card__num"><%= c.num %></span>
+          <span class="deck-card__name"><%= c.name %></span>
           <span class="deck-card__slab" aria-hidden="true"></span>
           <span class="deck-card__line" aria-hidden="true"></span>
-          <a class="deck-card__go" href="/schedule">Full schedule &rarr;</a>
+          <% if (c.go) { %><a class="deck-card__go" href="<%= c.go.href %>"><%- c.go.label %></a><% } %>
+          <button class="fancard__close" type="button" data-js="fancard-close" aria-label="Close <%= c.name %>">&#10005;</button>
         </div>
-        <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_schedule-preview', { scheduleDays }) %>
-        </div>
-      </div>
-      <span class="deck-card__scrim" data-js="deck-scrim" aria-hidden="true"></span>
-    </article>
-  </div>
 
-  <!-- 04 TEAM -->
-  <div class="deck-item" style="--i: 3">
-    <article class="deck-card" style="--accent: 128,146,246">
-      <div class="deck-card__inner">
-        <div class="deck-card__head">
-          <span class="deck-card__num">04</span>
-          <span class="deck-card__name">Team</span>
-          <span class="deck-card__slab" aria-hidden="true"></span>
-          <span class="deck-card__line" aria-hidden="true"></span>
-          <a class="deck-card__go" href="/team">Open &rarr;</a>
-        </div>
-        <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_team-preview', { teamTotal, teamGroupCount }) %>
-        </div>
-      </div>
-      <span class="deck-card__scrim" data-js="deck-scrim" aria-hidden="true"></span>
-    </article>
-  </div>
+        <!-- Fan face: a short teaser + the OPEN hint (both hidden once open). -->
+        <p class="fancard__teaser"><%= c.teaser %></p>
+        <span class="fancard__hint" aria-hidden="true">Open &#8599;</span>
 
-  <!-- 05 SPONSORS — the deck's closer. -->
-  <div class="deck-item" style="--i: 4">
-    <article class="deck-card" style="--accent: 232,121,249">
-      <div class="deck-card__inner">
-        <div class="deck-card__head">
-          <span class="deck-card__num">05</span>
-          <span class="deck-card__name">Sponsors</span>
-          <span class="deck-card__slab" aria-hidden="true"></span>
-          <span class="deck-card__line" aria-hidden="true"></span>
-          <a class="deck-card__go" href="/#footer">Partner &rarr;</a>
-        </div>
-        <div class="deck-card__body" data-lenis-prevent>
-          <%- include('_sponsors') %>
+        <!-- Full content: hidden in the fan, revealed when the card opens. -->
+        <div class="fancard__body deck-card__body" data-lenis-prevent>
+          <% if (c.id === 'about') { %><%- include('_about-engineer', { festDates }) %>
+          <% } else if (c.id === 'events') { %><%- include('_events-rail', { events, regState }) %>
+          <% } else if (c.id === 'schedule') { %><%- include('_schedule-preview', { scheduleDays }) %>
+          <% } else if (c.id === 'team') { %><%- include('_team-preview', { teamTotal, teamGroupCount }) %>
+          <% } else if (c.id === 'sponsors') { %><%- include('_sponsors') %><% } %>
         </div>
       </div>
     </article>
+    <% }); %>
   </div>
 
-</div>
+  <!-- Click-anywhere-to-close backdrop; only live while a card is open. -->
+  <button class="fandeck__scrim" type="button" data-js="fandeck-scrim" aria-label="Close card" tabindex="-1"></button>
+</section>
