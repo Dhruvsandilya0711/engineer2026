@@ -6,8 +6,10 @@ import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail
 import { initScroll, registerReveals, registerParallax, scrollState } from '/js/scroll.js';
 import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import { initDots } from '/js/dots.js';
+import { initPageTransition } from '/js/page-transition.js';
 
 (async function boot() {
+  initPageTransition();
   initNav();
   initMagneticButtons();
   initCountdown();

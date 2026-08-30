@@ -20,17 +20,25 @@
   <div class="hero-glows absolute inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
   <div class="hero-grid absolute inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
 
-  <!-- ============ HUD STATUS BAR ============ -->
-  <div class="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-6 sm:pt-8">
-    <div class="flex items-center gap-3">
-      <img src="/images/engineer26logo.png" alt="ENGINEER '26"
-           class="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-           style="filter: drop-shadow(0 0 12px rgba(124,58,237,0.7));">
-      <span class="hud-label">NITK</span>
-    </div>
-    <div class="flex items-center gap-3">
-      <span class="hud-label hidden xs:inline">Session 26.0</span>
-      <span class="hud-rule w-[34px] hidden xs:block"></span>
+  <!-- ============ HUD CHROME ============
+       One row, evenly spaced: the mark, the nav bar, then the status readout.
+       Nothing is stacked on anything and the gap is shared, so the three read
+       as one instrument panel rather than three crowded fragments. -->
+  <div class="hud-navrow relative z-10 pt-7 sm:pt-9">
+    <a href="/" class="flex items-center shrink-0" aria-label="ENGINEER '26 home">
+      <img class="hud-mark" src="/images/engineer26-mark.png" alt="ENGINEER '26" width="399" height="389">
+    </a>
+
+    <nav aria-label="Primary" class="hidden lg:block">
+      <%- include('_nav-bays', { variant: 'hero', activeNav: 'home' }) %>
+    </nav>
+
+    <div class="hud-status flex items-center gap-3 shrink-0">
+      <%# Visibility owned by .hud-session in CSS rather than Tailwind display
+          utilities — the utility kept winning the cascade and forcing this back
+          on at widths where it squeezes the bays. %>
+      <span class="hud-label hud-session">Session 26.0</span>
+      <span class="hud-rule hud-session w-[34px]"></span>
       <span class="hud-label" style="color: var(--color-cyan);">Online</span>
       <!-- Below the nav bar's breakpoint the six bays would be unreadable, so
            the menu lives in the drawer — this is its handle on the hero. -->
@@ -40,11 +48,6 @@
       </button>
     </div>
   </div>
-
-  <!-- ============ NAV BAYS ============ -->
-  <nav aria-label="Primary" class="relative z-10 mt-1 sm:mt-2 hidden lg:block">
-    <%- include('_nav-bays', { variant: 'hero', useRoutes: false, activeNav: 'home' }) %>
-  </nav>
 
   <!-- ============ MAIN ============ -->
   <!-- One clamped gap rather than per-element margins: margins cannot respond

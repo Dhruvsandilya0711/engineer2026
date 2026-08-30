@@ -33,11 +33,9 @@ export function initNav() {
       const past = window.scrollY > (heroEl ? heroEl.offsetHeight - 120 : 400);
       header.classList.toggle('is-revealed', past);
     }
-    const scrolled = window.scrollY > 80;
-    header.classList.toggle('bg-charcoal/90', scrolled);
-    header.classList.toggle('backdrop-blur-md', scrolled);
-    header.classList.toggle('border-b', scrolled);
-    header.classList.toggle('border-[var(--hairline)]', scrolled);
+    // One class; the glass plate and its spectrum hairline live in CSS
+    // (#site-nav.is-solid) rather than four utilities toggled from here.
+    header.classList.toggle('is-solid', window.scrollY > 80);
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

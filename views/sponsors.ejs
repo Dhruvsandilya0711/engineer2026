@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sponsors — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="Partner with ENGINEER '26 at NITK Surathkal. Partnership tiers are open for the 2026 edition.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="ambient" data-priority="2" data-density="0.85" data-tone="nebula" data-signals="9" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'sponsors' }) %>
+
+  <main class="relative z-10 pt-32 pb-28 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <%
+        const sponsorTitle = `Powering<br><span class="text-gradient-impossible">the system.</span>`;
+        const sponsorMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
+          + `<span class="text-paper">${tiers.length}</span> tiers &middot; `
+          + `<span class="text-paper">${openSlots}</span> open<br>`
+          + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
+      %>
+      <%- include('partials/_page-hero', { accent: '232,121,249', num: '06', nav: 'Sponsors', kicker: 'Cognitrixx / partners', title: sponsorTitle, meta: sponsorMeta }) %>
+
+      <p class="text-[var(--paper-dim)] max-w-xl mt-6">
+        ENGINEER is NITK Surathkal's annual technical festival, run by students. Partnership tiers
+        for the '26 edition are open — slots fill in here as they are confirmed.
+      </p>
+
+      <div class="hud-frame mt-6" style="--accent: 232,121,249">
+        <div class="hud-frame__inner"><div class="hud-frame__body">
+
+        <!-- ============ TIERS ============
+             Structure only. Every slot is genuinely open: no placeholder logos
+             and no invented partner names, same rule the deck card follows. -->
+        <section aria-labelledby="tiers">
+          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+            <h2 id="tiers" class="font-display font-semibold text-xl">Partnership tiers</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= openSlots %> open</p>
+          </div>
+
+          <ul class="grid sm:grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)] list-none p-0 m-0">
+            <% tiers.forEach(function (t, i) { %>
+            <li class="surface-card p-6 sm:p-7 text-center" data-reveal>
+              <p class="font-mono text-[0.6rem] tracking-[0.2em] uppercase mb-3" style="color: rgb(<%= t.accent %>)"><%= String(i + 1).padStart(2, '0') %> / <%= t.name %></p>
+              <p class="font-display font-semibold text-lg mb-2"><%= t.name %></p>
+              <p class="font-mono text-[0.62rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">Open slot</p>
+            </li>
+            <% }); %>
+          </ul>
+        </section>
+
+        <!-- ============ WHY / WHO REACHES IT ============
+             Only what this repository can actually stand behind: the fest's
+             own scale, taken from the live event data. -->
+        <section class="mt-16" aria-labelledby="reach">
+          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+            <h2 id="reach" class="font-display font-semibold text-xl">What you're backing</h2>
+          </div>
+
+          <div class="grid sm:grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)]">
+            <div class="surface-card p-6" data-reveal>
+              <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Programme</p>
+              <p class="font-display font-bold text-3xl mb-1"><%= eventCount %></p>
+              <p class="text-sm text-[var(--paper-dim)]">events across the festival</p>
+            </div>
+            <div class="surface-card p-6" data-reveal>
+              <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Dates</p>
+              <p class="font-display font-bold text-3xl mb-1">3</p>
+              <p class="text-sm text-[var(--paper-dim)]"><%= festDates.display %></p>
+            </div>
+            <div class="surface-card p-6" data-reveal>
+              <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Host</p>
+              <p class="font-display font-bold text-3xl mb-1">NITK</p>
+              <p class="text-sm text-[var(--paper-dim)]">Surathkal, Karnataka</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ CONTACT ============ -->
+        <section class="mt-16 border border-dashed border-[var(--hairline-strong)] py-14 px-6 text-center" data-reveal>
+          <p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-magenta mb-4">Partner with the fest</p>
+          <h2 class="font-display font-semibold text-2xl mb-4">Take a tier</h2>
+          <p class="text-[var(--paper-dim)] text-sm max-w-md mx-auto mb-8">
+            Tier details and the sponsorship deck are shared on request. Reach the ENGINEER '26
+            organising team and we'll take it from there.
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center">
+            <a href="/#footer" class="btn btn-primary" data-js="magnetic">Get in touch</a>
+            <a href="/events" class="btn btn-secondary">See the programme</a>
+          </div>
+        </section>
+
+        <aside class="mt-16 border-l-2 border-magenta/50 pl-5 py-2">
+          <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-magenta mb-2">Status</p>
+          <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
+            No sponsors are confirmed for ENGINEER '26 yet. Slots stay visibly empty here rather
+            than being filled with placeholder logos.
+          </p>
+        </aside>
+
+        </div></div></div>
+    </div>
+  </main>
+
+  <%- include('partials/_footer') %>
+
+  <script type="module" src="/js/page.js"></script>
+</body>
+</html>

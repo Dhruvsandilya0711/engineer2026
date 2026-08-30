@@ -21,15 +21,16 @@ import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail
 import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initPreloader } from '/js/preloader.js';
+import { initPageTransition } from '/js/page-transition.js';
+import { mountNeuralHead } from '/js/neural-head.js';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
-function registerNarrative(ctx, fields) {
+function registerNarrative(ctx, subject) {
   const section = document.getElementById('transformation');
   const stages = section?.querySelectorAll('.transform-stage');
   const dots = section?.querySelectorAll('.dot');
   if (!section || !stages?.length) return;
 
-  const field = fields.transformation;
 
   const setStage = (i) => {
     stages.forEach(s => s.classList.toggle('is-active', Number(s.dataset.stage) === i));
@@ -41,7 +42,7 @@ function registerNarrative(ctx, fields) {
     section.style.height = 'auto';
     section.querySelector('.sticky')?.classList.remove('sticky', 'h-screen');
     setStage(0);
-    field?.setProgress(1);
+    subject?.setProgress(1);
     return;
   }
 
@@ -51,7 +52,7 @@ function registerNarrative(ctx, fields) {
     end: 'bottom bottom',
     scrub: true,
     onUpdate(self) {
-      field?.setProgress(self.progress);
+      subject?.setProgress(self.progress);
       setStage(Math.min(5, Math.floor(self.progress * 6)));
     },
   });
@@ -219,6 +220,7 @@ function initFanDeck() {
 
 // -- Boot ------------------------------------------------------------------
 (async function boot() {
+  initPageTransition();
   initNav();
   initMagneticButtons();
   initCountdown();
@@ -230,12 +232,16 @@ function initFanDeck() {
 
   // Mount every declared 3D moment. Skipped wholesale without WebGL — the page
   // is still complete, just without the fields.
-  const fields = hasWebGL() ? mountFields({ scroll: scrollState }) : {};
+  if (hasWebGL()) mountFields({ scroll: scrollState });
+  // The transformation section's subject: its own scene, not a [data-field]
+  // moment. It carries a face, an assemble and a drag interaction, none of
+  // which the shared field vocabulary has any business knowing about.
+  const subject = mountNeuralHead();
 
   registerReveals(ctx);
   registerParallax(ctx);
   registerSeams(ctx);
-  registerNarrative(ctx, fields);
+  registerNarrative(ctx, subject);
   registerEventsRail();
   initFanDeck();
   initGalleryFlow();

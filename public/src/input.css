@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* Orbitron, self-hosted as ONE variable file (15.9KB woff2) covering the whole
+   400-900 axis — no extra network request per weight, and no dependency on
+   Google Fonts for the face the body copy is set in. SIL Open Font License;
+   the text ships alongside it at public/fonts/Orbitron-OFL.txt. */
+@font-face {
+  font-family: "Orbitron";
+  /* Plain woff2, not the older `woff2-variations` keyword: browsers that do not
+     recognise that keyword drop the whole src and fall back. The axis is
+     declared by the font-weight range below. */
+  src: url("/fonts/Orbitron-Variable.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ==========================================================================
    ENGINEER '26 — "The Impossible Machine" design tokens
    Source of truth: approved design-system spec (color / type / radius).
@@ -27,6 +42,10 @@
   --color-magenta: #e879f9;
 
   --color-charcoal: #05060a;
+  /* Card surfaces sit over the neural field, so they are translucent rather
+     than flat panels — the field reads faintly through them and the cards stop
+     looking like holes punched in the page. */
+  --card-surface: rgba(5, 6, 10, 0.68);
   --color-charcoal-2: #0b0d16;
   --color-amber: #e8923c;
   --color-success: #3fbf8f;
@@ -34,8 +53,16 @@
   --color-error: #f87186;
 
   /* Chakra Petch (display, 700 + italic) and Space Mono for everything else. */
+  /* Three roles, deliberately split:
+       display  the big statements — untouched, still Chakra Petch
+       body     the CONTENT, now Orbitron: squarer and more machined than the
+                monospace it replaces, and it reads as type rather than as a
+                terminal dump
+       mono     the HUD chrome (eyebrows, readouts, indices) stays Space Mono —
+                that tracking-heavy lab-instrument voice is the site's texture,
+                and Orbitron does not do it as well */
   --font-display: "Chakra Petch", system-ui, sans-serif;
-  --font-body: "Space Mono", ui-monospace, monospace;
+  --font-body: "Orbitron", "Chakra Petch", system-ui, sans-serif;
   --font-mono: "Space Mono", ui-monospace, monospace;
 }
 
@@ -79,8 +106,18 @@
     background: var(--color-void);
     color: var(--color-paper);
     font-family: var(--font-body);
+    /* Orbitron sets WIDE and tall for its point size, so it needs the opposite
+       treatment to the monospace it replaces: tracking pulled back in, leading
+       opened up. Without this, content lines run long and set too tight. */
+    font-weight: 400;
+    letter-spacing: -0.006em;
+    line-height: 1.68;
     overflow-x: hidden;
   }
+
+  /* Bold is the emphasis weight — Orbitron's 400/700 pair is its strongest
+     contrast; the middle weights read as indecisive at content sizes. */
+  strong, b { font-weight: 700; }
 
   ::selection {
     background: var(--color-violet);
@@ -223,6 +260,60 @@
   transform: translateY(-2px);
   box-shadow: 0 0 0 1px var(--color-violet), 0 10px 30px -10px rgba(95, 121, 242, 0.55);
 }
+/* REGISTER — the one action on the page, so it is the only control that gets
+   the full spectrum treatment: an angular bevel from the bay language, a
+   cyan->violet->magenta fill, and a sheen that sweeps across on hover. Black
+   type on the bright fill is the highest contrast pairing available here. */
+.btn-register {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-void);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  background: linear-gradient(100deg, #22d3ee 0%, #8b78f6 52%, #e879f9 100%);
+  box-shadow: 0 6px 20px -8px rgba(34, 211, 238, 0.6);
+  transition:
+    transform var(--dur-fast) var(--ease-emphasized),
+    box-shadow var(--dur-base) var(--ease-standard),
+    filter var(--dur-base) var(--ease-standard);
+}
+.btn-register::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 34%, rgba(255, 255, 255, 0.5) 50%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 700ms var(--ease-emphasized);
+}
+.btn-register:hover,
+.btn-register:focus-visible {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 12px 30px -8px rgba(34, 211, 238, 0.7),
+    0 0 26px rgba(232, 121, 249, 0.38);
+}
+.btn-register:hover::after,
+.btn-register:focus-visible::after { transform: translateX(120%); }
+.btn-register:active { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-register::after { display: none; }
+}
+
 .btn-secondary {
   background: transparent;
   color: var(--color-paper);
@@ -335,22 +426,62 @@
 }
 
 
-/* transformation section — stacked, crossfading stage labels */
-[data-js="transform-stages"] { text-align: center; }
+/* ==================================================================
+   TRANSFORMATION — the narration on the left, the subject on the right.
+   The head is a WebGL point cloud (public/js/neural-head.js); everything
+   framing it is HTML, so the HUD stays crisp at any DPR and costs nothing.
+   ================================================================== */
+.tf-split {
+  position: relative;
+  height: 100%;
+  width: min(1500px, calc(100% - 4rem));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(1.5rem, 3.5vw, 4rem);
+  /* Clears the fixed header at the top and the stage dots at the bottom. */
+  padding-block: clamp(4.5rem, 9vh, 6.5rem) clamp(2rem, 5vh, 4rem);
+}
+
+.tf-copy { align-self: center; min-width: 0; }
+
+/* Stacked, crossfading stage labels. Left-aligned now, so the whole column
+   shares one edge with the eyebrow, the lede and the dots. */
+.tf-stages {
+  position: relative;
+  margin-top: clamp(1rem, 2.4vh, 1.75rem);
+  height: clamp(6.5rem, 16vh, 10rem);
+}
 .transform-stage {
   position: absolute;
-  left: 50%;
+  left: 0;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
   opacity: 0;
-  white-space: nowrap;
+  max-width: 12ch;                     /* two lines at most, by design */
+  font-size: clamp(1.9rem, 2.9vw, 3.15rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
   transition: opacity var(--dur-slow) var(--ease-standard);
 }
 .transform-stage.is-active { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .transform-stage { transition: none; }
 }
+
+.tf-lede {
+  margin-top: clamp(1rem, 2.2vh, 1.6rem);
+  max-width: 36ch;
+  color: var(--paper-dim);
+  font-size: clamp(0.85rem, 1vw, 0.98rem);
+  line-height: 1.7;
+}
+
+.tf-dots { display: flex; gap: 0.5rem; margin-top: clamp(1.5rem, 3.5vh, 2.5rem); }
 .dot {
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
   background: var(--hairline-strong);
   transition: background var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard);
@@ -358,6 +489,105 @@
 .dot.is-active {
   background: var(--color-amber);
   transform: scale(1.6);
+}
+
+/* ---- the subject ------------------------------------------------- */
+.tf-head { position: relative; min-width: 0; min-height: min(50vh, 400px); }
+.tf-head__scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Transparent to the page by default: this section is PINNED, so a canvas
+     that swallowed touch gestures would trap the visitor inside it. The
+     module opts back in on fine pointers only (.is-grabbable). */
+  pointer-events: none;
+}
+.tf-head__scene canvas { display: block; width: 100%; height: 100%; }
+.tf-head__scene.is-grabbable { pointer-events: auto; cursor: grab; }
+.tf-head__scene.is-grabbing { cursor: grabbing; }
+/* No WebGL: a shaped glow rather than an empty panel. */
+.tf-head__scene.is-static {
+  background:
+    radial-gradient(38% 46% at 50% 42%, rgba(138, 156, 244, 0.22), transparent 70%),
+    radial-gradient(22% 26% at 50% 40%, rgba(232, 121, 249, 0.16), transparent 70%);
+}
+
+/* ---- HUD frame ---------------------------------------------------- */
+.tf-hud { position: absolute; inset: 0; pointer-events: none; }
+
+.tf-hud__bracket {
+  position: absolute;
+  width: 24px; height: 24px;
+  border: 1px solid rgba(138, 156, 244, 0.40);
+}
+.tf-hud__bracket--tl { top: 4%; left: 3%; border-right: 0; border-bottom: 0; }
+.tf-hud__bracket--tr { top: 4%; right: 3%; border-left: 0; border-bottom: 0; }
+.tf-hud__bracket--bl { bottom: 4%; left: 3%; border-right: 0; border-top: 0; }
+.tf-hud__bracket--br { bottom: 4%; right: 3%; border-left: 0; border-top: 0; }
+
+/* Instrument scale: short ticks throughout, a longer one every third. */
+.tf-hud__ticks {
+  position: absolute;
+  left: 3%; top: 20%;
+  width: 22px; height: 34%;
+  background-image:
+    repeating-linear-gradient(to bottom, rgba(148, 163, 184, 0.42) 0 1px, transparent 1px 15px),
+    repeating-linear-gradient(to bottom, rgba(138, 156, 244, 0.72) 0 1px, transparent 1px 45px);
+  background-size: 10px 100%, 22px 100%;
+  background-repeat: repeat-y;
+}
+.tf-hud__bar {
+  position: absolute;
+  left: 3%; top: 14%;
+  width: 46px; height: 3px;
+  background: linear-gradient(90deg, rgba(226, 232, 240, 0.85), rgba(138, 156, 244, 0.2));
+}
+.tf-hud__box {
+  position: absolute;
+  right: 8%; bottom: 15%;
+  width: 13px; height: 13px;
+  border: 1px solid rgba(148, 163, 184, 0.38);
+}
+/* Anamorphic streak, the one piece of lens language in the frame. */
+.tf-hud__streak {
+  position: absolute;
+  right: -6%; top: 8%;
+  width: 46%; height: 1px;
+  transform: rotate(28deg);
+  transform-origin: right center;
+  background: linear-gradient(90deg, transparent, rgba(200, 190, 255, 0.34) 55%, rgba(232, 121, 249, 0.16));
+}
+.tf-hud__tag {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  white-space: nowrap;
+}
+.tf-hud__tag--top { top: 4%; right: 9%; }
+.tf-hud__tag--bottom { bottom: 4%; left: 9%; color: rgba(138, 156, 244, 0.62); }
+
+/* ---- stacked layout ------------------------------------------------
+   The head leads and the narration reads underneath it. Splitting the
+   pinned viewport into two columns on a phone would leave neither half
+   enough room to be legible. */
+@media (max-width: 900px) {
+  .tf-split {
+    width: calc(100% - 2.5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    padding-block: clamp(4rem, 8vh, 5.5rem) clamp(1.5rem, 4vh, 2.5rem);
+  }
+  .tf-copy { align-self: end; text-align: center; }
+  .tf-stages { height: clamp(5rem, 13vh, 7rem); }
+  .transform-stage { left: 50%; transform: translate(-50%, -50%); max-width: 14ch; }
+  .tf-lede { margin-inline: auto; }
+  .tf-dots { justify-content: center; }
+  .tf-hud__ticks, .tf-hud__bar, .tf-hud__streak { display: none; }
+  .tf-hud__tag { font-size: 0.52rem; }
 }
 
 /* ==================================================================
@@ -630,7 +860,8 @@
 .team-card { display: flex; flex-direction: column; }
 .team-card__portrait {
   aspect-ratio: 3 / 4;
-  background: var(--color-charcoal);
+  background: var(--card-surface);
+  backdrop-filter: blur(7px);
   border: 1px solid var(--hairline);
   overflow: hidden;
   display: flex;
@@ -697,12 +928,6 @@
 [data-field="hero"] {
   mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
 }
-/* The transformation field is the densest on the page (1.1 against the ambient
-   field's 0.72), so its joins carry the largest jump and need the longest ramp
-   of any of them. */
-[data-field="transformation"] {
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 27%, #000 73%, transparent 100%);
-}
 
 /* Legibility scrim behind the pinned transformation labels.
    It used to be `from-void via-transparent to-void` — and --color-void is pure
@@ -764,7 +989,8 @@
   text-decoration: none;
   color: inherit;
   border: 1px solid var(--hairline);
-  background: var(--color-charcoal);
+  background: var(--card-surface);
+  backdrop-filter: blur(7px);
   overflow: hidden;
   transition: border-color var(--dur-base) var(--ease-standard),
               transform var(--dur-base) var(--ease-emphasized);
@@ -916,6 +1142,13 @@
   background: #05060c;
   box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.8);
 }
+/* Panel surface for the grid tiles that used a flat `bg-void` — same
+   translucency as the other cards so the field carries behind them too. */
+.surface-card {
+  background: var(--card-surface);
+  backdrop-filter: blur(7px);
+}
+
 .gflow__link { position: relative; display: block; width: 100%; height: 100%; text-decoration: none; }
 .gflow__card img {
   width: 100%; height: 100%;
@@ -1326,24 +1559,24 @@ html.cx-native .cx-ring { opacity: 0; }
   }
   88% {
     filter:
-      drop-shadow(-4px 0 0 rgba(34, 211, 238, 0.9))
-      drop-shadow(4px 0 0 rgba(232, 121, 249, 0.8))
+      drop-shadow(-5px 0 0 rgba(34, 211, 238, 1))
+      drop-shadow(5px 0 0 rgba(232, 121, 249, 1))
       drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
-    transform: translate(3px, -2px);
+    transform: translate(4px, -3px);
   }
   90% {
     filter:
-      drop-shadow(3px 0 0 rgba(34, 211, 238, 0.85))
-      drop-shadow(-3px 0 0 rgba(232, 121, 249, 0.75))
+      drop-shadow(4px 0 0 rgba(34, 211, 238, 1))
+      drop-shadow(-4px 0 0 rgba(232, 121, 249, 0.98))
       drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
-    transform: translate(-3px, 1px);
+    transform: translate(-4px, 1px);
   }
   92% {
     filter:
-      drop-shadow(-3px 0 0 rgba(34, 211, 238, 0.8))
-      drop-shadow(4px 0 0 rgba(232, 121, 249, 0.72))
+      drop-shadow(-4px 0 0 rgba(34, 211, 238, 1))
+      drop-shadow(5px 0 0 rgba(232, 121, 249, 0.94))
       drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
-    transform: translate(2px, 1px);
+    transform: translate(3px, 1px);
   }
   94% {
     filter: drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
@@ -1571,11 +1804,10 @@ html.cx-native .cx-ring { opacity: 0; }
   .baybar::after { animation: none; }
 }
 
-/* Hero: a centred, content-width instrument under the HUD bar. */
-.baybar--hero {
-  width: min(1080px, calc(100% - 80px));
-  margin-inline: auto;
-}
+/* Hero: sits in the centre track of .hud-navrow, sized to its own content so
+   it stays a discrete instrument with air either side rather than stretching
+   into the mark and the status readout. */
+.baybar--hero { width: auto; }
 /* Header: the same bar, trimmed to ride inside the 80px fixed row. */
 .baybar--bar {
   --bay-bevel: 11px;
@@ -1675,6 +1907,89 @@ html.cx-native .cx-ring { opacity: 0; }
 /* ==================================================================
    HUD chrome — status bar, kicker, status strip
    ================================================================== */
+/* The HUD row shares the nav bar's measure, so the mark sits directly above
+   the bar's left edge and the status cluster above its right edge. Left on the
+   old full-bleed padding the mark hung out past the bar entirely. */
+/* The mark, the bar and the status readout share ONE row: nothing stacked,
+   nothing overlapping, and one shared gap so the spacing reads as even. */
+.hud-navrow {
+  /* Both flanks must be at least the WIDER flank's content (the status
+     readout, ~222px). A flex item cannot shrink below its min-content, so a
+     smaller basis leaves the status flank wider than the mark's — and that
+     asymmetry pushes the bar off centre. */
+  --hud-side: 230px;
+  --hud-gap: clamp(34px, 4.2vw, 67px);    /* clear space around the bar */
+  width: min(1500px, calc(100% - 64px));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hud-gap);
+  min-height: 68px;
+}
+@media (min-width: 1024px) {
+  /* The BAR is what gets centred. Giving both flanks the SAME width is what
+     makes that true without absolute positioning: with equal sides, the centred
+     flex line puts the bar on the row's exact midpoint, and the gap either side
+     of it stays equal too. (Laid out by content width the bar would drift,
+     because the status readout is far wider than the mark.)
+     Each flank then aligns its content INWARD, so the three stay a deliberate
+     cluster rather than drifting off to the row's far edges. */
+  .hud-navrow > a,
+  .hud-navrow > .hud-status { flex: 0 0 var(--hud-side); }
+  .hud-navrow > a { justify-content: flex-end; }
+  .hud-navrow > .hud-status { justify-content: flex-start; }
+  /* Only the bar gives when the row runs short. */
+  .hud-navrow > nav { min-width: 0; }
+}
+/* "Session 26.0" only appears where there is room for it. Below 1360px two
+   230px flanks plus six bays do not fit, and the bays were being squeezed to
+   ~86px with their labels clipped — ONLINE alone carries the state there, and
+   the flanks tighten to match so the width goes back to the bar. */
+.hud-session { display: none; }
+@media (min-width: 1360px) {
+  .hud-session { display: block; }
+}
+@media (min-width: 1024px) and (max-width: 1359px) {
+  .hud-navrow { --hud-side: 100px; --hud-gap: 32px; }
+}
+@media (max-width: 1023px) {
+  /* The bar is hidden below this width, so the group is just mark + status —
+     which reads better split to the edges than bunched in the middle. */
+  .hud-navrow {
+    width: calc(100% - 34px);
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}
+
+/* The same mark, smaller, in the fixed header. */
+.nav-mark {
+  width: 40px;
+  height: auto;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 7px rgba(103, 232, 249, 0.5))
+    drop-shadow(0 0 18px rgba(34, 211, 238, 0.26));
+}
+
+/* The mark in the hero's HUD row. Same line-art logo the page transition
+   assembles, lit with the same icy cyan -> magenta glow so the two read as one
+   object. The PNG carries a real alpha channel (built from the artwork's own
+   luminance), so it needs no blend-mode trick and leaves no black box. */
+/* Sized against the bar it sits beside (~46px tall) rather than against the
+   viewport: a little taller than the bar reads as deliberate, while the old
+   68px towered over it and crowded the row. */
+.hud-mark {
+  width: clamp(55px, 6vw, 67px);
+  height: auto;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 8px rgba(103, 232, 249, 0.45))
+    drop-shadow(0 0 20px rgba(34, 211, 238, 0.22))
+    drop-shadow(0 0 34px rgba(232, 121, 249, 0.13));
+}
+
 .hud-rule { height: 1px; background: rgba(71, 85, 105, 0.8); flex: none; }
 .hud-label {
   font-family: var(--font-mono);
@@ -1819,6 +2134,197 @@ html.cx-native .cx-ring { opacity: 0; }
   padding-bottom: clamp(14px, 4vw, 26px);
 }
 
+
+/* ==================================================================
+   PAGE TRANSITION — the mark shattered into pinwheeling blades.
+
+   Leaving a page: the veil drops and the blades UNWIND out of a tight
+   spiral into the assembled logo. Arriving: they wind back up, scale
+   out and blow apart as the veil lifts on the new page.
+
+   This is only for navigation BETWEEN pages. The first-visit preloader
+   (#preloader / _entry.ejs) is untouched and still owns the boot
+   sequence — the two never run at the same time.
+   ================================================================== */
+.pt {
+  position: fixed;
+  inset: 0;
+  /* Above the nav (40) and an open deck card (130). */
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: var(--color-void);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease-standard), visibility 0s linear 320ms;
+}
+/* Server-side gate: set by the inline script in _transition.ejs when this load
+   is the far side of a transition, so the veil is already up at first paint
+   and the new page never flashes in behind it. */
+.pt-arriving .pt,
+.pt.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.pt__mark {
+  position: relative;
+  width: min(44vmin, 300px);
+  aspect-ratio: 1;
+  /* Perspective turns the blades' rotateX/Y and translateZ into real depth —
+     they swing toward and away from the viewer instead of sliding flat. */
+  perspective: 900px;
+  perspective-origin: 50% 46%;
+  transform-style: preserve-3d;
+}
+/* Every blade is the whole logo, clipped to its own wedge (clip-path comes
+   from the partial). `screen` drops the artwork's black field so only the
+   white line art shows against the veil. */
+.pt__blade {
+  position: absolute;
+  inset: 0;
+  background-image: url("/images/engineer26-mark.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform-origin: 50% 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+  /* Each blade is wound a little further than the last, so they unfurl as a
+     spiral rather than all snapping open together. */
+  --spin: calc(160deg + (var(--i) * 16deg));
+  /* Blades left of centre swing in from one side, blades right of centre from
+     the other, so the fan opens in space rather than on a flat plane. */
+  --tilt-y: calc((var(--i) - 5.5) * 7deg);
+  --tilt-x: calc(38deg - (var(--i) * 1.5deg));
+  /* A cast shadow for separation, plus the accent bloom picking out each
+     blade's edge — the depth cue the flat version was missing. */
+  filter:
+    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.75))
+    drop-shadow(0 0 14px rgba(103, 232, 249, 0.3));
+}
+.pt__bloom {
+  position: absolute;
+  width: min(54vmin, 368px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* Icy cyan core into a magenta halo — no indigo/violet in the middle, which
+     is what made the bloom read as purple. */
+  background:
+    radial-gradient(
+      circle,
+      rgba(226, 253, 255, 0.46) 0%,
+      rgba(103, 232, 249, 0.28) 18%,
+      rgba(34, 211, 238, 0.15) 34%,
+      transparent 58%),
+    radial-gradient(
+      circle,
+      rgba(232, 121, 249, 0.21) 32%,
+      rgba(232, 121, 249, 0.07) 52%,
+      transparent 74%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Arriving, before the module has booted: hold the mark ASSEMBLED from the
+   first painted frame. The outgoing page ends on the assembled logo, so
+   without this the new document paints a bare veil (blades default to
+   opacity 0) until the JS runs — the logo blinks out and back, which reads as
+   a pause in the middle of the transition. Held, the two halves join into one
+   continuous shot. */
+.pt-arriving .pt__blade { opacity: 1; transform: none; }
+.pt-arriving .pt__bloom { opacity: 0.5; }
+
+@keyframes pt-unwind {
+  0% {
+    transform: translateZ(-260px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) rotate(var(--spin)) scale(0.18);
+    opacity: 0;
+  }
+  45% { opacity: 1; }
+  70% {
+    /* Overshoots slightly past flat, so the blades settle into the plane
+       instead of arriving on it — that read is what sells the depth. */
+    transform: translateZ(34px) rotateX(-7deg) rotateY(calc(var(--tilt-y) * -0.16)) rotate(-5deg) scale(1.04);
+  }
+  100% {
+    transform: translateZ(0) rotateX(0deg) rotateY(0deg) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes pt-wind {
+  0% {
+    transform: translateZ(0) rotateX(0deg) rotateY(0deg) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    /* Flies past the camera on the way out rather than just fading. */
+    transform: translateZ(300px) rotateX(calc(var(--tilt-x) * -0.8)) rotateY(calc(var(--tilt-y) * -1)) rotate(calc(var(--spin) * -0.55)) scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes pt-bloom-in {
+  0%   { opacity: 0; transform: scale(0.4); }
+  60%  { opacity: 0.85; }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+@keyframes pt-bloom-out {
+  0%   { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+.pt.is-covering .pt__blade {
+  animation: pt-unwind 660ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 22ms);
+}
+.pt.is-covering .pt__bloom { animation: pt-bloom-in 700ms var(--ease-standard) both; }
+
+.pt.is-revealing .pt__blade {
+  animation: pt-wind 520ms cubic-bezier(0.55, 0, 0.85, 0.2) both;
+  animation-delay: calc(var(--i) * 14ms);
+}
+.pt.is-revealing .pt__bloom { animation: pt-bloom-out 520ms var(--ease-standard) both; }
+
+/* Reduced motion: keep the veil as a plain cut, no spinning parts. */
+@media (prefers-reduced-motion: reduce) {
+  .pt { transition: opacity 120ms linear; }
+  .pt__blade,
+  .pt__bloom { animation: none !important; }
+  .pt.is-covering .pt__blade { opacity: 1; transform: none; }
+}
+
+/* The header pane, once the page has scrolled. Glass rather than the flat
+   charcoal slab it used to be: a translucent plate the field and the page move
+   behind, lifted by a saturated blur, closed by a spectrum hairline instead of
+   a grey border. Toggled from site.js (.is-solid). */
+#site-nav.is-solid {
+  background: linear-gradient(
+    180deg,
+    rgba(11, 14, 26, 0.66) 0%,
+    rgba(6, 8, 16, 0.55) 100%);
+  backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow: 0 12px 40px -20px rgba(0, 0, 0, 0.95);
+}
+/* Spectrum hairline along the bottom edge — the same cyan -> magenta run the
+   nav bar and the register button use, so the chrome reads as one system. */
+#site-nav.is-solid::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.5) 22%,
+    rgba(139, 120, 246, 0.55) 50%,
+    rgba(232, 121, 249, 0.5) 78%,
+    transparent 100%);
+}
 
 /* Deferred header (homepage): the hero's nav bays are the menu up top; this
    slides in only once the hero is gone. */
@@ -2010,13 +2516,13 @@ html.cx-native .cx-ring { opacity: 0; }
   clip-path: var(--fc-clip);
   background:
     radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, rgba(8, 10, 18, 0.9) 0%, rgba(4, 5, 10, 0.88) 55%, rgba(7, 8, 15, 0.9) 100%);
+    linear-gradient(180deg, rgba(8, 10, 18, 0.82) 0%, rgba(4, 5, 10, 0.79) 55%, rgba(7, 8, 15, 0.82) 100%);
 }
 @media (min-width: 768px) {
   .fancard__plate {
     background:
       radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.15) 0%, transparent 58%),
-      linear-gradient(180deg, rgba(8, 10, 18, 0.82) 0%, rgba(4, 5, 10, 0.78) 55%, rgba(7, 8, 15, 0.82) 100%);
+      linear-gradient(180deg, rgba(8, 10, 18, 0.7) 0%, rgba(4, 5, 10, 0.66) 55%, rgba(7, 8, 15, 0.7) 100%);
     backdrop-filter: blur(18px) saturate(1.15);
     -webkit-backdrop-filter: blur(18px) saturate(1.15);
   }
@@ -2623,3 +3129,45 @@ html.pl-skip #preloader { display: none; }
 }
 
 } /* end @layer components */
+
+/* Glass variant of the register CTA. The header's filled button is the
+   page's loudest control; this closer sits on top of the logo artwork, so a
+   solid fill would punch a hole in it. Same bevel, same sheen sweep — the
+   plate is translucent instead, letting the mark and field read through, with
+   a lit rim standing in for the gradient fill. */
+.btn-register--glass {
+  color: var(--color-paper);
+  /* Tinted glass, not clear: the cyan -> violet -> magenta wash sits over a
+     dark base that keeps the label legible, and stays translucent enough that
+     the logo artwork behind still reads through the button. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 38%, transparent 72%),
+    linear-gradient(100deg, rgba(34, 211, 238, 0.34) 0%, rgba(139, 120, 246, 0.3) 52%, rgba(232, 121, 249, 0.34) 100%),
+    linear-gradient(180deg, rgba(16, 20, 36, 0.42) 0%, rgba(9, 12, 22, 0.36) 100%);
+  backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 10px 30px -12px rgba(0, 0, 0, 0.85),
+    0 0 22px -6px rgba(34, 211, 238, 0.25);
+}
+.btn-register--glass:hover,
+.btn-register--glass:focus-visible {
+  filter: none;
+  color: #fff;
+  /* Hover pushes the same gradient up rather than swapping to a flat colour. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 38%, transparent 72%),
+    linear-gradient(100deg, rgba(34, 211, 238, 0.5) 0%, rgba(139, 120, 246, 0.45) 52%, rgba(232, 121, 249, 0.5) 100%),
+    linear-gradient(180deg, rgba(16, 20, 36, 0.38) 0%, rgba(9, 12, 22, 0.32) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(34, 211, 238, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    0 14px 34px -12px rgba(0, 0, 0, 0.85),
+    0 0 32px rgba(34, 211, 238, 0.36),
+    0 0 46px rgba(232, 121, 249, 0.26);
+}
+/* The sheen reads as a highlight travelling over glass, not a wipe over a fill. */
+.btn-register--glass::after {
+  background: linear-gradient(100deg, transparent 36%, rgba(255, 255, 255, 0.32) 50%, transparent 64%);
+}

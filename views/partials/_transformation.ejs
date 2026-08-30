@@ -1,40 +1,70 @@
 <!-- ==========================================================================
      COGNITRIXX TRANSFORMATION — a conceptual progression, not six literal
      animations (per brief: "the conceptual progression is more important
-     than literal animation"). One pinned section, one canvas that drifts
-     from amber neural-network toward structured circuit traces as the
-     visitor scrolls, and six stage labels crossfading in step. Driven by
-     GSAP ScrollTrigger (scrub) in public/js/main.js — initTransformation().
+     than literal animation"). One pinned section split in two: the six stage
+     labels crossfade on the left, and on the right stands the subject they
+     describe — a scanned human head rebuilt as a neural point cloud
+     (public/js/neural-head.js).
+
+     Both halves are driven by the same scrubbed ScrollTrigger in
+     public/js/main.js — initTransformation(): the label steps, and the head
+     warms from cold indigo toward the full cyan/violet/magenta spectrum as
+     the scan intensifies.
      ========================================================================== -->
 <!-- 200vh (was 300vh): one pinned viewport plus one of scroll travel. At 300vh
      the six stages were spread over ~1600px of otherwise empty scrolling, which
      read as dead space rather than pacing. -->
 <section id="transformation" class="relative" data-js="transformation" style="height:200vh;">
-  <div class="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden px-6">
-    <%# Thinned from density 1.1 / spread 11: that packed ~19 links onto every
-        node, which with the lit-node treatment turned the whole stage into
-        wireframe noise behind the labels. The wider spread is what keeps the
-        line clutter down, so the node count can come back up — 0.81 is the
-        de-noised 0.6 plus 35%. %>
-    <div data-field="transformation" data-priority="1" data-density="0.81" data-tone="mixed" data-signals="6" data-spread="13" data-rotate="0.02" class="absolute inset-0"></div>
+  <div class="sticky top-0 h-screen overflow-hidden">
     <div class="transform-scrim absolute inset-0 -z-10" aria-hidden="true"></div>
 
-    <p class="font-mono text-xs tracking-[0.3em] uppercase text-[var(--paper-faint)] mb-8">Cognitrixx / transformation</p>
-    <div class="relative h-24 sm:h-28 flex items-center justify-center w-full" data-js="transform-stages">
-      <span class="transform-stage is-active font-display font-bold text-3xl sm:text-6xl" data-stage="0">Neural Network</span>
-      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl" data-stage="1">Information</span>
-      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl text-magenta" data-stage="2">Rewire</span>
-      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl" data-stage="3">Engineering</span>
-      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl" data-stage="4">Impossible Geometry</span>
-      <span class="transform-stage font-display font-bold text-3xl sm:text-6xl text-gradient-impossible" data-stage="5">New Reality</span>
-    </div>
-    <div class="flex gap-2 mt-10" data-js="transform-dots" aria-hidden="true">
-      <span class="w-1.5 h-1.5 dot" data-dot="0"></span>
-      <span class="w-1.5 h-1.5 dot" data-dot="1"></span>
-      <span class="w-1.5 h-1.5 dot" data-dot="2"></span>
-      <span class="w-1.5 h-1.5 dot" data-dot="3"></span>
-      <span class="w-1.5 h-1.5 dot" data-dot="4"></span>
-      <span class="w-1.5 h-1.5 dot" data-dot="5"></span>
+    <div class="tf-split">
+      <!-- ============ COPY ============ -->
+      <div class="tf-copy">
+        <p class="font-mono text-xs tracking-[0.3em] uppercase text-[var(--paper-faint)]">Cognitrixx / transformation</p>
+
+        <div class="tf-stages" data-js="transform-stages">
+          <span class="transform-stage is-active font-display font-bold" data-stage="0">Neural Network</span>
+          <span class="transform-stage font-display font-bold" data-stage="1">Information</span>
+          <span class="transform-stage font-display font-bold text-magenta" data-stage="2">Rewire</span>
+          <span class="transform-stage font-display font-bold" data-stage="3">Engineering</span>
+          <span class="transform-stage font-display font-bold" data-stage="4">Impossible Geometry</span>
+          <span class="transform-stage font-display font-bold text-gradient-impossible" data-stage="5">New Reality</span>
+        </div>
+
+        <p class="tf-lede">A mind, resolved node by node. Six stages of rewiring
+          between the network you arrive with and the one you leave with.</p>
+
+        <div class="tf-dots" data-js="transform-dots" aria-hidden="true">
+          <span class="dot" data-dot="0"></span>
+          <span class="dot" data-dot="1"></span>
+          <span class="dot" data-dot="2"></span>
+          <span class="dot" data-dot="3"></span>
+          <span class="dot" data-dot="4"></span>
+          <span class="dot" data-dot="5"></span>
+        </div>
+      </div>
+
+      <!-- ============ SUBJECT ============ -->
+      <!-- The canvas host is its own element inside the frame so the HUD marks
+           below never sit inside the WebGL element (they would be wiped on
+           every resize, since the renderer owns that box). -->
+      <div class="tf-head">
+        <div class="tf-head__scene" data-js="neural-head"></div>
+
+        <div class="tf-hud" aria-hidden="true">
+          <span class="tf-hud__bracket tf-hud__bracket--tl"></span>
+          <span class="tf-hud__bracket tf-hud__bracket--tr"></span>
+          <span class="tf-hud__bracket tf-hud__bracket--bl"></span>
+          <span class="tf-hud__bracket tf-hud__bracket--br"></span>
+          <span class="tf-hud__ticks"></span>
+          <span class="tf-hud__bar"></span>
+          <span class="tf-hud__box"></span>
+          <span class="tf-hud__streak"></span>
+          <span class="tf-hud__tag tf-hud__tag--top">SUBJECT / 001</span>
+          <span class="tf-hud__tag tf-hud__tag--bottom">NEURAL MESH · LIVE</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>

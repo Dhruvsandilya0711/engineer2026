@@ -1,0 +1,80 @@
+<!-- ==========================================================================
+     PAGE TRANSITION — the ENGINEER '26 mark, shattered into blades that wind
+     into a spiral and unwind back out. Modelled on the Cognizance loader the
+     brief references: dark blades pinwheeling around a bright core, each with
+     a lit leading edge, over a radial bloom.
+
+     Every blade is the SAME logo image clipped to its own angular wedge, so
+     the mark is genuinely torn apart rather than approximated — assembled, the
+     wedges reconstruct the logo exactly. `mix-blend-mode: screen` drops the
+     artwork's black field, so the white line art floats on the veil.
+
+     Driven by public/js/page-transition.js. Included from _nav.ejs, so it is
+     present on every page.
+     ========================================================================== -->
+<%
+  // Wedge geometry. Each blade owns 360/N degrees; the polygon is the pie slice
+  // walked in a few steps so the outer edge follows the arc rather than cutting
+  // a chord across it. R overshoots the box so corners stay covered.
+  const BLADES = 12, R = 96, ARC_STEPS = 4;
+  const wedge = (i) => {
+    const a0 = (i * 360 / BLADES) - 90;
+    const a1 = ((i + 1) * 360 / BLADES) - 90;
+    const pts = ['50% 50%'];
+    for (let s = 0; s <= ARC_STEPS; s++) {
+      const a = (a0 + (a1 - a0) * (s / ARC_STEPS)) * Math.PI / 180;
+      pts.push((50 + R * Math.cos(a)).toFixed(2) + '% ' + (50 + R * Math.sin(a)).toFixed(2) + '%');
+    }
+    return pts.join(', ');
+  };
+%>
+<%# Parser-blocking gate: if this load is the far side of a transition, mark the
+    document before the veil paints, so the arriving page is covered from the
+    very first frame instead of flashing in and then being hidden.
+
+    This also PLAYS the reveal, rather than leaving it to page-transition.js.
+    That module sits behind the whole three/gsap/lenis graph, which is ~540ms
+    even on localhost and seconds on a phone — the viewer would sit on a held
+    frame for all of it. Nothing here needs those libraries, so the outgoing
+    and incoming halves join without waiting on them. %>
+<script>
+  (function () {
+    var KEY = 'engi26.pt', arriving = false;
+    try {
+      arriving = sessionStorage.getItem(KEY) === '1';
+      if (arriving) sessionStorage.removeItem(KEY);
+    } catch (e) {}
+    if (!arriving) return;
+
+    var doc = document;
+    doc.documentElement.classList.add('pt-arriving');
+    // Tell page-transition.js the arrival is already handled here.
+    window.__engiPtArrival = true;
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function done(veil) {
+      veil.classList.remove('is-active', 'is-revealing');
+      doc.documentElement.classList.remove('pt-arriving');
+    }
+    function play() {
+      var veil = doc.getElementById('page-transition');
+      if (!veil) { doc.documentElement.classList.remove('pt-arriving'); return; }
+      veil.classList.add('is-active');
+      if (reduced) { setTimeout(function () { done(veil); }, 120); return; }
+      requestAnimationFrame(function () {
+        veil.classList.add('is-revealing');
+        setTimeout(function () { done(veil); }, 700);
+      });
+    }
+    if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', play);
+    else play();
+  })();
+</script>
+<div id="page-transition" class="pt" data-js="page-transition" aria-hidden="true">
+  <span class="pt__bloom"></span>
+  <div class="pt__mark">
+    <% for (let i = 0; i < BLADES; i++) { %>
+    <span class="pt__blade" style="--i: <%= i %>; --n: <%= BLADES %>; clip-path: polygon(<%= wedge(i) %>);"></span>
+    <% } %>
+  </div>
+</div>

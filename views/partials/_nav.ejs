@@ -6,10 +6,8 @@
      ========================================================================== -->
 <header id="site-nav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300<%= typeof deferred !== 'undefined' && deferred ? ' is-deferred' : '' %>" data-js="nav"<%= typeof deferred !== 'undefined' && deferred ? ' data-deferred' : '' %>>
   <div class="max-w-7xl mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
-    <a href="#top" class="flex items-center gap-3 shrink-0" aria-label="ENGINEER '26 home">
-      <img src="/images/engineer26logo.png" alt="ENGINEER '26 logo" class="w-9 h-9 object-contain mix-blend-screen"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <span class="hidden w-9 h-9 items-center justify-center border border-[var(--hairline-strong)] font-mono text-[0.6rem] text-cyan">ENGI</span>
+    <a href="/" class="flex items-center gap-3 shrink-0" aria-label="ENGINEER '26 home">
+      <img class="nav-mark" src="/images/engineer26-mark.png" alt="ENGINEER '26 logo" width="399" height="389">
       <span class="font-display font-semibold text-sm tracking-wide hidden sm:inline">ENGINEER&nbsp;'26</span>
     </a>
 
@@ -18,13 +16,12 @@
     <nav aria-label="Site" class="hidden lg:block">
       <%- include('_nav-bays', {
             variant: 'bar',
-            useRoutes: true,
             activeNav: (typeof activeNav !== 'undefined' ? activeNav : '')
           }) %>
     </nav>
 
     <div class="flex items-center gap-4">
-      <a href="/register" class="btn btn-primary !py-2.5 !px-5 hidden sm:inline-flex" data-js="magnetic">Register</a>
+      <a href="/register" class="btn-register hidden sm:inline-flex" data-js="magnetic">Register</a>
       <button type="button" class="lg:hidden w-11 h-11 flex items-center justify-center border border-[var(--hairline-strong)]"
         data-js="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
         <span class="font-mono text-sm">☰</span>
@@ -36,6 +33,10 @@
 <%# Vertical SCROLL / TOP rail — chrome, so it rides along with the nav
     and appears on every page. %>
 <%- include('_scroll-rail') %>
+
+<%# Page-to-page transition veil. Lives here for the same reason: every page
+    gets it, and a navigation can start from any of them. %>
+<%- include('_transition') %>
 
 <!-- mobile drawer -->
 <div id="mobile-drawer" class="fixed inset-0 z-50 bg-void translate-x-full transition-transform duration-300 lg:hidden" data-js="drawer">
@@ -51,10 +52,9 @@
   <nav aria-label="Mobile" class="flex flex-col px-6 mt-6">
     <%- include('_nav-bays', {
           variant: 'drawer',
-          useRoutes: true,
           drawerLinks: true,
           activeNav: (typeof activeNav !== 'undefined' ? activeNav : '')
         }) %>
-    <a href="/register" class="btn btn-primary mt-8 justify-center" data-js="drawer-link">Register</a>
+    <a href="/register" class="btn-register mt-8" data-js="drawer-link">Register</a>
   </nav>
 </div>

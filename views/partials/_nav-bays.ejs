@@ -13,22 +13,22 @@
      Params
        variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
        drawerLinks  true inside the drawer: segments also close it.
-       useRoutes  true on inner pages, where Events/Schedule/Team are real
-                  routes. On the homepage the hash targets open the fan-deck
-                  cards instead (public/js/main.js → initFanDeck).
        activeNav  id of the current section, highlighted in the bar.
      ========================================================================== -->
 <%
+  // One href per destination, the same from every page. Events, Schedule, Team
+  // and Sponsors are real routes, so the bar goes to those PAGES rather than
+  // opening a deck card. Only About, which exists solely as a deck card, stays
+  // a hash target (initFanDeck picks that up and opens the card).
   const bayItems = [
-    { n: '01', label: 'Home',     id: 'home',     hash: '#top',        route: '/',          accent: '34,211,238'  },
-    { n: '02', label: 'About',    id: 'about',    hash: '/#about',     route: '/#about',    accent: '80,150,242'  },
-    { n: '03', label: 'Events',   id: 'events',   hash: '/#events',    route: '/events',    accent: '108,124,244' },
-    { n: '04', label: 'Schedule', id: 'schedule', hash: '/#schedule',  route: '/schedule',  accent: '128,146,246' },
-    { n: '05', label: 'Team',     id: 'team',     hash: '/#team',      route: '/team',      accent: '214,118,226' },
-    { n: '06', label: 'Sponsors', id: 'sponsors', hash: '/#sponsors',  route: '/#sponsors', accent: '232,121,249' },
+    { n: '01', label: 'Home',     id: 'home',     href: '/',          accent: '34,211,238'  },
+    { n: '02', label: 'About',    id: 'about',    href: '/#about',    accent: '80,150,242'  },
+    { n: '03', label: 'Events',   id: 'events',   href: '/events',    accent: '108,124,244' },
+    { n: '04', label: 'Schedule', id: 'schedule', href: '/schedule',  accent: '128,146,246' },
+    { n: '05', label: 'Team',     id: 'team',     href: '/team',      accent: '214,118,226' },
+    { n: '06', label: 'Sponsors', id: 'sponsors', href: '/sponsors',  accent: '232,121,249' },
   ];
   const barVariant = typeof variant  !== 'undefined' ? variant : 'hero';
-  const routes     = typeof useRoutes !== 'undefined' && useRoutes;
   const current    = typeof activeNav !== 'undefined' ? activeNav : '';
   // In the drawer the segments stack vertically and must also close it.
   const inDrawer   = typeof drawerLinks !== 'undefined' && drawerLinks;
@@ -38,7 +38,7 @@
   <%# The accent rides on the CELL so it inherits into the link AND is readable
       by the cell itself — the drawer draws a per-button frame with it. %>
   <li class="baybar__cell" style="--bay-accent: <%= b.accent %>;">
-    <a href="<%= routes ? b.route : b.hash %>"
+    <a href="<%= b.href %>"
        class="bay<%= on ? ' is-active' : '' %>"
        <%- inDrawer ? 'data-js="drawer-link"' : '' %>
        <%- on ? 'aria-current="page"' : '' %>>

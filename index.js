@@ -157,6 +157,24 @@ app.get('/team', (req, res) => {
   });
 });
 
+// Sponsors. Tier STRUCTURE only — there is no sponsor data in this codebase and
+// none is invented here, so every slot renders as open (same rule as the deck
+// card in partials/_sponsors.ejs). Wire a real list in once partners confirm.
+const SPONSOR_TIERS = [
+  { name: 'Title',  accent: '232,121,249' },
+  { name: 'Gold',   accent: '232,146,60'  },
+  { name: 'Silver', accent: '148,163,184' },
+];
+
+app.get('/sponsors', (req, res) => {
+  res.render('sponsors', {
+    festDates: FEST_DATES,
+    tiers: SPONSOR_TIERS,
+    openSlots: SPONSOR_TIERS.length,
+    eventCount: allEvents.length,
+  });
+});
+
 app.get('/events/:slug', (req, res, next) => {
   const event = allEvents.find(e => e.slug === req.params.slug);
   if (!event) return next(); // falls through to the 404 handler
