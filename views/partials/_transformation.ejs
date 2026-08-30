@@ -11,8 +11,13 @@
      read as dead space rather than pacing. -->
 <section id="transformation" class="relative" data-js="transformation" style="height:200vh;">
   <div class="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden px-6">
-    <div data-field="transformation" data-priority="1" data-density="1.1" data-tone="mixed" data-signals="9" data-spread="11" data-rotate="0.02" class="absolute inset-0"></div>
-    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-void via-transparent to-void"></div>
+    <%# Thinned from density 1.1 / spread 11: that packed ~19 links onto every
+        node, which with the lit-node treatment turned the whole stage into
+        wireframe noise behind the labels. The wider spread is what keeps the
+        line clutter down, so the node count can come back up — 0.81 is the
+        de-noised 0.6 plus 35%. %>
+    <div data-field="transformation" data-priority="1" data-density="0.81" data-tone="mixed" data-signals="6" data-spread="13" data-rotate="0.02" class="absolute inset-0"></div>
+    <div class="transform-scrim absolute inset-0 -z-10" aria-hidden="true"></div>
 
     <p class="font-mono text-xs tracking-[0.3em] uppercase text-[var(--paper-faint)] mb-8">Cognitrixx / transformation</p>
     <div class="relative h-24 sm:h-28 flex items-center justify-center w-full" data-js="transform-stages">

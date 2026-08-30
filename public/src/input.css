@@ -288,8 +288,11 @@
    py-28/sm:py-36 (112/144px each side, i.e. up to 288px of dead space
    between two sections) — this clamps to 64–104px a side.
    ------------------------------------------------------------------ */
-.section-y { padding-block: clamp(4rem, 7.5vh, 6.5rem); }
-.section-y-lg { padding-block: clamp(5rem, 9vh, 8rem); }
+/* Section rhythm. Tightened from 4-6.5rem / 5-8rem: at desktop heights those
+   clamps resolved near their maximum on every section at once, which stacked
+   into long empty runs between blocks that each only needed breathing room. */
+.section-y { padding-block: clamp(2.75rem, 5vh, 4.5rem); }
+.section-y-lg { padding-block: clamp(3.25rem, 6vh, 5.5rem); }
 
 /* reveal-on-scroll target */
 [data-reveal] {
@@ -679,6 +682,46 @@
 }
 [data-field] canvas { display: block; width: 100%; height: 100%; }
 
+/* Per-section fields paint ON TOP of the sitewide ambient field, and each one
+   is exactly its section's box. Ending them on the section edge makes the
+   background density jump on a hard horizontal line — the background reading
+   as "cut off" between sections. Feathering both edges ramps each section
+   field into the ambient one instead, so the seams disappear.
+   Standard property only: hand-writing the -webkit- alias next to it makes the
+   minifier drop the unprefixed one (see .bay). */
+[data-field]:not([data-field="ambient"]) {
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+/* The hero field opens the page — there is nothing above it to blend into, so
+   it holds full strength at the top and only feathers out at the bottom. */
+[data-field="hero"] {
+  mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+}
+/* The transformation field is the densest on the page (1.1 against the ambient
+   field's 0.72), so its joins carry the largest jump and need the longest ramp
+   of any of them. */
+[data-field="transformation"] {
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 27%, #000 73%, transparent 100%);
+}
+
+/* Legibility scrim behind the pinned transformation labels.
+   It used to be `from-void via-transparent to-void` — and --color-void is pure
+   black, so it painted OPAQUE black bands across the top and bottom of the
+   pinned viewport. Those bands blanked the sitewide ambient field exactly where
+   this section joins its neighbours, which is what made the boundaries above
+   and below it read as hard lines.
+   Inverted: the darkening now sits in the middle, behind the labels that
+   actually need it, and both edges stay clear so the field runs through the
+   joins continuously. It never reaches full opacity. */
+.transform-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.5) 26%,
+    rgba(0, 0, 0, 0.5) 74%,
+    rgba(0, 0, 0, 0) 100%);
+}
+
 /* ==================================================================
    EVENTS RAIL — vertical scroll drives horizontal travel
    ================================================================== */
@@ -781,24 +824,16 @@
   padding-block: clamp(2.5rem, 6vh, 4.5rem);
   overflow: hidden;               /* clip the horizontal stream to the page */
 }
+/* Centred like every other section heading on the site (the archive meta line
+   that used to sit opposite it, pushing this into a left/right split, is
+   gone). */
 .gflow__head {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.75rem 1.5rem;
   max-width: 90rem;
   margin: 0 auto clamp(1.4rem, 3vh, 2.4rem);
   padding-inline: clamp(1.25rem, 5vw, 2.5rem);
-}
-.gflow__meta {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-faint);
+  text-align: center;
 }
 
 /* --- the curved moving field (a 3D cylinder of frames) ------------------ */
@@ -1841,9 +1876,11 @@ html.cx-native .cx-ring { opacity: 0; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.6rem, 5vh, 3.4rem);
-  min-height: 100svh;
-  padding: clamp(3rem, 9vh, 6rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 12vh, 8rem);
+  gap: clamp(1.2rem, 3.2vh, 2.4rem);
+  /* Not a forced full screen: the intro + fan come to ~550px, so 100svh left
+     several hundred pixels of dead space above and below on a desktop. */
+  min-height: 74svh;
+  padding: clamp(2.25rem, 5.5vh, 4rem) clamp(1rem, 4vw, 3rem) clamp(2.75rem, 7vh, 5rem);
 }
 
 .fandeck__intro { text-align: center; max-width: 40rem; }

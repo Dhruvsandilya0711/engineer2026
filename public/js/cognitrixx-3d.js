@@ -33,6 +33,26 @@ const DEEP   = new THREE.Color('#0e1338');
 // Signals get theme colours rather than all-cyan.
 const SIGNAL_HUES = [CYAN, MAGENTA, VIOLET, CYAN];
 
+// A soft radial dot, generated once and shared by every field. Square points
+// are what made the web read as scattered specks; a glow sprite gives each node
+// a core and a falloff, so the same node count reads as a lit network instead.
+let GLOW_TEX = null;
+function glowTexture() {
+  if (GLOW_TEX) return GLOW_TEX;
+  const s = 64, c = document.createElement('canvas');
+  c.width = c.height = s;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.22, 'rgba(255,255,255,0.72)');
+  grad.addColorStop(0.5, 'rgba(255,255,255,0.19)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, s, s);
+  GLOW_TEX = new THREE.CanvasTexture(c);
+  return GLOW_TEX;
+}
+
 export function hasWebGL() {
   try {
     const c = document.createElement('canvas');
@@ -94,7 +114,13 @@ export function createNeuralField(host, opts = {}) {
 
   // ---- nodes -------------------------------------------------------------
   const isSmall = window.innerWidth < 768;
-  const count = Math.round((isSmall ? 46 : 104) * density);
+  // The journey spine flows through a 52-deep corridor, so its nodes are spread
+  // over far more volume than a fixed moment's — it needs a bigger population to
+  // read as a network rather than scattered specks. Phones get the same lift:
+  // link-building is O(n²) but at these counts that is a few thousand distance
+  // checks a frame, which is not what costs on a phone (the GPU context is).
+  const base = journey ? (isSmall ? 108 : 190) : (isSmall ? 46 : 104);
+  const count = Math.round(base * density);
 
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
@@ -124,7 +150,13 @@ export function createNeuralField(host, opts = {}) {
   nodeGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   nodeGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   const nodeMat = new THREE.PointsMaterial({
-    size: isSmall ? 0.11 : 0.085,
+    // Glow sprites carry much further than hard squares, so nodes can be larger
+    // without turning into blobs — the falloff does the work.
+    // EVERY field uses the same sprite, sized to look alike at its own camera
+    // depth. That is what makes the travelling spine read as flowing OUT of the
+    // hero's field rather than as a second, unrelated system fading in over it.
+    size: journey ? (isSmall ? 0.52 : 0.46) : (isSmall ? 0.4 : 0.34),
+    map: glowTexture(),
     vertexColors: true,
     transparent: true,
     opacity: 0.92,
@@ -154,15 +186,19 @@ export function createNeuralField(host, opts = {}) {
   // ---- links -------------------------------------------------------------
   // One LineSegments for every connection, rebuilt in place each frame. Cheaper
   // than a mesh per link by orders of magnitude.
-  const LINK_DIST = spread * 0.48;
-  const maxLinks = count * 7;
+  // The spine's nodes sit in a much deeper volume, so the same ratio leaves
+  // most of them unconnected — hence the "sparse" look. Reach further there.
+  const LINK_DIST = spread * (journey ? 0.55 : 0.48);
+  const maxLinks = count * (journey ? 12 : 7);
   const linkPos = new Float32Array(maxLinks * 6);
   const linkCol = new Float32Array(maxLinks * 6);
   const linkGeo = new THREE.BufferGeometry();
   linkGeo.setAttribute('position', new THREE.BufferAttribute(linkPos, 3));
   linkGeo.setAttribute('color', new THREE.BufferAttribute(linkCol, 3));
   const linkMat = new THREE.LineBasicMaterial({
-    vertexColors: true, transparent: true, opacity: 0.24,
+    // Matched to the spine's resting value so every field on the site reads as
+    // the same material: lit nodes leading, links as the depth between them.
+    vertexColors: true, transparent: true, opacity: 0.16,
     depthWrite: false, blending: THREE.AdditiveBlending,
   });
   const lines = new THREE.LineSegments(linkGeo, linkMat);
@@ -176,7 +212,9 @@ export function createNeuralField(host, opts = {}) {
   sigGeo.setAttribute('position', new THREE.BufferAttribute(sigPos, 3));
   sigGeo.setAttribute('color', new THREE.BufferAttribute(sigCol, 3));
   const sigMat = new THREE.PointsMaterial({
-    size: isSmall ? 0.3 : 0.24, vertexColors: true, transparent: true,
+    size: journey ? (isSmall ? 0.9 : 0.8) : (isSmall ? 0.62 : 0.54),
+    map: glowTexture(),
+    vertexColors: true, transparent: true,
     opacity: 1, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true,
   });
   const signalPoints = new THREE.Points(sigGeo, sigMat);
@@ -267,8 +305,11 @@ export function createNeuralField(host, opts = {}) {
       camera.position.y += ((Math.cos(scroll.progress * Math.PI * 2) * 1.1) - pointer.y * 0.9 - camera.position.y) * 0.05;
       camera.lookAt(0, 0, -20);
 
-      // Connections brighten with scroll speed; signals accelerate.
-      linkMat.opacity = 0.2 + Math.min(0.24, speed * 0.14);
+      // Connections brighten with scroll speed; signals accelerate. Kept low at
+      // rest so the lit NODES carry the image and the links read as the depth
+      // between them — at the old 0.2 the denser web turned into flat wireframe
+      // noise.
+      linkMat.opacity = 0.12 + Math.min(0.2, speed * 0.13);
       rebuildLinks();
       for (let s = 0; s < travellers.length; s++) {
         const tr = travellers[s];
@@ -400,10 +441,11 @@ export function createNeuralField(host, opts = {}) {
   };
 }
 
-// This site is mobile-forward, and WebGL contexts are the scarce resource on a
-// phone: each one holds GPU memory, drains battery, and mobile Safari will
-// silently drop the oldest once a handful are live. So small screens mount only
-// the highest-priority moments and everything else degrades to a CSS wash.
+// Mobile and desktop both matter here, and WebGL CONTEXTS are the scarce
+// resource on a phone: each one holds GPU memory, drains battery, and mobile
+// Safari will silently drop the oldest once a handful are live. So small
+// screens mount fewer moments — but the ones they keep run at close to full
+// strength (see the density note below), rather than a thinned-out version.
 const MOBILE_CONTEXT_BUDGET = 2;
 
 /**
@@ -440,15 +482,18 @@ export function mountFields(opts = {}) {
   hosts.forEach((host) => {
     if (!allowedSet.has(host)) { host.classList.add('is-static'); return; }
 
-    // Phones also get a thinner field inside the moments they do keep.
-    const density = (parseFloat(host.dataset.density) || 1) * (isSmall ? 0.7 : 1);
+    // Phones still get a slightly thinner field inside the moments they keep,
+    // but only slightly: the scarce resource on a phone is the GPU CONTEXT
+    // (handled by the budget above), not the node count. Thinning to 0.7 was
+    // what left the spine looking like scattered specks on mobile.
+    const density = (parseFloat(host.dataset.density) || 1) * (isSmall ? 0.85 : 1);
     const signals = parseInt(host.dataset.signals || '6', 10);
 
     out[host.dataset.field] = createNeuralField(host, {
       density,
       spread: parseFloat(host.dataset.spread) || 9,
       tone: host.dataset.tone || 'mixed',
-      signals: isSmall ? Math.min(signals, 4) : signals,
+      signals: isSmall ? Math.min(signals, 6) : signals,
       rotate: parseFloat(host.dataset.rotate || '0.035'),
       depth: parseFloat(host.dataset.depth || '16'),
       // The ambient field becomes the scroll-driven spine; everything else
