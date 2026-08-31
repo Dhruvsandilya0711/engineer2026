@@ -86,6 +86,12 @@ export function initAudio(whenReady) {
   // the last sample back to the 25s mark doesn't click. Held in a Web Audio
   // GainNode if available, but a manual ramp on audio.volume is enough here.
   let userVol = VOLUME;
+  // Ducking — while the visitor is actively engaging with the signal-range
+  // game, the music drops to this fraction of userVol so the SFX and their
+  // own concentration have room. Restored when they leave the arena.
+  const DUCK_FACTOR = 0.32;
+  let ducked = false;
+  const effectiveVol = () => audio.muted ? 0 : (ducked ? userVol * DUCK_FACTOR : userVol);
   const rampVolume = (from, to, ms) => {
     const steps = Math.max(1, Math.round(ms / 16));
     let i = 0;
@@ -111,7 +117,7 @@ export function initAudio(whenReady) {
       audio.currentTime = START_AT;
       const play = audio.play();
       const finish = () => {
-        rampVolume(0, audio.muted ? 0 : userVol, FADE_MS);
+        rampVolume(0, effectiveVol(), FADE_MS);
         loopingBack = false;
       };
       if (play && play.then) play.then(finish, finish); else finish();
@@ -211,10 +217,28 @@ export function initAudio(whenReady) {
       audio.muted = intendedMuted;
       localStorage.setItem(KEY, intendedMuted ? '1' : '0');
       if (intendedMuted) audio.volume = 0;
-      else rampVolume(0, userVol, 200);
+      else rampVolume(0, effectiveVol(), 200);
       tryPlay();
       render();
     });
   }
+
+  // Duck / restore — driven by whichever surface on the page wants the
+  // music quieter for a beat. The signal-range game fires these when the
+  // pointer enters and leaves its arena. Anything else can too.
+  const duck = () => {
+    if (ducked) return;
+    ducked = true;
+    if (audio.muted) return;
+    rampVolume(audio.volume, effectiveVol(), 220);
+  };
+  const restore = () => {
+    if (!ducked) return;
+    ducked = false;
+    if (audio.muted) return;
+    rampVolume(audio.volume, effectiveVol(), 260);
+  };
+  document.addEventListener('e26:music:duck', duck);
+  document.addEventListener('e26:music:restore', restore);
 
 }

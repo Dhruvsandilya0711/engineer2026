@@ -11,7 +11,7 @@
     <p class="signal-range__lede">
       <span class="signal-range__hint">Aim</span> with the pointer, <span class="signal-range__hint">hold</span> to
       charge the emitter, <span class="signal-range__hint">release</span> to transmit. Hit the node — bullseye is
-      100&nbsp;pts, ring hits count too. Miss and the streak resets.
+      100&nbsp;pts, ring hits count too. Three misses and the range resets.
     </p>
   </div>
 
@@ -30,6 +30,14 @@
       <div class="signal-range__stat">
         <span class="signal-range__stat-l">Best</span>
         <span class="signal-range__stat-v" data-js="sg-best">0</span>
+      </div>
+      <div class="signal-range__stat signal-range__stat--lives">
+        <span class="signal-range__stat-l">Signal</span>
+        <span class="signal-range__lives" data-js="sg-lives" role="img" aria-label="Signal strength">
+          <span class="signal-range__life"></span>
+          <span class="signal-range__life"></span>
+          <span class="signal-range__life"></span>
+        </span>
       </div>
     </div>
 

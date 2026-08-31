@@ -29,8 +29,9 @@ const CHARGE_MS = 900;                 // 0 → max in this many ms of hold
 const AUTO_FIRE_AT_FULL = true;        // release the shot at max charge
 const WIND_MAX = 0.09;                 // px/frame^2 sideways nudge
 const WIND_ROTATE_EVERY = 3;           // shots between wind rotations
-const NODE_TTL_MS = 5000;              // node moves on its own after this
+const NODE_TTL_MS = 3500;              // node moves on its own after this
 const NODE_WARN_MS = 1200;             // last N ms it pulses red
+const MAX_MISSES = 3;                  // 3 misses and the run ends
 
 // Best score is per-visitor, persisted client-side.
 const BEST_KEY = 'e26.signalRange.best';
@@ -55,13 +56,15 @@ export function mountSignalGame() {
   const streakEl = host.querySelector('[data-js="sg-streak"]');
   const bestEl   = host.querySelector('[data-js="sg-best"]');
   const chargeEl = host.querySelector('[data-js="sg-charge"]');
+  const livesEl  = host.querySelector('[data-js="sg-lives"]');
   const resetBtn = host.querySelector('[data-js="sg-reset"]');
+  const lifeDots = livesEl ? Array.from(livesEl.querySelectorAll('.signal-range__life')) : [];
 
   const state = {
     w: 0, h: 0, dpr: 1,
     pointer: { x: 0, y: 0, inside: false },
     emitter: { x: 0, y: 0, angle: -0.35 },
-    node:    { x: 0, y: 0, ringR: [52, 32, 13], drift: 0, driftY: 0, bornAt: 0 },
+    node:    { x: 0, y: 0, ringR: [34, 21, 9], drift: 0, driftY: 0, bornAt: 0 },
     projectile: null,
     trail: [],                         // recent projectile positions
     bursts: [],
@@ -79,14 +82,51 @@ export function mountSignalGame() {
     streak: 0,
     shots: 0,
     hits: 0,
+    misses: 0,                         // consecutive misses toward MAX_MISSES
     best: Number(localStorage.getItem(BEST_KEY) || 0),
     lastPop: null,                     // { text, x, y, life, color }
+    lockUntil: 0,                      // frozen input during game-over flash
     time: 0,
   };
   // Start with a random wind direction so the very first shot must reckon
   // with it too.
   state.wind = (Math.random() * 2 - 1) * WIND_MAX * 0.7;
   bestEl.textContent = String(state.best);
+
+  // Life dots — leftmost dot goes dark first, so the row reads "3 → 2 → 1
+  // → out" left-to-right. Keeps the visual grammar the same as most arcade
+  // life bars people already know.
+  function paintLives() {
+    const left = MAX_MISSES - state.misses;
+    for (let i = 0; i < lifeDots.length; i++) {
+      lifeDots[i].classList.toggle('is-lost', i < state.misses);
+      lifeDots[i].classList.toggle('is-warn', i === state.misses - 1 && left > 0);
+    }
+  }
+  paintLives();
+
+  // End of a run — reset the score column but keep the best. A short input
+  // freeze prevents an in-flight click from starting the next charge on top
+  // of the "SIGNAL LOST" flash.
+  function gameOver() {
+    if (state.charging) {
+      state.charging = false; state.charge = 0;
+      chargeEl.style.width = '0%';
+      sfx('chargeEnd');
+    }
+    state.score = 0;
+    state.streak = 0;
+    state.misses = 0;
+    scoreEl.textContent = '0';
+    streakEl.textContent = '×0';
+    paintLives();
+    spawnPop('SIGNAL LOST — RESTART', state.w / 2, state.h * 0.42, MAGENTA);
+    state.shake = Math.min(20, state.shake + 14);
+    sfx('miss');
+    state.lockUntil = state.time + 900;
+    rotateWind();
+    placeNode();
+  }
 
   // -------------------------------------------------------------------------
   // SOUND — a tiny WebAudio synth. No sample files: everything is oscillators
@@ -261,16 +301,25 @@ export function mountSignalGame() {
     const r = canvas.getBoundingClientRect();
     return { x: e.clientX - r.left, y: e.clientY - r.top };
   };
-  canvas.addEventListener('pointerenter', () => { state.pointer.inside = true; });
+  // Duck the site music while the visitor is playing — the SFX and their
+  // own concentration have room. Restored the moment they leave the arena.
+  const duckMusic    = () => document.dispatchEvent(new CustomEvent('e26:music:duck'));
+  const restoreMusic = () => document.dispatchEvent(new CustomEvent('e26:music:restore'));
+  canvas.addEventListener('pointerenter', () => {
+    state.pointer.inside = true;
+    duckMusic();
+  });
   canvas.addEventListener('pointerleave', () => {
     state.pointer.inside = false;
     if (state.charging) release();
+    restoreMusic();
   });
   canvas.addEventListener('pointermove', (e) => {
     const p = localPt(e); state.pointer.x = p.x; state.pointer.y = p.y;
   });
   const start = (e) => {
     if (state.projectile) return;
+    if (state.time < state.lockUntil) return;
     const p = localPt(e); state.pointer.x = p.x; state.pointer.y = p.y;
     state.pointer.inside = true;
     state.charging = true;
@@ -287,7 +336,7 @@ export function mountSignalGame() {
   // Keyboard: space to charge/release. Focus lands on the canvas via tabindex.
   canvas.tabIndex = 0;
   canvas.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && !state.charging && !state.projectile) {
+    if (e.code === 'Space' && !state.charging && !state.projectile && state.time >= state.lockUntil) {
       state.charging = true; state.charge = 0; state.chargeStart = performance.now();
       e.preventDefault();
     }
@@ -296,7 +345,9 @@ export function mountSignalGame() {
 
   resetBtn?.addEventListener('click', () => {
     state.score = 0; state.streak = 0; state.shots = 0; state.hits = 0;
+    state.misses = 0;
     scoreEl.textContent = '0'; streakEl.textContent = '×0';
+    paintLives();
     rotateWind();
     placeNode();
   });
@@ -432,14 +483,22 @@ export function mountSignalGame() {
         state.trail.length = 0;
         placeNode();
       } else if (p.y > state.h - 4 || p.x > state.w + 30 || p.x < -30) {
-        // Miss: ground puff or off-screen, streak resets.
+        // Miss: ground puff or off-screen, streak resets, life burned.
         const gy = Math.min(p.y, state.h - 4);
         spawnBurst(p.x, gy, hex('#642'), 10, 0.6);
         if (state.streak > 0) state.streak = 0;
         streakEl.textContent = '×' + state.streak;
         state.projectile = null;
         state.trail.length = 0;
-        sfx('miss');
+        state.misses += 1;
+        paintLives();
+        if (state.misses >= MAX_MISSES) {
+          gameOver();
+        } else {
+          const left = MAX_MISSES - state.misses;
+          spawnPop(`SIGNAL DROPPED — ${left} LEFT`, state.w / 2, state.h * 0.32, MAGENTA);
+          sfx('miss');
+        }
       }
     } else {
       // Fade the trail into the void after the shot resolves.
@@ -855,7 +914,9 @@ export function mountSignalGame() {
     // Only show the arc while charging — a coach line, not clutter.
     if (!state.charging || state.projectile) return;
     ctx.save();
-    ctx.setLineDash([2, 6]);
+    // 50% smaller dashes than before — quieter coach line, keeps the same
+    // rhythm without competing with the barrel and node for attention.
+    ctx.setLineDash([1, 3]);
     ctx.strokeStyle = rgba(CYAN, 0.35);
     ctx.lineWidth = 1;
     const angle = state.emitter.angle;
