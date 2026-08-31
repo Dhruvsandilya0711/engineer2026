@@ -77,7 +77,6 @@ export function mountSignalGame() {
     charging: false,
     charge: 0,
     chargeStart: 0,
-    lastNodeMove: 0,
     score: 0,
     streak: 0,
     shots: 0,
@@ -101,6 +100,14 @@ export function mountSignalGame() {
     for (let i = 0; i < lifeDots.length; i++) {
       lifeDots[i].classList.toggle('is-lost', i < state.misses);
       lifeDots[i].classList.toggle('is-warn', i === state.misses - 1 && left > 0);
+    }
+    // Keep the accessible label in sync so the live region announces "Signal
+    // at 2 of 3" rather than the same static label after a miss.
+    if (livesEl) {
+      livesEl.setAttribute('aria-label',
+        left === MAX_MISSES ? 'Signal at full strength' :
+        left === 0          ? 'Signal lost' :
+                              `Signal at ${left} of ${MAX_MISSES}`);
     }
   }
   paintLives();
@@ -341,7 +348,6 @@ export function mountSignalGame() {
     state.node.driftY = state.node.y;
     state.node.drift = 0;
     state.node.bornAt = state.time;
-    state.lastNodeMove = state.time;
     if (initial) return;
     spawnBurst(state.node.x, state.node.y, CYAN, 6, 0.6);
     sfx('spawn');
@@ -469,7 +475,59 @@ export function mountSignalGame() {
   }
 
   // ---- per-frame -----------------------------------------------------------
+  // The RAF loop is gated by two signals so it doesn't waste frames when the
+  // arena isn't on screen:
+  //   • an IntersectionObserver — pauses the moment the arena leaves the
+  //     viewport (scrolled past, or the section unmounted).
+  //   • document.hidden — pauses when the tab is backgrounded, and drives a
+  //     time-offset restart so charge / TTL don't sprint through the gap.
+  // Restart uses a fresh performance.now baseline for `state.time` so the
+  // very first frame after resuming doesn't see a giant `dt`.
   let raf = 0;
+  let running = false;
+  let onScreen = true;
+  const startLoop = () => {
+    if (running) return;
+    // Reset time baselines so the pause interval doesn't count toward the
+    // node's TTL or the charge timer. Only applies to a real resume — a
+    // first-time start has state.time = 0 and nothing to offset.
+    if (state.time > 0) {
+      const pauseDur = performance.now() - state.time;
+      if (state.node.bornAt) state.node.bornAt += pauseDur;
+      if (state.chargeStart) state.chargeStart += pauseDur;
+      if (state.lockUntil)   state.lockUntil   += pauseDur;
+    }
+    running = true;
+    raf = requestAnimationFrame(frame);
+  };
+  const stopLoop = () => {
+    if (!running) return;
+    running = false;
+    cancelAnimationFrame(raf);
+    raf = 0;
+    // Kill any live charge so the visitor doesn't come back to an armed shot.
+    if (state.charging) {
+      state.charging = false;
+      state.charge = 0;
+      chargeEl.style.width = '0%';
+      sfx('chargeEnd');
+    }
+  };
+
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      onScreen = e.isIntersecting;
+      if (onScreen && !document.hidden) startLoop();
+      else stopLoop();
+    }
+  }, { rootMargin: '120px' });                 // wake a touch before it slides in
+  io.observe(canvas);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopLoop();
+    else if (onScreen) startLoop();
+  });
+
   function frame(now) {
     state.time = now;
     // Aim: emitter always points at the current pointer, clamped so it can't
@@ -606,9 +664,11 @@ export function mountSignalGame() {
     }
 
     draw();
-    raf = requestAnimationFrame(frame);
+    if (running) raf = requestAnimationFrame(frame);
   }
-  raf = requestAnimationFrame(frame);
+  // Loop starts through the IntersectionObserver callback the moment the
+  // arena reports its first intersection (whether it's already on-screen or
+  // not) — no eager RAF here.
 
   // ---- draw ----------------------------------------------------------------
   function draw() {
@@ -1035,8 +1095,9 @@ export function mountSignalGame() {
 
   return {
     destroy() {
-      cancelAnimationFrame(raf);
+      stopLoop();
       ro.disconnect();
+      io.disconnect();
     },
   };
 }

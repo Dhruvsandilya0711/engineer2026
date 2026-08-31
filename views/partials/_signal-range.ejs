@@ -18,12 +18,16 @@
   <div class="signal-range__arena" data-js="signal-game-mount">
     <canvas class="signal-range__canvas" data-js="signal-game" aria-label="Signal firing range game"></canvas>
 
-    <div class="signal-range__hud" aria-hidden="true">
-      <div class="signal-range__stat">
+    <div class="signal-range__hud">
+      <!-- Score / Streak / Signal are role=status live regions so a screen
+           reader hears every change. Best is silent — it only bumps on a new
+           high and the celebration is visual. aria-atomic makes each update
+           re-read the label + value together instead of just the number. -->
+      <div class="signal-range__stat" role="status" aria-live="polite" aria-atomic="true">
         <span class="signal-range__stat-l">Score</span>
         <span class="signal-range__stat-v" data-js="sg-score">0</span>
       </div>
-      <div class="signal-range__stat">
+      <div class="signal-range__stat" role="status" aria-live="polite" aria-atomic="true">
         <span class="signal-range__stat-l">Streak</span>
         <span class="signal-range__stat-v signal-range__stat-v--accent" data-js="sg-streak">×0</span>
       </div>
@@ -31,12 +35,12 @@
         <span class="signal-range__stat-l">Best</span>
         <span class="signal-range__stat-v" data-js="sg-best">0</span>
       </div>
-      <div class="signal-range__stat signal-range__stat--lives">
+      <div class="signal-range__stat signal-range__stat--lives" role="status" aria-live="polite" aria-atomic="true">
         <span class="signal-range__stat-l">Signal</span>
-        <span class="signal-range__lives" data-js="sg-lives" role="img" aria-label="Signal strength">
-          <span class="signal-range__life"></span>
-          <span class="signal-range__life"></span>
-          <span class="signal-range__life"></span>
+        <span class="signal-range__lives" data-js="sg-lives" role="img" aria-label="Signal at full strength">
+          <span class="signal-range__life" aria-hidden="true"></span>
+          <span class="signal-range__life" aria-hidden="true"></span>
+          <span class="signal-range__life" aria-hidden="true"></span>
         </span>
       </div>
     </div>
