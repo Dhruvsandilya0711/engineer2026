@@ -3462,30 +3462,135 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   transition: width 60ms linear;
 }
 
-/* Reset — quiet chip, bottom-right so it doesn't compete with the HUD. */
+/* Restart — proper control, not a text chip. A glass panel with a chamfered
+   top-left / bottom-right corner, a cyan accent bar that scans across on
+   hover, an inline circular-arrow icon that spins on press, and a keycap
+   telegraphing the R shortcut. Bottom-right of the arena. */
 .signal-range__reset {
   position: absolute;
   bottom: 18px;
   right: 18px;
   z-index: 2;
-  padding: 6px 12px;
-  background: rgba(6, 8, 14, 0.7);
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem 0.55rem 0.75rem;
   color: var(--paper-dim);
-  border: 1px solid var(--hairline-strong);
-  border-radius: 3px;
+  background:
+    linear-gradient(135deg,
+      rgba(103, 232, 249, 0.06) 0%,
+      rgba(6, 8, 14, 0.75) 45%,
+      rgba(232, 121, 249, 0.05) 100%);
+  border: 1px solid color-mix(in oklab, var(--color-cyan) 32%, transparent);
+  border-radius: 0;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: color var(--dur-base) var(--ease-standard),
-              border-color var(--dur-base) var(--ease-standard);
+  box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.6),
+              0 6px 22px -14px rgba(103, 232, 249, 0.55);
+  transition: color 220ms var(--ease-standard),
+              border-color 220ms var(--ease-standard),
+              transform 180ms var(--ease-out),
+              box-shadow 220ms var(--ease-standard);
+}
+.signal-range__reset::before {
+  /* Sweep — a diagonal cyan/magenta streak that rides across on hover,
+     laid behind the label so text stays legible. */
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg,
+    transparent 30%,
+    color-mix(in oklab, var(--color-cyan) 32%, transparent) 50%,
+    color-mix(in oklab, var(--color-magenta) 22%, transparent) 60%,
+    transparent 80%);
+  transform: translateX(-100%);
+  transition: transform 520ms var(--ease-out);
+  pointer-events: none;
+}
+.signal-range__reset::after {
+  /* Tiny cyan tick riding the top edge — telegraphs "instrument". */
+  content: '';
+  position: absolute;
+  top: 0; right: 14px;
+  width: 22px; height: 2px;
+  background: var(--color-cyan);
+  opacity: 0.35;
+  transition: opacity 220ms var(--ease-standard), width 220ms var(--ease-out);
+  pointer-events: none;
+}
+.signal-range__reset-icon {
+  transition: transform 420ms var(--ease-out);
+  color: var(--color-cyan);
+  flex: none;
+}
+.signal-range__reset-label { line-height: 1; }
+.signal-range__reset-key {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.28rem;
+  margin-left: 0.2rem;
+  border: 1px solid color-mix(in oklab, var(--color-cyan) 45%, transparent);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0;
+  color: var(--color-cyan);
+  background: rgba(6, 8, 14, 0.55);
+  line-height: 1;
 }
 .signal-range__reset:hover,
 .signal-range__reset:focus-visible {
   color: var(--paper);
   border-color: var(--color-cyan);
   outline: none;
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.6),
+              0 10px 28px -14px rgba(103, 232, 249, 0.85);
+}
+.signal-range__reset:hover::before,
+.signal-range__reset:focus-visible::before {
+  transform: translateX(100%);
+}
+.signal-range__reset:hover::after,
+.signal-range__reset:focus-visible::after {
+  opacity: 0.9;
+  width: 34px;
+}
+.signal-range__reset:hover .signal-range__reset-icon,
+.signal-range__reset:focus-visible .signal-range__reset-icon {
+  transform: rotate(-90deg);
+}
+.signal-range__reset:active {
+  transform: translateY(0);
+}
+.signal-range__reset.is-firing .signal-range__reset-icon {
+  animation: sg-reset-spin 620ms var(--ease-out) 1;
+}
+.signal-range__reset.is-firing {
+  border-color: var(--color-cyan);
+  box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.6),
+              0 0 0 1px color-mix(in oklab, var(--color-cyan) 60%, transparent),
+              0 12px 34px -12px rgba(103, 232, 249, 0.95);
+}
+@keyframes sg-reset-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-540deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-range__reset,
+  .signal-range__reset::before,
+  .signal-range__reset::after,
+  .signal-range__reset-icon { transition: none; animation: none; }
+  .signal-range__reset:hover .signal-range__reset-icon,
+  .signal-range__reset:focus-visible .signal-range__reset-icon { transform: none; }
 }
 
 @media (max-width: 640px) {

@@ -107,25 +107,39 @@ export function mountSignalGame() {
 
   // End of a run — reset the score column but keep the best. A short input
   // freeze prevents an in-flight click from starting the next charge on top
-  // of the "SIGNAL LOST" flash.
-  function gameOver() {
+  // of the "SIGNAL LOST" flash. Both the lose-condition and the Restart
+  // button funnel through restartRun so the arena reboots the same way.
+  function restartRun(text, color, sound) {
     if (state.charging) {
       state.charging = false; state.charge = 0;
       chargeEl.style.width = '0%';
       sfx('chargeEnd');
     }
+    state.projectile = null;
+    state.trail.length = 0;
     state.score = 0;
     state.streak = 0;
     state.misses = 0;
     scoreEl.textContent = '0';
     streakEl.textContent = '×0';
     paintLives();
-    spawnPop('SIGNAL LOST — RESTART', state.w / 2, state.h * 0.42, MAGENTA);
+    spawnPop(text, state.w / 2, state.h * 0.42, color);
     state.shake = Math.min(20, state.shake + 14);
-    sfx('miss');
+    sfx(sound);
     state.lockUntil = state.time + 900;
     rotateWind();
     placeNode();
+    // Ping the Restart chip so it flashes and its icon spins even when the
+    // reboot came from an internal trigger (lose or R key), not a click.
+    if (resetBtn) {
+      resetBtn.classList.remove('is-firing');
+      void resetBtn.offsetWidth;              // restart the animation cleanly
+      resetBtn.classList.add('is-firing');
+      setTimeout(() => resetBtn.classList.remove('is-firing'), 640);
+    }
+  }
+  function gameOver() {
+    restartRun('SIGNAL LOST — RESTART', MAGENTA, 'miss');
   }
 
   // -------------------------------------------------------------------------
@@ -344,12 +358,18 @@ export function mountSignalGame() {
   canvas.addEventListener('keyup', (e) => { if (e.code === 'Space') end(); });
 
   resetBtn?.addEventListener('click', () => {
-    state.score = 0; state.streak = 0; state.shots = 0; state.hits = 0;
-    state.misses = 0;
-    scoreEl.textContent = '0'; streakEl.textContent = '×0';
-    paintLives();
-    rotateWind();
-    placeNode();
+    state.shots = 0; state.hits = 0;
+    restartRun('RANGE REBOOTED', CYAN, 'spawn');
+  });
+  // R key — global shortcut so pressing R anywhere on the page reboots
+  // the range even when the canvas doesn't hold focus.
+  window.addEventListener('keydown', (e) => {
+    if (e.code !== 'KeyR') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    state.shots = 0; state.hits = 0;
+    restartRun('RANGE REBOOTED', CYAN, 'spawn');
   });
 
   function release() {
