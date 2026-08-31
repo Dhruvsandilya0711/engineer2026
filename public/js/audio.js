@@ -17,7 +17,7 @@ const SRC = '/audio/tentative.mp3';
 const START_AT = 25;              // seconds — skip the intro
 // Full clip is 124.26s @ 256 kbps CBR / 44.1 kHz, so the effective loop
 // window is START_AT..DURATION ≈ 99s of music per cycle.
-const VOLUME = 0.243;             // quiet, sits under the site chrome
+const VOLUME = 0.182;             // −25% from 0.243, quieter under the site chrome
 const FADE_MS = 450;              // ramp at each loop boundary — hides the seam
 const KEY = 'e26.audio.muted';    // localStorage flag (mute preference)
 const POS_KEY = 'e26.audio.pos';  // sessionStorage — carry playhead across pages
