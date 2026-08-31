@@ -934,9 +934,9 @@ export function mountSignalGame() {
     // Only show the arc while charging — a coach line, not clutter.
     if (!state.charging || state.projectile) return;
     ctx.save();
-    // 50% smaller dashes than before — quieter coach line, keeps the same
-    // rhythm without competing with the barrel and node for attention.
-    ctx.setLineDash([1, 3]);
+    // Halved again — the coach line is now a whisper of dots. Enough to see
+    // the arc while charging, quiet enough to disappear the moment you fire.
+    ctx.setLineDash([0.5, 1.5]);
     ctx.strokeStyle = rgba(CYAN, 0.35);
     ctx.lineWidth = 1;
     const angle = state.emitter.angle;
