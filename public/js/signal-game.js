@@ -257,6 +257,7 @@ export function mountSignalGame() {
     ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
     state.emitter.x = 110;
     state.emitter.y = state.h - 108;
+    computeExclusions();
     if (state.node.x === 0) placeNode(true);
     else {
       // Nudge the node's home base into the new arena bounds on resize.
@@ -281,18 +282,62 @@ export function mountSignalGame() {
   const ro = new ResizeObserver(resize); ro.observe(canvas);
   resize();
 
+  // ---- HUD exclusion zones -------------------------------------------------
+  // The node must never land behind the Score/Streak/Best/Signal HUD, the
+  // wind readout, the charge gauge, or the Restart chip — chrome eats the
+  // target and the shot has nothing to read against. Rects here are in the
+  // canvas's local space and include a small pad so the node's outer bloom
+  // stays clear too. Recomputed on resize.
+  function computeExclusions() {
+    const zones = [];
+    const cr = canvas.getBoundingClientRect();
+    const local = (el) => {
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { x: r.left - cr.left, y: r.top - cr.top, w: r.width, h: r.height };
+    };
+    // Wind readout — drawn on the canvas itself, coords match drawWindIndicator.
+    const ww = Math.min(180, state.w * 0.22);
+    zones.push({ x: state.w / 2 - ww / 2 - 20, y: 0, w: ww + 40, h: 54 });
+    // Emitter cabinet — the whole bay around the tank stays clear.
+    zones.push({ x: state.emitter.x - 96, y: state.emitter.y - 96, w: 192, h: 220 });
+    for (const sel of ['.signal-range__hud', '.signal-range__gauge', '.signal-range__reset']) {
+      const b = local(host.querySelector(sel));
+      if (b) zones.push({ x: b.x - 14, y: b.y - 14, w: b.w + 28, h: b.h + 28 });
+    }
+    state.exclusion = zones;
+  }
+  state.exclusion = [];
+
   // ---- node placement ------------------------------------------------------
   function placeNode(initial = false) {
-    // Choose a fresh position that isn't too close to the emitter and stays
-    // in the top half so the shot has to arc. Range widens with score so
+    // Choose a fresh position that isn't too close to the emitter, stays in
+    // the top half so the shot has to arc, and doesn't collide with any of
+    // the HUD panels around the arena edges. Range widens with score so
     // late-game shots are longer and harder to line up.
+    if (!state.exclusion || !state.exclusion.length) computeExclusions();
     const scoreStretch = Math.min(0.28, state.score / 1200);
     const marginTop = 50;
     const marginBottom = state.h - 200;
     const range = Math.max(80, marginBottom - marginTop);
-    const backoff = 90 + Math.random() * Math.min(260, state.w * (0.14 + scoreStretch));
-    state.node.x = state.w - backoff;
-    state.node.y = marginTop + Math.random() * range;
+    // Padding matches the node's visible extent: outer ring + halo + brackets.
+    const pad = state.node.ringR[0] + 30;
+    const clear = (cx, cy) => {
+      for (const z of state.exclusion) {
+        if (cx + pad > z.x && cx - pad < z.x + z.w &&
+            cy + pad > z.y && cy - pad < z.y + z.h) return false;
+      }
+      return true;
+    };
+    let nx = state.w - 130, ny = state.h * 0.5;
+    for (let i = 0; i < 30; i++) {
+      const backoff = 90 + Math.random() * Math.min(260, state.w * (0.14 + scoreStretch));
+      const candX = state.w - backoff;
+      const candY = marginTop + Math.random() * range;
+      if (clear(candX, candY)) { nx = candX; ny = candY; break; }
+    }
+    state.node.x = nx;
+    state.node.y = ny;
     state.node.driftY = state.node.y;
     state.node.drift = 0;
     state.node.bornAt = state.time;
