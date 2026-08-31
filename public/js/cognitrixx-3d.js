@@ -155,11 +155,13 @@ export function createNeuralField(host, opts = {}) {
     // EVERY field uses the same sprite, sized to look alike at its own camera
     // depth. That is what makes the travelling spine read as flowing OUT of the
     // hero's field rather than as a second, unrelated system fading in over it.
-    size: journey ? (isSmall ? 0.52 : 0.46) : (isSmall ? 0.4 : 0.34),
+    // Dot size lifted ~30% so nodes read as points of light rather than
+    // atmosphere.
+    size: journey ? (isSmall ? 0.68 : 0.60) : (isSmall ? 0.52 : 0.44),
     map: glowTexture(),
     vertexColors: true,
     transparent: true,
-    opacity: 0.92,
+    opacity: 0.96,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
     sizeAttenuation: true,
@@ -212,7 +214,7 @@ export function createNeuralField(host, opts = {}) {
   sigGeo.setAttribute('position', new THREE.BufferAttribute(sigPos, 3));
   sigGeo.setAttribute('color', new THREE.BufferAttribute(sigCol, 3));
   const sigMat = new THREE.PointsMaterial({
-    size: journey ? (isSmall ? 0.9 : 0.8) : (isSmall ? 0.62 : 0.54),
+    size: journey ? (isSmall ? 1.17 : 1.04) : (isSmall ? 0.81 : 0.70),
     map: glowTexture(),
     vertexColors: true, transparent: true,
     opacity: 1, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true,
@@ -297,25 +299,20 @@ export function createNeuralField(host, opts = {}) {
       }
       nodeGeo.attributes.position.needsUpdate = true;
 
-      // Pointer-driven parallax — sensitivity dialled up so the field
-      // visibly leans with the cursor (was 1.3/-0.9 with a 0.05 lerp; now
-      // 3.6/-2.7 with a 0.10 lerp). Combined with a look-at that follows
-      // the cursor in world space, the near nodes swing more than the far
-      // ones and the corridor reads as a real 3D volume rather than a
-      // static backdrop.
-      pointer.x += (pointer.tx - pointer.x) * 0.10;
-      pointer.y += (pointer.ty - pointer.y) * 0.10;
-      camera.position.x += ((Math.sin(scroll.progress * Math.PI * 3) * 1.7) + pointer.x * 3.6 - camera.position.x) * 0.08;
-      camera.position.y += ((Math.cos(scroll.progress * Math.PI * 2) * 1.1) - pointer.y * 2.7 - camera.position.y) * 0.08;
-      // A subtle pointer-led group rotation on top of the camera shift.
-      // Near nodes travel more than far ones under camera-only motion, but
-      // the added yaw/pitch pushes the whole cloud around the look-at
-      // point, doubling the sense of depth.
-      group.rotation.y += (pointer.x * 0.12 - group.rotation.y) * 0.08;
-      group.rotation.x += (-pointer.y * 0.09 - group.rotation.x) * 0.08;
-      // Look-at chases the cursor a little into world space so the framing
-      // recomposes as you move around, not just a lateral pan.
-      camera.lookAt(pointer.x * 2.4, -pointer.y * 1.8, -20);
+      // Pointer-driven parallax. Backed off 25% from the first pass so the
+      // response is present but not seasick — camera x/y factor 3.6/-2.7 →
+      // 2.7/-2.0, group yaw/pitch 0.12/-0.09 → 0.09/-0.07, look-at chase
+      // 2.4/-1.8 → 1.8/-1.35, pointer lerp 0.10 → 0.075. Combined with a
+      // look-at that follows the cursor in world space, near nodes still
+      // swing more than the far ones so the corridor reads as a real 3D
+      // volume rather than a static backdrop.
+      pointer.x += (pointer.tx - pointer.x) * 0.075;
+      pointer.y += (pointer.ty - pointer.y) * 0.075;
+      camera.position.x += ((Math.sin(scroll.progress * Math.PI * 3) * 1.7) + pointer.x * 2.7 - camera.position.x) * 0.08;
+      camera.position.y += ((Math.cos(scroll.progress * Math.PI * 2) * 1.1) - pointer.y * 2.0 - camera.position.y) * 0.08;
+      group.rotation.y += (pointer.x * 0.09 - group.rotation.y) * 0.08;
+      group.rotation.x += (-pointer.y * 0.07 - group.rotation.x) * 0.08;
+      camera.lookAt(pointer.x * 1.8, -pointer.y * 1.35, -20);
 
       // Connections brighten with scroll speed; signals accelerate. Kept low at
       // rest so the lit NODES carry the image and the links read as the depth
