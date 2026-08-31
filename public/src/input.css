@@ -388,6 +388,10 @@
    page having lost its place rather than as breathing room. */
 .section-y { padding-block: clamp(2rem, 3.6vh, 3.25rem); }
 .section-y-lg { padding-block: clamp(2.5rem, 4.4vh, 4rem); }
+/* The section directly under the hero. The hero is a full fold whose content
+   is centred, so it already hands over ~185px of clear screen — a matching
+   top pad on top of that read as one 270px void. Tight above, normal below. */
+.intro-y { padding-block: clamp(0.75rem, 1.6vh, 1.5rem) clamp(2.25rem, 4vh, 3.5rem); }
 
 /* reveal-on-scroll target */
 [data-reveal] {
@@ -443,22 +447,27 @@
   margin-inline: auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  align-items: center;
+  /* Stretch, not centre. Centring left a 594px composition floating in a
+     1080px pinned viewport with ~250px of dead screen above and below it.
+     The narration column now spans the full height and distributes itself
+     (eyebrow at the top, stage + lede optically centred, progress dots at the
+     foot), so the space reads as an instrument panel instead of a void. */
+  align-items: stretch;
   column-gap: clamp(2.5rem, 5vw, 5rem);
   /* Clears the fixed header at the top; the bottom is only breathing room. */
-  padding-block: clamp(4rem, 7vh, 5rem) clamp(1.5rem, 3vh, 2.5rem);
+  padding-block: clamp(3.25rem, 5.6vh, 4.25rem) clamp(1.25rem, 2.4vh, 2rem);
 }
 
 /* ---- narration ---------------------------------------------------- */
-.tf-copy { min-width: 0; }
-
-.tf-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--paper-faint);
+/* Full-height column, narration centred on the mark standing beside it. */
+.tf-copy {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+.tf-mid { min-width: 0; }
 
 /* Stacked, crossfading stage labels. Left-aligned, so the eyebrow, the
    label, the lede and the dots all share one edge. The box is a fixed
@@ -467,7 +476,6 @@
 .tf-stages {
   position: relative;
   height: clamp(5rem, 10vh, 7rem);
-  margin-top: clamp(0.7rem, 1.4vh, 1.1rem);
 }
 .transform-stage {
   position: absolute;
@@ -493,7 +501,15 @@
   line-height: 1.7;
 }
 
-.tf-dots { display: flex; gap: 0.5rem; margin-top: clamp(1.25rem, 2.4vh, 1.75rem); }
+/* Stays with the label it indexes. Pinning these to the foot of the column
+   filled the space the eyebrow left behind, but 370px from the lede they
+   stopped reading as a progress indicator and started reading as stray dots
+   in the corner. */
+.tf-dots {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: clamp(1.1rem, 2.2vh, 1.6rem);
+}
 .dot {
   width: 6px;
   height: 6px;
@@ -513,6 +529,7 @@
 .tf-subject {
   position: relative;
   justify-self: center;
+  align-self: center;
   width: 100%;
   max-width: min(100%, 640px);
   aspect-ratio: 1 / 1;
@@ -550,19 +567,26 @@
   .tf-split {
     width: calc(100% - 2.5rem);
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) auto;
-    row-gap: clamp(0.25rem, 1vh, 0.75rem);
-    padding-block: clamp(3.5rem, 6vh, 4.5rem) clamp(1rem, 2.5vh, 1.75rem);
+    /* Rows sized to their content and the whole stack centred: a 1fr subject
+       row parked the leftover height above the mark (~230px of blank screen
+       under the header) and left nothing under the dots. */
+    grid-template-rows: auto auto;
+    align-content: center;
+    row-gap: clamp(0.6rem, 1.8vh, 1.25rem);
+    padding-block: clamp(3.25rem, 5.5vh, 4rem) clamp(1rem, 2.2vh, 1.5rem);
   }
   /* The subject leads on a phone. `order` rather than a second markup
      order: the reading order stays narration-then-subject, which is the
      order the section is actually written in. */
-  .tf-subject { order: -1; align-self: end; justify-self: center; max-width: min(100%, 400px); }
-  .tf-copy { align-self: start; text-align: center; }
+  .tf-subject { order: -1; justify-self: center; max-width: min(100%, 400px); }
+  /* Back to a plain block: the desktop column's full-height distribution
+     would stretch three short lines down a phone screen. */
+  .tf-copy { display: block; text-align: center; }
   .tf-stages { height: clamp(3.75rem, 9vh, 5rem); }
   .transform-stage { left: 50%; transform: translate(-50%, -50%); width: 100%; }
   .tf-lede { margin-inline: auto; }
   .tf-dots { justify-content: center; }
+
 }
 
 /* ==================================================================
@@ -1022,7 +1046,7 @@
 .gflow {
   --flow-in: 0;
   position: relative;
-  padding-block: clamp(1.75rem, 4vh, 3.25rem);
+  padding-block: clamp(3rem, 6.8vh, 5.3rem) clamp(1.25rem, 3vh, 2.5rem);
   overflow: hidden;               /* clip the horizontal stream to the page */
 }
 /* Centred like every other section heading on the site (the archive meta line
@@ -2251,16 +2275,16 @@ html.cx-native .cx-ring { opacity: 0; }
 }
 
 .pt.is-covering .pt__blade {
-  animation: pt-unwind 660ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--i) * 22ms);
+  animation: pt-unwind 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 10ms);
 }
-.pt.is-covering .pt__bloom { animation: pt-bloom-in 700ms var(--ease-standard) both; }
+.pt.is-covering .pt__bloom { animation: pt-bloom-in 480ms var(--ease-standard) both; }
 
 .pt.is-revealing .pt__blade {
-  animation: pt-wind 520ms cubic-bezier(0.55, 0, 0.85, 0.2) both;
-  animation-delay: calc(var(--i) * 14ms);
+  animation: pt-wind 300ms cubic-bezier(0.55, 0, 0.85, 0.2) both;
+  animation-delay: calc(var(--i) * 8ms);
 }
-.pt.is-revealing .pt__bloom { animation: pt-bloom-out 520ms var(--ease-standard) both; }
+.pt.is-revealing .pt__bloom { animation: pt-bloom-out 380ms var(--ease-standard) both; }
 
 /* Reduced motion: keep the veil as a plain cut, no spinning parts. */
 @media (prefers-reduced-motion: reduce) {
@@ -2321,8 +2345,13 @@ html.cx-native .cx-ring { opacity: 0; }
    320x720 phone up to a desktop. */
 .hero-main {
   gap: clamp(0.4rem, 1.65vh, 1.5rem);
-  padding-top: clamp(0.5rem, 2vh, 2rem);
-  padding-bottom: clamp(0.75rem, 3vh, 3rem);
+  /* Asymmetric on purpose. justify-content:center splits the leftover height
+     evenly, and with the HUD row above it that left ~185px of blank fold
+     under the countdown. A heavier top pad shifts the centred block down by
+     half the difference, so the fold closes tighter without touching the
+     order or the gap rhythm. */
+  padding-top: clamp(1rem, 5.5vh, 4.5rem);
+  padding-bottom: clamp(0.4rem, 1.2vh, 1rem);
 }
 /* Short *laptops* (720-800px tall) are the tight case — trim the nav gap
    there. Guarded to min-width 700px so tall phones (e.g. 375x812) are NOT
@@ -2363,7 +2392,7 @@ html.cx-native .cx-ring { opacity: 0; }
      even 68svh left ~110px of centring slack that showed up as a gap between
      the deck and the gallery. Sized to the content, not to the viewport. */
   min-height: 60svh;
-  padding: clamp(1.75rem, 4vh, 3rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 5vh, 3.5rem);
+  padding: clamp(1.5rem, 3.4vh, 2.5rem) clamp(1rem, 4vw, 3rem) clamp(3.5rem, 7vh, 5.25rem);
 }
 
 .fandeck__intro { text-align: center; max-width: 40rem; }
@@ -2381,7 +2410,7 @@ html.cx-native .cx-ring { opacity: 0; }
 .fandeck__stage {
   position: relative;
   width: min(1280px, 97vw);
-  height: clamp(300px, 46svh, 430px);
+  height: clamp(280px, 38svh, 380px);
   /* Perspective gives the fan its depth (back cards sit further away and read
      smaller). No `preserve-3d`: perspective on this parent already renders the
      cards in 3D, and preserve-3d here broke hit-testing on the rotated cards. */
@@ -2641,10 +2670,10 @@ html.cx-native .cx-ring { opacity: 0; }
 @media (max-width: 640px) {
   .fandeck {
     min-height: auto;
-    padding-block: clamp(3rem, 9vh, 4.5rem);
+    padding-block: clamp(2rem, 5vh, 3rem);
     gap: clamp(1.1rem, 4vh, 2rem);
   }
-  .fandeck__stage { height: clamp(280px, 42svh, 360px); }
+  .fandeck__stage { height: clamp(240px, 33svh, 300px); }
   .fancard {
     /* Phones: shorter/wider than the old slats, same size across all cards. */
     --fc-w: clamp(200px, 60vw, 260px);
@@ -3147,4 +3176,285 @@ html.pl-skip #preloader { display: none; }
 /* The sheen reads as a highlight travelling over glass, not a wipe over a fill. */
 .btn-register--glass::after {
   background: linear-gradient(100deg, transparent 36%, rgba(255, 255, 255, 0.32) 50%, transparent 64%);
+}
+
+
+/* ==================================================================
+   AUDIO TOGGLE — one round pill, bottom-right, sitewide. Small, chrome-
+   coloured, unobtrusive; brightens when unmuted (music is playing) so the
+   user can see the state at a glance without hovering.
+   ================================================================== */
+.audio-toggle {
+  position: fixed;
+  right: clamp(0.9rem, 2vw, 1.5rem);
+  bottom: clamp(0.9rem, 2vw, 1.5rem);
+  z-index: 60;
+  width: 51px;
+  height: 51px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(6, 8, 14, 0.72);
+  color: var(--paper-dim);
+  border: 1px solid var(--hairline-strong);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-standard),
+              border-color var(--dur-base) var(--ease-standard),
+              transform var(--dur-base) var(--ease-standard),
+              box-shadow var(--dur-base) var(--ease-standard);
+}
+.audio-toggle:hover,
+.audio-toggle:focus-visible {
+  color: var(--paper);
+  border-color: var(--color-cyan);
+  outline: none;
+  transform: translateY(-1px);
+}
+.audio-toggle.is-on {
+  color: var(--color-cyan);
+  border-color: rgba(99, 220, 246, 0.55);
+  box-shadow: 0 0 0 1px rgba(99, 220, 246, 0.18), 0 6px 20px -8px rgba(99, 220, 246, 0.4);
+}
+.audio-toggle svg { display: block; }
+@media (max-width: 640px) {
+  .audio-toggle { width: 49px; height: 49px; }
+}
+
+/* Preloader owns the screen — the audio pill would poke through the wipe. */
+.pl-locked .audio-toggle,
+body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
+.audio-toggle { transition: color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard), opacity 260ms var(--ease-standard); }
+
+
+/* ==================================================================
+   SIGNAL RANGE — an interactive between-sections moment.
+   The game itself is drawn to <canvas> in public/js/signal-game.js;
+   this stylesheet dresses the chassis: HUD chrome, angular scoring
+   plates, the charge gauge, and the aura that lifts the arena out of
+   the page.
+   ================================================================== */
+.signal-range {
+  position: relative;
+  padding: clamp(2rem, 4vh, 3.25rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 4vh, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 2.6vh, 2rem);
+  overflow: hidden;
+  contain: layout paint;
+}
+
+/* Copy on top of the arena — big line first, tight helper underneath. */
+.signal-range__head {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 44rem;
+  padding-inline: 1rem;
+}
+.signal-range__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.85rem, 4.2vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.012em;
+  background: linear-gradient(96deg,
+    var(--color-cyan) 0%,
+    var(--color-magenta) 52%,
+    var(--color-indigo) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.signal-range__lede {
+  margin-top: 0.9rem;
+  color: var(--paper-dim);
+  font-size: clamp(0.85rem, 0.95vw, 0.95rem);
+  line-height: 1.7;
+  max-width: 40ch;
+  margin-inline: auto;
+}
+.signal-range__hint {
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.78em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 4px;
+  background: rgba(103, 232, 249, 0.05);
+}
+
+/* The arena is the whole thing — canvas fills it, HUD floats on top. */
+.signal-range__arena {
+  position: relative;
+  width: min(1280px, calc(100% - 2rem));
+  height: clamp(420px, 62svh, 620px);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 90% at 50% 100%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    radial-gradient(70% 60% at 15% 90%, rgba(103, 232, 249, 0.10) 0%, transparent 55%),
+    radial-gradient(70% 60% at 88% 15%, rgba(232, 121, 249, 0.09) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(6, 8, 14, 0.85), rgba(6, 8, 14, 0.95));
+  box-shadow:
+    0 0 0 1px rgba(103, 232, 249, 0.08),
+    0 24px 80px -32px rgba(99, 102, 241, 0.55),
+    inset 0 0 120px -40px rgba(232, 121, 249, 0.18);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Bracket corners — the same instrument-plate detail the rest of the site
+   uses on framed panels, drawn with pseudo-elements so they scale with the
+   arena. */
+.signal-range__arena::before,
+.signal-range__arena::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--color-cyan);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 3;
+}
+.signal-range__arena::before {
+  top: 10px; left: 10px;
+  border-right: none; border-bottom: none;
+}
+.signal-range__arena::after {
+  bottom: 10px; right: 10px;
+  border-left: none; border-top: none;
+}
+
+.signal-range__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+  outline: none;
+}
+.signal-range__canvas:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(103, 232, 249, 0.55);
+}
+
+/* HUD — top-right scoring stack. Angular, mono, cyan-lit values. */
+.signal-range__hud {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: flex;
+  gap: 12px;
+  pointer-events: none;
+}
+.signal-range__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 6px 12px 7px;
+  background: rgba(6, 8, 14, 0.72);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 4px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  min-width: 64px;
+}
+.signal-range__stat-l {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.signal-range__stat-v {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+.signal-range__stat-v--accent { color: var(--color-magenta); }
+
+/* Charge gauge — bottom-left, plays only while pointer is held. */
+.signal-range__gauge {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+  min-width: 200px;
+}
+.signal-range__gauge-l {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.signal-range__gauge-track {
+  position: relative;
+  height: 6px;
+  background: rgba(6, 8, 14, 0.8);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.signal-range__gauge-fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: linear-gradient(90deg,
+    var(--color-cyan) 0%,
+    var(--color-magenta) 65%,
+    var(--color-magenta) 100%);
+  box-shadow: 0 0 12px rgba(103, 232, 249, 0.6);
+  transition: width 60ms linear;
+}
+
+/* Reset — quiet chip, bottom-right so it doesn't compete with the HUD. */
+.signal-range__reset {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 2;
+  padding: 6px 12px;
+  background: rgba(6, 8, 14, 0.7);
+  color: var(--paper-dim);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-standard),
+              border-color var(--dur-base) var(--ease-standard);
+}
+.signal-range__reset:hover,
+.signal-range__reset:focus-visible {
+  color: var(--paper);
+  border-color: var(--color-cyan);
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .signal-range__arena { height: clamp(380px, 58svh, 480px); }
+  .signal-range__hud { top: 10px; right: 10px; gap: 6px; }
+  .signal-range__stat { min-width: 52px; padding: 4px 9px; }
+  .signal-range__stat-v { font-size: 1.05rem; }
+  .signal-range__gauge { left: 10px; bottom: 10px; min-width: 140px; }
+  .signal-range__reset { right: 10px; bottom: 10px; }
 }

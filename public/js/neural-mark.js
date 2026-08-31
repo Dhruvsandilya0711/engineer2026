@@ -310,7 +310,7 @@ export function createMarkField(host, img, opts = {}) {
   // on the frame the cursor actually moved.
   const cursor = { nx: 0, ny: 0, on: false, speed: 0, pnx: 0, pny: 0 };
   const ptr = new THREE.Vector3();
-  const PUSH_R = 0.80;                 // world radius of the disturbance
+  const PUSH_R = 0.56;                 // world radius of the disturbance
   const PUSH_R2 = PUSH_R * PUSH_R;
   const SPRING = 0.055;                // how hard a particle is pulled home
   const DAMP = 0.89;                   // long enough that the wake is visible

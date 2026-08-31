@@ -63,7 +63,7 @@
       if (reduced) { setTimeout(function () { done(veil); }, 120); return; }
       requestAnimationFrame(function () {
         veil.classList.add('is-revealing');
-        setTimeout(function () { done(veil); }, 700);
+        setTimeout(function () { done(veil); }, 380);
       });
     }
     if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', play);

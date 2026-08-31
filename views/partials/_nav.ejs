@@ -38,6 +38,12 @@
     gets it, and a navigation can start from any of them. %>
 <%- include('_transition') %>
 
+<%# Mute/unmute for the background music. Fixed pill at bottom-right — one
+    control sitewide, out of the reading path. Starts muted for autoplay
+    policies; the user opts in, and the choice sticks (localStorage). %>
+<button type="button" class="audio-toggle" data-js="audio-toggle"
+        aria-pressed="false" aria-label="Unmute background music" title="Unmute music"></button>
+
 <!-- mobile drawer -->
 <div id="mobile-drawer" class="fixed inset-0 z-50 bg-void translate-x-full transition-transform duration-300 lg:hidden" data-js="drawer">
   <div class="flex items-center justify-between px-6 h-20">

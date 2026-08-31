@@ -17,12 +17,13 @@ import {
   scrollState, REDUCED_MOTION,
   scrollTo, stopScroll, startScroll,
 } from '/js/scroll.js';
-import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail } from '/js/site.js';
+import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail, initAudio } from '/js/site.js';
 import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initPreloader } from '/js/preloader.js';
 import { initPageTransition } from '/js/page-transition.js';
 import { mountNeuralMark } from '/js/neural-mark.js';
+import { mountSignalGame } from '/js/signal-game.js';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
 function registerNarrative(ctx, subject) {
@@ -228,6 +229,7 @@ function initFanDeck() {
   initScrollRail();
 
   const entryDone = initPreloader();
+  initAudio(entryDone);
   const ctx = await initScroll();
 
   // Mount every declared 3D moment. Skipped wholesale without WebGL — the page
@@ -237,6 +239,7 @@ function initFanDeck() {
   // moment. It samples the mark PNG, assembles, and takes a drag — none of
   // which the shared field vocabulary has any business knowing about.
   const subject = mountNeuralMark();
+  mountSignalGame();
 
   registerReveals(ctx);
   registerParallax(ctx);

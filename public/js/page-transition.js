@@ -19,7 +19,7 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 
 // Long enough for the veil (320ms) plus the last blade's unwind, so the new
 // document is requested behind a fully-covered screen.
-const COVER_MS = REDUCED_MOTION ? 160 : 900;
+const COVER_MS = REDUCED_MOTION ? 160 : 500;
 // No deliberate hold on arrival: the module already loads after the document,
 // and CSS holds the mark assembled until then (.pt-arriving), so any extra
 // wait here just extends a pause the viewer is already sitting through.
@@ -51,7 +51,7 @@ export function initPageTransition() {
       requestAnimationFrame(async () => {
         await wait(REVEAL_HOLD_MS);
         veil.classList.add('is-revealing');
-        await wait(REDUCED_MOTION ? 120 : 700);
+        await wait(REDUCED_MOTION ? 120 : 380);
         veil.classList.remove('is-active', 'is-revealing');
         root.classList.remove('pt-arriving');
       });
