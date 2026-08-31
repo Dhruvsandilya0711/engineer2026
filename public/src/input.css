@@ -388,10 +388,10 @@
    page having lost its place rather than as breathing room. */
 .section-y { padding-block: clamp(2rem, 3.6vh, 3.25rem); }
 .section-y-lg { padding-block: clamp(2.5rem, 4.4vh, 4rem); }
-/* The section directly under the hero. The hero is a full fold whose content
-   is centred, so it already hands over ~185px of clear screen — a matching
-   top pad on top of that read as one 270px void. Tight above, normal below. */
-.intro-y { padding-block: clamp(0.75rem, 1.6vh, 1.5rem) clamp(2.25rem, 4vh, 3.5rem); }
+/* The section directly under the hero. Hand the hero a bit more breathing
+   room below its motto (top pad up), and pull the transformation section
+   in closer under the "Reality isn't fixed" line (bottom pad down). */
+.intro-y { padding-block: clamp(1.75rem, 3.4vh, 3rem) clamp(1.25rem, 2.2vh, 2rem); }
 
 /* reveal-on-scroll target */
 [data-reveal] {
@@ -2365,6 +2365,34 @@ html.cx-native .cx-ring { opacity: 0; }
 /* The rules either side of the date read as dividers, so they carry a little
    extra air without reintroducing fixed margins. */
 .hero-main > span[aria-hidden] { margin-block: clamp(0.15rem, 0.8vh, 0.7rem); }
+
+/* Three-word manifesto under the countdown. Sits at the mono/uppercase
+   register of the status strip so it reads as ENGINEER chrome rather than
+   headline copy; the periods are cyan instrument marks. */
+.hero-motto {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28em;
+  margin-top: clamp(0.55rem, 1.4vh, 1.1rem);
+  font-family: var(--font-mono);
+  font-size: clamp(0.66rem, 2.1vw, 0.82rem);
+  letter-spacing: 0.44em;
+  text-indent: 0.44em;                 /* balances the trailing letter-spacing */
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+.hero-motto__word { color: inherit; }
+.hero-motto__dot {
+  color: var(--color-cyan);
+  letter-spacing: 0;
+  margin-left: -0.2em;                 /* period hugs its word */
+  margin-right: 0.35em;
+  text-shadow: 0 0 8px color-mix(in oklab, var(--color-cyan) 55%, transparent);
+}
+.hero-motto__dot:last-child { margin-right: 0; }
+@media (max-width: 479px) {
+  .hero-motto { gap: 0.2em; letter-spacing: 0.32em; text-indent: 0.32em; }
+}
 
 
 /* ==================================================================
