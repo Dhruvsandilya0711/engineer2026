@@ -393,6 +393,60 @@
    in closer under the "Reality isn't fixed" line (bottom pad down). */
 .intro-y { padding-block: clamp(1.75rem, 3.4vh, 3rem) clamp(1.25rem, 2.2vh, 2rem); }
 
+/* Chapter dateline used at the top of #cognitrixx. Reads as a single
+   instrument stamp — mono, uppercase, wide tracking, cyan bullet, hairline
+   rules on either side that shrink at phone widths. */
+.intro-when {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.6vw, 0.9rem);
+  padding: 0.35rem 0.15rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 2.1vw, 0.84rem);
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+.intro-when__rule {
+  display: inline-block;
+  width: clamp(28px, 6vw, 60px);
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-cyan) 55%, transparent) 100%);
+}
+.intro-when__rule:last-child {
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--color-cyan) 55%, transparent) 0%,
+    transparent 100%);
+}
+.intro-when__d { color: var(--paper); }
+.intro-when__w {
+  /* "Join Us" reads as invitation, not location — nudge it to full paper
+     and give it a subtle underline in the cyan accent so it lands as the
+     stamp's active half. */
+  color: var(--paper);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-cyan) 45%, transparent);
+  padding-bottom: 2px;
+}
+.intro-when__dot {
+  color: var(--color-cyan);
+  letter-spacing: 0;
+  text-indent: 0;
+  text-shadow: 0 0 8px color-mix(in oklab, var(--color-cyan) 55%, transparent);
+}
+@media (max-width: 479px) {
+  .intro-when {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.25rem;
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+  }
+  .intro-when__rule { width: 22px; }
+}
+
 /* reveal-on-scroll target */
 [data-reveal] {
   opacity: 0;
@@ -2375,11 +2429,12 @@ html.cx-native .cx-ring { opacity: 0; }
   gap: 0.28em;
   margin-top: clamp(0.55rem, 1.4vh, 1.1rem);
   font-family: var(--font-mono);
-  font-size: clamp(0.66rem, 2.1vw, 0.82rem);
+  font-weight: 700;                    /* Space Mono Bold */
+  font-size: clamp(0.54rem, 1.68vw, 0.69rem);   /* -20% after bolding */
   letter-spacing: 0.44em;
   text-indent: 0.44em;                 /* balances the trailing letter-spacing */
   text-transform: uppercase;
-  color: var(--paper-dim);
+  color: var(--paper);
 }
 .hero-motto__word { color: inherit; }
 .hero-motto__dot {

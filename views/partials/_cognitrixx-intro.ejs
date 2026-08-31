@@ -5,7 +5,18 @@
      ========================================================================== -->
 <section id="cognitrixx" class="relative intro-y px-6">
   <div class="max-w-4xl mx-auto text-center">
-    <h2 class="font-display font-bold text-4xl sm:text-6xl leading-[1.05]" data-reveal>
+    <!-- Chapter dateline — the fest's "when + where" as an instrument
+         stamp above the thesis. Cyan periods echo the HUD chrome and the
+         motto in the hero above; the hairlines either side frame it as a
+         single line rather than a caption. -->
+    <p class="intro-when" aria-label="<%= festDates.display %>. Join us." data-reveal>
+      <span class="intro-when__rule" aria-hidden="true"></span>
+      <span class="intro-when__d"><%= festDates.display %></span>
+      <span class="intro-when__dot" aria-hidden="true">·</span>
+      <span class="intro-when__w">Join Us</span>
+      <span class="intro-when__rule" aria-hidden="true"></span>
+    </p>
+    <h2 class="font-display font-bold text-4xl sm:text-6xl leading-[1.05] mt-6" data-reveal>
       Reality isn't fixed.<br>
       <span class="text-gradient-impossible">It's engineered.</span>
     </h2>
