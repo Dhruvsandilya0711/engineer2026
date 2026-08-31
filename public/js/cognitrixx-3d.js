@@ -297,13 +297,25 @@ export function createNeuralField(host, opts = {}) {
       }
       nodeGeo.attributes.position.needsUpdate = true;
 
-      // Gentle curved path: the camera drifts on x/y (plus pointer parallax)
-      // but keeps looking down the corridor — no constant rotation.
-      pointer.x += (pointer.tx - pointer.x) * 0.05;
-      pointer.y += (pointer.ty - pointer.y) * 0.05;
-      camera.position.x += ((Math.sin(scroll.progress * Math.PI * 3) * 1.7) + pointer.x * 1.3 - camera.position.x) * 0.05;
-      camera.position.y += ((Math.cos(scroll.progress * Math.PI * 2) * 1.1) - pointer.y * 0.9 - camera.position.y) * 0.05;
-      camera.lookAt(0, 0, -20);
+      // Pointer-driven parallax — sensitivity dialled up so the field
+      // visibly leans with the cursor (was 1.3/-0.9 with a 0.05 lerp; now
+      // 3.6/-2.7 with a 0.10 lerp). Combined with a look-at that follows
+      // the cursor in world space, the near nodes swing more than the far
+      // ones and the corridor reads as a real 3D volume rather than a
+      // static backdrop.
+      pointer.x += (pointer.tx - pointer.x) * 0.10;
+      pointer.y += (pointer.ty - pointer.y) * 0.10;
+      camera.position.x += ((Math.sin(scroll.progress * Math.PI * 3) * 1.7) + pointer.x * 3.6 - camera.position.x) * 0.08;
+      camera.position.y += ((Math.cos(scroll.progress * Math.PI * 2) * 1.1) - pointer.y * 2.7 - camera.position.y) * 0.08;
+      // A subtle pointer-led group rotation on top of the camera shift.
+      // Near nodes travel more than far ones under camera-only motion, but
+      // the added yaw/pitch pushes the whole cloud around the look-at
+      // point, doubling the sense of depth.
+      group.rotation.y += (pointer.x * 0.12 - group.rotation.y) * 0.08;
+      group.rotation.x += (-pointer.y * 0.09 - group.rotation.x) * 0.08;
+      // Look-at chases the cursor a little into world space so the framing
+      // recomposes as you move around, not just a lateral pan.
+      camera.lookAt(pointer.x * 2.4, -pointer.y * 1.8, -20);
 
       // Connections brighten with scroll speed; signals accelerate. Kept low at
       // rest so the lit NODES carry the image and the links read as the depth

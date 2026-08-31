@@ -115,7 +115,7 @@ export function createMarkField(host, img, opts = {}) {
   if (!host || !hasWebGL()) return null;
 
   const isSmall = window.innerWidth < 900;
-  const { cover, w, h } = sampleMark(img, opts.sample || (isSmall ? 96 : 132));
+  const { cover, w, h } = sampleMark(img, opts.sample || (isSmall ? 112 : 152));
   const ON = 0.40;                              // coverage threshold
   const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? 0 : cover[y * w + x]);
 
