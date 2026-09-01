@@ -3267,49 +3267,129 @@ html.pl-skip #preloader { display: none; }
    coloured, unobtrusive; brightens when unmuted (music is playing) so the
    user can see the state at a glance without hovering.
    ================================================================== */
+/* Audio toggle — a round instrument dial. A rotating conic-gradient
+   scan lives on the border (like the radar sweep on the game's node),
+   the fill is deep glass, and the speaker icon sits inside a cyan
+   halo. When the music is on the scan brightens and speeds up and a
+   soft outer glow pulses so the button quietly telegraphs "signal
+   flowing". Same instrument-panel language as the HUD in the hero
+   and the emitter chassis in the game. */
 .audio-toggle {
   position: fixed;
   right: clamp(0.9rem, 2vw, 1.5rem);
   bottom: clamp(0.9rem, 2vw, 1.5rem);
   z-index: 60;
-  width: 51px;
-  height: 51px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: rgba(6, 8, 14, 0.72);
+  isolation: isolate;
+  width: 54px;
+  height: 54px;
+  padding: 2px;                              /* space for the border ring */
+  display: inline-grid;
+  place-items: center;
   color: var(--paper-dim);
-  border: 1px solid var(--hairline-strong);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
   cursor: pointer;
-  transition: color var(--dur-base) var(--ease-standard),
-              border-color var(--dur-base) var(--ease-standard),
-              transform var(--dur-base) var(--ease-standard),
-              box-shadow var(--dur-base) var(--ease-standard);
+  transition: color 240ms var(--ease-standard),
+              transform 200ms var(--ease-out),
+              opacity 260ms var(--ease-standard);
 }
+/* Rotating conic border — the "scan". Sits behind the glass core and
+   spins slowly at rest, faster while playing. */
+.audio-toggle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg,
+    color-mix(in oklab, var(--color-cyan) 70%, transparent) 0deg,
+    color-mix(in oklab, var(--color-cyan) 12%, transparent) 90deg,
+    transparent 180deg,
+    color-mix(in oklab, var(--color-magenta) 22%, transparent) 260deg,
+    color-mix(in oklab, var(--color-cyan) 70%, transparent) 360deg);
+  animation: audio-scan 6.5s linear infinite;
+  z-index: 0;
+  opacity: 0.55;
+  transition: opacity 260ms var(--ease-standard);
+}
+/* Deep glass core — sits inside the scan ring, hosting the icon. */
+.audio-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 999px;
+  background:
+    radial-gradient(120% 120% at 30% 20%,
+      rgba(103, 232, 249, 0.10) 0%,
+      rgba(6, 8, 14, 0.85) 55%,
+      rgba(6, 8, 14, 0.92) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.55),
+              inset 0 0 12px rgba(6, 8, 14, 0.55);
+  z-index: 1;
+  transition: box-shadow 240ms var(--ease-standard);
+}
+.audio-toggle svg {
+  display: block;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 6px color-mix(in oklab, currentColor 55%, transparent));
+  transition: transform 240ms var(--ease-out), filter 240ms var(--ease-standard);
+}
+
+@keyframes audio-scan {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes audio-glow {
+  0%, 100% { box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-cyan) 22%, transparent),
+                          0 8px 28px -14px rgba(103, 232, 249, 0.75); }
+  50%      { box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-cyan) 40%, transparent),
+                          0 12px 34px -12px rgba(103, 232, 249, 1); }
+}
+
 .audio-toggle:hover,
 .audio-toggle:focus-visible {
   color: var(--paper);
-  border-color: var(--color-cyan);
   outline: none;
   transform: translateY(-1px);
 }
+.audio-toggle:hover::before,
+.audio-toggle:focus-visible::before {
+  opacity: 0.9;
+  animation-duration: 3.2s;                  /* spin up on hover */
+}
+.audio-toggle:hover svg,
+.audio-toggle:focus-visible svg {
+  transform: scale(1.06);
+}
+.audio-toggle:active { transform: translateY(0); }
+
 .audio-toggle.is-on {
   color: var(--color-cyan);
-  border-color: rgba(99, 220, 246, 0.55);
-  box-shadow: 0 0 0 1px rgba(99, 220, 246, 0.18), 0 6px 20px -8px rgba(99, 220, 246, 0.4);
+  animation: audio-glow 3s var(--ease-standard) infinite;
 }
-.audio-toggle svg { display: block; }
+.audio-toggle.is-on::before {
+  opacity: 0.95;
+  animation-duration: 4.2s;                  /* faster scan while playing */
+}
+
 @media (max-width: 640px) {
-  .audio-toggle { width: 49px; height: 49px; }
+  .audio-toggle { width: 50px; height: 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audio-toggle,
+  .audio-toggle::before,
+  .audio-toggle svg { transition: none; animation: none; }
+  .audio-toggle.is-on { animation: none; }
+  .audio-toggle:hover { transform: none; }
 }
 
 /* Preloader owns the screen — the audio pill would poke through the wipe. */
 .pl-locked .audio-toggle,
 body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
-.audio-toggle { transition: color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard), opacity 260ms var(--ease-standard); }
 
 
 /* ==================================================================
