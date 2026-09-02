@@ -1,47 +1,42 @@
 /* ==========================================================================
    SIGNAL RANGE LEADERBOARD — client.
 
-   Listens for the game's `e26:range:runend` event, offers to submit the run,
-   and renders the two boards (score and streak). The game itself knows
-   nothing about names, networks or prizes; this module is the whole bridge.
+   Listens for the game's `e26:range:runend`, submits the run, and renders
+   the two boards (score and streak). The game knows nothing about names,
+   networks or prizes; this module is the whole bridge.
 
-   PHASE 1: the score is computed in the browser, so what gets posted is a
-   CLAIM. The board says so on its face — see lib/leaderboard.js for why that
-   label matters while two ₹2,500 prizes are attached to it.
+   The NAME is chosen on the start screen before a run begins, so there is
+   no form here — a finished run submits on its own and this panel reports
+   what the SERVER scored it and where that placed. That ordering matters:
+   a run goes onto a public prize board the moment it ends, so the player
+   has to have picked their public name before earning a score with it.
 
-   SAVE ends the run (the game enforces that, not this module): banking a
-   score and playing on would let a player re-save after every lucky shot.
-   LOAD restores the handle and personal best held on this device — it does
-   NOT restore a run in progress, for the same reason.
+   Nothing here sends a score. It sends the seed the server issued and the
+   inputs the player made; the server replays that trace through the same
+   simulation to derive the score. See lib/leaderboard.js.
    ========================================================================== */
 
 const NAME_KEY = 'e26.signalRange.name';
 const BEST_KEY = 'e26.signalRange.best';
 
 const get = (k) => { try { return localStorage.getItem(k); } catch (_) { return null; } };
-const set = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
 
 export function mountLeaderboard() {
   const host = document.querySelector('[data-js="range-board"]');
   if (!host) return;
 
-  const arena     = document.querySelector('[data-js="signal-game-mount"]');
-  const panel     = host.querySelector('[data-js="lb-panel"]');
-  const form      = host.querySelector('[data-js="lb-form"]');
-  const nameInput = host.querySelector('[data-js="lb-name"]');
-  const summary   = host.querySelector('[data-js="lb-summary"]');
-  const msg       = host.querySelector('[data-js="lb-msg"]');
-  const dismiss   = host.querySelector('[data-js="lb-dismiss"]');
-  const loadBtn   = document.querySelector('[data-js="sg-load"]');
-  const tabs      = [...host.querySelectorAll('[data-js="lb-tab"]')];
-  const bodies    = {
+  const arena   = document.querySelector('[data-js="signal-game-mount"]');
+  const panel   = host.querySelector('[data-js="lb-panel"]');
+  const summary = host.querySelector('[data-js="lb-summary"]');
+  const msg     = host.querySelector('[data-js="lb-msg"]');
+  const dismiss = host.querySelector('[data-js="lb-dismiss"]');
+  const loadBtn = document.querySelector('[data-js="sg-load"]');
+  const tabs    = [...host.querySelectorAll('[data-js="lb-tab"]')];
+  const bodies  = {
     score:  host.querySelector('[data-js="lb-body-score"]'),
     streak: host.querySelector('[data-js="lb-body-streak"]'),
   };
 
-  const submitBtn = host.querySelector('[data-js="lb-go"]');
-
-  let pending = null;          // the run awaiting submission
   let busy = false;
 
   const say = (text, tone = '') => {
@@ -49,12 +44,9 @@ export function mountLeaderboard() {
     msg.className = 'lb-msg' + (tone ? ' lb-msg--' + tone : '');
   };
 
-  // The panel is opened by two different things — a finished run, and Load —
-  // and only one of them has something to submit. Without this the Load view
-  // shows a live Save button that silently does nothing.
-  const setPending = (run) => {
-    pending = run;
-    if (submitBtn) submitBtn.disabled = !run;
+  const open = (summaryText) => {
+    panel.hidden = false;
+    summary.textContent = summaryText || '';
   };
 
   // ---- boards ------------------------------------------------------------
@@ -108,53 +100,18 @@ export function mountLeaderboard() {
   });
 
   // ---- submission --------------------------------------------------------
-  function offer(run, reason) {
-    setPending(run);
-    summary.textContent = `${run.score} pts · best streak ×${run.streak} · ${run.hits}/${run.shots} hits`;
-    panel.hidden = false;
-    panel.dataset.reason = reason;
-    say(reason === 'lost' ? 'Run over. Save it to the board?' : 'Run banked. Save it to the board?');
-    const saved = get(NAME_KEY);
-    if (saved) nameInput.value = saved;
-    // Don't yank focus on a lost run — the player may just want to replay.
-    if (reason !== 'lost') nameInput.focus();
-  }
-
-  arena?.addEventListener('e26:range:runend', (e) => {
-    const { run, reason } = e.detail;
-    if (run.score <= 0 && run.streak <= 0) return;   // nothing worth saving
-    // A run played without a server-issued seed cannot be verified, so it
-    // cannot go on the board. Say why rather than failing at submit time.
-    if (!run.session) {
-      panel.hidden = false;
-      setPending(null);
-      summary.textContent = `${run.score} pts · best streak ×${run.streak}`;
-      say('This run started without a connection, so it can’t be verified. Play another to get on the board.', 'bad');
-      return;
-    }
-    offer(run, reason);
-  });
-
-  dismiss?.addEventListener('click', () => { panel.hidden = true; setPending(null); });
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!pending || busy) return;
+  async function submit(run) {
+    const name = (get(NAME_KEY) || '').trim();
+    if (!name) { say('No name set — start a run and enter one first.', 'bad'); return; }
+    if (busy) return;
     busy = true;
     say('Saving…');
 
     try {
-      // Only the NAME and the run's inputs go up. The score is not sent at
-      // all — the server derives it by replaying these shots against the seed
-      // it issued, so there is nothing here worth tampering with.
       const res = await fetch('/api/range/score', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          name: nameInput.value.trim(),
-          session: pending.session,
-          shots: pending.shotTrace,
-        }),
+        body: JSON.stringify({ name, session: run.session, shots: run.shotTrace }),
       });
       const data = await res.json();
 
@@ -165,31 +122,44 @@ export function mountLeaderboard() {
         return;
       }
 
-      set(NAME_KEY, nameInput.value.trim());
-      setPending(null);
-      // Show the SERVER's figure. If it differs from what the player watched,
-      // the honest thing is to show the one that actually went on the board.
-      const verified = data.run || {};
-      say(`Saved: ${verified.score} pts, streak ×${verified.streak} — `
+      // Report the SERVER's figure. If it ever differs from what the player
+      // watched, the number that went on the board is the honest one to show.
+      const v = data.run || {};
+      say(`Saved as “${name}”: ${v.score} pts, streak ×${v.streak} — `
         + `#${data.rank.score} on score, #${data.rank.streak} on streak.`, 'good');
       await refresh();
-      setTimeout(() => { panel.hidden = true; }, 2600);
     } catch (_) {
       say('Network error — the run was not saved.', 'bad');
     }
     busy = false;
+  }
+
+  arena?.addEventListener('e26:range:runend', (e) => {
+    const { run } = e.detail;
+    if (run.score <= 0 && run.streak <= 0) return;   // nothing worth saving
+
+    open(`${run.score} pts · best streak ×${run.streak} · ${run.hits}/${run.shots} hits`);
+
+    // A run played without a server-issued seed cannot be verified, so it
+    // cannot go on the board. Say why rather than failing silently.
+    if (!run.session) {
+      say('This run started without a connection, so it can’t be verified. Play another to get on the board.', 'bad');
+      return;
+    }
+    submit(run);
   });
 
+  dismiss?.addEventListener('click', () => { panel.hidden = true; });
+
   // ---- load --------------------------------------------------------------
-  // Restores who you are on this device, not a run in progress.
+  // Shows who this device plays as and its personal best. It does not restore
+  // a run in progress: banking a score and resuming would let a player re-save
+  // after every lucky shot.
   loadBtn?.addEventListener('click', () => {
     const name = get(NAME_KEY);
     const best = get(BEST_KEY);
-    panel.hidden = false;
-    setPending(null);
-    summary.textContent = best ? `Personal best on this device: ${best} pts` : 'No saved runs on this device yet.';
-    nameInput.value = name || '';
-    say(name ? `Loaded handle “${name}”. Play a run to add to the board.` : 'No handle saved here yet — finish a run and save one.');
+    open(best ? `Personal best on this device: ${best} pts` : 'No runs saved on this device yet.');
+    say(name ? `Playing as “${name}”. Change it on the start screen.` : 'No name set yet — start a run to choose one.');
   });
 
   refresh();

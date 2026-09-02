@@ -2705,6 +2705,102 @@ html.cx-native .cx-ring { opacity: 0; }
 }
 .sg-chip:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
 
+/* ---- START SCREEN ------------------------------------------------
+   Covers the arena until the player has entered a name and pressed
+   Start. Nothing simulates behind it, so this is also what stops a
+   half-watched game burning frames on every page load. */
+.sg-start {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: color-mix(in oklab, var(--color-void) 78%, transparent);
+  backdrop-filter: blur(4px);
+}
+.sg-start[hidden] { display: none; }
+.sg-start__box {
+  width: min(380px, 100%);
+  text-align: center;
+  border: 1px solid var(--hairline-strong);
+  background: color-mix(in oklab, var(--color-void) 80%, transparent);
+  padding: clamp(1rem, 3vw, 1.6rem);
+}
+.sg-start__k {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+}
+.sg-start__t {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 3.2vw, 1.5rem);
+  margin-top: 0.35rem;
+  color: var(--paper);
+}
+.sg-start__sum {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--color-cyan);
+}
+.sg-start__lab {
+  display: block;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.sg-start__input {
+  width: 100%;
+  margin-top: 0.4rem;
+  background: transparent;
+  border: 1px solid var(--hairline-strong);
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--paper);
+}
+.sg-start__input:focus { outline: none; border-color: var(--color-cyan); }
+.sg-start__err {
+  min-height: 1.1em;
+  margin-top: 0.35rem;
+  font-size: 0.66rem;
+  color: var(--color-error);
+}
+.sg-start__go {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-void);
+  background: var(--color-cyan);
+  border: 1px solid var(--color-cyan);
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.sg-start__go:hover { filter: brightness(1.12); }
+.sg-start__go:disabled { opacity: 0.55; cursor: wait; }
+.sg-start__go:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 3px; }
+.sg-start__note,
+.sg-start__privacy {
+  margin-top: 0.75rem;
+  font-size: 0.66rem;
+  line-height: 1.5;
+  color: var(--paper-dim);
+}
+.sg-start__privacy { font-size: 0.6rem; color: var(--paper-faint); }
+
 .lb {
   max-width: 720px;
   margin: clamp(1.5rem, 4vh, 2.75rem) auto 0;
@@ -2781,22 +2877,12 @@ html.cx-native .cx-ring { opacity: 0; }
 
 .lb__panel { margin-top: 1.25rem; border: 1px solid var(--hairline-strong); padding: 1rem; }
 .lb__summary { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--paper); }
-.lb__form { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; align-items: center; }
-.lb__input {
-  flex: 1 1 12rem;
-  min-width: 0;
-  background: transparent;
-  border: 1px solid var(--hairline-strong);
-  padding: 0.55rem 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--paper);
-}
-.lb__input:focus { outline: none; border-color: var(--color-cyan); }
-.lb__go { flex: none; }
-.lb__go:disabled { opacity: 0.4; cursor: not-allowed; }
+/* The submit form that used to live here is gone: the name is taken on the
+   start screen, so a finished run submits itself and this panel only reports
+   the result. */
 .lb__dismiss {
-  flex: none;
+  display: inline-block;
+  margin-top: 0.6rem;
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.14em;
@@ -3992,11 +4078,15 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
 .signal-range__arena {
   position: relative;
   width: min(1280px, calc(100% - 2rem));
-  /* Matches the simulation's fixed 1280x620 field (public/js/range-sim.js),
-     so the contain-fit that maps logical units to the canvas leaves no
-     letterbox at all on anything above phone width. The min-height keeps a
-     narrow screen playable; there the field centres with small bars. */
-  aspect-ratio: 1280 / 620;
+  /* Height tracks the simulation's fixed 1280x620 field
+     (public/js/range-sim.js) so the contain-fit leaves no letterbox — but it
+     is ALSO capped to the viewport, because the player has to see the
+     emitter and the target at the same time. A laptop was getting a 620px
+     arena that did not fit on screen, which made the game unplayable even
+     though it was running correctly. Where the cap binds, the field simply
+     centres with side bars: it stays 1280x620 for everyone, which is what
+     keeps the two prizes fair. */
+  height: min(620px, 68svh, calc((100vw - 2rem) * 620 / 1280));
   min-height: 260px;
   border: 1px solid var(--hairline-strong);
   border-radius: 6px;

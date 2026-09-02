@@ -67,6 +67,13 @@ export function mountSignalGame() {
   const livesEl  = host.querySelector('[data-js="sg-lives"]');
   const resetBtn = host.querySelector('[data-js="sg-reset"]');
   const saveBtn  = host.querySelector('[data-js="sg-save"]');
+  const startEl   = host.querySelector('[data-js="sg-start"]');
+  const startGo   = host.querySelector('[data-js="sg-start-go"]');
+  const nameInput = host.querySelector('[data-js="sg-name"]');
+  const nameErr   = host.querySelector('[data-js="sg-name-err"]');
+  const startTitle= host.querySelector('[data-js="sg-start-title"]');
+  const startKick = host.querySelector('[data-js="sg-start-kicker"]');
+  const startSum  = host.querySelector('[data-js="sg-start-summary"]');
   const lifeDots = livesEl ? Array.from(livesEl.querySelectorAll('.signal-range__life')) : [];
 
   const state = {
@@ -111,6 +118,60 @@ export function mountSignalGame() {
   let trace = [];                       // [{ tick, angle, charge }] — the run
   let accum = 0;                        // leftover ms between fixed ticks
   let lastNow = 0;
+
+  // ---- start screen --------------------------------------------------------
+  // The name is taken BEFORE a run, because a finished run is submitted to a
+  // prize board automatically — the player has to be able to choose the name
+  // that appears publicly before they earn a score with it, not after.
+  const NAME_KEY = 'e26.signalRange.name';
+  const NAME_RE = /^[\p{L}\p{N} _.'-]{2,20}$/u;
+  let armed = false;                    // has the player pressed Start?
+
+  function showStart({ title, kicker, summary } = {}) {
+    armed = false;
+    if (!startEl) return;
+    startEl.hidden = false;
+    if (title)  startTitle.textContent = title;
+    if (kicker) startKick.textContent = kicker;
+    if (startSum) {
+      startSum.hidden = !summary;
+      if (summary) startSum.textContent = summary;
+    }
+    if (startGo) startGo.disabled = false;
+  }
+
+  function hideStart() {
+    armed = true;
+    if (startEl) startEl.hidden = true;
+  }
+
+  try {
+    const saved = localStorage.getItem(NAME_KEY);
+    if (saved && nameInput) nameInput.value = saved;
+  } catch (_) {}
+
+  startGo?.addEventListener('click', async () => {
+    const name = (nameInput?.value || '').trim();
+    if (!NAME_RE.test(name)) {
+      nameErr.textContent = 'Use 2–20 characters: letters, numbers, spaces, . _ - \'';
+      nameInput?.focus();
+      return;
+    }
+    nameErr.textContent = '';
+    try { localStorage.setItem(NAME_KEY, name); } catch (_) {}
+    startGo.disabled = true;
+    startGo.textContent = 'Opening channel…';
+    await beginRun();
+    startGo.textContent = 'Start run';
+    hideStart();
+    canvas.focus();
+  });
+
+  nameInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); startGo?.click(); }
+  });
+
+  showStart();
 
   async function beginRun() {
     trace = [];
@@ -227,7 +288,7 @@ export function mountSignalGame() {
   // freeze prevents an in-flight click from starting the next charge on top
   // of the "SIGNAL LOST" flash. Both the lose-condition and the Restart
   // button funnel through restartRun so the arena reboots the same way.
-  function restartRun(text, color, sound) {
+  function restartRun(text, color, sound, resume = true) {
     if (state.charging) {
       state.charging = false; state.charge = 0;
       chargeEl.style.width = '0%';
@@ -249,8 +310,10 @@ export function mountSignalGame() {
     sfx(sound);
     state.lockUntil = state.time + 900;
     // A new run means a NEW SEED from the server. Wind and the opening node
-    // come from that seed, so there is nothing to randomise here.
-    beginRun();
+    // come from that seed, so there is nothing to randomise here. A run that
+    // just ENDED does not reopen automatically — the start screen takes over,
+    // so the player chooses when the next run (and next seed) begins.
+    if (resume) beginRun(); else sim = null;
     // Ping the Restart chip so it flashes and its icon spins even when the
     // reboot came from an internal trigger (lose or R key), not a click.
     if (resetBtn) {
@@ -288,11 +351,17 @@ export function mountSignalGame() {
   // would quietly hollow out the streak prize.
   function endRun(reason) {
     const run = snapshotRun();
-    if (reason === 'lost') restartRun('SIGNAL LOST — RESTART', MAGENTA, 'miss');
-    else restartRun('RUN BANKED', CYAN, 'spawn');
+    restartRun(reason === 'lost' ? 'SIGNAL LOST' : 'RUN BANKED',
+               reason === 'lost' ? MAGENTA : CYAN,
+               reason === 'lost' ? 'miss' : 'spawn', false);
     host.dispatchEvent(new CustomEvent('e26:range:runend', {
       detail: { run, reason }, bubbles: true,
     }));
+    showStart({
+      kicker: reason === 'lost' ? 'Signal lost' : 'Run banked',
+      title: 'Run again?',
+      summary: `${run.score} pts · best streak ×${run.streak} · ${run.hits}/${run.shots} hits`,
+    });
   }
 
   function gameOver() { endRun('lost'); }
@@ -450,8 +519,6 @@ export function mountSignalGame() {
   };
   const ro = new ResizeObserver(resize); ro.observe(canvas);
   resize();
-  // Ask the server for the opening seed. Play starts as soon as it lands.
-  beginRun();
   // Node placement, wind and the exclusion zones all moved into range-sim.js:
   // they decide where the target goes, so they must be identical on the
   // server that replays the run. The zones are now FIXED logical rects
@@ -483,7 +550,7 @@ export function mountSignalGame() {
   });
   const start = (e) => {
     if (state.projectile) return;
-    if (state.time < state.lockUntil) return;
+    if (!armed || !sim || state.time < state.lockUntil) return;
     const p = localPt(e); state.pointer.x = p.x; state.pointer.y = p.y;
     state.pointer.inside = true;
     state.charging = true;
@@ -500,7 +567,7 @@ export function mountSignalGame() {
   // Keyboard: space to charge/release. Focus lands on the canvas via tabindex.
   canvas.tabIndex = 0;
   canvas.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && !state.charging && !state.projectile && state.time >= state.lockUntil) {
+    if (e.code === 'Space' && armed && sim && !state.charging && !state.projectile && state.time >= state.lockUntil) {
       state.charging = true; state.charge = 0; state.chargeStart = performance.now();
       e.preventDefault();
     }

@@ -18,6 +18,36 @@
   <div class="signal-range__arena" data-js="signal-game-mount">
     <canvas class="signal-range__canvas" data-js="signal-game" aria-label="Signal firing range game"></canvas>
 
+    <%# START SCREEN. The name is taken BEFORE the run, not after it: a run
+        is submitted to a prize board the moment it ends, so the player has
+        to know they are entering one — and be able to choose the name that
+        will appear publicly — before they start playing rather than after
+        they have already earned a score. Nothing simulates until Start. %>
+    <div class="sg-start" data-js="sg-start">
+      <div class="sg-start__box">
+        <p class="sg-start__k" data-js="sg-start-kicker">Signal range</p>
+        <h3 class="sg-start__t" data-js="sg-start-title">Ready to transmit?</h3>
+        <p class="sg-start__sum" data-js="sg-start-summary" hidden></p>
+
+        <label class="sg-start__lab" for="sg-name">Name for the leaderboard</label>
+        <input class="sg-start__input" id="sg-name" data-js="sg-name" type="text"
+               maxlength="20" placeholder="Your name" autocomplete="nickname" spellcheck="false">
+        <p class="sg-start__err" data-js="sg-name-err" role="alert"></p>
+
+        <button type="button" class="sg-start__go" data-js="sg-start-go">Start run</button>
+
+        <p class="sg-start__note">
+          <span class="signal-range__hint">Aim</span> with the pointer,
+          <span class="signal-range__hint">hold</span> to charge,
+          <span class="signal-range__hint">release</span> to fire. Three misses ends the run.
+        </p>
+        <p class="sg-start__privacy">
+          Your name is shown publicly on the leaderboard below. Finished runs are
+          submitted automatically.
+        </p>
+      </div>
+    </div>
+
     <div class="signal-range__hud">
       <!-- Score / Streak / Signal are role=status live regions so a screen
            reader hears every change. Best is silent — it only bumps on a new
@@ -125,23 +155,17 @@
 
     <p class="lb__err" data-js="lb-error" hidden>Leaderboard unavailable right now.</p>
 
-    <!-- Submit panel — revealed when a run ends, or by Load. -->
+    <%# RESULT panel. There is no name field here any more — the name is taken
+        on the start screen, so a finished run submits on its own and this
+        just reports what the SERVER scored it and where that placed. %>
     <div class="lb__panel" data-js="lb-panel" hidden>
       <p class="lb__summary" data-js="lb-summary"></p>
-      <form class="lb__form" data-js="lb-form">
-        <label class="sr-only" for="lb-name">Your name for the leaderboard</label>
-        <input class="lb__input" id="lb-name" data-js="lb-name" type="text"
-               placeholder="Your name" maxlength="20" autocomplete="nickname" required>
-        <button type="submit" class="btn btn-primary lb__go" data-js="lb-go">Save to board</button>
-        <button type="button" class="lb__dismiss" data-js="lb-dismiss">Not now</button>
-      </form>
       <p class="lb-msg" data-js="lb-msg" role="status" aria-live="polite"></p>
-      <%# Names go on a public page, so say so where the name is typed rather
-          than in a policy nobody opens. %>
+      <button type="button" class="lb__dismiss" data-js="lb-dismiss">Dismiss</button>
       <p class="lb__privacy">
-        The name you enter is shown publicly on this page. We also store a
-        one-way hash of your IP address to limit repeat submissions — it is
-        never displayed and cannot be reversed to your address.
+        Names are shown publicly on this page. We also store a one-way hash of
+        your IP address to limit repeat submissions — it is never displayed and
+        cannot be reversed to your address.
       </p>
     </div>
   </div>
