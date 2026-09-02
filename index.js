@@ -6,6 +6,10 @@ import path from 'path'
 import {readFileSync} from 'fs';
 import {networkInterfaces} from 'os';
 import {initRegistrationStore, validate, saveRegistration, storeMode} from './lib/registration.js';
+import {
+  initLeaderboardStore, leaderboardMode, hasStableSalt,
+  hashIp, validateRun, rateLimit, saveRun, topRuns, rankFor, hideRun,
+} from './lib/leaderboard.js';
 
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = dirname(__fileName)
@@ -266,6 +270,61 @@ app.post('/register', async (req, res) => {
   });
 });
 
+// -------------------------------------------------------- signal range board
+// PHASE 1: the browser reports its own score, so these numbers are CLAIMS.
+// lib/leaderboard.js rejects runs that are impossible under the game's own
+// scoring rules, which stops a hand-edited payload but not a patched client —
+// the board is labelled unverified for exactly that reason. Do not settle the
+// two ₹2,500 prizes on these alone; see the note at the top of that module.
+
+const clientIp = (req) =>
+  (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+  || req.socket?.remoteAddress || '';
+
+app.get('/api/range/leaderboard', async (req, res) => {
+  try {
+    const limit = Math.min(25, Math.max(1, Number(req.query.limit) || 10));
+    const [score, streak] = await Promise.all([
+      topRuns('score', limit),
+      topRuns('streak', limit),
+    ]);
+    res.json({ ok: true, verified: false, boards: { score, streak } });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Leaderboard unavailable.' });
+  }
+});
+
+app.post('/api/range/score', async (req, res) => {
+  try {
+    const { valid, errors, value } = validateRun(req.body || {});
+    if (!valid) return res.status(400).json({ ok: false, errors });
+
+    const ipHash = hashIp(clientIp(req));
+    const gate = await rateLimit(ipHash);
+    if (!gate.ok) return res.status(429).json({ ok: false, errors: { form: gate.reason } });
+
+    const { id } = await saveRun(value, ipHash);
+    const [scoreRank, streakRank] = await Promise.all([
+      rankFor('score', value.score),
+      rankFor('streak', value.streak),
+    ]);
+    res.json({ ok: true, id, rank: { score: scoreRank, streak: streakRank } });
+  } catch (err) {
+    res.status(500).json({ ok: false, errors: { form: 'Could not save that run.' } });
+  }
+});
+
+// Moderation. A public free-text board WILL collect names that have to come
+// off it; this is the way to do that without a database client. Requires
+// ADMIN_TOKEN to be set — with no token configured the route stays closed
+// rather than defaulting to open.
+app.post('/api/range/hide', async (req, res) => {
+  const token = process.env.ADMIN_TOKEN;
+  if (!token || req.get('x-admin-token') !== token) return res.status(404).end();
+  const ok = await hideRun(String(req.body?.id || ''), req.body?.hidden !== false);
+  res.status(ok ? 200 : 404).json({ ok });
+});
+
 app.use((req, res) => {
   res.status(404).render('404', { url: req.originalUrl });
 });
@@ -282,6 +341,17 @@ function lanAddresses() {
 const storeInfo = await initRegistrationStore();
 console.log(`
   Registration store: ${storeMode()} — ${storeInfo.reason}`);
+
+const boardInfo = await initLeaderboardStore();
+console.log(`  Leaderboard store:  ${leaderboardMode()} — ${boardInfo.reason}`);
+if (!hasStableSalt) {
+  console.log(`  ! LEADERBOARD_SALT unset — IP hashes reset each restart, so the`);
+  console.log(`    rate limiter forgets everything when the server bounces.`);
+}
+if (!process.env.ADMIN_TOKEN) {
+  console.log(`  ! ADMIN_TOKEN unset — /api/range/hide is closed, so there is no`);
+  console.log(`    way to take an abusive name off the public board.`);
+}
 
 app.listen(port, host, () => {
   console.log(`\n  ENGINEER '26 — Cognitrixx\n`);

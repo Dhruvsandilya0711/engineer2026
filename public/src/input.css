@@ -2664,6 +2664,155 @@ html.cx-native .cx-ring { opacity: 0; }
   color: var(--paper-faint);
 }
 
+/* ==================================================================
+   SIGNAL RANGE — save/load chips and the prize leaderboard.
+
+   The chips sit in the arena like the Restart chip and are registered
+   as an exclusion zone in signal-game.js, so the target never spawns
+   underneath them. The board below the arena is deliberately plain
+   instrument-panel furniture: two tabs, tabular figures, and an
+   Unverified badge that is not hidden away, because two ₹2,500 prizes
+   hang off numbers the browser reported about itself.
+   ================================================================== */
+.signal-range__actions {
+  position: absolute;
+  left: clamp(0.6rem, 2vw, 1.2rem);
+  bottom: clamp(0.6rem, 2vh, 1.1rem);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 3;
+}
+.sg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  background: color-mix(in oklab, var(--color-void) 72%, transparent);
+  border: 1px solid var(--hairline-strong);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.sg-chip:hover {
+  color: var(--paper);
+  border-color: color-mix(in oklab, var(--color-cyan) 55%, transparent);
+  background: color-mix(in oklab, var(--color-cyan) 10%, transparent);
+}
+.sg-chip:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
+
+.lb {
+  max-width: 720px;
+  margin: clamp(1.5rem, 4vh, 2.75rem) auto 0;
+  padding: 0 1.25rem;
+}
+.lb__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+.lb__title { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; }
+.lb__prize {
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.lb__amt { color: var(--color-amber); }
+.lb__badge {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+  border: 1px solid color-mix(in oklab, var(--color-amber) 45%, transparent);
+  padding: 0.25rem 0.5rem;
+  cursor: help;
+}
+
+.lb__tabs { display: flex; gap: 1px; margin: 1rem 0 0; background: var(--hairline); border: 1px solid var(--hairline); }
+.lb__tab {
+  flex: 1;
+  padding: 0.55rem;
+  background: var(--color-void);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.lb__tab.is-active { color: var(--paper); background: color-mix(in oklab, var(--color-cyan) 12%, var(--color-void)); }
+.lb__tab:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: -2px; }
+
+.lb__table { width: 100%; border-collapse: collapse; margin-top: 1px; }
+.lb__table th {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  text-align: left;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--hairline);
+}
+.lb__table th:last-child, .lb-val { text-align: right; }
+.lb__table td { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--hairline); font-size: 0.85rem; }
+.lb-rank { font-family: var(--font-mono); font-size: 0.68rem; color: var(--paper-faint); width: 2.5rem; }
+.lb-name { color: var(--paper-dim); overflow-wrap: anywhere; }
+.lb-val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--paper); }
+.lb__table tr.is-you .lb-name { color: var(--color-cyan); }
+.lb-empty, .lb__err { color: var(--paper-faint); font-size: 0.8rem; text-align: center; padding: 1.5rem 0; }
+
+.lb__panel { margin-top: 1.25rem; border: 1px solid var(--hairline-strong); padding: 1rem; }
+.lb__summary { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--paper); }
+.lb__form { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; align-items: center; }
+.lb__input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid var(--hairline-strong);
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--paper);
+}
+.lb__input:focus { outline: none; border-color: var(--color-cyan); }
+.lb__go { flex: none; }
+.lb__go:disabled { opacity: 0.4; cursor: not-allowed; }
+.lb__dismiss {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+.lb__dismiss:hover { color: var(--paper-dim); }
+.lb-msg { margin-top: 0.6rem; font-size: 0.78rem; color: var(--paper-dim); min-height: 1.2em; }
+.lb-msg--good { color: var(--color-success); }
+.lb-msg--bad { color: var(--color-error); }
+.lb__privacy { margin-top: 0.7rem; font-size: 0.68rem; line-height: 1.5; color: var(--paper-faint); }
+
+@media (max-width: 479px) {
+  .signal-range__actions { gap: 0.35rem; }
+  .sg-chip { padding: 0.38rem 0.55rem; font-size: 0.55rem; }
+  .sg-chip span { display: none; }
+}
+
 /* ---- CHAPTER SEAM ------------------------------------------------
    A hairline joint between homepage chapters. The sections used to butt
    straight up against each other, so a boundary read as "the content

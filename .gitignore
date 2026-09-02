@@ -5,6 +5,9 @@ screenshots/
 # emails) — the local file store must never be committed.
 data/registrations.json
 
+# Leaderboard runs carry player-entered names and hashed IPs — same reason.
+data/leaderboard.json
+
 # Secrets: DBURL and any Razorpay keys live here, never in the repo.
 .env
 .env.*

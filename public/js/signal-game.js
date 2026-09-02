@@ -58,6 +58,7 @@ export function mountSignalGame() {
   const chargeEl = host.querySelector('[data-js="sg-charge"]');
   const livesEl  = host.querySelector('[data-js="sg-lives"]');
   const resetBtn = host.querySelector('[data-js="sg-reset"]');
+  const saveBtn  = host.querySelector('[data-js="sg-save"]');
   const lifeDots = livesEl ? Array.from(livesEl.querySelectorAll('.signal-range__life')) : [];
 
   const state = {
@@ -79,6 +80,10 @@ export function mountSignalGame() {
     chargeStart: 0,
     score: 0,
     streak: 0,
+    bestStreak: 0,                     // longest streak THIS run — the streak
+                                       // board scores this, not the live value,
+                                       // which is 0 the moment a run ends
+    runStartedAt: Date.now(),
     shots: 0,
     hits: 0,
     misses: 0,                         // consecutive misses toward MAX_MISSES
@@ -126,6 +131,10 @@ export function mountSignalGame() {
     state.trail.length = 0;
     state.score = 0;
     state.streak = 0;
+    state.bestStreak = 0;
+    state.shots = 0;
+    state.hits = 0;
+    state.runStartedAt = Date.now();
     state.misses = 0;
     scoreEl.textContent = '0';
     streakEl.textContent = '×0';
@@ -145,8 +154,43 @@ export function mountSignalGame() {
       setTimeout(() => resetBtn.classList.remove('is-firing'), 640);
     }
   }
-  function gameOver() {
-    restartRun('SIGNAL LOST — RESTART', MAGENTA, 'miss');
+  // A run's final numbers, taken BEFORE restartRun wipes them. The streak
+  // board scores `bestStreak`, not the live streak — that one is always 0 at
+  // the moment a run ends, because a run ends on misses.
+  function snapshotRun() {
+    return {
+      score: state.score,
+      streak: state.bestStreak,
+      shots: state.shots,
+      hits: state.hits,
+      runMs: Math.max(0, Date.now() - state.runStartedAt),
+    };
+  }
+
+  // Every run end funnels through here, whether the player lost or chose to
+  // bank the run. The leaderboard UI (public/js/leaderboard.js) listens for
+  // the event and offers to submit; the game itself stays unaware of names,
+  // networks and prizes.
+  //
+  // Banking ENDS the run deliberately: if you could save and keep playing,
+  // you could bank a good score, gamble the next shot, and re-save — which
+  // would quietly hollow out the streak prize.
+  function endRun(reason) {
+    const run = snapshotRun();
+    if (reason === 'lost') restartRun('SIGNAL LOST — RESTART', MAGENTA, 'miss');
+    else restartRun('RUN BANKED', CYAN, 'spawn');
+    host.dispatchEvent(new CustomEvent('e26:range:runend', {
+      detail: { run, reason }, bubbles: true,
+    }));
+  }
+
+  function gameOver() { endRun('lost'); }
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      if (state.score <= 0 && state.bestStreak <= 0) return;
+      endRun('banked');
+    });
   }
 
   // -------------------------------------------------------------------------
@@ -308,7 +352,8 @@ export function mountSignalGame() {
     zones.push({ x: state.w / 2 - ww / 2 - 20, y: 0, w: ww + 40, h: 54 });
     // Emitter cabinet — the whole bay around the tank stays clear.
     zones.push({ x: state.emitter.x - 96, y: state.emitter.y - 96, w: 192, h: 220 });
-    for (const sel of ['.signal-range__hud', '.signal-range__gauge', '.signal-range__reset']) {
+    for (const sel of ['.signal-range__hud', '.signal-range__gauge',
+                       '.signal-range__actions', '.signal-range__reset']) {
       const b = local(host.querySelector(sel));
       if (b) zones.push({ x: b.x - 14, y: b.y - 14, w: b.w + 28, h: b.h + 28 });
     }
@@ -586,6 +631,7 @@ export function mountSignalGame() {
         const gained = Math.round(pts * streakMult);
         state.score += gained;
         state.streak += 1;
+        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
         if (state.score > state.best) {
           state.best = state.score;
           try { localStorage.setItem(BEST_KEY, String(state.best)); } catch (_) {}

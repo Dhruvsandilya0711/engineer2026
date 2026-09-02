@@ -50,6 +50,28 @@
       <span class="signal-range__gauge-track"><span class="signal-range__gauge-fill" data-js="sg-charge"></span></span>
     </div>
 
+    <%# SAVE ends the run on purpose — see public/js/signal-game.js → endRun().
+        Banking a score and playing on would let a player re-save after every
+        lucky shot, which would hollow out the streak prize.
+        LOAD restores the handle and personal best held on this device; it
+        deliberately does NOT restore a run in progress, for the same reason. %>
+    <div class="signal-range__actions">
+      <button type="button" class="sg-chip" data-js="sg-save">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false">
+          <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
+                d="M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6"/>
+        </svg>
+        <span>Save run</span>
+      </button>
+      <button type="button" class="sg-chip" data-js="sg-load">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false">
+          <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
+                d="M4 6h6l2 2h8v10H4zM12 11v5m0 0l-2-2m2 2l2-2"/>
+        </svg>
+        <span>Load</span>
+      </button>
+    </div>
+
     <button type="button" class="signal-range__reset" data-js="sg-reset" aria-label="Restart the signal range">
       <svg class="signal-range__reset-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
         <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
@@ -59,5 +81,68 @@
       <span class="signal-range__reset-label">Restart</span>
       <span class="signal-range__reset-key" aria-hidden="true">R</span>
     </button>
+  </div>
+
+  <!-- ============ LEADERBOARD ============
+       Two separate boards because the two prizes are separate: ₹2,500 for
+       the highest score, ₹2,500 for the longest streak.
+
+       Scores are computed in the browser and submitted by it, so every row
+       is a CLAIM. That is stated on the board rather than buried, because
+       the alternative — a prize board that looks authoritative and isn't —
+       is how a fest ends up in an argument it cannot win. See
+       lib/leaderboard.js for the integrity checks that ARE applied. -->
+  <div class="lb" data-js="range-board">
+    <div class="lb__head">
+      <div>
+        <h3 class="lb__title">Range leaderboard</h3>
+        <p class="lb__prize">
+          <span class="lb__amt">&#8377;2,500</span> highest score &middot;
+          <span class="lb__amt">&#8377;2,500</span> longest streak
+        </p>
+      </div>
+      <p class="lb__badge" title="Scores are reported by the browser and are not server-verified.">Unverified</p>
+    </div>
+
+    <div class="lb__tabs" role="tablist" aria-label="Leaderboard metric">
+      <button type="button" class="lb__tab is-active" data-js="lb-tab" data-metric="score"
+              role="tab" aria-selected="true" aria-controls="lb-table-score">Score</button>
+      <button type="button" class="lb__tab" data-js="lb-tab" data-metric="streak"
+              role="tab" aria-selected="false" aria-controls="lb-table-streak">Streak</button>
+    </div>
+
+    <% ['score', 'streak'].forEach(function (m) { %>
+    <table class="lb__table" id="lb-table-<%= m %>" data-js="lb-table-<%= m %>" <%= m === 'streak' ? 'hidden' : '' %>>
+      <caption class="sr-only">Top runs by <%= m %></caption>
+      <thead>
+        <tr><th scope="col">#</th><th scope="col">Name</th><th scope="col"><%= m === 'streak' ? 'Streak' : 'Score' %></th></tr>
+      </thead>
+      <tbody data-js="lb-body-<%= m %>">
+        <tr><td class="lb-empty" colspan="3">Loading…</td></tr>
+      </tbody>
+    </table>
+    <% }); %>
+
+    <p class="lb__err" data-js="lb-error" hidden>Leaderboard unavailable right now.</p>
+
+    <!-- Submit panel — revealed when a run ends, or by Load. -->
+    <div class="lb__panel" data-js="lb-panel" hidden>
+      <p class="lb__summary" data-js="lb-summary"></p>
+      <form class="lb__form" data-js="lb-form">
+        <label class="sr-only" for="lb-name">Your name for the leaderboard</label>
+        <input class="lb__input" id="lb-name" data-js="lb-name" type="text"
+               placeholder="Your name" maxlength="20" autocomplete="nickname" required>
+        <button type="submit" class="btn btn-primary lb__go" data-js="lb-go">Save to board</button>
+        <button type="button" class="lb__dismiss" data-js="lb-dismiss">Not now</button>
+      </form>
+      <p class="lb-msg" data-js="lb-msg" role="status" aria-live="polite"></p>
+      <%# Names go on a public page, so say so where the name is typed rather
+          than in a policy nobody opens. %>
+      <p class="lb__privacy">
+        The name you enter is shown publicly on this page. We also store a
+        one-way hash of your IP address to limit repeat submissions — it is
+        never displayed and cannot be reversed to your address.
+      </p>
+    </div>
   </div>
 </section>

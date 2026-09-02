@@ -24,6 +24,7 @@ import { initPreloader } from '/js/preloader.js';
 import { initPageTransition } from '/js/page-transition.js';
 import { mountNeuralMark } from '/js/neural-mark.js';
 import { mountSignalGame } from '/js/signal-game.js';
+import { mountLeaderboard } from '/js/leaderboard.js';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
 function registerNarrative(ctx, subject) {
@@ -240,6 +241,7 @@ function initFanDeck() {
   // which the shared field vocabulary has any business knowing about.
   const subject = mountNeuralMark();
   mountSignalGame();
+  mountLeaderboard();
 
   registerReveals(ctx);
   registerParallax(ctx);
