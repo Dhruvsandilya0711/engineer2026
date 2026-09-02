@@ -720,7 +720,13 @@ export function mountSignalGame() {
       accum += Math.min(250, now - (lastNow || now));
       lastNow = now;
       let steps = 0;
-      while (accum >= TICK_MS && steps < 8 && !sim.state.over) {
+      // `sim` is re-tested every iteration, not just !sim.state.over: a
+      // losing tick runs gameOver() inside onSimEvent below, which hands
+      // control back to the start screen and clears `sim` mid-loop. Without
+      // the null check this condition dereferenced it on the next pass and
+      // threw, killing the animation loop — so the arena froze the first
+      // time a run was lost and the game became unplayable until reload.
+      while (accum >= TICK_MS && steps < 8 && sim && !sim.state.over) {
         const prevWind = sim.state.wind;
         sim.step();
         accum -= TICK_MS;
