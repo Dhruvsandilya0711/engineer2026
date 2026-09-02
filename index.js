@@ -54,6 +54,27 @@ const gallery = allEvents.filter(e => e.image).map(e => ({ image: e.image, capti
 const schedule = JSON.parse(readFileSync(path.join(__dirname, 'data/schedule.json'), 'utf-8'));
 const teamData = JSON.parse(readFileSync(path.join(__dirname, 'data/team.json'), 'utf-8'));
 
+// Everything sourced from the ENGINEER '26 sponsorship brochure: the scale
+// figures, the research centres, and the three logo walls (past sponsors,
+// alumni-founded companies, industry partners). See data/fest.json for the
+// provenance note — none of it is estimated here.
+const fest = JSON.parse(readFileSync(path.join(__dirname, 'data/fest.json'), 'utf-8'));
+const proshows = JSON.parse(readFileSync(path.join(__dirname, 'data/proshows.json'), 'utf-8'));
+
+// The line-up heading depends on whether anything is signed for '26 yet, so
+// derive it rather than hard-coding a claim that will quietly go stale.
+const proshowState = {
+  ...proshows,
+  confirmed: proshows.acts.filter(a => a.status === 'confirmed'),
+  past: proshows.acts.filter(a => a.status !== 'confirmed'),
+};
+
+// Programme tracks (brochure §03). Each carries the events mapped to it so a
+// track can render its own roster without the view re-filtering.
+const tracks = Object.entries(eventData._tracks || {}).map(([id, t]) => ({
+  id, ...t, events: allEvents.filter(e => e.track === id),
+}));
+
 // Slots reference events by slug; resolve them once so views never have to.
 function resolvedDays() {
   return schedule.days.map(day => ({
@@ -107,6 +128,9 @@ app.get('/', (req, res) => {
     regState,
     teamTotal: groups.reduce((n, g) => n + g.members.length, 0),
     teamGroupCount: groups.length,
+    fest,
+    tracks,
+    proshows: proshowState,
   });
 });
 
@@ -134,6 +158,7 @@ app.get('/events', (req, res) => {
     query: q,
     activeCategory: category || 'All',
     regState,
+    tracks,
   });
 });
 
@@ -172,6 +197,7 @@ app.get('/sponsors', (req, res) => {
     tiers: SPONSOR_TIERS,
     openSlots: SPONSOR_TIERS.length,
     eventCount: allEvents.length,
+    fest,
   });
 });
 
@@ -188,6 +214,9 @@ app.get('/events/:slug', (req, res, next) => {
     event,
     related,
     regState,
+    // The brochure describes TRACKS, not individual events, so an event with
+    // no description of its own can still say what kind of thing it is.
+    track: tracks.find(t => t.id === event.track) || null,
     index: allEvents.indexOf(event) + 1,
     canonical: `${req.protocol}://${req.get('host')}/events/${event.slug}`,
   });

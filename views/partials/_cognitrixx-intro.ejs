@@ -3,8 +3,13 @@
      Large short statements first, so the concept lands visually before any
      explanatory copy. See design-system §14 for the per-page motion budget.
      ========================================================================== -->
-<section id="cognitrixx" class="relative intro-y px-6">
-  <div class="max-w-4xl mx-auto text-center">
+<%# data-seam opts this chapter into registerSeams() in public/js/scroll.js:
+    its content drifts and dims as the next chapter arrives, so the boundary
+    reads as a transition rather than an edge. Only static text chapters take
+    it — the pinned transformation, the game canvas and the gallery run their
+    own scroll machinery and must not be scrubbed underneath it. %>
+<section id="cognitrixx" class="relative intro-y px-6" data-seam>
+  <div class="max-w-4xl mx-auto text-center" data-seam-inner>
     <!-- Chapter dateline — the fest's "when + where" as an instrument
          stamp above the thesis. Cyan periods echo the HUD chrome and the
          motto in the hero above; the hairlines either side frame it as a

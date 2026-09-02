@@ -1,0 +1,44 @@
+<!-- ==========================================================================
+     DECK CARD 05 — THE NETWORK.
+
+     Alumni-founded companies, institutional partners and the brands that
+     have backed ENGINEER before. All three walls are from the sponsorship
+     brochure; see data/fest.json for provenance and for how the marks were
+     knocked out to sit on this ground.
+
+     The legacy wall is explicitly labelled PAST. No sponsor is confirmed for
+     '26, and this card must not let anyone read it as if one were.
+
+     Card-sized: the deck body supplies the padding and the angular frame.
+     ========================================================================== -->
+<section id="network" class="relative">
+  <div class="max-w-4xl">
+    <p class="eyebrow text-magenta mb-5" data-reveal>Cognitrixx / the network</p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      Backed by<br><span class="text-gradient-impossible">the whole graph.</span>
+    </h2>
+
+    <p class="text-sm sm:text-base text-[var(--paper-dim)] mt-5 max-w-xl leading-relaxed" data-reveal>
+      250+ startups, CEOs and directors trace back to this campus. That network is the
+      backbone of the fest — and the room a partner walks into.
+    </p>
+
+    <div class="mt-9">
+      <%- include('_logo-wall', { items: fest.alumniCompanies, label: 'Founded by alumni' }) %>
+    </div>
+
+    <div class="mt-10">
+      <%- include('_logo-wall', { items: fest.industryPartners, label: 'Industry & research partners' }) %>
+    </div>
+
+    <div class="mt-10">
+      <%- include('_logo-wall', { items: fest.pastSponsors, label: 'Backed ENGINEER before', muted: true }) %>
+      <p class="text-xs text-[var(--paper-faint)] mt-4 max-w-lg">
+        Previous editions. No partner is confirmed for &rsquo;26 yet — tiers are open.
+      </p>
+    </div>
+
+    <a href="/sponsors" class="btn btn-secondary mt-9" data-reveal>Partner with us &rarr;</a>
+  </div>
+</section>

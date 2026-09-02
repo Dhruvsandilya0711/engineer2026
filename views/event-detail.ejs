@@ -61,9 +61,20 @@
                   <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
                 </div>
 
+                <%# Not every event has a photograph — the ENGI Care and Startup
+                    Pitch entries came from the brochure without one. An empty
+                    src would make the browser re-request this page as an image,
+                    so the plate stands in until real art exists. %>
                 <figure class="relative border border-[var(--hairline)] overflow-hidden">
+                  <% if (event.image) { %>
                   <img src="<%= event.image %>" alt="<%= event.name %> at ENGINEER '26"
                     class="w-full aspect-[4/3] object-cover">
+                  <% } else { %>
+                  <div class="media-plate w-full aspect-[4/3]" role="img"
+                       aria-label="No photograph for <%= event.name %> yet">
+                    <span class="media-plate__t"><%= event.category %></span>
+                  </div>
+                  <% } %>
                   <!-- subtle Cognitrixx corner annotation -->
                   <figcaption class="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-2 bg-void/80 font-mono text-[0.6rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">
                     <span><%= event.slug %></span>
@@ -266,7 +277,8 @@
             <a href="/events/<%= rel.slug %>" class="event-row__link" data-img="<%= rel.image %>">
               <span class="event-row__idx"><%= String(i + 1).padStart(2, '0') %></span>
               <span class="event-row__thumb md:hidden">
-                <img src="<%= rel.image %>" alt="" loading="lazy" aria-hidden="true">
+                <% if (rel.image) { %><img src="<%= rel.image %>" alt="" loading="lazy" aria-hidden="true">
+                <% } else { %><span class="media-plate media-plate--sm" aria-hidden="true"></span><% } %>
               </span>
               <span class="event-row__name"><%= rel.name %></span>
               <span class="event-row__cat"><%= rel.category %></span>

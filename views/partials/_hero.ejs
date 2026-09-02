@@ -64,7 +64,17 @@
            alt="ENGINEER '26" fetchpriority="high">
     </h1>
 
-    <p class="font-display font-bold text-gradient-impossible text-[clamp(1.6rem,7vw,2.5rem)] tracking-[0.06em]" data-reveal>COGNITRIXX</p>
+    <%# COGNITRIXX — the brochure sets this wide, gradient-filled and eroded
+        by print texture. Rebuilt here in the site's own register: same
+        gradient and the same wide tracking, but the erosion becomes a
+        dot-matrix scan so the word reads as an instrument readout rather
+        than distressed print. Hairline ticks either side frame it the way
+        the brochure's side rails frame the cover. %>
+    <p class="cgx" data-reveal>
+      <span class="cgx__rule" aria-hidden="true"></span>
+      <span class="cgx__word">Cognitrixx</span>
+      <span class="cgx__rule" aria-hidden="true"></span>
+    </p>
 
     <p class="font-mono text-[clamp(0.72rem,3.2vw,0.94rem)] tracking-[0.44em] text-[var(--color-muted)] uppercase" data-reveal>Rewire Reality</p>
 
@@ -97,10 +107,13 @@
     <!-- The three-word ENGINEER manifesto — the festival's long-standing
          strap since it moved online. Rendered as mono/uppercase to match
          the HUD chrome, with cyan periods as instrument marks. -->
-    <p class="hero-motto" aria-label="Think. Create. Engineer." data-reveal>
+    <%# Set exactly as the brochure sets it — THINK. CREATE. ENGINEER, with no
+        period after the last word. The two dots are separators, not sentence
+        punctuation, so a third one was our addition rather than the brand's. %>
+    <p class="hero-motto" aria-label="Think. Create. Engineer" data-reveal>
       <span class="hero-motto__word">Think</span><span class="hero-motto__dot">.</span>
       <span class="hero-motto__word">Create</span><span class="hero-motto__dot">.</span>
-      <span class="hero-motto__word">Engineer</span><span class="hero-motto__dot">.</span>
+      <span class="hero-motto__word">Engineer</span>
     </p>
   </div>
 </section>

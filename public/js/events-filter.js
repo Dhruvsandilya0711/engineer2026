@@ -103,8 +103,12 @@ if (preview && previewImg && canHover && !reduced) {
 
   document.querySelectorAll('.event-row__link').forEach((link) => {
     link.addEventListener('pointerenter', () => {
+      // Some events have no photograph yet. Without this the panel would
+      // stay open still showing the LAST event's image, captioning one
+      // event with another's picture.
       const src = link.dataset.img;
-      if (src && previewImg.getAttribute('src') !== src) previewImg.src = src;
+      if (!src) { preview.classList.remove('is-visible'); return; }
+      if (previewImg.getAttribute('src') !== src) previewImg.src = src;
       preview.classList.add('is-visible');
       if (!raf) raf = requestAnimationFrame(render);
     });

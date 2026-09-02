@@ -167,15 +167,17 @@ export function registerSeams(ctx) {
     const inner = section.querySelector('[data-seam-inner]') || section.firstElementChild;
     if (!inner) return;
 
+    // Dim rather than dissolve: at 0.35 the outgoing chapter read as broken
+    // while it was still on screen and still legible. It only has to recede.
     gsap.fromTo(inner,
       { yPercent: 0, opacity: 1 },
       {
-        yPercent: -6, opacity: 0.35, ease: 'none',
+        yPercent: -4, opacity: 0.55, ease: 'none',
         scrollTrigger: {
           trigger: section,
-          start: 'bottom 85%',
+          start: 'bottom 78%',
           end: 'bottom top',
-          scrub: true,
+          scrub: 0.6,
         },
       });
   });

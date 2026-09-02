@@ -1,0 +1,40 @@
+<!-- ==========================================================================
+     DECK CARD 03 — ENGI CARE.
+
+     The fest's CSR programme: the most distinctive thing in the sponsorship
+     brochure and, until now, absent from this site entirely. Copy and the
+     three events are the brochure's own (§03 Track 04).
+
+     The roster is DERIVED from data/events.json (track === 'care') rather
+     than restated here, so adding a fourth ENGI Care event needs no view
+     change and the card can never list one that isn't in the programme.
+
+     Card-sized: the deck body supplies the padding and the angular frame.
+     ========================================================================== -->
+<% const care = tracks.find(t => t.id === 'care'); %>
+<section id="engi-care" class="relative">
+  <div class="max-w-3xl">
+    <p class="eyebrow text-amber mb-5" data-reveal>CSR initiative</p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      Engineering<br><span class="text-gradient-impossible">that gives back.</span>
+    </h2>
+
+    <p class="text-sm sm:text-base text-[var(--paper-dim)] mt-5 max-w-xl leading-relaxed" data-reveal>
+      ENGI Care is our CSR initiative — a testament to our dedication to making a positive
+      difference in the lives of those around us.
+    </p>
+
+    <ul class="care-list mt-8">
+      <% (care ? care.events : []).forEach(function (e, i) { %>
+      <li class="care" data-reveal>
+        <span class="care__n"><%= String(i + 1).padStart(2, '0') %></span>
+        <div class="care__b">
+          <h3 class="care__name"><a href="/events/<%= e.slug %>"><%= e.name %></a></h3>
+          <p class="care__d"><%= e.description %></p>
+        </div>
+      </li>
+      <% }); %>
+    </ul>
+  </div>
+</section>

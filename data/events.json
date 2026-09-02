@@ -1,5 +1,5 @@
 {
-  "_note": "Single source of truth for events. Names, images and slugs are the real data already present in this repo (originally hardcoded in views/carousal_events.ejs). `category` is an editorial grouping of that real data. Everything genuinely unknown is null and MUST stay null until confirmed — the UI renders around nulls rather than inventing dates, venues, prizes or rules. `registration` is 'open' because /register is live and writes to the same useraccounts store as the existing payment_gateway project. Change per-event as entries close.",
+  "_note": "Single source of truth for events. Names, images and slugs are the real data already present in this repo (originally hardcoded in views/carousal_events.ejs). `category` is an editorial grouping of that real data. Everything genuinely unknown is null and MUST stay null until confirmed — the UI renders around nulls rather than inventing dates, venues, prizes or rules. `registration` is 'open' because /register is live and writes to the same useraccounts store as the existing payment_gateway project. Change per-event as entries close. ADDED from the ENGINEER '26 sponsorship brochure: the `_tracks` block and every event's `track`; the Startup Pitch, ENGI Care (Music For All / Techadapt / Innovate4Good), Auto Expo and Stunt Show events. Descriptions are quoted from that brochure where it supplies them — the remaining events still have `description: null` because the brochure describes TRACKS, not individual events, and per-event copy must come from the event heads rather than be invented here.",
   "_registrationStates": [
     "not_open",
     "opening_soon",
@@ -28,7 +28,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "engineer-hackathon",
@@ -48,7 +49,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "robocon-expo",
@@ -68,7 +70,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "engi-talks",
@@ -77,7 +80,7 @@
       "image": "/images/engi_talks.png",
       "featured": true,
       "registration": "open",
-      "description": null,
+      "description": "Fostering collaboration and engineering excellence, a wide range of experts from fields such as art, administration, politics and defence deliver compelling talks on current issues, engaging in active discussion with the audience.",
       "date": null,
       "time": null,
       "venue": null,
@@ -88,7 +91,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "talks"
     },
     {
       "slug": "workshops",
@@ -108,7 +112,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "line-tracker-bot-race",
@@ -128,7 +133,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "robo-soccer",
@@ -148,7 +154,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "wright-flight",
@@ -168,7 +175,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "drone-race",
@@ -188,7 +196,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "robo-racing",
@@ -208,7 +217,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "open-house-labs",
@@ -228,7 +238,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "tech-space-quizzers",
@@ -248,7 +259,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "technical"
     },
     {
       "slug": "beach-event",
@@ -268,7 +280,8 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "campus"
     },
     {
       "slug": "tech-mela",
@@ -288,7 +301,161 @@
       "eligibility": null,
       "teamSize": null,
       "faq": null,
-      "coordinators": null
+      "coordinators": null,
+      "track": "campus"
+    },
+    {
+      "slug": "startup-pitch",
+      "name": "Startup Pitch",
+      "category": "Startup",
+      "image": null,
+      "featured": true,
+      "registration": "not_open",
+      "description": "Our startup pitch sessions are the heartbeat of entrepreneurial creativity, where bright minds converge to showcase disruptive ideas — an opportunity to foster innovation, connect with visionary thinkers and shape the future of industries.",
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "startup"
+    },
+    {
+      "slug": "music-for-all",
+      "name": "Music For All",
+      "category": "ENGI Care",
+      "image": null,
+      "featured": false,
+      "registration": "not_open",
+      "description": "A musical performance by specially-abled kids, staged as part of ENGI Care.",
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "care"
+    },
+    {
+      "slug": "techadapt",
+      "name": "Techadapt",
+      "category": "ENGI Care",
+      "image": null,
+      "featured": false,
+      "registration": "not_open",
+      "description": "Games designed for and played with specially-abled participants.",
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "care"
+    },
+    {
+      "slug": "innovate4good",
+      "name": "Innovate4Good",
+      "category": "ENGI Care",
+      "image": null,
+      "featured": false,
+      "registration": "not_open",
+      "description": "A national case study contest on building technology that does social good.",
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "care"
+    },
+    {
+      "slug": "auto-expo",
+      "name": "Auto Expo",
+      "category": "Exhibits",
+      "image": "/images/auto_expo.jpg",
+      "featured": true,
+      "registration": "not_open",
+      "description": null,
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "campus"
+    },
+    {
+      "slug": "stunt-show",
+      "name": "Stunt Show",
+      "category": "Outdoor",
+      "image": "/images/stunt_show.jpg",
+      "featured": false,
+      "registration": "not_open",
+      "description": null,
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "campus"
     }
-  ]
+  ],
+  "_tracks": {
+    "technical": {
+      "name": "Technical Events",
+      "accent": "34,211,238",
+      "blurb": "Bright minds from across the country compete, collaborate and innovate — coding challenges, robotics, workshops and technology-driven competitions."
+    },
+    "startup": {
+      "name": "Startup Pitch",
+      "accent": "99,102,241",
+      "blurb": "The heartbeat of entrepreneurial creativity, where bright minds converge to showcase disruptive ideas and shape the future of industries."
+    },
+    "talks": {
+      "name": "Engi Talks",
+      "accent": "232,121,249",
+      "blurb": "Experts from art, administration, politics and defence deliver compelling talks on current issues, in active discussion with the audience."
+    },
+    "care": {
+      "name": "ENGI Care",
+      "accent": "245,158,11",
+      "blurb": "Our CSR initiative — a testament to making a positive difference in the lives of those around us."
+    },
+    "campus": {
+      "name": "Campus & Expo",
+      "accent": "128,146,246",
+      "blurb": "The parts of ENGINEER that spill out of the lecture halls and onto the campus itself."
+    }
+  }
 }

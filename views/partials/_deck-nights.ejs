@@ -1,0 +1,48 @@
+<!-- ==========================================================================
+     DECK CARD 04 — AFTER DARK.
+
+     Names come from the sponsorship brochure (p11). The brochure presents
+     them as acts ENGINEER HAS HOSTED, not as a signed 2026 line-up, so this
+     card says exactly that. The heading is DERIVED: the moment an act in
+     data/proshows.json flips to `status: "confirmed"` it lifts into its own
+     list and the card stops describing the roster as purely historical.
+     Nothing here announces a booking that has not happened.
+
+     Card-sized: the deck body supplies the padding and the angular frame.
+     ========================================================================== -->
+<section id="nights" class="relative">
+  <div class="max-w-3xl">
+    <p class="eyebrow text-magenta mb-5" data-reveal>After dark</p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      Dazzling tech to<br><span class="text-gradient-impossible">electrifying nights.</span>
+    </h2>
+
+    <% if (proshows.confirmed.length) { %>
+    <p class="eyebrow text-cyan mt-8 mb-4" data-reveal>Confirmed for &rsquo;26</p>
+    <ul class="act-wall" data-reveal>
+      <% proshows.confirmed.forEach(function (a) { %>
+      <li class="act act--live"><span class="act__n"><%= a.name %></span><span class="act__k"><%= a.kind %></span></li>
+      <% }); %>
+    </ul>
+    <% } %>
+
+    <% if (proshows.past.length) { %>
+    <p class="eyebrow text-[var(--paper-faint)] mt-8 mb-4" data-reveal>Previously at ENGINEER</p>
+    <ul class="act-wall" data-reveal>
+      <% proshows.past.forEach(function (a) { %>
+      <li class="act"><span class="act__n"><%= a.name %></span><span class="act__k"><%= a.kind %></span></li>
+      <% }); %>
+    </ul>
+    <% } %>
+
+    <p class="text-sm text-[var(--paper-dim)] max-w-xl mt-6" data-reveal>
+      <% if (!proshows.confirmed.length) { %>
+        The &rsquo;26 line-up isn&rsquo;t announced yet. These are the acts ENGINEER has
+        hosted — names publish here as they sign.
+      <% } else { %>
+        More acts publish here as they sign.
+      <% } %>
+    </p>
+  </div>
+</section>

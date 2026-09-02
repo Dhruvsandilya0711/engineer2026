@@ -1,0 +1,26 @@
+<!-- ==========================================================================
+     LOGO WALL — a row of partner marks.
+
+     The source art sits on white tiles in the sponsorship brochure, which
+     would fight this site's dark ground, so each mark was knocked out to a
+     white-on-transparent silhouette (see the extraction note in
+     data/fest.json). The wall tints them with opacity rather than colour, so
+     one asset serves every context and the row reads as one material.
+
+     Params
+       items    [{ name, logo }]
+       label    optional eyebrow above the wall
+       muted    true to sit the wall back (used for historical rows)
+     ========================================================================== -->
+<% const wallMuted = typeof muted !== 'undefined' && muted; %>
+<% if (typeof label !== 'undefined' && label) { %>
+<p class="eyebrow <%= wallMuted ? 'text-[var(--paper-faint)]' : 'text-cyan' %> mb-5" data-reveal><%= label %></p>
+<% } %>
+<ul class="logo-wall<%= wallMuted ? ' logo-wall--muted' : '' %>" data-reveal>
+  <% items.forEach(function (it) { %>
+  <li class="logo-wall__cell">
+    <img src="<%= it.logo %>" alt="<%= it.name %>" title="<%= it.name %>"
+         loading="lazy" decoding="async">
+  </li>
+  <% }); %>
+</ul>

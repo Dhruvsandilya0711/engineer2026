@@ -69,6 +69,12 @@
 :root {
   --hairline: rgba(148, 163, 184, 0.18);
   --hairline-strong: rgba(148, 163, 184, 0.35);
+  /* The base of the paper ramp. It was never declared, so every
+     `color: var(--paper)` in this sheet was invalid and silently fell back
+     to inheritance — which happened to land near the right colour on the
+     body, and so went unnoticed. Declared here as the alias it always
+     meant to be, alongside the two steps below it. */
+  --paper: var(--color-paper);
   --paper-dim: #94a3b8;      /* text-muted */
   --paper-faint: #64748b;    /* text-dim  */
   --rule: rgba(148, 163, 184, 0.35);
@@ -2423,6 +2429,383 @@ html.cx-native .cx-ring { opacity: 0; }
 /* Three-word manifesto under the countdown. Sits at the mono/uppercase
    register of the status strip so it reads as ENGINEER chrome rather than
    headline copy; the periods are cyan instrument marks. */
+/* ==================================================================
+   BROCHURE-SOURCED CONTENT — scale figures, programme tracks, the CSR
+   list, the pro-show wall and the partner logo walls.
+
+   All of it arrived with the sponsorship brochure and none of it had a
+   home in the design system before, so the pieces share one vocabulary:
+   a hairline grid, mono labels, and an accent that each block sets on
+   itself via --accent rather than hard-coding a colour.
+   ================================================================== */
+
+/* ---- SCALE: the fest's numbers as an instrument readout ---------- */
+.stat-band {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+}
+.stat {
+  background: var(--color-void);
+  padding: clamp(0.9rem, 2.4vw, 1.4rem);
+}
+.stat__v {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4.6vw, 2.35rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  background: var(--gradient-impossible);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat__l {
+  margin-top: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+.stat__n {
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--paper-faint);
+}
+.stat-band--tight .stat { padding: clamp(0.8rem, 2vw, 1.1rem); }
+
+/* ---- PROGRAMME TRACKS ------------------------------------------- */
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+}
+.track {
+  background: var(--color-void);
+  padding: clamp(1.1rem, 2.6vw, 1.5rem);
+  border-top: 2px solid rgb(var(--accent) / 0.55);
+}
+.track__head { display: flex; align-items: baseline; gap: 0.7rem; }
+.track__num {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: rgb(var(--accent));
+}
+.track__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--paper);
+}
+.track__blurb {
+  margin-top: 0.65rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--paper-dim);
+}
+.track__events {
+  margin: 0.9rem 0 0;
+  padding: 0.8rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+}
+.track__events a {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.track__events a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent) / 0.5); }
+.track__more a { color: rgb(var(--accent) / 0.8); }
+
+/* ---- ENGI CARE -------------------------------------------------- */
+.care-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.care {
+  display: flex;
+  gap: clamp(0.8rem, 2.4vw, 1.4rem);
+  padding: 1.05rem 0;
+  border-top: 1px solid var(--hairline);
+}
+.care:last-child { border-bottom: 1px solid var(--hairline); }
+.care__n {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  color: var(--color-amber);
+  padding-top: 0.2rem;
+}
+.care__name { font-family: var(--font-display); font-weight: 600; font-size: 0.98rem; }
+.care__name a { color: var(--paper); text-decoration: none; }
+.care__name a:hover { color: var(--color-amber); }
+.care__d { margin-top: 0.28rem; font-size: 0.8rem; line-height: 1.55; color: var(--paper-dim); }
+
+/* ---- PRO SHOWS: a wall of names, not a grid of empty slots ------- */
+.act-wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.act {
+  background: var(--color-void);
+  border: 1px solid var(--hairline);
+  padding: 0.6rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.act__n {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--paper-dim);
+}
+.act__k {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.act--live { border-color: color-mix(in oklab, var(--color-cyan) 45%, transparent); }
+.act--live .act__n { color: var(--paper); }
+.act--live .act__k { color: var(--color-cyan); }
+
+/* ---- LOGO WALLS -------------------------------------------------
+   The marks ship as white-on-transparent silhouettes, so the wall
+   controls weight with opacity alone and every row reads as one
+   material regardless of the original brand colours. */
+.logo-wall {
+  display: grid;
+  /* auto-FIT, not auto-fill: the industry wall only has four marks, and
+     auto-fill kept the empty tracks, leaving a run of hollow cells beside
+     four undersized logos. */
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+}
+.logo-wall__cell {
+  background: var(--color-void);
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  padding: 0.7rem 0.85rem;
+}
+.logo-wall__cell img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  /* A grid item's automatic minimum size is its intrinsic size, so a
+     portrait mark (ISRO, QNu) pushed its cell past the aspect box and made
+     that whole row taller than the rest of the wall. */
+  min-width: 0;
+  min-height: 0;
+  object-fit: contain;
+  opacity: 0.62;
+  transition: opacity 0.25s ease;
+}
+.logo-wall__cell:hover img { opacity: 1; }
+.logo-wall--muted .logo-wall__cell img { opacity: 0.4; }
+.logo-wall--muted .logo-wall__cell:hover img { opacity: 0.85; }
+
+/* ---- RESEARCH CENTRES ------------------------------------------- */
+.centre-list { margin: 0; padding: 0; list-style: none; }
+.centre {
+  display: flex;
+  gap: 0.9rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--hairline);
+}
+.centre:last-child { border-bottom: 1px solid var(--hairline); }
+.centre__n {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  color: var(--color-cyan);
+  padding-top: 0.15rem;
+}
+.centre__b { display: flex; flex-direction: column; gap: 0.1rem; }
+.centre__name { font-size: 0.86rem; color: var(--paper-dim); }
+.centre__note {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+/* ---- CHAPTER SEAM ------------------------------------------------
+   A hairline joint between homepage chapters. The sections used to butt
+   straight up against each other, so a boundary read as "the content
+   stopped" rather than "the chapter changed". The rule draws itself
+   outward from the node as it enters (data-reveal drives the scale),
+   which gives the scroll a beat between chapters. */
+.seam {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding-block: clamp(0.5rem, 2.4vh, 1.5rem);
+  pointer-events: none;
+}
+.seam__line {
+  height: 1px;
+  width: clamp(40px, 16vw, 190px);
+  background: linear-gradient(90deg, transparent, var(--hairline-strong));
+  transform-origin: right center;
+}
+.seam__line:last-child {
+  background: linear-gradient(90deg, var(--hairline-strong), transparent);
+  transform-origin: left center;
+}
+.seam__node {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  transform: rotate(45deg);
+  background: color-mix(in oklab, var(--color-cyan) 55%, transparent);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--color-cyan) 45%, transparent);
+}
+[data-reveal].seam .seam__line { transform: scaleX(0.2); }
+[data-reveal].seam.is-visible .seam__line {
+  transform: scaleX(1);
+  transition: transform 1100ms var(--ease-emphasized);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal].seam .seam__line { transform: none; }
+}
+
+/* ---- MEDIA PLATE -------------------------------------------------
+   Stands in where an event has no photograph yet (the ENGI Care and
+   Startup Pitch entries arrived from the brochure without art). An
+   empty `src` would make the browser re-request the PAGE as an image,
+   so these render as a plate instead of a broken tag. */
+.media-plate {
+  display: grid;
+  place-items: center;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(148, 163, 184, 0.05) 0 6px,
+      transparent 6px 12px),
+    var(--color-void);
+  border: 1px dashed var(--hairline);
+}
+.media-plate__t {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.media-plate--sm { width: 100%; height: 100%; border-style: solid; }
+
+/* ---- FOOTER CREST ----------------------------------------------- */
+.footer-crest {
+  width: 42px;
+  height: auto;
+  flex: none;
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+footer:hover .footer-crest { opacity: 0.8; }
+
+/* ==================================================================
+   COGNITRIXX — the theme wordmark under the ENGINEER logotype.
+
+   The sponsorship brochure sets it wide-tracked, filled with the
+   cyan→indigo→magenta gradient, and eroded by a dotted print texture.
+   Straight print distress would read as noise next to this site's HUD
+   chrome, so the erosion is rebuilt as a DOT MATRIX: a fine mask grid
+   punched through the gradient fill, so the word looks assembled out of
+   emitters — the same vocabulary as the neural field behind it.
+
+   The mask rides on the glyphs because `background-clip: text` has
+   already shaped the element; `drop-shadow` then glows off that same
+   alpha, which a `text-shadow` could not do through transparent text.
+   ================================================================== */
+.cgx {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.6rem, 2.2vw, 1.1rem);
+  margin: 0;
+}
+.cgx__rule {
+  display: block;
+  height: 1px;
+  width: clamp(18px, 7vw, 54px);
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-cyan) 50%, transparent) 100%);
+}
+.cgx__rule:last-child {
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--color-magenta) 50%, transparent) 0%,
+    transparent 100%);
+}
+.cgx__word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 7vw, 2.5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  /* The brochure's defining move: air between the letters. */
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;              /* re-centres against the trailing gap */
+  background: var(--gradient-impossible);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Dot matrix. 2px cells, so the grid resolves as texture rather than
+     stripes, and never eats enough of a stem to hurt legibility. */
+  --cgx-cell: 2px;
+  -webkit-mask-image:
+    repeating-linear-gradient(0deg,   #000 0 1px, rgba(0,0,0,0.62) 1px var(--cgx-cell)),
+    repeating-linear-gradient(90deg,  #000 0 1px, rgba(0,0,0,0.72) 1px var(--cgx-cell));
+  mask-image:
+    repeating-linear-gradient(0deg,   #000 0 1px, rgba(0,0,0,0.62) 1px var(--cgx-cell)),
+    repeating-linear-gradient(90deg,  #000 0 1px, rgba(0,0,0,0.72) 1px var(--cgx-cell));
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  filter:
+    drop-shadow(0 0 14px color-mix(in oklab, var(--color-violet-mid) 42%, transparent))
+    drop-shadow(0 0 3px color-mix(in oklab, var(--color-cyan) 30%, transparent));
+}
+@media (min-width: 640px) {
+  /* Bigger type carries a bigger cell, so the matrix stays visible instead
+     of dissolving into a flat fill as the glyphs grow. */
+  .cgx__word { --cgx-cell: 3px; }
+}
+
 .hero-motto {
   display: inline-flex;
   align-items: baseline;

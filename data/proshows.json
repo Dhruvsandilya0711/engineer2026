@@ -1,0 +1,14 @@
+{
+  "_note": "Pro-show and cultural line-up. Names are taken from the ENGINEER '26 sponsorship brochure (p11, 'Dazzling tech to electrifying nights'). The brochure presents them as the acts ENGINEER has hosted, NOT as a confirmed 2026 line-up — so `status` is 'past' for every entry and the site labels the section accordingly. Move an act to `status: \"confirmed\"` ONLY once it is signed for the '26 edition; the heading changes on its own when any act is confirmed.",
+  "headline": "Dazzling tech to electrifying nights",
+  "acts": [
+    { "name": "Zakir Khan",           "kind": "Comedy",        "status": "past" },
+    { "name": "Lost Stories",         "kind": "Electronic",    "status": "past" },
+    { "name": "Paranox",              "kind": "Electronic",    "status": "past" },
+    { "name": "Pineapple Express",    "kind": "Live band",     "status": "past" },
+    { "name": "Karan Singh",          "kind": "Comedy",        "status": "past" },
+    { "name": "Thammrasery Churam",   "kind": "Live band",     "status": "past" },
+    { "name": "Pallavi Ishpuniyani",  "kind": "Live",          "status": "past" },
+    { "name": "DJ Carnivore",         "kind": "DJ set",        "status": "past" }
+  ]
+}

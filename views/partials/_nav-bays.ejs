@@ -22,7 +22,9 @@
   // a hash target (initFanDeck picks that up and opens the card).
   const bayItems = [
     { n: '01', label: 'Home',     id: 'home',     href: '/',          accent: '34,211,238'  },
-    { n: '02', label: 'About',    id: 'about',    href: '/#about',    accent: '80,150,242'  },
+    // About points at the intro SECTION, not a deck card: the deck no longer
+    // mirrors the nav, so #about is not a card id any more.
+    { n: '02', label: 'About',    id: 'about',    href: '/#cognitrixx', accent: '80,150,242'  },
     { n: '03', label: 'Events',   id: 'events',   href: '/events',    accent: '108,124,244' },
     { n: '04', label: 'Schedule', id: 'schedule', href: '/schedule',  accent: '128,146,246' },
     { n: '05', label: 'Team',     id: 'team',     href: '/team',      accent: '214,118,226' },

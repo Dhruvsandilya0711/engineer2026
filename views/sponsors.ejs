@@ -34,8 +34,9 @@
       <%- include('partials/_page-hero', { accent: '232,121,249', num: '06', nav: 'Sponsors', kicker: 'Cognitrixx / partners', title: sponsorTitle, meta: sponsorMeta }) %>
 
       <p class="text-[var(--paper-dim)] max-w-xl mt-6">
-        ENGINEER is NITK Surathkal's annual technical festival, run by students. Partnership tiers
-        for the '26 edition are open — slots fill in here as they are confirmed.
+        ENGINEER is NITK Surathkal's annual technical festival, run by students since
+        <%= fest.founded %>. Partnership tiers for the '26 edition are open — slots fill in
+        here as they are confirmed. Below: who the fest reaches, and who has backed it before.
       </p>
 
       <div class="hud-frame mt-6" style="--accent: 232,121,249">
@@ -62,14 +63,26 @@
         </section>
 
         <!-- ============ WHY / WHO REACHES IT ============
-             Only what this repository can actually stand behind: the fest's
-             own scale, taken from the live event data. -->
+             The reach figures a sponsor is actually buying, from the
+             brochure (data/fest.json). This section used to show only the
+             event count, the day count and the host — true, but no case. -->
         <section class="mt-16" aria-labelledby="reach">
           <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
             <h2 id="reach" class="font-display font-semibold text-xl">What you're backing</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">Since <%= fest.founded %></p>
           </div>
 
-          <div class="grid sm:grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)]">
+          <ul class="stat-band stat-band--tight" data-reveal>
+            <% fest.stats.forEach(function (s) { %>
+            <li class="stat">
+              <p class="stat__v"><%= s.value %></p>
+              <p class="stat__l"><%= s.label %></p>
+              <p class="stat__n"><%= s.note %></p>
+            </li>
+            <% }); %>
+          </ul>
+
+          <div class="grid sm:grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)] mt-8">
             <div class="surface-card p-6" data-reveal>
               <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Programme</p>
               <p class="font-display font-bold text-3xl mb-1"><%= eventCount %></p>
@@ -86,6 +99,62 @@
               <p class="text-sm text-[var(--paper-dim)]">Surathkal, Karnataka</p>
             </div>
           </div>
+        </section>
+
+        <!-- ============ LEGACY SPONSORS ============
+             Brands that have backed ENGINEER in previous editions. Labelled
+             as past explicitly — none of these is a confirmed '26 partner,
+             and the page must not let anyone read it that way. -->
+        <section class="mt-16" aria-labelledby="legacy-sponsors">
+          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+            <h2 id="legacy-sponsors" class="font-display font-semibold text-xl">Legacy sponsors</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= fest.pastSponsors.length %> brands</p>
+          </div>
+          <p class="text-sm text-[var(--paper-dim)] max-w-xl mb-8">
+            Brands that have backed ENGINEER in previous editions. None is a confirmed
+            partner for '26 — that list starts empty above.
+          </p>
+          <%- include('partials/_logo-wall', { items: fest.pastSponsors, muted: true }) %>
+        </section>
+
+        <!-- ============ INSTITUTIONAL PARTNERS ============
+             Standing collaborations of the host institute rather than fest
+             sponsorships — which is the stronger signal for a technical
+             partner, so they are kept distinct from the wall above. -->
+        <section class="mt-16" aria-labelledby="partners">
+          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+            <h2 id="partners" class="font-display font-semibold text-xl">Industry &amp; research partners</h2>
+          </div>
+          <p class="text-sm text-[var(--paper-dim)] max-w-xl mb-8">
+            NITK's collaborations with industry, research labs and foreign academic institutes —
+            the reason the fest reaches past the campus.
+          </p>
+          <%- include('partials/_logo-wall', { items: fest.industryPartners }) %>
+
+          <ul class="centre-list mt-10" data-reveal>
+            <% fest.centres.forEach(function (c, i) { %>
+            <li class="centre">
+              <span class="centre__n"><%= String(i + 1).padStart(2, '0') %></span>
+              <span class="centre__b">
+                <span class="centre__name"><%= c.name %></span>
+                <% if (c.note) { %><span class="centre__note"><%= c.note %></span><% } %>
+              </span>
+            </li>
+            <% }); %>
+          </ul>
+        </section>
+
+        <!-- ============ ALUMNI COMPANIES ============ -->
+        <section class="mt-16" aria-labelledby="alumni">
+          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+            <h2 id="alumni" class="font-display font-semibold text-xl">Founded by alumni</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">250+ startups</p>
+          </div>
+          <p class="text-sm text-[var(--paper-dim)] max-w-xl mb-8">
+            A sample of the companies NITK alumni have founded. This network is the backbone
+            of the fest — and the room a sponsor is walking into.
+          </p>
+          <%- include('partials/_logo-wall', { items: fest.alumniCompanies, muted: true }) %>
         </section>
 
         <!-- ============ CONTACT ============ -->

@@ -1,0 +1,46 @@
+<!-- ==========================================================================
+     DECK CARD 02 — PROGRAMME.
+
+     The five tracks the fest actually runs, straight from the sponsorship
+     brochure (§03 "Key events & highlights"). STARTUP PITCH existed nowhere
+     on this site before. Blurbs are the brochure's own copy.
+
+     Rosters are DERIVED from data/events.json via each event's `track`, so a
+     track can never advertise a line-up it doesn't have.
+
+     Card-sized: the deck body supplies the padding and the angular frame.
+     ========================================================================== -->
+<section id="programme" class="relative">
+  <div class="max-w-4xl">
+    <p class="eyebrow text-violet mb-5" data-reveal>The programme</p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      Five ways in.<br><span class="text-gradient-impossible">One current.</span>
+    </h2>
+
+    <ul class="track-grid mt-8">
+      <% tracks.forEach(function (t, i) { %>
+      <li class="track" style="--accent: <%= t.accent %>" data-reveal>
+        <div class="track__head">
+          <span class="track__num"><%= String(i + 1).padStart(2, '0') %></span>
+          <h3 class="track__name"><%= t.name %></h3>
+        </div>
+        <p class="track__blurb"><%= t.blurb %></p>
+
+        <% if (t.events.length) { %>
+        <ul class="track__events">
+          <% t.events.slice(0, 6).forEach(function (e) { %>
+          <li><a href="/events/<%= e.slug %>"><%= e.name %></a></li>
+          <% }); %>
+          <% if (t.events.length > 6) { %>
+          <li class="track__more"><a href="/events">+<%= t.events.length - 6 %> more</a></li>
+          <% } %>
+        </ul>
+        <% } %>
+      </li>
+      <% }); %>
+    </ul>
+
+    <a href="/events" class="btn btn-secondary mt-8" data-reveal>All <%= events.all.length %> events &rarr;</a>
+  </div>
+</section>

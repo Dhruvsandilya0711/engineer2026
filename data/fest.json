@@ -1,0 +1,292 @@
+{
+  "_source": "Figures, partner lists and centre names are taken from the ENGINEER '26 sponsorship brochure (16pp, supplied by the organising team). Nothing here is estimated. Footfall is quoted as 15K+, the lower of the two figures the brochure gives (p2 says 16K+, p3 says 15K+) — resolve upstream and update once confirmed.",
+  "founded": 2005,
+  "stats": [
+    {
+      "value": "15K+",
+      "label": "Footfall",
+      "note": "across three days"
+    },
+    {
+      "value": "200+",
+      "label": "Colleges",
+      "note": "represented nationwide"
+    },
+    {
+      "value": "250+",
+      "label": "Alumni startups",
+      "note": "founders, CEOs, directors"
+    },
+    {
+      "value": "50+",
+      "label": "MoUs & labs",
+      "note": "incl. ISRO and DRDO"
+    },
+    {
+      "value": "20+",
+      "label": "Clubs",
+      "note": "powering the fest"
+    }
+  ],
+  "centres": [
+    {
+      "name": "Regional Academic Centre for Space",
+      "note": "MoU between ISRO & NITK"
+    },
+    {
+      "name": "Centre for Sustainable Energy Engineering",
+      "note": null
+    },
+    {
+      "name": "Centre for System Design",
+      "note": null
+    },
+    {
+      "name": "NITK Science & Technology Entrepreneurs' Park",
+      "note": "NITK-STEP"
+    }
+  ],
+  "domains": [
+    "Wireless comms",
+    "Robotics",
+    "Artificial intelligence"
+  ],
+  "industryPartners": [
+    {
+      "name": "ISRO",
+      "logo": "/images/logos/industry/isro.png"
+    },
+    {
+      "name": "QNu Labs",
+      "logo": "/images/logos/industry/qnu-labs.png"
+    },
+    {
+      "name": "SEG Automotive",
+      "logo": "/images/logos/industry/seg-automotive.png"
+    },
+    {
+      "name": "EM Microelectronic",
+      "logo": "/images/logos/industry/em-microelectronic.png"
+    }
+  ],
+  "alumniCompanies": [
+    {
+      "name": "Practo",
+      "logo": "/images/logos/alumni/practo.png"
+    },
+    {
+      "name": "Delhivery",
+      "logo": "/images/logos/alumni/delhivery.png"
+    },
+    {
+      "name": "Pinkvilla",
+      "logo": "/images/logos/alumni/pinkvilla.png"
+    },
+    {
+      "name": "Docpulse",
+      "logo": "/images/logos/alumni/docpulse.png"
+    },
+    {
+      "name": "Travelyaari",
+      "logo": "/images/logos/alumni/travelyaari.png"
+    },
+    {
+      "name": "NestAway",
+      "logo": "/images/logos/alumni/nestaway.png"
+    },
+    {
+      "name": "Koo",
+      "logo": "/images/logos/alumni/koo.png"
+    },
+    {
+      "name": "Glowpink",
+      "logo": "/images/logos/alumni/glowpink.png"
+    },
+    {
+      "name": "Simplilearn",
+      "logo": "/images/logos/alumni/simplilearn.png"
+    },
+    {
+      "name": "Chai Point",
+      "logo": "/images/logos/alumni/chai-point.png"
+    },
+    {
+      "name": "Urgently",
+      "logo": "/images/logos/alumni/urgently.png"
+    },
+    {
+      "name": "KB NBFC",
+      "logo": "/images/logos/alumni/kb-nbfc.png"
+    },
+    {
+      "name": "Quest Global",
+      "logo": "/images/logos/alumni/quest-global.png"
+    },
+    {
+      "name": "Capitalmind",
+      "logo": "/images/logos/alumni/capitalmind.png"
+    }
+  ],
+  "pastSponsors": [
+    {
+      "name": "Decathlon",
+      "logo": "/images/logos/past/decathlon.png"
+    },
+    {
+      "name": "Ather",
+      "logo": "/images/logos/past/ather.png"
+    },
+    {
+      "name": "Royal Enfield",
+      "logo": "/images/logos/past/royal-enfield.png"
+    },
+    {
+      "name": "Canara Bank",
+      "logo": "/images/logos/past/canara-bank.png"
+    },
+    {
+      "name": "Reliance Industries",
+      "logo": "/images/logos/past/reliance-industries.png"
+    },
+    {
+      "name": "Monster Energy",
+      "logo": "/images/logos/past/monster-energy.png"
+    },
+    {
+      "name": "SBI",
+      "logo": "/images/logos/past/sbi.png"
+    },
+    {
+      "name": "Zebronics",
+      "logo": "/images/logos/past/zebronics.png"
+    },
+    {
+      "name": "IBM",
+      "logo": "/images/logos/past/ibm.png"
+    },
+    {
+      "name": "Cisco",
+      "logo": "/images/logos/past/cisco.png"
+    },
+    {
+      "name": "Volvo",
+      "logo": "/images/logos/past/volvo.png"
+    },
+    {
+      "name": "Unacademy",
+      "logo": "/images/logos/past/unacademy.png"
+    },
+    {
+      "name": "Times of India",
+      "logo": "/images/logos/past/times-of-india.png"
+    },
+    {
+      "name": "MS Master",
+      "logo": "/images/logos/past/ms-master.png"
+    },
+    {
+      "name": "Big FM",
+      "logo": "/images/logos/past/big-fm.png"
+    },
+    {
+      "name": "Tata",
+      "logo": "/images/logos/past/tata.png"
+    },
+    {
+      "name": "TIME",
+      "logo": "/images/logos/past/time.png"
+    },
+    {
+      "name": "Bosch",
+      "logo": "/images/logos/past/bosch.png"
+    },
+    {
+      "name": "Intel",
+      "logo": "/images/logos/past/intel.png"
+    },
+    {
+      "name": "LIC",
+      "logo": "/images/logos/past/lic.png"
+    },
+    {
+      "name": "CFA Institute",
+      "logo": "/images/logos/past/cfa-institute.png"
+    },
+    {
+      "name": "SAP",
+      "logo": "/images/logos/past/sap.png"
+    },
+    {
+      "name": "HDFC Bank",
+      "logo": "/images/logos/past/hdfc-bank.png"
+    },
+    {
+      "name": "Dell",
+      "logo": "/images/logos/past/dell.png"
+    },
+    {
+      "name": "IFMS",
+      "logo": "/images/logos/past/ifms.png"
+    },
+    {
+      "name": "RA",
+      "logo": "/images/logos/past/ra.png"
+    },
+    {
+      "name": "EaseMyTrip",
+      "logo": "/images/logos/past/easemytrip.png"
+    },
+    {
+      "name": "Wells Fargo",
+      "logo": "/images/logos/past/wells-fargo.png"
+    },
+    {
+      "name": "Course Hero",
+      "logo": "/images/logos/past/course-hero.png"
+    },
+    {
+      "name": "Helion Studios",
+      "logo": "/images/logos/past/helion-studios.png"
+    },
+    {
+      "name": "SKMEP",
+      "logo": "/images/logos/past/skmep.png"
+    },
+    {
+      "name": "ICICI Bank",
+      "logo": "/images/logos/past/icici-bank.png"
+    },
+    {
+      "name": "Devfolio",
+      "logo": "/images/logos/past/devfolio.png"
+    },
+    {
+      "name": "MESCOM",
+      "logo": "/images/logos/past/mescom.png"
+    },
+    {
+      "name": "Beardo",
+      "logo": "/images/logos/past/beardo.png"
+    },
+    {
+      "name": "Unstop",
+      "logo": "/images/logos/past/unstop.png"
+    },
+    {
+      "name": "Kreative Keeda",
+      "logo": "/images/logos/past/kreative-keeda.png"
+    },
+    {
+      "name": "Moxx Entertainments",
+      "logo": "/images/logos/past/moxx-entertainments.png"
+    },
+    {
+      "name": "Bank of Baroda",
+      "logo": "/images/logos/past/bank-of-baroda.png"
+    },
+    {
+      "name": "TribeVibe",
+      "logo": "/images/logos/past/tribevibe.png"
+    }
+  ]
+}

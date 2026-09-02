@@ -1,0 +1,34 @@
+<!-- ==========================================================================
+     DECK CARD 01 — SCALE.
+
+     The fest's own numbers. Every figure comes from the ENGINEER '26
+     sponsorship brochure; data/fest.json carries the provenance note and
+     records how the brochure's own footfall discrepancy was resolved.
+     Before this card the site carried no number anywhere except a countdown.
+
+     Card-sized: the deck body supplies the padding and the angular frame.
+     ========================================================================== -->
+<section id="scale" class="relative">
+  <div class="max-w-3xl">
+    <p class="eyebrow text-cyan mb-5" data-reveal>Running since <%= fest.founded %></p>
+
+    <h2 class="font-display font-bold" data-reveal>
+      The network<br><span class="text-gradient-impossible">already exists.</span>
+    </h2>
+
+    <p class="text-sm sm:text-base text-[var(--paper-dim)] mt-5 max-w-xl leading-relaxed" data-reveal>
+      ENGINEER has run out of NITK Surathkal since <%= fest.founded %>, built and staffed
+      entirely by students. This is what it reaches in a normal year.
+    </p>
+
+    <ul class="stat-band mt-8" data-reveal>
+      <% fest.stats.forEach(function (s) { %>
+      <li class="stat">
+        <p class="stat__v"><%= s.value %></p>
+        <p class="stat__l"><%= s.label %></p>
+        <p class="stat__n"><%= s.note %></p>
+      </li>
+      <% }); %>
+    </ul>
+  </div>
+</section>

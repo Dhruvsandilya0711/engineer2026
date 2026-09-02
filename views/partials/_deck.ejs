@@ -1,39 +1,39 @@
 <!-- ==========================================================================
-     FANDECK — the homepage nav destinations, dealt as a tilted horizontal fan.
+     FANDECK — the homepage's five chapters, dealt as a tilted horizontal fan.
 
-     The five cards (About → Sponsors) rest overlapping in 3D, all leaning the
-     same way like a fanned hand. Hover lifts a card toward you; clicking one
-     OPENS it — it flies to the centre, straightens, and expands to a full panel
-     showing its real content (a FLIP morph in public/js/main.js → initFanDeck).
-     A scrim closes it, as does Esc or the ✕.
+     The cards rest overlapping in 3D, all leaning the same way like a fanned
+     hand. Hover lifts a card toward you; clicking one OPENS it — it flies to
+     the centre, straightens, and expands to a full panel showing its real
+     content (a FLIP morph in public/js/main.js → initFanDeck). A scrim closes
+     it, as does Esc or the ✕.
 
-     Card order, accents and index numbers mirror the hero nav bays. HOME is the
-     hero itself, so the fan's first CARD is 01 ABOUT. Each card keeps its real
-     id (#about … #sponsors) so the nav anchors still resolve — and the nav opens
-     the matching card rather than just scrolling to it.
+     The deck USED to be About / Events / Schedule / Team / Sponsors — the
+     same five destinations as the nav bar directly above it, so opening a
+     card only ever restated a link the visitor could already see. It now
+     carries the material that has nowhere else to live on this page: the
+     fest's scale, its programme tracks, its CSR work, the pro shows, and the
+     partner network. Navigation stays where navigation belongs — the bays.
      ========================================================================== -->
 <%
   const cards = [
-    { id: 'about',    i: 0, num: '01', name: 'About',    accent: '34,211,238',
-      teaser: 'The festival, the theme, and the idea behind COGNITRIXX.' },
-    { id: 'events',   i: 1, num: '02', name: 'Events',   accent: '99,102,241',
-      teaser: (events.all.length) + ' flagship events across three days.',
+    { id: 'scale',     i: 0, num: '01', name: 'Scale',     accent: '34,211,238',
+      teaser: '15K+ footfall, 200+ colleges, running since ' + fest.founded + '.' },
+    { id: 'programme', i: 1, num: '02', name: 'Programme', accent: '99,102,241',
+      teaser: 'Five tracks, ' + events.all.length + ' events, three days.',
       go: { href: '/events', label: 'All ' + events.all.length + ' &rarr;' } },
-    { id: 'schedule', i: 2, num: '03', name: 'Schedule', accent: '108,124,244',
-      teaser: 'The full three-day programme, hour by hour.',
-      go: { href: '/schedule', label: 'Full schedule &rarr;' } },
-    { id: 'team',     i: 3, num: '04', name: 'Team',     accent: '128,146,246',
-      teaser: 'The people who build ENGINEER \'26.',
-      go: { href: '/team', label: 'Open &rarr;' } },
-    { id: 'sponsors', i: 4, num: '05', name: 'Sponsors', accent: '232,121,249',
-      teaser: 'Partner with the fest — back the network.',
-      go: { href: '/#footer', label: 'Partner &rarr;' } },
+    { id: 'engi-care', i: 2, num: '03', name: 'ENGI Care', accent: '245,158,11',
+      teaser: 'The CSR programme — engineering that gives back.' },
+    { id: 'nights',    i: 3, num: '04', name: 'After Dark', accent: '214,118,226',
+      teaser: 'Pro shows, comedy and the acts ENGINEER has hosted.' },
+    { id: 'network',   i: 4, num: '05', name: 'Network',   accent: '232,121,249',
+      teaser: 'Alumni companies, research partners, past sponsors.',
+      go: { href: '/sponsors', label: 'Partner &rarr;' } },
   ];
 %>
 <section class="fandeck" id="deck" data-js="fandeck" aria-label="Explore ENGINEER '26">
 
   <div class="fandeck__intro" data-reveal>
-    <h2 class="font-display font-bold text-3xl sm:text-5xl">Explore the deck</h2>
+    <h2 class="font-display font-bold text-3xl sm:text-5xl">Inside the fest</h2>
     <p class="fandeck__lead">Hover a card &middot; click to open</p>
   </div>
 
@@ -62,11 +62,11 @@
 
         <!-- Full content: hidden in the fan, revealed when the card opens. -->
         <div class="fancard__body deck-card__body" data-lenis-prevent>
-          <% if (c.id === 'about') { %><%- include('_about-engineer', { festDates }) %>
-          <% } else if (c.id === 'events') { %><%- include('_events-rail', { events, regState }) %>
-          <% } else if (c.id === 'schedule') { %><%- include('_schedule-preview', { scheduleDays }) %>
-          <% } else if (c.id === 'team') { %><%- include('_team-preview', { teamTotal, teamGroupCount }) %>
-          <% } else if (c.id === 'sponsors') { %><%- include('_sponsors') %><% } %>
+          <% if (c.id === 'scale') { %><%- include('_deck-scale', { fest }) %>
+          <% } else if (c.id === 'programme') { %><%- include('_deck-programme', { tracks, events }) %>
+          <% } else if (c.id === 'engi-care') { %><%- include('_deck-care', { tracks }) %>
+          <% } else if (c.id === 'nights') { %><%- include('_deck-nights', { proshows }) %>
+          <% } else if (c.id === 'network') { %><%- include('_deck-network', { fest }) %><% } %>
         </div>
       </div>
     </article>

@@ -82,7 +82,11 @@
             <span class="event-row__idx"><%= String(i + 1).padStart(2, '0') %></span>
 
             <span class="event-row__thumb md:hidden">
+              <% if (evt.image) { %>
               <img src="<%= evt.image %>" alt="" loading="lazy" aria-hidden="true">
+              <% } else { %>
+              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
+              <% } %>
             </span>
 
             <span class="event-row__name"><%= evt.name %></span>
