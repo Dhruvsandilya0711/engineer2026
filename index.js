@@ -8,8 +8,12 @@ import {networkInterfaces} from 'os';
 import {initRegistrationStore, validate, saveRegistration, storeMode} from './lib/registration.js';
 import {
   initLeaderboardStore, leaderboardMode, hasStableSalt,
-  hashIp, validateRun, rateLimit, saveRun, topRuns, rankFor, hideRun,
+  hashIp, validateName, rateLimit, saveRun, topRuns, rankFor, hideRun,
+  issueSession, verifySession, sessionUsed,
 } from './lib/leaderboard.js';
+// The SAME simulation the browser runs. Replaying a submitted trace through
+// it is what makes a leaderboard score a fact rather than a claim.
+import { replay } from './public/js/range-sim.js';
 
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = dirname(__fileName)
@@ -271,11 +275,12 @@ app.post('/register', async (req, res) => {
 });
 
 // -------------------------------------------------------- signal range board
-// PHASE 1: the browser reports its own score, so these numbers are CLAIMS.
-// lib/leaderboard.js rejects runs that are impossible under the game's own
-// scoring rules, which stops a hand-edited payload but not a patched client —
-// the board is labelled unverified for exactly that reason. Do not settle the
-// two ₹2,500 prizes on these alone; see the note at the top of that module.
+// PHASE 2: the client never sends a score. It sends the seed the server
+// issued and the inputs the player made, and the server replays that trace
+// through the same deterministic simulation the browser ran to derive what
+// those inputs actually score. Patching the game changes nothing that
+// reaches the board. See lib/leaderboard.js for what this does and does not
+// defend against.
 
 const clientIp = (req) =>
   (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
@@ -288,27 +293,66 @@ app.get('/api/range/leaderboard', async (req, res) => {
       topRuns('score', limit),
       topRuns('streak', limit),
     ]);
-    res.json({ ok: true, verified: false, boards: { score, streak } });
+    res.json({ ok: true, verified: true, boards: { score, streak } });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'Leaderboard unavailable.' });
   }
 });
 
+// A run begins by asking for a seed. Rate-limited on its own so a client
+// cannot mint thousands of sessions looking for a soft one.
+app.post('/api/range/session', async (req, res) => {
+  try {
+    const gate = await rateLimit(hashIp(clientIp(req)), 'session');
+    if (!gate.ok) return res.status(429).json({ ok: false, error: gate.reason });
+    res.json({ ok: true, session: issueSession() });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Could not start a run.' });
+  }
+});
+
 app.post('/api/range/score', async (req, res) => {
   try {
-    const { valid, errors, value } = validateRun(req.body || {});
-    if (!valid) return res.status(400).json({ ok: false, errors });
+    const body = req.body || {};
+
+    const nameCheck = validateName(body.name);
+    if (!nameCheck.valid) return res.status(400).json({ ok: false, errors: { name: nameCheck.error } });
+
+    const session = verifySession(body.session);
+    if (!session.ok) return res.status(400).json({ ok: false, errors: { form: session.reason } });
+    if (await sessionUsed(session.sessionId)) {
+      return res.status(409).json({ ok: false, errors: { form: 'That run has already been saved.' } });
+    }
 
     const ipHash = hashIp(clientIp(req));
     const gate = await rateLimit(ipHash);
     if (!gate.ok) return res.status(429).json({ ok: false, errors: { form: gate.reason } });
 
-    const { id } = await saveRun(value, ipHash);
+    // THE authoritative step. Nothing the client claimed about its own run is
+    // consulted — only the seed it was issued and the inputs it recorded.
+    const outcome = replay(session.seed, body.shots);
+    if (!outcome.ok) return res.status(400).json({ ok: false, errors: { form: outcome.reason } });
+    if (outcome.score === 0 && outcome.streak === 0) {
+      return res.status(400).json({ ok: false, errors: { form: 'Nothing to save yet.' } });
+    }
+
+    const value = {
+      name: nameCheck.name,
+      score: outcome.score,
+      streak: outcome.streak,
+      shots: outcome.shots,
+      hits: outcome.hits,
+      // Derived from the simulation's own tick count, so it describes the run
+      // rather than however long the tab happened to be open.
+      runMs: Math.round(outcome.ticks * (1000 / 60)),
+    };
+
+    const { id } = await saveRun(value, ipHash, session.sessionId);
     const [scoreRank, streakRank] = await Promise.all([
       rankFor('score', value.score),
       rankFor('streak', value.streak),
     ]);
-    res.json({ ok: true, id, rank: { score: scoreRank, streak: streakRank } });
+    res.json({ ok: true, id, verified: true, run: value, rank: { score: scoreRank, streak: streakRank } });
   } catch (err) {
     res.status(500).json({ ok: false, errors: { form: 'Could not save that run.' } });
   }

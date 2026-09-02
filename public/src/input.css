@@ -2676,8 +2676,8 @@ html.cx-native .cx-ring { opacity: 0; }
    ================================================================== */
 .signal-range__actions {
   position: absolute;
-  left: clamp(0.6rem, 2vw, 1.2rem);
-  bottom: clamp(0.6rem, 2vh, 1.1rem);
+  left: 18px;
+  top: 18px;
   display: flex;
   gap: 0.5rem;
   z-index: 3;
@@ -2738,6 +2738,10 @@ html.cx-native .cx-ring { opacity: 0; }
   border: 1px solid color-mix(in oklab, var(--color-amber) 45%, transparent);
   padding: 0.25rem 0.5rem;
   cursor: help;
+}
+.lb__badge--ok {
+  color: var(--color-success);
+  border-color: color-mix(in oklab, var(--color-success) 45%, transparent);
 }
 
 .lb__tabs { display: flex; gap: 1px; margin: 1rem 0 0; background: var(--hairline); border: 1px solid var(--hairline); }
@@ -3988,7 +3992,12 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
 .signal-range__arena {
   position: relative;
   width: min(1280px, calc(100% - 2rem));
-  height: clamp(420px, 62svh, 620px);
+  /* Matches the simulation's fixed 1280x620 field (public/js/range-sim.js),
+     so the contain-fit that maps logical units to the canvas leaves no
+     letterbox at all on anything above phone width. The min-height keeps a
+     narrow screen playable; there the field centres with small bars. */
+  aspect-ratio: 1280 / 620;
+  min-height: 260px;
   border: 1px solid var(--hairline-strong);
   border-radius: 6px;
   background:

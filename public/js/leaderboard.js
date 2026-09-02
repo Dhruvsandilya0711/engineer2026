@@ -123,6 +123,15 @@ export function mountLeaderboard() {
   arena?.addEventListener('e26:range:runend', (e) => {
     const { run, reason } = e.detail;
     if (run.score <= 0 && run.streak <= 0) return;   // nothing worth saving
+    // A run played without a server-issued seed cannot be verified, so it
+    // cannot go on the board. Say why rather than failing at submit time.
+    if (!run.session) {
+      panel.hidden = false;
+      setPending(null);
+      summary.textContent = `${run.score} pts · best streak ×${run.streak}`;
+      say('This run started without a connection, so it can’t be verified. Play another to get on the board.', 'bad');
+      return;
+    }
     offer(run, reason);
   });
 
@@ -135,10 +144,17 @@ export function mountLeaderboard() {
     say('Saving…');
 
     try {
+      // Only the NAME and the run's inputs go up. The score is not sent at
+      // all — the server derives it by replaying these shots against the seed
+      // it issued, so there is nothing here worth tampering with.
       const res = await fetch('/api/range/score', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ name: nameInput.value.trim(), ...pending }),
+        body: JSON.stringify({
+          name: nameInput.value.trim(),
+          session: pending.session,
+          shots: pending.shotTrace,
+        }),
       });
       const data = await res.json();
 
@@ -151,7 +167,11 @@ export function mountLeaderboard() {
 
       set(NAME_KEY, nameInput.value.trim());
       setPending(null);
-      say(`Saved — #${data.rank.score} on score, #${data.rank.streak} on streak.`, 'good');
+      // Show the SERVER's figure. If it differs from what the player watched,
+      // the honest thing is to show the one that actually went on the board.
+      const verified = data.run || {};
+      say(`Saved: ${verified.score} pts, streak ×${verified.streak} — `
+        + `#${data.rank.score} on score, #${data.rank.streak} on streak.`, 'good');
       await refresh();
       setTimeout(() => { panel.hidden = true; }, 2600);
     } catch (_) {

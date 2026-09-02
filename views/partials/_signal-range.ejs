@@ -87,11 +87,11 @@
        Two separate boards because the two prizes are separate: ₹2,500 for
        the highest score, ₹2,500 for the longest streak.
 
-       Scores are computed in the browser and submitted by it, so every row
-       is a CLAIM. That is stated on the board rather than buried, because
-       the alternative — a prize board that looks authoritative and isn't —
-       is how a fest ends up in an argument it cannot win. See
-       lib/leaderboard.js for the integrity checks that ARE applied. -->
+       Scores here are SERVER-DERIVED: the browser submits the seed it was
+       issued plus the inputs the player made, and the server replays that
+       trace to work out what it actually scores. Patching the game changes
+       nothing that reaches this table. What it does NOT stop is a bot
+       computing good inputs offline — see lib/leaderboard.js. -->
   <div class="lb" data-js="range-board">
     <div class="lb__head">
       <div>
@@ -101,7 +101,7 @@
           <span class="lb__amt">&#8377;2,500</span> longest streak
         </p>
       </div>
-      <p class="lb__badge" title="Scores are reported by the browser and are not server-verified.">Unverified</p>
+      <p class="lb__badge lb__badge--ok" title="Every run on this board was replayed and scored by the server from the player's own inputs.">Server-verified</p>
     </div>
 
     <div class="lb__tabs" role="tablist" aria-label="Leaderboard metric">

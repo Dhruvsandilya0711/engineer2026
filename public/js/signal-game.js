@@ -13,25 +13,33 @@
    enough to run on a low-end phone next to the rest of the WebGL work on
    the page. Palette is the site palette (--color-cyan / --color-magenta /
    --color-indigo), typography inherits var(--font-mono) via the HUD DOM.
+   The RULES are not in this file. Physics, field geometry, wind, node
+   placement and scoring live in range-sim.js, which the server runs too:
+   a submitted run is verified by replaying its inputs through that same
+   module, so anything this file computed on its own would be worthless the
+   moment money was attached to the leaderboard. This file drives that
+   simulation, draws it, and records what the player did.
    ========================================================================== */
+
+import {
+  ARENA, TICK_MS, MAX_MISSES, RING_R, EMITTER, NODE_TTL_TICKS, createSim,
+  // Drawing needs the same numbers the simulation runs on: the wind gauge
+  // scales against WIND_MAX, and the aim preview traces the real ballistic
+  // arc rather than an approximation of it.
+  WIND_MAX, SPEED_MIN, SPEED_MAX, GRAV,
+} from '/js/range-sim.js';
 
 const IS_TOUCH = window.matchMedia('(hover: none)').matches;
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Physics — tuned so mid-charge with the right angle drops onto the node
-// most of the time. Harder now: smaller rings (in state), sideways wind
-// that changes every few shots, and the node relocates on its own if the
-// visitor sits on a shot for too long.
-const GRAV = 0.34;
-const SPEED_MIN = 6;
-const SPEED_MAX = 22;
+// The physics, the field, the wind and the scoring all live in range-sim.js
+// now, because the SERVER runs that same module to verify a submitted run.
+// What stays here is presentation: how the charge builds, how the node warns
+// before it moves, and everything that is drawn.
 const CHARGE_MS = 900;                 // 0 → max in this many ms of hold
 const AUTO_FIRE_AT_FULL = true;        // release the shot at max charge
-const WIND_MAX = 0.09;                 // px/frame^2 sideways nudge
-const WIND_ROTATE_EVERY = 3;           // shots between wind rotations
-const NODE_TTL_MS = 3500;              // node moves on its own after this
+const NODE_TTL_MS = NODE_TTL_TICKS * TICK_MS;
 const NODE_WARN_MS = 1200;             // last N ms it pulses red
-const MAX_MISSES = 3;                  // 3 misses and the run ends
 
 // Best score is per-visitor, persisted client-side.
 const BEST_KEY = 'e26.signalRange.best';
@@ -74,7 +82,6 @@ export function mountSignalGame() {
     ripples: [],                       // radial pulses from big hits
     shake: 0,                          // camera shake amplitude (px)
     wind: 0,                           // current sideways nudge (px/frame^2)
-    shotsSinceWind: 0,                 // rotate wind every WIND_ROTATE_EVERY
     charging: false,
     charge: 0,
     chargeStart: 0,
@@ -83,7 +90,6 @@ export function mountSignalGame() {
     bestStreak: 0,                     // longest streak THIS run — the streak
                                        // board scores this, not the live value,
                                        // which is 0 the moment a run ends
-    runStartedAt: Date.now(),
     shots: 0,
     hits: 0,
     misses: 0,                         // consecutive misses toward MAX_MISSES
@@ -92,10 +98,110 @@ export function mountSignalGame() {
     lockUntil: 0,                      // frozen input during game-over flash
     time: 0,
   };
-  // Start with a random wind direction so the very first shot must reckon
-  // with it too.
-  state.wind = (Math.random() * 2 - 1) * WIND_MAX * 0.7;
   bestEl.textContent = String(state.best);
+
+  // ---- the authoritative run ----------------------------------------------
+  // `sim` is the run; `state` above is only a mirror of it for drawing.
+  // `session` is the server-issued, signed seed — without one the run is
+  // still playable but cannot be submitted, which is the honest behaviour
+  // when the network is down: let people play, don't let them bank a run
+  // the server has no way to verify.
+  let sim = null;
+  let session = null;
+  let trace = [];                       // [{ tick, angle, charge }] — the run
+  let accum = 0;                        // leftover ms between fixed ticks
+  let lastNow = 0;
+
+  async function beginRun() {
+    trace = [];
+    accum = 0;
+    lastNow = 0;
+    session = null;
+    let seed;
+    try {
+      const res = await fetch('/api/range/session', { method: 'POST' });
+      const data = await res.json();
+      if (data?.ok) { session = data.session; seed = session.seed; }
+    } catch (_) { /* offline: fall through to a local seed */ }
+    // A local seed still gives a real game, just an unverifiable one.
+    if (seed === undefined) seed = (Math.random() * 0xFFFFFFFF) >>> 0;
+    sim = createSim(seed);
+    mirror();
+    host.dispatchEvent(new CustomEvent('e26:range:session', {
+      detail: { verifiable: Boolean(session) }, bubbles: true,
+    }));
+  }
+
+  /** Copy the simulation's state into the drawing mirror. Every draw routine
+   *  below reads `state`, so this is the single seam between the two. */
+  function mirror() {
+    if (!sim) return;
+    const s = sim.state;
+    state.node.x = s.node.x;
+    state.node.y = s.node.y;
+    state.node.driftY = s.node.baseY;
+    // The node's age drives its warning pulse, so convert ticks back to the
+    // wall clock the renderer already uses.
+    state.node.bornAt = state.time - (s.tick - s.node.bornTick) * TICK_MS;
+    state.wind = s.wind;
+    state.projectile = s.projectile;
+    state.score = s.score;
+    state.streak = s.streak;
+    state.bestStreak = s.bestStreak;
+    state.shots = s.shots;
+    state.hits = s.hits;
+    state.misses = s.misses;
+  }
+
+  /** Turn a tick's outcome into sound and particles. The simulation reports
+   *  WHAT happened; everything about how it looks and sounds is decided here. */
+  function onSimEvent(ev, prevWind) {
+    if (sim.state.wind !== prevWind) sfx('gust');
+    if (!ev) return;
+
+    if (ev.type === 'respawn') {
+      spawnBurst(state.node.x, state.node.y, CYAN, 6, 0.6);
+      sfx('spawn');
+      return;
+    }
+
+    if (ev.type === 'hit') {
+      const { pts, gained, x, y } = ev;
+      const ringColor = pts >= 100 ? CYAN : pts >= 40 ? MAGENTA : INDIGO;
+      const label = pts >= 100 ? 'BULLSEYE +100' : pts >= 40 ? 'RING +40' : '+15';
+      const mult = gained / pts;
+      if (sim.state.score > state.best) {
+        state.best = sim.state.score;
+        try { localStorage.setItem(BEST_KEY, String(state.best)); } catch (_) {}
+        bestEl.textContent = String(state.best);
+      }
+      scoreEl.textContent = String(sim.state.score);
+      streakEl.textContent = '×' + sim.state.streak;
+      spawnBurst(x, y, ringColor, 30 + pts / 4, 1.4);
+      state.hitFlashes.push({ x, y, life: 1, color: ringColor });
+      state.ripples.push({ x, y, r: RING_R[0], life: 1, color: ringColor });
+      sfx(pts >= 100 ? 'hitCore' : pts >= 40 ? 'hitMid' : 'hitRing');
+      state.shake = Math.min(14, state.shake + (pts >= 100 ? 10 : pts >= 40 ? 5 : 2));
+      spawnPop(mult > 1 ? `${label}  ×${mult.toFixed(1)}` : label, x, y - 46, ringColor);
+      state.trail.length = 0;
+      return;
+    }
+
+    if (ev.type === 'miss') {
+      spawnBurst(ev.x, ev.y, hex('#642'), 10, 0.6);
+      streakEl.textContent = '×0';
+      state.trail.length = 0;
+      state.misses = sim.state.misses;
+      paintLives();
+      if (sim.state.over) {
+        gameOver();
+      } else {
+        spawnPop(`SIGNAL DROPPED — ${MAX_MISSES - sim.state.misses} LEFT`,
+                 state.w / 2, state.h * 0.32, MAGENTA);
+        sfx('miss');
+      }
+    }
+  }
 
   // Life dots — leftmost dot goes dark first, so the row reads "3 → 2 → 1
   // → out" left-to-right. Keeps the visual grammar the same as most arcade
@@ -134,7 +240,6 @@ export function mountSignalGame() {
     state.bestStreak = 0;
     state.shots = 0;
     state.hits = 0;
-    state.runStartedAt = Date.now();
     state.misses = 0;
     scoreEl.textContent = '0';
     streakEl.textContent = '×0';
@@ -143,8 +248,9 @@ export function mountSignalGame() {
     state.shake = Math.min(20, state.shake + 14);
     sfx(sound);
     state.lockUntil = state.time + 900;
-    rotateWind();
-    placeNode();
+    // A new run means a NEW SEED from the server. Wind and the opening node
+    // come from that seed, so there is nothing to randomise here.
+    beginRun();
     // Ping the Restart chip so it flashes and its icon spins even when the
     // reboot came from an internal trigger (lose or R key), not a click.
     if (resetBtn) {
@@ -157,13 +263,18 @@ export function mountSignalGame() {
   // A run's final numbers, taken BEFORE restartRun wipes them. The streak
   // board scores `bestStreak`, not the live streak — that one is always 0 at
   // the moment a run ends, because a run ends on misses.
+  // What the run LOOKED like, for the panel's summary line. These numbers are
+  // for the player's eyes only — the board's figures come from the server
+  // replaying `trace`, and may differ if anything has been tampered with,
+  // which is the entire point.
   function snapshotRun() {
     return {
-      score: state.score,
-      streak: state.bestStreak,
-      shots: state.shots,
-      hits: state.hits,
-      runMs: Math.max(0, Date.now() - state.runStartedAt),
+      score: sim ? sim.state.score : 0,
+      streak: sim ? sim.state.bestStreak : 0,
+      shots: sim ? sim.state.shots : 0,
+      hits: sim ? sim.state.hits : 0,
+      session,
+      shotTrace: trace.slice(),
     };
   }
 
@@ -188,7 +299,7 @@ export function mountSignalGame() {
 
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
-      if (state.score <= 0 && state.bestStreak <= 0) return;
+      if (!sim || (sim.state.score <= 0 && sim.state.bestStreak <= 0)) return;
       endRun('banked');
     });
   }
@@ -301,19 +412,26 @@ export function mountSignalGame() {
   const resize = () => {
     const r = canvas.getBoundingClientRect();
     state.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    state.w = Math.max(1, r.width);
-    state.h = Math.max(1, r.height);
-    canvas.width  = Math.round(state.w * state.dpr);
-    canvas.height = Math.round(state.h * state.dpr);
-    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
-    state.emitter.x = 110;
-    state.emitter.y = state.h - 108;
-    computeExclusions();
-    if (state.node.x === 0) placeNode(true);
-    else {
-      // Nudge the node's home base into the new arena bounds on resize.
-      state.node.x = Math.min(state.node.x, state.w - 130);
-    }
+    const cw = Math.max(1, r.width);
+    const ch = Math.max(1, r.height);
+    canvas.width  = Math.round(cw * state.dpr);
+    canvas.height = Math.round(ch * state.dpr);
+
+    // Play happens in a FIXED logical field and is only scaled for display.
+    // Everything below this line — and every draw routine in this file —
+    // therefore works in logical units, unchanged from when they were
+    // viewport units. Contain-fit, so the whole field is always visible and
+    // nobody gets a wider board to aim across than anybody else.
+    const scale = Math.min(cw / ARENA.w, ch / ARENA.h);
+    const ox = (cw - ARENA.w * scale) / 2;
+    const oy = (ch - ARENA.h * scale) / 2;
+    state.view = { scale, ox, oy, cw, ch };
+    ctx.setTransform(state.dpr * scale, 0, 0, state.dpr * scale, state.dpr * ox, state.dpr * oy);
+
+    state.w = ARENA.w;
+    state.h = ARENA.h;
+    state.emitter.x = EMITTER.x;
+    state.emitter.y = EMITTER.y;
     // Seed the ambient signal drift only on first size.
     if (state.ambient.length === 0) {
       const n = Math.round(Math.min(70, (state.w * state.h) / 24000));
@@ -332,84 +450,20 @@ export function mountSignalGame() {
   };
   const ro = new ResizeObserver(resize); ro.observe(canvas);
   resize();
-
-  // ---- HUD exclusion zones -------------------------------------------------
-  // The node must never land behind the Score/Streak/Best/Signal HUD, the
-  // wind readout, the charge gauge, or the Restart chip — chrome eats the
-  // target and the shot has nothing to read against. Rects here are in the
-  // canvas's local space and include a small pad so the node's outer bloom
-  // stays clear too. Recomputed on resize.
-  function computeExclusions() {
-    const zones = [];
-    const cr = canvas.getBoundingClientRect();
-    const local = (el) => {
-      if (!el) return null;
-      const r = el.getBoundingClientRect();
-      return { x: r.left - cr.left, y: r.top - cr.top, w: r.width, h: r.height };
-    };
-    // Wind readout — drawn on the canvas itself, coords match drawWindIndicator.
-    const ww = Math.min(180, state.w * 0.22);
-    zones.push({ x: state.w / 2 - ww / 2 - 20, y: 0, w: ww + 40, h: 54 });
-    // Emitter cabinet — the whole bay around the tank stays clear.
-    zones.push({ x: state.emitter.x - 96, y: state.emitter.y - 96, w: 192, h: 220 });
-    for (const sel of ['.signal-range__hud', '.signal-range__gauge',
-                       '.signal-range__actions', '.signal-range__reset']) {
-      const b = local(host.querySelector(sel));
-      if (b) zones.push({ x: b.x - 14, y: b.y - 14, w: b.w + 28, h: b.h + 28 });
-    }
-    state.exclusion = zones;
-  }
-  state.exclusion = [];
-
-  // ---- node placement ------------------------------------------------------
-  function placeNode(initial = false) {
-    // Choose a fresh position that isn't too close to the emitter, stays in
-    // the top half so the shot has to arc, and doesn't collide with any of
-    // the HUD panels around the arena edges. Range widens with score so
-    // late-game shots are longer and harder to line up.
-    if (!state.exclusion || !state.exclusion.length) computeExclusions();
-    const scoreStretch = Math.min(0.28, state.score / 1200);
-    const marginTop = 50;
-    const marginBottom = state.h - 200;
-    const range = Math.max(80, marginBottom - marginTop);
-    // Padding matches the node's visible extent: outer ring + halo + brackets.
-    const pad = state.node.ringR[0] + 30;
-    const clear = (cx, cy) => {
-      for (const z of state.exclusion) {
-        if (cx + pad > z.x && cx - pad < z.x + z.w &&
-            cy + pad > z.y && cy - pad < z.y + z.h) return false;
-      }
-      return true;
-    };
-    let nx = state.w - 130, ny = state.h * 0.5;
-    for (let i = 0; i < 30; i++) {
-      const backoff = 90 + Math.random() * Math.min(260, state.w * (0.14 + scoreStretch));
-      const candX = state.w - backoff;
-      const candY = marginTop + Math.random() * range;
-      if (clear(candX, candY)) { nx = candX; ny = candY; break; }
-    }
-    state.node.x = nx;
-    state.node.y = ny;
-    state.node.driftY = state.node.y;
-    state.node.drift = 0;
-    state.node.bornAt = state.time;
-    if (initial) return;
-    spawnBurst(state.node.x, state.node.y, CYAN, 6, 0.6);
-    sfx('spawn');
-  }
-
-  function rotateWind() {
-    // Fresh direction, biased away from the previous one so the wind
-    // actually changes rather than nudging the same way twice in a row.
-    const sign = state.wind === 0 ? (Math.random() < 0.5 ? -1 : 1) : (state.wind > 0 ? -1 : 1);
-    state.wind = sign * (0.35 + Math.random() * 0.65) * WIND_MAX;
-    state.shotsSinceWind = 0;
-  }
+  // Ask the server for the opening seed. Play starts as soon as it lands.
+  beginRun();
+  // Node placement, wind and the exclusion zones all moved into range-sim.js:
+  // they decide where the target goes, so they must be identical on the
+  // server that replays the run. The zones are now FIXED logical rects
+  // (range-sim.js -> EXCLUSIONS) rather than DOM measurements, and the
+  // stylesheet positions the real panels to match them.
 
   // ---- input ---------------------------------------------------------------
   const localPt = (e) => {
     const r = canvas.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    // Screen space -> logical field space, undoing the contain-fit above.
+    const { scale, ox, oy } = state.view;
+    return { x: (e.clientX - r.left - ox) / scale, y: (e.clientY - r.top - oy) / scale };
   };
   // Duck the site music while the visitor is playing — the SFX and their
   // own concentration have room. Restored the moment they leave the arena.
@@ -454,7 +508,6 @@ export function mountSignalGame() {
   canvas.addEventListener('keyup', (e) => { if (e.code === 'Space') end(); });
 
   resetBtn?.addEventListener('click', () => {
-    state.shots = 0; state.hits = 0;
     restartRun('RANGE REBOOTED', CYAN, 'spawn');
   });
   // R key — global shortcut so pressing R anywhere on the page reboots
@@ -464,7 +517,6 @@ export function mountSignalGame() {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-    state.shots = 0; state.hits = 0;
     restartRun('RANGE REBOOTED', CYAN, 'spawn');
   });
 
@@ -479,24 +531,20 @@ export function mountSignalGame() {
   }
 
   function fire(power) {
+    if (!sim || sim.state.over) return;
     const angle = state.emitter.angle;     // already aimed at the pointer
-    const speed = SPEED_MIN + (SPEED_MAX - SPEED_MIN) * power;
-    // Emerge from the tip of the barrel — visually and hit-wise.
-    const barrelLen = 46;
-    const x = state.emitter.x + Math.cos(angle) * barrelLen;
-    const y = state.emitter.y + Math.sin(angle) * barrelLen;
-    state.projectile = {
-      x, y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      age: 0,
-    };
+    // The simulation owns the shot. It is also the thing that decides whether
+    // the shot is legal at all, so a refusal here means no trace entry — the
+    // recorded run and the run that was played can never diverge.
+    const tick = sim.state.tick;
+    if (!sim.fire(angle, power)) return;
+    trace.push({ tick, angle, charge: power });
+    mirror();
+
     // Recoil puff at the muzzle + fire SFX.
-    spawnBurst(x, y, CYAN, 8, 0.7);
+    const p = sim.state.projectile;
+    spawnBurst(p.x, p.y, CYAN, 8, 0.7);
     sfx('fire');
-    state.shots++;
-    state.shotsSinceWind++;
-    if (state.shotsSinceWind >= WIND_ROTATE_EVERY) { rotateWind(); sfx('gust'); }
   }
 
   // ---- particles -----------------------------------------------------------
@@ -596,80 +644,34 @@ export function mountSignalGame() {
       if (AUTO_FIRE_AT_FULL && state.charge >= 1) release();
     }
 
-    // Auto-move the node if it's been sitting too long.
-    if (!state.projectile && (now - state.node.bornAt) > NODE_TTL_MS) {
-      placeNode();
+    // ---- advance the AUTHORITATIVE simulation -----------------------------
+    // Fixed timestep, because the server replays these same ticks. A frame
+    // that took 40ms runs three ticks; a frame that took 8ms runs none. The
+    // cap stops a backgrounded tab from trying to catch up thousands of
+    // ticks in one frame when it returns.
+    if (sim && !sim.state.over) {
+      accum += Math.min(250, now - (lastNow || now));
+      lastNow = now;
+      let steps = 0;
+      while (accum >= TICK_MS && steps < 8 && !sim.state.over) {
+        const prevWind = sim.state.wind;
+        sim.step();
+        accum -= TICK_MS;
+        steps++;
+        // Trail is presentation, but it has to sample every TICK so the arc
+        // looks the same regardless of frame rate.
+        if (sim.state.projectile) {
+          state.trail.push({ x: sim.state.projectile.x, y: sim.state.projectile.y, life: 1 });
+          if (state.trail.length > 60) state.trail.shift();
+        }
+        onSimEvent(sim.state.lastEvent, prevWind);
+      }
+      mirror();
+    } else {
+      lastNow = now;
     }
 
-    // The node drifts a little on its Y axis — it's alive, not a bullseye
-    // painted on a wall. Idle drift only, and it's slow.
-    const t = now / 1000;
-    state.node.y = state.node.driftY + Math.sin(t * 0.6) * 12;
-
-    // Projectile physics + collision.
-    if (state.projectile) {
-      const p = state.projectile;
-      state.trail.push({ x: p.x, y: p.y, life: 1 });
-      if (state.trail.length > 60) state.trail.shift();
-      p.vy += GRAV;
-      p.vx += state.wind;                  // sideways nudge
-      p.x += p.vx;
-      p.y += p.vy;
-      p.age++;
-
-      // Hit test against the node's outer ring.
-      const nx = p.x - state.node.x, ny = p.y - state.node.y;
-      const d = Math.hypot(nx, ny);
-      const [rOuter, rMid, rCore] = state.node.ringR;
-      if (d < rOuter) {
-        let pts, ringColor, label;
-        if (d < rCore)      { pts = 100; ringColor = CYAN;    label = 'BULLSEYE +100'; }
-        else if (d < rMid)  { pts = 40;  ringColor = MAGENTA; label = 'RING +40';      }
-        else                { pts = 15;  ringColor = INDIGO;  label = '+15';           }
-        // Streak bonus: every third consecutive hit adds a multiplier.
-        const streakMult = 1 + Math.floor(state.streak / 3) * 0.5;
-        const gained = Math.round(pts * streakMult);
-        state.score += gained;
-        state.streak += 1;
-        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
-        if (state.score > state.best) {
-          state.best = state.score;
-          try { localStorage.setItem(BEST_KEY, String(state.best)); } catch (_) {}
-          bestEl.textContent = String(state.best);
-        }
-        scoreEl.textContent = String(state.score);
-        streakEl.textContent = '×' + state.streak;
-        spawnBurst(state.node.x, state.node.y, ringColor, 30 + pts / 4, 1.4);
-        state.hitFlashes.push({ x: state.node.x, y: state.node.y, life: 1, color: ringColor });
-        state.ripples.push({ x: state.node.x, y: state.node.y, r: rOuter, life: 1, color: ringColor });
-        sfx(pts >= 100 ? 'hitCore' : pts >= 40 ? 'hitMid' : 'hitRing');
-        state.hits++;
-        // Camera shake scales with points; bullseye is a proper thump.
-        state.shake = Math.min(14, state.shake + (pts >= 100 ? 10 : pts >= 40 ? 5 : 2));
-        spawnPop(streakMult > 1 ? `${label}  ×${streakMult.toFixed(1)}` : label,
-                 state.node.x, state.node.y - 46, ringColor);
-        state.projectile = null;
-        state.trail.length = 0;
-        placeNode();
-      } else if (p.y > state.h - 4 || p.x > state.w + 30 || p.x < -30) {
-        // Miss: ground puff or off-screen, streak resets, life burned.
-        const gy = Math.min(p.y, state.h - 4);
-        spawnBurst(p.x, gy, hex('#642'), 10, 0.6);
-        if (state.streak > 0) state.streak = 0;
-        streakEl.textContent = '×' + state.streak;
-        state.projectile = null;
-        state.trail.length = 0;
-        state.misses += 1;
-        paintLives();
-        if (state.misses >= MAX_MISSES) {
-          gameOver();
-        } else {
-          const left = MAX_MISSES - state.misses;
-          spawnPop(`SIGNAL DROPPED — ${left} LEFT`, state.w / 2, state.h * 0.32, MAGENTA);
-          sfx('miss');
-        }
-      }
-    } else {
+    if (!state.projectile) {
       // Fade the trail into the void after the shot resolves.
       for (const t of state.trail) t.life *= 0.88;
       if (state.trail.length && state.trail[0].life < 0.02) state.trail.length = 0;
@@ -719,7 +721,13 @@ export function mountSignalGame() {
   // ---- draw ----------------------------------------------------------------
   function draw() {
     const { w, h } = state;
-    ctx.clearRect(0, 0, w, h);
+    // Clear in DEVICE space: the contain-fit can leave a letterbox margin
+    // outside the logical field, and clearing only the field would smear
+    // whatever was drawn into those bars.
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
 
     // Camera shake — wrap the whole scene in a small translate.
     if (state.shake > 0) {
