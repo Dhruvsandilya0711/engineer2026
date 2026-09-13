@@ -34,7 +34,13 @@
 
   <div class="fandeck__intro" data-reveal>
     <h2 class="font-display font-bold text-3xl sm:text-5xl">Inside the fest</h2>
-    <p class="fandeck__lead">Hover a card &middot; click to open</p>
+    <%# A phone cannot hover, so it is told what it CAN do. CSS-only rather
+         than a JS swap: the wrong line must never be the one that shows while
+         a script is still loading. %>
+    <p class="fandeck__lead">
+      <span class="when-hover">Hover a card &middot; click to open</span>
+      <span class="when-touch">Tap a card to open it</span>
+    </p>
   </div>
 
   <div class="fandeck__stage" data-js="fandeck-stage">

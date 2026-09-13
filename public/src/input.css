@@ -1248,6 +1248,17 @@
 .gflow__link:focus-visible .gflow__cap { opacity: 1; }
 @media (hover: none) { .gflow__cap { opacity: 0.9; } }
 
+/* --- copy that has to differ by input device ---------------------------
+   "Hover a card" is an instruction a phone cannot follow. Done in CSS, not
+   JS, because the wrong line must never be the one on screen while a script
+   is still loading — and because it then works with JS disabled entirely.
+   Same query the rest of the site uses for touch (see scroll.js IS_TOUCH). */
+.when-touch { display: none; }
+@media (hover: none), (pointer: coarse) {
+  .when-hover { display: none; }
+  .when-touch { display: inline; }
+}
+
 /* signal paths behind the stream — the "connections" the frames ride along */
 .gflow__lines { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .gflow__lines span {

@@ -98,21 +98,12 @@
           </div>
         </section>
 
-        <!-- Structural preview of what the grid becomes, clearly marked. -->
-        <section class="mt-16" aria-hidden="true">
-          <p class="font-mono text-[0.68rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-5">
-            Layout preview — no real people shown
-          </p>
-          <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 list-none p-0 m-0 opacity-40">
-            <% for (let i = 0; i < 4; i++) { %>
-            <li class="team-card">
-              <div class="team-card__portrait"></div>
-              <div class="h-3 w-3/5 bg-[var(--hairline-strong)] mt-4"></div>
-              <div class="h-2.5 w-2/5 bg-[var(--hairline)] mt-2"></div>
-            </li>
-            <% } %>
-          </ul>
-        </section>
+        <%# There was a "layout preview" here: four empty skeleton cards under a
+             label reading "no real people shown". It was a developer's view of
+             the page, shipped to visitors, who got grey boxes plus a note
+             explaining the grey boxes. Deleted rather than hidden — the roster
+             panel above already says the team is not announced yet, and dead
+             markup left behind only waits to be un-hidden by accident. %>
       <% } %>
 
       <aside class="mt-16 border-l-2 border-magenta/50 pl-5 py-2">
@@ -121,8 +112,8 @@
           <% if (totalMembers) { %>
             Roster is live. Corrections go to the ENGINEER '26 organising team.
           <% } else { %>
-            No team members are listed yet — the roster is empty in the data layer rather than
-            filled with placeholders.
+            The ENGINEER '26 committee has not been announced yet. We would rather show
+            nothing than credit the wrong people, so nobody is listed until it is.
           <% } %>
         </p>
       </aside>
