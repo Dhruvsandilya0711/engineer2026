@@ -5,6 +5,7 @@ import {dirname} from 'path';
 import path from 'path'
 import {readFileSync} from 'fs';
 import {networkInterfaces} from 'os';
+import crypto from 'crypto';
 import {initRegistrationStore, validate, saveRegistration, storeMode} from './lib/registration.js';
 import {
   initLeaderboardStore, leaderboardMode, hasStableSalt,
@@ -358,13 +359,29 @@ app.post('/api/range/score', async (req, res) => {
   }
 });
 
+/* Constant-time token compare, matching what verifySession already does for
+   session signatures in lib/leaderboard.js.
+
+   A plain `!==` returns as soon as two bytes differ, so how long the check
+   takes depends on how much of the token was guessed correctly — enough, over
+   many requests, to recover it a byte at a time. Hashing both sides to a
+   fixed 32 bytes first means every comparison costs the same and a wrong
+   LENGTH is indistinguishable from wrong content; timingSafeEqual throws on
+   mismatched lengths, and that throw would leak the length by itself. */
+function tokenMatches(sent, expected) {
+  if (typeof sent !== 'string' || !sent) return false;
+  const a = crypto.createHash('sha256').update(sent).digest();
+  const b = crypto.createHash('sha256').update(expected).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+
 // Moderation. A public free-text board WILL collect names that have to come
 // off it; this is the way to do that without a database client. Requires
 // ADMIN_TOKEN to be set — with no token configured the route stays closed
 // rather than defaulting to open.
 app.post('/api/range/hide', async (req, res) => {
   const token = process.env.ADMIN_TOKEN;
-  if (!token || req.get('x-admin-token') !== token) return res.status(404).end();
+  if (!token || !tokenMatches(req.get('x-admin-token'), token)) return res.status(404).end();
   const ok = await hideRun(String(req.body?.id || ''), req.body?.hidden !== false);
   res.status(ok ? 200 : 404).json({ ok });
 });
