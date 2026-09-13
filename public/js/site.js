@@ -6,6 +6,7 @@
 // ==========================================================================
 
 export { initCursor } from '/js/cursor.js';
+export { initClickTone } from '/js/click-sfx.js';
 export { initAudio } from '/js/audio.js';
 
 import { scrollTo } from '/js/scroll.js';

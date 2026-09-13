@@ -1356,11 +1356,15 @@ html.cx-native .cx-ring { opacity: 0; }
   height: 134px;
   border-radius: 50%;
   mix-blend-mode: screen;
+  /* Alphas up ~40% (0.16/0.13/0.07 -> 0.22/0.18/0.10). Cutting the radius
+     30% took slightly over half the lit AREA with it, so the bloom read
+     faint rather than just tighter. Brightness carries what size used to,
+     which is the trade we wanted: same presence, smaller footprint. */
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(52, 216, 232, 0.16) 0%,
-    rgba(95, 121, 242, 0.13) 32%,
-    rgba(226, 63, 209, 0.07) 55%,
+    rgba(52, 216, 232, 0.22) 0%,
+    rgba(95, 121, 242, 0.18) 32%,
+    rgba(226, 63, 209, 0.10) 55%,
     transparent 72%
   );
   transition: width 420ms var(--ease-emphasized),

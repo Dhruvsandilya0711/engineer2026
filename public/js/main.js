@@ -17,7 +17,7 @@ import {
   scrollState, REDUCED_MOTION,
   scrollTo, stopScroll, startScroll,
 } from '/js/scroll.js';
-import { initNav, initMagneticButtons, initCountdown, initCursor, initScrollRail, initAudio } from '/js/site.js';
+import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/js/site.js';
 import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initPreloader } from '/js/preloader.js';
@@ -227,6 +227,7 @@ function initFanDeck() {
   initMagneticButtons();
   initCountdown();
   initCursor();
+  initClickTone();
   initScrollRail();
 
   const entryDone = initPreloader();

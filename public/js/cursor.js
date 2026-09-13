@@ -18,9 +18,12 @@
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const FINE_POINTER = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-// Elements that should make the reticle react.
-const INTERACTIVE = 'a, button, [role="button"], summary, .rail-card, .gallery-tile__link, .cat-chip, .event-row__link';
-const TEXTUAL = 'input:not([type="submit"]):not([type="button"]), textarea, select, [contenteditable="true"]';
+// Elements that should make the reticle react. Exported because the click
+// tone keys off the same two lists -- see click-sfx.js. Two copies of these
+// selectors would drift, and then the cursor would light up on something the
+// sound ignored.
+export const INTERACTIVE = 'a, button, [role="button"], summary, .rail-card, .gallery-tile__link, .cat-chip, .event-row__link';
+export const TEXTUAL = 'input:not([type="submit"]):not([type="button"]), textarea, select, [contenteditable="true"]';
 
 export function initCursor() {
   if (REDUCED_MOTION || !FINE_POINTER) return null;
