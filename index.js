@@ -6,7 +6,18 @@ import path from 'path'
 import {readFileSync} from 'fs';
 import {networkInterfaces} from 'os';
 import crypto from 'crypto';
-import {initRegistrationStore, validate, saveRegistration, storeMode} from './lib/registration.js';
+import {
+  initRegistrationStore, validate, saveRegistration, storeMode,
+  createPendingRegistration, markPaid, findByOrderId, hasPaidRegistration,
+} from './lib/registration.js';
+import {
+  initPayments, paymentsMode, paymentsEnabled, publicKeyId, feeFor,
+  createOrder, verifyCheckoutSignature, verifyWebhookSignature,
+} from './lib/payments.js';
+import {
+  generateTicketPDF, sendTicket, ticketToken, ticketTokenValid,
+  emailConfigured, hasStableTicketSecret, publicOrigin,
+} from './lib/tickets.js';
 import {
   initLeaderboardStore, leaderboardMode, hasStableSalt,
   hashIp, validateName, rateLimit, saveRun, topRuns, rankFor, hideRun,
@@ -20,6 +31,12 @@ const __fileName = fileURLToPath(import.meta.url)
 const __dirname = dirname(__fileName)
 
 const app = express();
+// CCC will serve engineer.nitk.ac.in through a reverse proxy terminating TLS.
+// Without this, req.protocol reports the http hop between proxy and node, so
+// every canonical and og:image on the site would advertise an http:// URL on
+// an https:// page — which is an SEO error and stops social cards resolving.
+// 1 = trust exactly one proxy hop, not an arbitrary X-Forwarded-For chain.
+app.set('trust proxy', 1);
 // HOST defaults to 0.0.0.0 so the site is reachable from other devices on the
 // same network (phones, teammates' laptops) — not just this machine.
 // Set HOST=127.0.0.1 to keep it private to localhost.
@@ -49,6 +66,16 @@ const REGISTRATION_STATES = {
   completed:     { label: 'Completed',              tone: 'closed', actionable: false },
 };
 const regState = (e) => REGISTRATION_STATES[e.registration] || REGISTRATION_STATES.not_open;
+
+/**
+ * The site's public origin. PUBLIC_ORIGIN wins when set, because it is the
+ * only thing that is right in every context: the Razorpay webhook arrives
+ * with no `req` to read a host from, and a request's Host header is
+ * attacker-controlled. Falls back to the request so local development needs
+ * no configuration.
+ */
+const originFor = (req) =>
+  publicOrigin() || `${req.protocol}://${req.get('host')}`;
 
 const events = {
   all: allEvents,
@@ -122,7 +149,10 @@ app.use('/vendor/lenis', express.static(path.join(__dirname, 'node_modules/lenis
 
 // Form posts for registration.
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// The Razorpay webhook signature is computed over the RAW bytes. Re-serialising
+// the parsed object reorders keys and drops whitespace, so the signature would
+// never match — the raw buffer has to be kept as it arrives.
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 
 app.get('/', (req, res) => {
   // The homepage deck's TEAM card shows counts only when there is a real
@@ -214,7 +244,7 @@ app.get('/events/:slug', (req, res, next) => {
   const event = allEvents.find(e => e.slug === req.params.slug);
   if (!event) return next(); // falls through to the 404 handler
 
-  const origin = `${req.protocol}://${req.get('host')}`;
+  const origin = originFor(req);
   const related = allEvents
     .filter(e => e.category === event.category && e.slug !== event.slug)
     .slice(0, 3);
@@ -241,13 +271,22 @@ app.get('/events/:slug', (req, res, next) => {
 
 // ---------------------------------------------------------------- register
 // Registration ONLY. No passes, tickets, QR or payment — see lib/registration.js.
+// `payment` is null on every path except the one that has just created a
+// Razorpay order. The view opens checkout when it is present, so there is one
+// template rather than a separate payment page to keep in step with this one.
+const renderRegister = (res, opts) => res.render('register', {
+  festDates: FEST_DATES,
+  events,
+  values: { userName: '', userRollNumber: '', userEvent: '', userMail: '' },
+  errors: {},
+  status: null,
+  payment: null,
+  ...opts,
+});
+
 app.get('/register', (req, res) => {
-  res.render('register', {
-    festDates: FEST_DATES,
-    events,
+  renderRegister(res, {
     values: { userName: '', userRollNumber: '', userEvent: req.query.event || '', userMail: '' },
-    errors: {},
-    status: null,
   });
 });
 
@@ -256,30 +295,178 @@ app.post('/register', async (req, res) => {
 
   if (!valid) {
     return res.status(400).render('register', {
-      festDates: FEST_DATES, events, values: req.body || {}, errors, status: 'invalid',
+      festDates: FEST_DATES, events, values: req.body || {}, errors, status: 'invalid', payment: null,
     });
   }
 
+  // Does this event cost anything? The price is looked up server-side and the
+  // request has no say in it, so a posted amount is simply ignored. Events
+  // with no fee row are free and take the original one-step path below.
+  let fee = null;
+  try {
+    fee = await feeFor(value.userEvent);
+  } catch {
+    return res.status(503).render('register', {
+      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null,
+    });
+  }
+
+  if (fee && paymentsEnabled()) {
+    // A PAID row is what blocks a second attempt. An abandoned checkout leaves
+    // an unpaid row behind and must not lock the person out of trying again.
+    if (await hasPaidRegistration(value.userMail, value.userEvent)) {
+      return res.status(409).render('register', {
+        festDates: FEST_DATES, events, values: req.body,
+        errors: { userMail: 'This email has already paid for that event.' },
+        status: 'duplicate', payment: null,
+      });
+    }
+
+    try {
+      const order = await createOrder({
+        rupees: fee,
+        receipt: `engi26_${Date.now()}`,
+        // Echoed back on the webhook, which otherwise knows only an order id.
+        notes: { event: value.userEvent, roll: value.userRollNumber },
+      });
+
+      // The row is written BEFORE the money moves. The webhook arrives with an
+      // order id and nothing else, so the row it updates has to exist already.
+      const pending = await createPendingRegistration(value, order.id, fee);
+      if (!pending.ok) throw new Error(pending.error || 'could not record the order');
+
+      return renderRegister(res, {
+        values: req.body,
+        status: 'pay',
+        payment: {
+          orderId: order.id,
+          amountPaise: order.amount,
+          rupees: fee,
+          keyId: publicKeyId(),
+          eventName: value.userEvent,
+          userName: value.userName,
+          userMail: value.userMail,
+        },
+      });
+    } catch (err) {
+      console.error('order creation failed:', err.message);
+      return res.status(502).render('register', {
+        festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'pay-error', payment: null,
+      });
+    }
+  }
+
+  // ---- free event: unchanged from before payments existed ----
   const result = await saveRegistration(value);
 
   if (result.duplicate) {
     return res.status(409).render('register', {
       festDates: FEST_DATES, events, values: req.body,
       errors: { userMail: 'This email is already registered for that event.' },
-      status: 'duplicate',
+      status: 'duplicate', payment: null,
     });
   }
   if (!result.ok) {
     return res.status(500).render('register', {
-      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error',
+      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null,
     });
   }
 
-  res.render('register', {
-    festDates: FEST_DATES, events,
-    values: { userName: '', userRollNumber: '', userEvent: '', userMail: '' },
-    errors: {}, status: 'success',
+  renderRegister(res, { status: 'success' });
+});
+
+
+// ------------------------------------------------------------------ payments
+// Two independent confirmations of the same payment, on purpose:
+//
+//   /api/pay/verify   the browser's checkout handler. Fast, so the visitor
+//                     gets an answer, but it only ever arrives if the visitor
+//                     kept the tab open.
+//   /api/pay/webhook  Razorpay calling the server directly. Slower, but it
+//                     arrives even if the browser was closed mid-payment, and
+//                     it is retried until it gets a 2xx.
+//
+// Both call markPaid(), which is idempotent and reports whether IT was the
+// call that flipped the row — so whichever lands first sends the one ticket
+// and the other is a no-op.
+
+async function issueTicket(orderId, label) {
+  const user = await findByOrderId(orderId);
+  if (!user) return { ok: false, reason: 'order has no registration' };
+  try {
+    const pdf = await generateTicketPDF(user);
+    const mail = await sendTicket(user, pdf);
+    if (!mail.sent) console.warn(`  ticket for ${orderId} not emailed (${label}): ${mail.reason}`);
+    return { ok: true, emailed: mail.sent };
+  } catch (err) {
+    // A ticket that cannot be rendered must not un-pay a payment. The row is
+    // already marked paid and /ticket can regenerate it on demand.
+    console.error(`  ticket generation failed for ${orderId}:`, err.message);
+    return { ok: false, reason: err.message };
+  }
+}
+
+app.post('/api/pay/verify', async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
+  if (!razorpay_order_id || !razorpay_payment_id) {
+    return res.status(400).json({ ok: false, error: 'Incomplete payment details.' });
+  }
+
+  if (!verifyCheckoutSignature(razorpay_order_id, razorpay_payment_id, razorpay_signature)) {
+    console.warn('  checkout signature mismatch for', razorpay_order_id);
+    return res.status(400).json({ ok: false, error: 'Payment could not be verified.' });
+  }
+
+  const marked = await markPaid(razorpay_order_id, razorpay_payment_id);
+  if (!marked.ok) return res.status(500).json({ ok: false, error: 'Could not record the payment.' });
+
+  if (marked.changed) await issueTicket(razorpay_order_id, 'checkout');
+
+  res.json({
+    ok: true,
+    ticket: `/ticket/${encodeURIComponent(razorpay_order_id)}?t=${ticketToken(razorpay_order_id)}`,
   });
+});
+
+app.post('/api/pay/webhook', async (req, res) => {
+  if (!verifyWebhookSignature(req.rawBody, req.get('x-razorpay-signature'))) {
+    return res.status(400).send('invalid signature');
+  }
+  // 2xx for events we do not act on, or Razorpay retries them forever.
+  if (req.body?.event !== 'payment.captured') return res.status(200).send('ignored');
+
+  const payment = req.body?.payload?.payment?.entity;
+  if (!payment?.order_id) return res.status(200).send('no order id');
+
+  const marked = await markPaid(payment.order_id, payment.id);
+  if (!marked.ok) return res.status(500).send('could not record');
+  if (marked.changed) await issueTicket(payment.order_id, 'webhook');
+
+  res.status(200).send('ok');
+});
+
+// The ticket itself. The token is an HMAC of the order id: order ids travel
+// in emails, URLs and screenshots and are an identifier, not a secret, so a
+// bare one must not be enough to pull down somebody's name, roll number and
+// address. A bad token is a 404, not a 403 — there is no reason to confirm
+// that an order exists to someone who cannot prove they own it.
+app.get('/ticket/:orderId', async (req, res) => {
+  const { orderId } = req.params;
+  if (!ticketTokenValid(orderId, req.query.t)) return res.status(404).end();
+
+  const user = await findByOrderId(orderId);
+  if (!user || !user.isPaid) return res.status(404).end();
+
+  try {
+    const pdf = await generateTicketPDF(user);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition',
+      `attachment; filename="ENGINEER26_Ticket_${String(user.userRollNumber).replace(/[^\w-]/g, '')}.pdf"`);
+    res.send(pdf);
+  } catch (err) {
+    console.error('ticket render failed:', err.message);
+    res.status(500).send('Could not generate that ticket.');
+  }
 });
 
 // -------------------------------------------------------- signal range board
@@ -419,6 +606,33 @@ if (!hasStableSalt) {
 if (!process.env.ADMIN_TOKEN) {
   console.log(`  ! ADMIN_TOKEN unset — /api/range/hide is closed, so there is no`);
   console.log(`    way to take an abusive name off the public board.`);
+}
+
+// AFTER the registration store, which owns the mongo connection payments
+// borrows. Every warning below describes something that still WORKS but
+// works worse, which is why none of them stop the boot.
+const payInfo = await initPayments();
+console.log(`  Payments:           ${paymentsMode()} — ${payInfo.reason}`);
+if (paymentsEnabled()) {
+  if (!process.env.RAZORPAY_WEBHOOK_SECRET) {
+    console.log(`  ! RAZORPAY_WEBHOOK_SECRET unset — a payment is only confirmed if`);
+    console.log(`    the payer's browser survives the redirect back. Close the tab`);
+    console.log(`    mid-payment and the money is taken with no ticket issued.`);
+  }
+  if (!publicOrigin()) {
+    console.log(`  ! PUBLIC_ORIGIN unset — ticket QR codes and emailed links are`);
+    console.log(`    built with no host and will not resolve. Set it to the real`);
+    console.log(`    site origin (https://engineer.nitk.ac.in).`);
+  }
+  if (!emailConfigured()) {
+    console.log(`  ! EMAIL_ADDRESS / EMAIL_APP_PASSKEY unset — tickets are generated`);
+    console.log(`    and downloadable, but nothing is posted to the registrant.`);
+  }
+  if (!hasStableTicketSecret) {
+    console.log(`  ! No TICKET_SECRET / RANGE_SECRET / LEADERBOARD_SALT — ticket`);
+    console.log(`    links are signed with a per-boot key, so every link already`);
+    console.log(`    emailed stops working the next time the server restarts.`);
+  }
 }
 
 app.listen(port, host, () => {

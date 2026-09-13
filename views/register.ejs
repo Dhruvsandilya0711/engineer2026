@@ -49,6 +49,48 @@
         </div>
       <% } %>
 
+      <%# PAYMENT. The server has already created the Razorpay order and
+          written an unpaid row for it; this only opens the modal. The form
+          is hidden below while this is showing, because re-submitting it
+          would create a second order for the same person. %>
+      <% if (status === 'pay' && payment) { %>
+        <div class="border border-[rgba(59,130,246,.45)] bg-charcoal p-7 mb-8">
+          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-cyan mb-3">Payment</p>
+          <h2 class="font-display font-semibold text-xl mb-2"><%= payment.eventName %></h2>
+          <p class="text-sm text-[var(--paper-dim)] mb-5">
+            <span class="font-display text-2xl text-paper">&#8377;<%= payment.rupees %></span>
+            <span class="block mt-2">Your place is held but not confirmed until this is paid.</span>
+          </p>
+
+          <p class="lb-msg" data-js="pay-status" role="status" aria-live="polite" hidden></p>
+
+          <noscript>
+            <p class="text-sm text-error">
+              Card payment needs JavaScript, which is switched off in this browser.
+              Turn it on and register again, or email
+              <a href="mailto:engineerconvenor@nitk.edu.in">engineerconvenor@nitk.edu.in</a>.
+            </p>
+          </noscript>
+
+          <button type="button" class="btn btn-primary mt-2" data-js="pay-now">Pay &#8377;<%= payment.rupees %></button>
+
+          <%# Server-issued, and read back by public/js/pay.js. The amount is
+              re-derived server-side at verification, so editing this changes
+              nothing about what is actually charged or what is accepted. %>
+          <script type="application/json" data-js="pay-data"><%- JSON.stringify(payment) %></script>
+        </div>
+      <% } %>
+
+      <% if (status === 'pay-error') { %>
+        <div class="border border-[rgba(232,104,138,.45)] bg-charcoal p-5 mb-8" role="alert">
+          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-error mb-2">Payment unavailable</p>
+          <p class="text-sm text-[var(--paper-dim)]">
+            We could not start a payment for that event just now, and nothing has been
+            charged or recorded. Please try again in a minute.
+          </p>
+        </div>
+      <% } %>
+
       <% if (status === 'error') { %>
         <div class="border border-[rgba(232,104,138,.45)] bg-charcoal p-5 mb-8" role="alert">
           <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-error mb-2">Could not save</p>
@@ -56,7 +98,7 @@
         </div>
       <% } %>
 
-      <% if (status !== 'success') { %>
+      <% if (status !== 'success' && status !== 'pay') { %>
       <form method="post" action="/register" novalidate class="flex flex-col gap-5" data-js="register-form">
 
         <div>
@@ -117,5 +159,11 @@
 
   <%- include('partials/_footer') %>
   <script type="module" src="/js/page.js"></script>
+  <% if (status === 'pay' && payment) { %>
+  <script type="module">
+    import { initPay } from '/js/pay.js';
+    initPay();
+  </script>
+  <% } %>
 </body>
 </html>

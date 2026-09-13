@@ -1,0 +1,5 @@
+{
+  "_note": "Per-event entry fees for ENGINEER '26, used ONLY when there is no database. With DBURL set the server reads the `event_fee` collection instead — the same one the engi_nitk_paymentgateway project writes — and this file is ignored. `fees` is intentionally EMPTY: an event with no row here is FREE and registers in one step without touching Razorpay, which is the correct behaviour until the committee has actually set prices. Add { eventName, eventFee } rows to charge for an event. eventName must match the event's `name` in data/events.json exactly, because that is the string the registration form submits.",
+  "_rowShape": { "eventName": "string — must equal the name in data/events.json", "eventFee": "number — whole rupees, e.g. 150" },
+  "fees": []
+}
