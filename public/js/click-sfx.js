@@ -16,12 +16,18 @@
 //
 // Governed by the site mute button. Same localStorage key as audio.js and
 // signal-game.js, so one switch owns every sound the site makes.
+//
+// Mounts on the same devices cursor.js does — fine pointer, motion allowed.
+// A phone has no cursor for this to be the sound OF, and a tick on every tap
+// of a site that already plays music is a lot to hand someone who never
+// asked for either.
 // ==========================================================================
 
 import { INTERACTIVE, TEXTUAL } from '/js/cursor.js';
 
 const MUTE_KEY = 'e26.audio.muted';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE_POINTER = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // The game synthesises its own charge/fire sounds on the same pointerdown.
 // Playing this on top of those muddies both, so the arena is left alone.
@@ -101,12 +107,13 @@ function strike(hot) {
 }
 
 /**
- * Mount the click tone. Returns a handle with destroy(), or null if the
- * visitor has asked for reduced motion — that preference is a request for
- * less of everything the page does at them, sound included.
+ * Mount the click tone. Returns a handle with destroy(), or null on a touch
+ * device (no cursor for this to be the sound of) or when the visitor has
+ * asked for reduced motion — that preference is a request for less of
+ * everything the page does at them, sound included.
  */
 export function initClickTone() {
-  if (REDUCED_MOTION) return null;
+  if (REDUCED_MOTION || !FINE_POINTER) return null;
 
   const onDown = (e) => {
     const el = e.target instanceof Element ? e.target : null;
