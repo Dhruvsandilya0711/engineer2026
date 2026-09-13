@@ -138,6 +138,72 @@
       <p class="lb__badge lb__badge--ok" title="Every run on this board was replayed and scored by the server from the player's own inputs.">Server-verified</p>
     </div>
 
+    <%# PRIZE RULES. Cash is on the line, so every clause here describes what
+        the code ACTUALLY does — ties, dedupe and the rate limit are read off
+        lib/leaderboard.js, not invented. Keep them in step if that changes.
+        Collapsed by default: the people who need them will open them, and
+        the section is meant to stay spacious. %>
+    <details class="lb__rules">
+      <summary class="lb__rules-sum">
+        Prize rules
+        <span class="lb__rules-hint">closes 25 Oct 2026, 18:00 IST</span>
+      </summary>
+      <div class="lb__rules-body">
+        <ol class="lb__rules-list">
+          <li>
+            <b>Two prizes, two boards.</b> &#8377;2,500 for the highest single-run
+            score and &#8377;2,500 for the longest streak in a single run. They are
+            judged separately, so the same run can place on both.
+          </li>
+          <li>
+            <b>Your best run counts.</b> Play as often as you like — each name
+            appears once per board, showing only its best result. Later runs never
+            replace a better earlier one.
+          </li>
+          <li>
+            <b>Ties go to whoever got there first.</b> On an equal score or streak,
+            the run submitted earlier ranks higher. There is no play-off.
+          </li>
+          <li>
+            <b>Enter under a name we can find you by.</b> It is shown publicly on
+            this page. 2–20 characters. We cannot pay out to a handle nobody can
+            match to a person at the fest.
+          </li>
+          <li>
+            <b>One person, one prize.</b> If the same player tops both boards they
+            take whichever they prefer, and the other goes to the next eligible
+            entrant.
+          </li>
+          <li>
+            <b>Scores are verified, not trusted.</b> The server replays the inputs
+            you made and derives the score itself, so a modified game changes
+            nothing here. Submissions are limited to 20 per hour with five seconds
+            between them.
+          </li>
+          <li>
+            <b>Automated play is disqualified.</b> Scripted or computed input is
+            not a run. Before either prize is paid, the leading entrant will be
+            asked to reproduce a comparable result on a supervised device at the
+            fest. Declining to is a withdrawal.
+          </li>
+          <li>
+            <b>We can remove an entry.</b> Offensive names and runs we judge to be
+            automated come off the board. The organising committee's decision on
+            both prizes is final.
+          </li>
+          <li>
+            <b>Closing.</b> The boards freeze at <b>18:00 IST on 25 October 2026</b>.
+            Winners are contacted on the email given at registration and must claim
+            in person at the fest with a college ID.
+          </li>
+        </ol>
+        <p class="lb__rules-foot">
+          We store a one-way hash of your IP address to rate-limit submissions. It
+          is never shown, never shared, and cannot be reversed to your address.
+        </p>
+      </div>
+    </details>
+
     <div class="lb__tabs" role="tablist" aria-label="Leaderboard metric">
       <button type="button" class="lb__tab is-active" data-js="lb-tab" data-metric="score"
               role="tab" aria-selected="true" aria-controls="lb-table-score">Score</button>
