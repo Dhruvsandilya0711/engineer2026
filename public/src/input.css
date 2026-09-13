@@ -1347,10 +1347,13 @@ html.cx-native .cx-ring { opacity: 0; }
   will-change: transform;
 }
 
-/* --- the glow: the light source trailing behind everything else --- */
+/* --- the glow: the light source trailing behind everything else ---
+   Diameter was 192/258/150. Pulled back 30% across all three states rather
+   than just the base, so the hot and down sizes keep their ratio to it and
+   the bloom still reads as one light source reacting. --- */
 .cx-glow {
-  width: 192px;
-  height: 192px;
+  width: 134px;
+  height: 134px;
   border-radius: 50%;
   mix-blend-mode: screen;
   background: radial-gradient(
@@ -1364,8 +1367,8 @@ html.cx-native .cx-ring { opacity: 0; }
               height 420ms var(--ease-emphasized),
               opacity 300ms var(--ease-standard);
 }
-.is-hot .cx-glow { width: 258px; height: 258px; }
-.is-down .cx-glow { width: 150px; height: 150px; }
+.is-hot .cx-glow { width: 180px; height: 180px; }
+.is-down .cx-glow { width: 104px; height: 104px; }
 
 /* --- the reticle ring --- */
 .cx-ring {
