@@ -13,7 +13,7 @@
   <meta property="og:title" content="<%= event.name %> — ENGINEER '26">
   <meta property="og:description" content="<%= event.description ? event.description : event.category + ' · ENGINEER \'26, NITK Surathkal' %>">
   <meta property="og:url" content="<%= canonical %>">
-  <meta property="og:image" content="<%= event.image %>">
+  <meta property="og:image" content="<%= ogImage %>">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -192,8 +192,12 @@
           <% } %>
 
           <%
-            // Nothing beyond name/category/image is confirmed for this event yet.
-            const hasAnyDetail = event.description || (event.rules && event.rules.length)
+            // Does this event have any CONFIRMED detail yet? `description` is
+            // deliberately not part of this test: every event now carries a
+            // description of its format, and letting that suppress the notice
+            // would leave a page that reads as complete while the rules,
+            // prizes and timings on it are still unknown.
+            const hasAnyDetail = (event.rules && event.rules.length)
               || (event.timeline && event.timeline.length) || event.prizes
               || event.eligibility || event.teamSize || (event.faq && event.faq.length);
           %>
@@ -203,7 +207,8 @@
             <h2 class="font-display font-semibold text-xl mb-3">Full details publish here</h2>
             <p class="text-sm text-[var(--paper-dim)] max-w-lg">
               The rules, timeline, prizes, eligibility and team requirements for <%= event.name %> go live
-              once the organising team confirms them. Nothing is listed above because nothing is confirmed yet.
+              once the organising team confirms them. What you see above is what the event is; none of the
+              specifics are settled yet.
             </p>
           </section>
           <% } %>

@@ -214,6 +214,7 @@ app.get('/events/:slug', (req, res, next) => {
   const event = allEvents.find(e => e.slug === req.params.slug);
   if (!event) return next(); // falls through to the 404 handler
 
+  const origin = `${req.protocol}://${req.get('host')}`;
   const related = allEvents
     .filter(e => e.category === event.category && e.slug !== event.slug)
     .slice(0, 3);
@@ -227,7 +228,13 @@ app.get('/events/:slug', (req, res, next) => {
     // no description of its own can still say what kind of thing it is.
     track: tracks.find(t => t.id === event.track) || null,
     index: allEvents.indexOf(event) + 1,
-    canonical: `${req.protocol}://${req.get('host')}/events/${event.slug}`,
+    canonical: `${origin}/events/${event.slug}`,
+    // og:image has to be an ABSOLUTE url -- a crawler will not resolve a
+    // site-relative path against the page, so the relative one this used to
+    // emit produced no card at all when an event link was pasted into
+    // WhatsApp or Instagram. The four events with no photo of their own
+    // fall back to the wordmark rather than to an empty content="".
+    ogImage: origin + (event.image || '/images/engineer26-wordmark.png'),
   });
 });
 
