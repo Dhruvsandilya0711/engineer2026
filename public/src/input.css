@@ -607,14 +607,21 @@
      the minifier drop the unprefixed one (see .bay). */
   mask-image: radial-gradient(closest-side at 50% 47%, #000 0 86%, transparent 100%);
   /* Transparent to the page by default: this section is PINNED, so a canvas
-     that swallowed touch gestures would trap the visitor inside it. The
-     module opts back in on fine pointers only (.is-grabbable), where the
-     cursor breaks the mark apart and it reforms behind it. */
+     that swallowed every touch gesture would trap the visitor inside it. The
+     module opts back in per input type — .is-grabbable on a fine pointer,
+     .is-swipeable on touch — where the cursor breaks the mark apart and it
+     reforms behind it. */
   pointer-events: none;
 }
 .tf-subject__scene canvas { display: block; width: 100%; height: 100%; }
 .tf-subject__scene.is-grabbable { pointer-events: auto; cursor: grab; }
 .tf-subject__scene.is-grabbing { cursor: grabbing; }
+/* Touch: take the panel's gestures back, but hand vertical panning straight
+   to the browser. `pan-y` is what keeps the pinned section scrollable — the
+   visitor swipes up and the page moves, swipes sideways and the mark turns.
+   Without it the canvas would eat the scroll, which is the exact trap the
+   pointer-events default above was written to avoid. */
+.tf-subject__scene.is-swipeable { pointer-events: auto; touch-action: pan-y; }
 /* No WebGL: a shaped glow rather than an empty panel. */
 .tf-subject__scene.is-static {
   background: radial-gradient(42% 42% at 50% 46%, rgba(138, 156, 244, 0.20), transparent 70%);

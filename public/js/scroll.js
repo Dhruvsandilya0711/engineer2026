@@ -160,8 +160,21 @@ export function registerReveals(ctx) {
  * the next one arrives, so boundaries read as transitions instead of edges.
  */
 export function registerSeams(ctx) {
-  if (!ctx || IS_TOUCH) return; // too costly on touch, and less legible
+  if (!ctx) return;
   const { gsap } = ctx;
+
+  // Seams used to be skipped entirely on touch as "too costly". That was
+  // over-cautious: each one is a single scrubbed tween on opacity and
+  // translate, both compositor properties, and registerParallax below has
+  // always run on touch doing the same class of work. Skipping them left a
+  // phone with hard edges between chapters where a desktop got transitions.
+  //
+  // The legibility half of that worry was real, though — a short viewport
+  // holds much more of the outgoing section on screen while it dims, so the
+  // desktop's 0.55 reads as broken text rather than as a chapter receding.
+  // Touch therefore gets the same seam, pulled back.
+  const dim = IS_TOUCH ? 0.72 : 0.55;
+  const drift = IS_TOUCH ? -2.5 : -4;
 
   document.querySelectorAll('[data-seam]').forEach((section) => {
     const inner = section.querySelector('[data-seam-inner]') || section.firstElementChild;
@@ -172,7 +185,7 @@ export function registerSeams(ctx) {
     gsap.fromTo(inner,
       { yPercent: 0, opacity: 1 },
       {
-        yPercent: -4, opacity: 0.55, ease: 'none',
+        yPercent: drift, opacity: dim, ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'bottom 78%',

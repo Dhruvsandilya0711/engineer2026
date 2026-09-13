@@ -7,7 +7,7 @@
 
    Muted by default (browser autoplay policies + politeness). The user opts
    in with the header button; the choice persists in localStorage so it
-   sticks page-to-page. Volume held at 0.28 — this is background, not a
+   sticks page-to-page. Volume held at 0.091 — this is background, not a
    speaker demo.
 
    Wired from public/js/site.js -> initAudio().
@@ -17,7 +17,7 @@ const SRC = '/audio/tentative.mp3';
 const START_AT = 25;              // seconds — skip the intro
 // Full clip is 124.26s @ 256 kbps CBR / 44.1 kHz, so the effective loop
 // window is START_AT..DURATION ≈ 99s of music per cycle.
-const VOLUME = 0.182;             // −25% from 0.243, quieter under the site chrome
+const VOLUME = 0.091;             // −50% from 0.182, which was itself −25% from 0.243
 const FADE_MS = 450;              // ramp at each loop boundary — hides the seam
 const KEY = 'e26.audio.muted';    // localStorage flag (mute preference)
 const POS_KEY = 'e26.audio.pos';  // sessionStorage — carry playhead across pages

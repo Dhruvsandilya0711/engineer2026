@@ -46,11 +46,28 @@ const BEST_KEY = 'e26.signalRange.best';
 // Shared with site audio: if music is muted, so are game SFX. One switch.
 const MUTE_KEY = 'e26.audio.muted';
 
+/* Rewrite the instructions for the input device actually in use.
+   The markup ships the pointer wording because that is the honest default for
+   a device we cannot detect server-side; on a touch screen "aim with the
+   pointer" describes something the visitor does not have. Marked spans rather
+   than two copies of the sentence, so there is only one text to keep right. */
+function localiseInput() {
+  if (!IS_TOUCH) return;
+  const swap = (key, text) =>
+    document.querySelectorAll(`[data-js="sg-word-${key}"]`)
+      .forEach((el) => { el.textContent = text; });
+  swap('device', 'your finger');
+  swap('hold', 'press and hold');
+  swap('release', 'lift off');
+}
+
 export function mountSignalGame() {
   const host = document.querySelector('[data-js="signal-game-mount"]');
   if (!host) return;
   const canvas = host.querySelector('canvas[data-js="signal-game"]');
   const ctx = canvas.getContext('2d', { alpha: true });
+
+  localiseInput();
 
   // Colours pulled from the site's cascade so this lives inside the palette
   // rather than beside it. --color-* are hex strings; parse to r,g,b once.

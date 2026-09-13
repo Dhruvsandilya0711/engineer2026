@@ -490,15 +490,60 @@ export function createMarkField(host, img, opts = {}) {
     host.releasePointerCapture?.(e.pointerId);
     host.classList.remove('is-grabbing');
   };
-  // Drag is a POINTER affordance only. On touch the panel stays transparent to
-  // the page scroll — this is a pinned section, and stealing the gesture would
-  // trap the visitor inside it.
   if (!REDUCED_MOTION && fine) {
     host.addEventListener('pointerdown', onDown);
     host.addEventListener('pointerup', onUp);
     host.addEventListener('pointercancel', onUp);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     host.classList.add('is-grabbable');
+  }
+
+  // ---- touch -------------------------------------------------------------
+  // This used to be pointer-only: the panel was transparent to touch so that a
+  // pinned section could not swallow the page scroll and trap the visitor.
+  // That was the right worry and the wrong cure — it left the mark completely
+  // inert on a phone, which is where most people see it.
+  //
+  // The fix is the bargain the gallery ring already strikes: CSS gives the
+  // panel `touch-action: pan-y`, so the BROWSER keeps vertical panning for
+  // itself and only hands us gestures it has judged horizontal. Scrolling
+  // straight through the section still works exactly as before; a sideways
+  // swipe turns the mark. No axis detection here — the browser has already
+  // done it, and it does it better than a threshold check would.
+  const touchAt = (e) => {
+    const r = host.getBoundingClientRect();
+    cursor.nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    cursor.ny = -(((e.clientY - r.top) / r.height - 0.5) * 2);
+    cursor.on = true;
+  };
+  const onTouchDown = (e) => {
+    drag.on = true; drag.last = e.clientX; drag.vel = 0;
+    touchAt(e);
+    host.classList.add('is-grabbing');
+  };
+  const onTouchMove = (e) => {
+    if (!drag.on) return;
+    touchAt(e);
+    const dx = e.clientX - drag.last;
+    drag.last = e.clientX;
+    drag.yaw += dx * 0.007;
+    drag.vel = dx * 0.007;
+  };
+  const onTouchUp = () => {
+    if (!drag.on) return;
+    drag.on = false;
+    // Let go of the cursor too, so the mark reforms once the finger lifts
+    // instead of staying broken around a contact point that no longer exists.
+    cursor.on = false;
+    host.classList.remove('is-grabbing');
+  };
+
+  if (!REDUCED_MOTION && !fine) {
+    host.addEventListener('pointerdown', onTouchDown);
+    host.addEventListener('pointermove', onTouchMove, { passive: true });
+    host.addEventListener('pointerup', onTouchUp);
+    host.addEventListener('pointercancel', onTouchUp);
+    host.classList.add('is-swipeable');
   }
 
   const onLeave = () => { cursor.on = false; };

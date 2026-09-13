@@ -1,7 +1,7 @@
 <!-- ==========================================================================
      SIGNAL RANGE — the site's one interactive moment.
      A bowmaster-style shooter, restyled as a data-signal transmission range.
-     Aim with the pointer, hold to charge, release to fire a packet across the
+     Aim with the pointer (a finger on touch), hold to charge, release to fire a packet across the
      screen; hit the node's core for the highest score. Sits between the deck
      and the gallery — see public/js/signal-game.js for the mechanics.
      ========================================================================== -->
@@ -9,8 +9,12 @@
   <div class="signal-range__head">
     <h2 class="signal-range__title">Fire the signal.</h2>
     <p class="signal-range__lede">
-      <span class="signal-range__hint">Aim</span> with the pointer, <span class="signal-range__hint">hold</span> to
-      charge the emitter, <span class="signal-range__hint">release</span> to transmit. Hit the node — bullseye is
+      <%# "the pointer" / "hold" / "release" are swapped for touch wording by
+          public/js/signal-game.js -- see localiseInput(). They are marked
+          rather than duplicated so there is one copy to keep correct. %>
+      <span class="signal-range__hint">Aim</span> with <span data-js="sg-word-device">the pointer</span>,
+      <span class="signal-range__hint" data-js="sg-word-hold">hold</span> to
+      charge the emitter, <span class="signal-range__hint" data-js="sg-word-release">release</span> to transmit. Hit the node — bullseye is
       100&nbsp;pts, ring hits count too. Three misses and the range resets.
     </p>
   </div>
@@ -37,9 +41,9 @@
         <button type="button" class="sg-start__go" data-js="sg-start-go">Start run</button>
 
         <p class="sg-start__note">
-          <span class="signal-range__hint">Aim</span> with the pointer,
-          <span class="signal-range__hint">hold</span> to charge,
-          <span class="signal-range__hint">release</span> to fire. Three misses ends the run.
+          <span class="signal-range__hint">Aim</span> with <span data-js="sg-word-device">the pointer</span>,
+          <span class="signal-range__hint" data-js="sg-word-hold">hold</span> to charge,
+          <span class="signal-range__hint" data-js="sg-word-release">release</span> to fire. Three misses ends the run.
         </p>
         <p class="sg-start__privacy">
           Your name is shown publicly on the leaderboard below. Finished runs are
