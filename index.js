@@ -18,6 +18,9 @@ import {
   generateTicketPDF, sendTicket, ticketToken, ticketTokenValid,
   emailConfigured, hasStableTicketSecret, publicOrigin,
 } from './lib/tickets.js';
+// Aliased: lib/leaderboard.js exports its own `rateLimit`, which counts saved
+// runs rather than requests. Two different limiters, two different names.
+import { securityHeaders, rateLimit as requestLimit, errorHandler } from './lib/security.js';
 import {
   initLeaderboardStore, leaderboardMode, hasStableSalt,
   hashIp, validateName, rateLimit, saveRun, topRuns, rankFor, hideRun,
@@ -139,6 +142,29 @@ function teamGroups() {
 }
 
 app.set('view engine', 'ejs');
+// Express advertises itself by default; there is no reason to tell an
+// attacker which stack to look up exploits for.
+app.disable('x-powered-by');
+
+/**
+ * JSON destined for a <script> block.
+ *
+ * JSON.stringify does NOT escape "<", so a value containing a literal
+ * </script> closes the tag and everything after it is parsed as HTML. The
+ * payment payload carries the registrant's own name, so that value is
+ * attacker-chosen. \u003c is valid JSON and JSON.parse turns it back into
+ * "<", so the page reads the same data and the tag cannot be closed.
+ */
+app.locals.safeJson = (value) => JSON.stringify(value)
+  .replace(/</g, '\\u003c')
+  .replace(/>/g, '\\u003e')
+  .replace(/&/g, '\\u0026')
+  .replace(/\u2028/g, '\\u2028')
+  .replace(/\u2029/g, '\\u2029');
+
+// FIRST middleware: every response carries the headers, including the ones
+// express.static answers by itself.
+app.use(securityHeaders(() => paymentsEnabled()));
 
 app.use(express.static('public'));
 // Serve the browser (ESM) builds of three.js and gsap directly — no bundler
@@ -307,7 +333,18 @@ app.get('/register', async (req, res) => {
   });
 });
 
-app.post('/register', async (req, res) => {
+// A dozen registrations in a second were accepted before this existed, so
+// a script could fill the table and bury the real entries. Twelve an hour
+// from one address is far above any genuine student and far below useful to
+// a spammer. Keyed on the forwarded address because CCC runs a proxy.
+const registerLimit = requestLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 12,
+  key: (req) => clientIp(req),
+  message: 'Too many registrations from this connection. Please try again later.',
+});
+
+app.post('/register', registerLimit, async (req, res) => {
   const { valid, errors, value } = validate(req.body || {});
   // Needed by every path that re-renders the form: coming back with an error
   // must not drop the prices out of the event picker.
@@ -601,7 +638,7 @@ app.post('/api/range/hide', async (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render('404', { url: req.originalUrl });
+  res.status(404).render('404', { url: req.originalUrl, status: 404 });
 });
 
 // Every non-internal IPv4 address, so the startup log prints a URL that can
@@ -654,6 +691,13 @@ if (paymentsEnabled()) {
     console.log(`    emailed stops working the next time the server restarts.`);
   }
 }
+
+// LAST middleware. Express's default error handler renders the stack trace
+// into the response unless NODE_ENV is "production", which is how a single
+// malformed form field was handing out absolute server paths. Registered
+// after every route so it catches whatever they throw.
+app.use(errorHandler((req, res, status) =>
+  res.status(status).render('404', { url: req.originalUrl, status })));
 
 app.listen(port, host, () => {
   console.log(`\n  ENGINEER '26 — Cognitrixx\n`);

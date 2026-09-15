@@ -37,7 +37,7 @@
     even on localhost and seconds on a phone — the viewer would sit on a held
     frame for all of it. Nothing here needs those libraries, so the outgoing
     and incoming halves join without waiting on them. %>
-<script>
+<script nonce="<%= nonce %>">
   (function () {
     var KEY = 'engi26.pt', arriving = false;
     try {

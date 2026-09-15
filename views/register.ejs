@@ -88,7 +88,7 @@
           <%# Server-issued, and read back by public/js/pay.js. The amount is
               re-derived server-side at verification, so editing this changes
               nothing about what is actually charged or what is accepted. %>
-          <script type="application/json" data-js="pay-data"><%- JSON.stringify(payment) %></script>
+          <script type="application/json" data-js="pay-data"><%- safeJson(payment) %></script>
         </div>
       <% } %>
 
@@ -184,7 +184,7 @@
   <script type="module" src="/js/page.js"></script>
   <%# The heading follows the picker. Server-rendered above for the ?event=
       case and for JS-off visitors; this only keeps it in step afterwards. %>
-  <script type="module">
+  <script type="module" nonce="<%= nonce %>">
     const title = document.querySelector('[data-js="reg-title"]');
     const picker = document.querySelector('#userEvent');
     if (title && picker) {
@@ -196,7 +196,7 @@
     }
   </script>
   <% if (status === 'pay' && payment) { %>
-  <script type="module">
+  <script type="module" nonce="<%= nonce %>">
     import { initPay } from '/js/pay.js';
     initPay();
   </script>
