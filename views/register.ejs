@@ -25,7 +25,18 @@
     <div class="max-w-xl mx-auto">
 
       <%
-        const regTitle = `Register for<br><span class="text-gradient-impossible">ENGINEER&nbsp;'26</span>`;
+        // The heading names the event being registered for, when there is
+        // one. `values.userEvent` reaches here from ?event= or from a failed
+        // POST, so it is attacker-controlled text, and the page-hero include
+        // below prints its title RAW. It is therefore never interpolated
+        // directly: it is matched against the real event list and only our
+        // own data is printed. An unrecognised value falls back to the fest
+        // name, so a crafted ?event= yields a heading and nothing more.
+        const selectedEvent = events.all.find(e => e.name === values.userEvent);
+        const headline = selectedEvent
+          ? selectedEvent.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          : `ENGINEER&nbsp;'26`;
+        const regTitle = `Register for<br><span class="text-gradient-impossible" data-js="reg-title">${headline}</span>`;
         const regMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
           + `${festDates.display}<br><span class="text-[var(--paper-faint)]">NITK Surathkal &middot; one entry per event</span></p>`;
       %>
@@ -171,6 +182,19 @@
 
   <%- include('partials/_footer') %>
   <script type="module" src="/js/page.js"></script>
+  <%# The heading follows the picker. Server-rendered above for the ?event=
+      case and for JS-off visitors; this only keeps it in step afterwards. %>
+  <script type="module">
+    const title = document.querySelector('[data-js="reg-title"]');
+    const picker = document.querySelector('#userEvent');
+    if (title && picker) {
+      const FALLBACK = "ENGINEER '26";
+      picker.addEventListener("change", () => {
+        // textContent, not innerHTML — the option label is data, not markup.
+        title.textContent = picker.value || FALLBACK;
+      });
+    }
+  </script>
   <% if (status === 'pay' && payment) { %>
   <script type="module">
     import { initPay } from '/js/pay.js';

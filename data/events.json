@@ -180,21 +180,56 @@
     },
     {
       "slug": "drone-race",
-      "name": "Drone Race",
+      "name": "FPV Drone Racing",
       "category": "Aeromodelling",
       "image": "/images/drone_race.png",
       "featured": true,
       "registration": "open",
-      "description": "Flying at full speed, inches off the ground. Pilots take drones through a gated course and the clock decides it.",
+      "description": "A high-energy FPV drone racing competition. Custom-built racing drones run a purpose-built obstacle course, and pilots are judged on speed, precision, reflexes and technical skill.",
+      "organisedBy": "AeroNITK",
       "date": null,
       "time": null,
-      "venue": null,
+      "venue": "Behind NSC, NITK Surathkal",
       "registrationDeadline": null,
-      "prizes": null,
-      "rules": null,
-      "timeline": null,
+      "prizes": [
+        {
+          "place": "1st",
+          "amount": "₹12,000"
+        },
+        {
+          "place": "2nd",
+          "amount": "₹7,000"
+        },
+        {
+          "place": "3rd",
+          "amount": "₹4,000"
+        },
+        {
+          "place": "Best Design",
+          "amount": "₹1,000"
+        }
+      ],
+      "rules": [
+        "Three rounds: technical inspection, timed qualifiers, then a 4v4 showdown.",
+        "Drones must be custom-built FPV quadcopters.",
+        "The course runs through 4 standard gates and 8 slalom posts."
+      ],
+      "timeline": [
+        {
+          "when": "Phase 1",
+          "what": "Technical Inspection"
+        },
+        {
+          "when": "Phase 2",
+          "what": "Qualifiers — lap time"
+        },
+        {
+          "when": "Phase 3",
+          "what": "4v4 Showdown"
+        }
+      ],
       "eligibility": null,
-      "teamSize": null,
+      "teamSize": "20 teams from across India",
       "faq": null,
       "coordinators": null,
       "track": "technical"
@@ -429,6 +464,201 @@
       "faq": null,
       "coordinators": null,
       "track": "campus"
+    },
+    {
+      "slug": "vr-space",
+      "name": "VR: Step Into Space",
+      "category": "Exhibits",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "Step into an immersive virtual world built around the wonders of space. Participants wear a VR headset and play a specially selected space-themed game, putting them at the centre of the virtual adventure.",
+      "organisedBy": "Amateur Astronomy Club (AAC NITK)",
+      "date": null,
+      "time": null,
+      "venue": "Centre for System Designs (CSD)",
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": "Open to students of all years",
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "campus"
+    },
+    {
+      "slug": "telescope-making",
+      "name": "Telescope Making Workshop",
+      "category": "Learning",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "Build a small reflective telescope you can actually observe the night sky with, and take it home. All materials and guidance are provided — lenses, adhesives, pipes and mirrors, with the AAC team walking you through it.",
+      "organisedBy": "Amateur Astronomy Club (AAC NITK)",
+      "date": null,
+      "time": null,
+      "venue": "LHCA",
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": "1st, 2nd and 3rd years",
+      "teamSize": "Limited to 40 participants (first come, first served)",
+      "faq": null,
+      "coordinators": null,
+      "track": "technical"
+    },
+    {
+      "slug": "planetarium",
+      "name": "Planetarium",
+      "category": "Exhibits",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "A portable planetarium built in-house by AAC NITK from aluminium frames and cardboard. Sit inside the dome for a five-minute film the club made itself, travelling from our solar system out to distant galaxies.",
+      "organisedBy": "Amateur Astronomy Club (AAC NITK)",
+      "date": null,
+      "time": null,
+      "venue": "LHCA",
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": "Open to everyone",
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "campus"
+    },
+    {
+      "slug": "projects-expo",
+      "name": "Projects Expo",
+      "category": "Exhibits",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "Student-led projects in space, astronomy and exploration, shown by the people who built them. Featured systems include a modular radio telescope and an exoplanet terrain mapping system that renders terrain in 3D.",
+      "organisedBy": "Amateur Astronomy Club (AAC NITK)",
+      "date": null,
+      "time": null,
+      "venue": "LHCA",
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": "Open to everyone",
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "technical"
+    },
+    {
+      "slug": "astroquiz",
+      "name": "AstroQuiz",
+      "category": "Quiz",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "A space-themed quiz spanning the solar system, stars, galaxies, space missions and the latest discoveries in astronomy and space science. Casual stargazers and serious enthusiasts both welcome.",
+      "organisedBy": "Amateur Astronomy Club (AAC NITK)",
+      "date": null,
+      "time": null,
+      "venue": "LHCA",
+      "registrationDeadline": null,
+      "prizes": [
+        {
+          "place": "Prize pool",
+          "amount": "₹5,000"
+        }
+      ],
+      "rules": null,
+      "timeline": null,
+      "eligibility": "Open to all years",
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "technical"
+    },
+    {
+      "slug": "verilog-quest",
+      "name": "Verilog Quest",
+      "category": "Technical",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "A hardware hackathon framed as a rescue: each team is the tech support behind a hero, writing Verilog to out-think the enemy. Round one is simulation, round two puts the same ideas onto real FPGA boards.",
+      "organisedBy": "ACM NITK Surathkal",
+      "date": null,
+      "time": null,
+      "venue": "NITK Surathkal",
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": [
+        {
+          "when": "Round 1",
+          "what": "Simulation — Verilog problems against enemy algorithms, verified with custom testbenches"
+        },
+        {
+          "when": "Round 2",
+          "what": "Hardware challenge — FPGA programming and verification on Altera Cyclone boards"
+        }
+      ],
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "technical"
+    },
+    {
+      "slug": "rechersion",
+      "name": "recHERSion",
+      "category": "Technical",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "A 24-hour hackathon built exclusively for women, run online and offline. Teams pick from a curated set of real-world problem statements and build a complete solution in 24 hours, backed by mentorship from industry experts.",
+      "organisedBy": "ACM-W NITK Surathkal",
+      "date": null,
+      "time": null,
+      "venue": "Online, and offline at CCC NITK",
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": [
+        {
+          "when": "One round",
+          "what": "Ideate, build and present within 24 hours"
+        }
+      ],
+      "eligibility": "Open to women only",
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "technical"
+    },
+    {
+      "slug": "sim2real",
+      "name": "SIM2REAL",
+      "category": "Robotics",
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "description": "A robotics event about closing the gap between simulation and the real world. Hands-on challenges across autonomous systems, drones and swarm robotics ask participants to turn a working simulation into something that survives real deployment.",
+      "organisedBy": "RoboTech NITK",
+      "date": null,
+      "time": null,
+      "venue": null,
+      "registrationDeadline": null,
+      "prizes": null,
+      "rules": null,
+      "timeline": null,
+      "eligibility": null,
+      "teamSize": null,
+      "faq": null,
+      "coordinators": null,
+      "track": "technical"
     }
   ],
   "_tracks": {

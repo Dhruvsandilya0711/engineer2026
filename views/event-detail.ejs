@@ -110,6 +110,14 @@
             <dt>Category</dt>
             <dd><%= event.category %></dd>
           </div>
+          <%# Only shown for events a club actually named. Most ENGI events
+              are run by the core team and need no line here. %>
+          <% if (event.organisedBy) { %>
+          <div>
+            <dt>Organised by</dt>
+            <dd><%= event.organisedBy %></dd>
+          </div>
+          <% } %>
         </dl>
       </div>
     </section>
@@ -156,10 +164,25 @@
           </section>
           <% } %>
 
+          <%# Prizes arrive either as one sentence or as a tiered list, and
+              both are legitimate: some events have a single pot, others pay
+              four places. Rendering an array through the string branch would
+              print [object Object] on the page, so the shape is checked. %>
           <% if (event.prizes) { %>
           <section class="mb-12">
             <h2 class="font-display font-semibold text-xl mb-4">Prizes</h2>
+            <% if (Array.isArray(event.prizes)) { %>
+            <ul class="flex flex-col gap-2 list-none p-0 m-0">
+              <% event.prizes.forEach(function(p){ %>
+              <li class="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] pb-2">
+                <span class="font-mono text-[0.72rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]"><%= p.place %></span>
+                <span class="font-display font-semibold text-paper"><%= p.amount %></span>
+              </li>
+              <% }); %>
+            </ul>
+            <% } else { %>
             <p class="text-[var(--paper-dim)]"><%= event.prizes %></p>
+            <% } %>
           </section>
           <% } %>
 
