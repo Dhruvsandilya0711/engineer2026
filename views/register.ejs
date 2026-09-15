@@ -139,7 +139,10 @@
             class="form-input <%= errors.userEvent ? 'has-error' : '' %>">
             <option value="">Select an event…</option>
             <% events.all.forEach(function(evt){ %>
-            <option value="<%= evt.name %>" <%= values.userEvent === evt.name ? 'selected' : '' %>><%= evt.name %> — <%= evt.category %></option>
+            <%# The fee is shown here, not after submitting. `fees` holds only the
+                priced events, so an event missing from it is free and shows no
+                price at all. %>
+            <option value="<%= evt.name %>" <%= values.userEvent === evt.name ? 'selected' : '' %>><%= evt.name %> — <%= evt.category %><%= fees[evt.name] ? ' · ₹' + fees[evt.name] : '' %></option>
             <% }); %>
           </select>
           <% if (errors.userEvent) { %><p id="err-userEvent" class="form-error"><%= errors.userEvent %></p><% } %>
@@ -147,9 +150,18 @@
 
         <button type="submit" class="btn btn-primary justify-center mt-2">Complete registration</button>
 
+        <%# This promised "No payment is taken and no pass is issued"
+             unconditionally. The moment an event can carry a fee that became a
+             false statement, printed on the form people hand their details to.
+             It now describes whichever case actually applies. %>
         <p class="font-mono text-[0.66rem] text-[var(--paper-faint)] leading-relaxed">
           We store your name, roll number, email and chosen event so the organising team can contact you.
-          No payment is taken and no pass is issued.
+          <% if (Object.keys(fees).length) { %>
+            Events showing a price are paid — you will see the amount before anything is charged,
+            and your ticket is emailed once the payment clears. Every other event is free to enter.
+          <% } else { %>
+            No payment is taken and no pass is issued.
+          <% } %>
         </p>
       </form>
       <% } %>

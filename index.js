@@ -11,7 +11,7 @@ import {
   createPendingRegistration, markPaid, findByOrderId, hasPaidRegistration,
 } from './lib/registration.js';
 import {
-  initPayments, paymentsMode, paymentsEnabled, publicKeyId, feeFor,
+  initPayments, paymentsMode, paymentsEnabled, publicKeyId, feeFor, feeMap,
   createOrder, verifyCheckoutSignature, verifyWebhookSignature,
 } from './lib/payments.js';
 import {
@@ -281,21 +281,41 @@ const renderRegister = (res, opts) => res.render('register', {
   errors: {},
   status: null,
   payment: null,
+  fees: {},
   ...opts,
 });
 
-app.get('/register', (req, res) => {
+/**
+ * Prices for the event picker. Looked up on every render rather than cached,
+ * because a fee added in the database has to reach the form immediately —
+ * showing yesterday's price next to today's charge is the one bug here that
+ * costs somebody money.
+ *
+ * A lookup failure yields {} and the form simply shows no prices; the real
+ * charge is decided again on POST, where a failure is a 503 instead of a
+ * silent free pass.
+ */
+async function eventFees() {
+  try { return await feeMap(allEvents.map(e => e.name)); }
+  catch { return {}; }
+}
+
+app.get('/register', async (req, res) => {
   renderRegister(res, {
     values: { userName: '', userRollNumber: '', userEvent: req.query.event || '', userMail: '' },
+    fees: await eventFees(),
   });
 });
 
 app.post('/register', async (req, res) => {
   const { valid, errors, value } = validate(req.body || {});
+  // Needed by every path that re-renders the form: coming back with an error
+  // must not drop the prices out of the event picker.
+  const fees = await eventFees();
 
   if (!valid) {
     return res.status(400).render('register', {
-      festDates: FEST_DATES, events, values: req.body || {}, errors, status: 'invalid', payment: null,
+      festDates: FEST_DATES, events, values: req.body || {}, errors, status: 'invalid', payment: null, fees,
     });
   }
 
@@ -307,7 +327,7 @@ app.post('/register', async (req, res) => {
     fee = await feeFor(value.userEvent);
   } catch {
     return res.status(503).render('register', {
-      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null,
+      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null, fees,
     });
   }
 
@@ -318,7 +338,7 @@ app.post('/register', async (req, res) => {
       return res.status(409).render('register', {
         festDates: FEST_DATES, events, values: req.body,
         errors: { userMail: 'This email has already paid for that event.' },
-        status: 'duplicate', payment: null,
+        status: 'duplicate', payment: null, fees,
       });
     }
 
@@ -351,7 +371,7 @@ app.post('/register', async (req, res) => {
     } catch (err) {
       console.error('order creation failed:', err.message);
       return res.status(502).render('register', {
-        festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'pay-error', payment: null,
+        festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'pay-error', payment: null, fees,
       });
     }
   }
@@ -363,12 +383,12 @@ app.post('/register', async (req, res) => {
     return res.status(409).render('register', {
       festDates: FEST_DATES, events, values: req.body,
       errors: { userMail: 'This email is already registered for that event.' },
-      status: 'duplicate', payment: null,
+      status: 'duplicate', payment: null, fees,
     });
   }
   if (!result.ok) {
     return res.status(500).render('register', {
-      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null,
+      festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null, fees,
     });
   }
 
