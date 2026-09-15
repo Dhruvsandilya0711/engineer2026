@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,9 +40,9 @@
         const regMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
           + `${festDates.display}<br><span class="text-[var(--paper-faint)]">NITK Surathkal &middot; one entry per event</span></p>`;
       %>
-      <%- include('partials/_page-hero', { accent: '232,121,249', num: '06', nav: 'Register', kicker: 'Cognitrixx / join the system', title: regTitle, meta: regMeta, stack: true }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-6)', num: '06', nav: 'Register', kicker: 'Cognitrixx / join the system', title: regTitle, meta: regMeta, stack: true }) %>
 
-      <div class="hud-frame mt-6" style="--accent: 232,121,249">
+      <div class="hud-frame mt-6" style="--accent: var(--bay-6)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <% if (status === 'success') { %>

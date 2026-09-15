@@ -23,31 +23,49 @@
 @theme {
   --breakpoint-xs: 400px;
 
-  /* Design-handoff tokens (design_handoff_engineer26_homepage/README.md).
-     These supersede the earlier palette: same cyan -> violet -> magenta idea,
-     but the handoff's exact values, plus its slate text ramp. */
-  --color-void: #000000;
-  --color-panel: #05060a;
-  --color-paper: #f1f5f9;
-  --color-strong: #e2e8f0;
-  --color-muted: #94a3b8;
-  --color-dim: #64748b;
-  --color-faint: #475569;
+  /* COASTAL NIGHT.
+     NITK Surathkal is on the Arabian Sea and the club brochures already draw
+     it that way: deep night water with one warm light on it. Sea-teal against
+     sodium-vapour amber is a true complementary pair, so the page has exactly
+     one warm note to spend and everything else supports it.
 
-  --color-cyan: #22d3ee;
-  --color-indigo: #6366f1;
-  --color-violet-mid: #6c7cf2;
-  --color-violet: #8a9cf4;
-  --color-orchid: #d676e0;
-  --color-magenta: #e879f9;
+     This replaces a palette that was stock Tailwind end to end — #22d3ee is
+     cyan-400, #6366f1 indigo-500, #e879f9 fuchsia-400, the greys plain slate.
+     That cyan -> indigo -> fuchsia sweep is the most-reached-for gradient in
+     generated design, which is why the site read as templated: the colours had
+     been inherited rather than chosen. Every value below is hand-mixed, the
+     neutrals are pulled toward the teal instead of sitting neutral, and the
+     gradient spans teal -> deep water only, because a full spectrum is what
+     reads as a default and a narrow one reads as a decision.
 
-  --color-charcoal: #05060a;
+     The names are kept (--color-cyan, --color-magenta) even though the hues
+     moved: they are referenced in ~300 places and renaming them buys nothing
+     but churn. Read them as slots, not as hues. */
+  --color-void: #05070d;          /* night water, not black */
+  --color-panel: #080c14;
+  --color-paper: #eef2f4;
+  --color-strong: #dfe7ea;
+  --color-muted: #8fa0ab;         /* greys biased teal, not neutral slate */
+  --color-dim: #6b7d88;
+  --color-faint: #4d5c66;
+
+  --color-cyan: #1fb6ad;          /* sea teal — the primary */
+  --color-indigo: #3b6fd4;        /* deep water */
+  --color-violet-mid: #4a7fd8;
+  --color-violet: #6f9ae0;        /* shallows */
+  --color-orchid: #b0567f;        /* muted coral */
+  --color-magenta: #c06a89;
+
+  --color-charcoal: #080c14;
   /* Card surfaces sit over the neural field, so they are translucent rather
      than flat panels — the field reads faintly through them and the cards stop
      looking like holes punched in the page. */
-  --card-surface: rgba(5, 6, 10, 0.68);
-  --color-charcoal-2: #0b0d16;
-  --color-amber: #e8923c;
+  --card-surface: rgba(8, 12, 20, 0.68);
+  --color-charcoal-2: #0d131d;
+  --color-amber: #f0a343;         /* sodium vapour — the one warm note */
+  --color-amber-dim: #b9762c;     /* was referenced by --gradient-cognitrixx
+                                     and never defined, which made that
+                                     gradient invalid and silently dead. */
   --color-success: #3fbf8f;
   --color-warning: #e8a63c;
   --color-error: #f87186;
@@ -67,24 +85,78 @@
 }
 
 :root {
-  --hairline: rgba(148, 163, 184, 0.18);
-  --hairline-strong: rgba(148, 163, 184, 0.35);
+  /* ── THE TRIPLE LAYER ──────────────────────────────────────────────────
+     A hex cannot be made translucent, so any colour needing an alpha used to
+     be written out as a literal — which is how ~95 stock-Tailwind values
+     ended up scattered through the components, permanently out of the
+     palette's reach. Each slot is therefore published twice: once as a hex
+     above for solid fills and the Tailwind utilities, once as a bare
+     "R, G, B" triple here, for use as rgba(var(--rgb-x), a).
+
+     Changing a hue now means changing it in ONE place. If you add a colour,
+     add both forms or the next palette will leak again. */
+  --rgb-cyan:        31, 182, 173;   /* --color-cyan   */
+  --rgb-indigo:      59, 111, 212;   /* --color-indigo */
+  --rgb-violet:     111, 154, 224;   /* --color-violet */
+  --rgb-magenta:    192, 106, 137;   /* --color-magenta */
+  --rgb-amber:      240, 163,  67;   /* --color-amber  */
+  --rgb-paper:      238, 242, 244;   /* --color-paper  */
+  /* Two lifts with no hex twin, because they only ever appear as light: */
+  --rgb-cyan-lift:  109, 219, 210;   /* the teal one step brighter — highlight
+                                        rims, focus bloom, hover glow */
+  --rgb-bloom:       48, 118, 196;   /* the ambient wash behind headings and
+                                        panels; deep water lit from within */
+  /* The neutral ramp, as triples. Biased teal to match the hexes. */
+  --rgb-slate:      143, 160, 171;   /* --color-muted */
+  --rgb-slate-dim:  107, 125, 136;   /* --color-dim   */
+  --rgb-slate-faint: 77,  92, 102;   /* --color-faint */
+  /* The dark ground, for translucent panels over the field. */
+  --rgb-ground:       5,   7,  13;   /* --color-void  */
+  --rgb-ground-2:     8,  12,  20;   /* --color-panel */
+
+  --hairline: rgba(var(--rgb-slate), 0.18);
+  --hairline-strong: rgba(var(--rgb-slate), 0.34);
   /* The base of the paper ramp. It was never declared, so every
      `color: var(--paper)` in this sheet was invalid and silently fell back
      to inheritance — which happened to land near the right colour on the
      body, and so went unnoticed. Declared here as the alias it always
      meant to be, alongside the two steps below it. */
   --paper: var(--color-paper);
-  --paper-dim: #94a3b8;      /* text-muted */
-  --paper-faint: #64748b;    /* text-dim  */
-  --rule: rgba(148, 163, 184, 0.35);
+  --paper-dim: var(--color-muted);
+  --paper-faint: var(--color-dim);
+  --rule: rgba(var(--rgb-slate), 0.34);
 
-  --glow-violet: rgba(80, 104, 238, 0.7);
-  --glow-blue: rgba(29, 45, 120, 0.35);
-  --glow-purple: rgba(30, 26, 86, 0.42);
+  /* Kept under their old names for the same reason the colour slots are:
+     too many call sites to rename for no gain. "violet" is now the teal
+     bloom, "blue"/"purple" the two depths of water behind it. */
+  --glow-violet: rgba(var(--rgb-cyan), 0.55);
+  --glow-blue: rgba(20, 58, 110, 0.38);
+  --glow-purple: rgba(14, 40, 78, 0.44);
 
-  /* ENGINEER logo identity — never used for the Cognitrixx neural layer */
-  --gradient-impossible: linear-gradient(90deg, #22d3ee, #6366f1 45%, #e879f9);
+  /* ENGINEER logo identity — never used for the Cognitrixx neural layer.
+     Teal -> deep water only. The amber deliberately stays OUT, so it keeps
+     its force as the single accent rather than becoming one band of five. */
+  --gradient-impossible: linear-gradient(90deg, var(--color-cyan), var(--color-indigo) 58%, var(--color-violet));
+  /* The CTA reads warmer than the logo mark on purpose — it is the one thing
+     on the page asking to be pressed. */
+  --gradient-cta: linear-gradient(100deg, var(--color-cyan) 0%, var(--color-indigo) 55%, var(--color-violet) 100%);
+  --cta-glow: rgba(var(--rgb-cyan), 0.55);
+
+  /* Nav bay accents: one walk from teal to coral across six bays, which is a
+     narrow traverse rather than the full-spectrum rainbow it replaced. */
+  --bay-1: 31, 182, 173;
+  --bay-2: 45, 140, 190;
+  --bay-3: 59, 111, 212;
+  --bay-4: 90, 132, 220;
+  --bay-5: 140, 120, 180;
+  --bay-6: 176, 86, 127;
+
+  /* Programme track accents. Only ENGI Care gets the amber. */
+  --track-technical: 31, 182, 173;
+  --track-startup:   59, 111, 212;
+  --track-talks:    176,  86, 127;
+  --track-care:     240, 163,  67;
+  --track-campus:   111, 154, 224;
   /* Cognitrixx neural/energy identity — never used to recolor the logo */
   --gradient-cognitrixx: linear-gradient(120deg, var(--color-amber-dim) 0%, var(--color-amber) 55%, #ffd58a 100%);
 
@@ -185,8 +257,8 @@
 .scanlines {
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(237, 235, 242, 0.030) 0px,
-    rgba(237, 235, 242, 0.030) 1px,
+    rgba(var(--rgb-paper), 0.030) 0px,
+    rgba(var(--rgb-paper), 0.030) 1px,
     transparent 1px,
     transparent 3px
   );
@@ -292,8 +364,8 @@
   /* The CTA is the most prominent element on every page and was pinned to
      the stock cyan -> violet -> fuchsia ramp, so no palette could reach it.
      The fallback is exactly what shipped, so an unset palette is unchanged. */
-  background: var(--gradient-cta, linear-gradient(100deg, #22d3ee 0%, #8b78f6 52%, #e879f9 100%));
-  box-shadow: 0 6px 20px -8px var(--cta-glow, rgba(34, 211, 238, 0.6));
+  background: var(--gradient-cta, linear-gradient(100deg, var(--color-cyan) 0%, var(--color-indigo) 52%, var(--color-magenta) 100%));
+  box-shadow: 0 6px 20px -8px var(--cta-glow, rgba(var(--rgb-cyan), 0.6));
   transition:
     transform var(--dur-fast) var(--ease-emphasized),
     box-shadow var(--dur-base) var(--ease-standard),
@@ -313,8 +385,8 @@
   transform: translateY(-2px);
   filter: brightness(1.06);
   box-shadow:
-    0 12px 30px -8px rgba(34, 211, 238, 0.7),
-    0 0 26px rgba(232, 121, 249, 0.38);
+    0 12px 30px -8px rgba(var(--rgb-cyan), 0.7),
+    0 0 26px rgba(var(--rgb-magenta), 0.38);
 }
 .btn-register:hover::after,
 .btn-register:focus-visible::after { transform: translateX(120%); }
@@ -627,7 +699,7 @@
 .tf-subject__scene.is-swipeable { pointer-events: auto; touch-action: pan-y; }
 /* No WebGL: a shaped glow rather than an empty panel. */
 .tf-subject__scene.is-static {
-  background: radial-gradient(42% 42% at 50% 46%, rgba(138, 156, 244, 0.20), transparent 70%);
+  background: radial-gradient(42% 42% at 50% 46%, rgba(var(--rgb-violet), 0.20), transparent 70%);
 }
 
 /* ---- stacked layout ------------------------------------------------
@@ -760,7 +832,7 @@
 }
 .event-row__link:hover,
 .event-row__link:focus-visible {
-  background: rgba(237, 235, 242, 0.028);
+  background: rgba(var(--rgb-paper), 0.028);
   padding-left: 18px;
 }
 .event-row__link:hover::before,
@@ -1235,7 +1307,7 @@
 .gflow__frame {
   position: absolute; top: 8px; left: 9px;
   font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(34,211,238,0.9);
+  text-transform: uppercase; color: rgba(var(--rgb-cyan),0.9);
   text-shadow: 0 1px 6px rgba(0,0,0,0.8);
 }
 .gflow__cap {
@@ -1265,11 +1337,11 @@
 .gflow__lines { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .gflow__lines span {
   position: absolute; left: -5%; right: -5%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(34,211,238,0.5) 20%, rgba(232,121,249,0.4) 80%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--rgb-cyan),0.5) 20%, rgba(var(--rgb-magenta),0.4) 80%, transparent);
   opacity: calc(0.25 + 0.55 * var(--flow-in));
 }
 .gflow__lines span:nth-child(1) { top: 32%; }
-.gflow__lines span:nth-child(2) { top: 54%; background: linear-gradient(90deg, transparent, rgba(99,102,241,0.45), transparent); }
+.gflow__lines span:nth-child(2) { top: 54%; background: linear-gradient(90deg, transparent, rgba(var(--rgb-indigo),0.45), transparent); }
 .gflow__lines span:nth-child(3) { top: 74%; }
 
 .gflow__tag {
@@ -1302,7 +1374,7 @@
 }
 .form-input {
   width: 100%;
-  background: rgba(237,235,242,.03);
+  background: rgba(var(--rgb-paper),.03);
   border: 1px solid var(--hairline-strong);
   border-radius: 6px;
   padding: 13px 15px;
@@ -1311,7 +1383,7 @@
   transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
 }
 .form-input:focus {
-  outline: none; border-color: var(--color-cyan); background: rgba(237,235,242,.055);
+  outline: none; border-color: var(--color-cyan); background: rgba(var(--rgb-paper),.055);
 }
 .form-input.has-error { border-color: var(--color-error); }
 select.form-input { appearance: none; cursor: pointer; }
@@ -1403,7 +1475,7 @@ html.cx-native .cx-ring { opacity: 0; }
   transition: stroke 260ms var(--ease-standard);
 }
 .cx-ring__tick {
-  stroke: rgba(232, 146, 60, 0.75);
+  stroke: rgba(var(--rgb-amber), 0.75);
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
   transition: stroke 260ms var(--ease-standard);
@@ -1446,7 +1518,7 @@ html.cx-native .cx-ring { opacity: 0; }
    the atmosphere with a static wash — cheap, and never an empty rectangle. */
 [data-field].is-static {
   background:
-    radial-gradient(ellipse 70% 55% at 22% 18%, rgba(232, 146, 60, 0.08), transparent 62%),
+    radial-gradient(ellipse 70% 55% at 22% 18%, rgba(var(--rgb-amber), 0.08), transparent 62%),
     radial-gradient(ellipse 60% 50% at 82% 72%, rgba(95, 121, 242, 0.09), transparent 62%);
 }
 [data-field].is-static::after {
@@ -1645,22 +1717,22 @@ html.cx-native .cx-ring { opacity: 0; }
   }
   88% {
     filter:
-      drop-shadow(-5px 0 0 rgba(34, 211, 238, 1))
-      drop-shadow(5px 0 0 rgba(232, 121, 249, 1))
+      drop-shadow(-5px 0 0 rgba(var(--rgb-cyan), 1))
+      drop-shadow(5px 0 0 rgba(var(--rgb-magenta), 1))
       drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
     transform: translate(4px, -3px);
   }
   90% {
     filter:
-      drop-shadow(4px 0 0 rgba(34, 211, 238, 1))
-      drop-shadow(-4px 0 0 rgba(232, 121, 249, 0.98))
+      drop-shadow(4px 0 0 rgba(var(--rgb-cyan), 1))
+      drop-shadow(-4px 0 0 rgba(var(--rgb-magenta), 0.98))
       drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
     transform: translate(-4px, 1px);
   }
   92% {
     filter:
-      drop-shadow(-4px 0 0 rgba(34, 211, 238, 1))
-      drop-shadow(5px 0 0 rgba(232, 121, 249, 0.94))
+      drop-shadow(-4px 0 0 rgba(var(--rgb-cyan), 1))
+      drop-shadow(5px 0 0 rgba(var(--rgb-magenta), 0.94))
       drop-shadow(0 0 26px rgba(40, 150, 240, 0.30));
     transform: translate(3px, 1px);
   }
@@ -1695,8 +1767,8 @@ html.cx-native .cx-ring { opacity: 0; }
   inset: 0;
   pointer-events: none;
 }
-.wm__ghost-c { color: rgba(34, 211, 238, 0.45); transform: translate(-0.046em, -0.018em); }
-.wm__ghost-m { color: rgba(232, 121, 249, 0.40); transform: translate(0.046em, 0.018em); }
+.wm__ghost-c { color: rgba(var(--rgb-cyan), 0.45); transform: translate(-0.046em, -0.018em); }
+.wm__ghost-m { color: rgba(var(--rgb-magenta), 0.40); transform: translate(0.046em, 0.018em); }
 
 .wm__main {
   position: relative;
@@ -1709,7 +1781,7 @@ html.cx-native .cx-ring { opacity: 0; }
   );
   -webkit-background-clip: text;
           background-clip: text;
-  filter: drop-shadow(0 0 0.2em rgba(80, 104, 238, 0.5));
+  filter: drop-shadow(0 0 0.2em rgba(var(--rgb-bloom), 0.5));
 }
 /* Solid-white fallback where background-clip:text is unavailable. */
 @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
@@ -1721,7 +1793,7 @@ html.cx-native .cx-ring { opacity: 0; }
   left: 0; right: 0;
   top: 52%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(232,121,249,0.7) 30%, rgba(34,211,238,0.7) 70%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--rgb-magenta),0.7) 30%, rgba(var(--rgb-cyan),0.7) 70%, transparent);
   pointer-events: none;
 }
 
@@ -1752,10 +1824,10 @@ html.cx-native .cx-ring { opacity: 0; }
   list-style: none;
   background: linear-gradient(
     90deg,
-    rgba(34, 211, 238, 0.62) 0%,
-    rgba(99, 102, 241, 0.5) 38%,
+    rgba(var(--rgb-cyan), 0.62) 0%,
+    rgba(var(--rgb-indigo), 0.5) 38%,
     rgba(128, 146, 246, 0.5) 62%,
-    rgba(232, 121, 249, 0.62) 100%);
+    rgba(var(--rgb-magenta), 0.62) 100%);
   clip-path: polygon(
     0 0,
     calc(100% - var(--bay-bevel)) 0,
@@ -1765,7 +1837,7 @@ html.cx-native .cx-ring { opacity: 0; }
     0 calc(100% - var(--bay-bevel)));
   box-shadow:
     0 14px 40px rgba(2, 4, 12, 0.55),
-    0 0 34px rgba(80, 104, 238, 0.22);
+    0 0 34px rgba(var(--rgb-bloom), 0.22);
 }
 /* A slow sheen travelling the length of the instrument. Absolutely positioned,
    so it is out of flow and never becomes a seventh column. */
@@ -1899,7 +1971,7 @@ html.cx-native .cx-ring { opacity: 0; }
   --bay-bevel: 11px;
   box-shadow:
     0 8px 26px rgba(2, 4, 12, 0.5),
-    0 0 22px rgba(80, 104, 238, 0.18);
+    0 0 22px rgba(var(--rgb-bloom), 0.18);
 }
 .baybar--bar .bay { padding: 0 clamp(10px, 1vw, 16px); }
 .baybar--bar .bay__row { min-height: 36px; padding-right: 12px; gap: 7px; }
@@ -1985,8 +2057,8 @@ html.cx-native .cx-ring { opacity: 0; }
   transition: background 160ms var(--ease-standard), border-color 160ms var(--ease-standard);
 }
 .hud-menu:hover {
-  background: rgba(34, 211, 238, 0.14);
-  border-color: rgba(34, 211, 238, 0.6);
+  background: rgba(var(--rgb-cyan), 0.14);
+  border-color: rgba(var(--rgb-cyan), 0.6);
 }
 @media (min-width: 1024px) { .hud-menu { display: none; } }
 
@@ -2055,8 +2127,8 @@ html.cx-native .cx-ring { opacity: 0; }
   height: auto;
   object-fit: contain;
   filter:
-    drop-shadow(0 0 7px rgba(103, 232, 249, 0.5))
-    drop-shadow(0 0 18px rgba(34, 211, 238, 0.26));
+    drop-shadow(0 0 7px rgba(var(--rgb-cyan-lift), 0.5))
+    drop-shadow(0 0 18px rgba(var(--rgb-cyan), 0.26));
 }
 
 /* The mark in the hero's HUD row. Same line-art logo the page transition
@@ -2071,12 +2143,12 @@ html.cx-native .cx-ring { opacity: 0; }
   height: auto;
   object-fit: contain;
   filter:
-    drop-shadow(0 0 8px rgba(103, 232, 249, 0.45))
-    drop-shadow(0 0 20px rgba(34, 211, 238, 0.22))
-    drop-shadow(0 0 34px rgba(232, 121, 249, 0.13));
+    drop-shadow(0 0 8px rgba(var(--rgb-cyan-lift), 0.45))
+    drop-shadow(0 0 20px rgba(var(--rgb-cyan), 0.22))
+    drop-shadow(0 0 34px rgba(var(--rgb-magenta), 0.13));
 }
 
-.hud-rule { height: 1px; background: rgba(71, 85, 105, 0.8); flex: none; }
+.hud-rule { height: 1px; background: rgba(var(--rgb-slate-faint), 0.8); flex: none; }
 .hud-label {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -2114,8 +2186,8 @@ html.cx-native .cx-ring { opacity: 0; }
 }
 .hero-grid {
   background-image:
-    linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px),
-    linear-gradient(0deg,  rgba(148,163,184,0.04) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(var(--rgb-slate),0.05) 1px, transparent 1px),
+    linear-gradient(0deg,  rgba(var(--rgb-slate),0.04) 1px, transparent 1px);
   background-size: 96px 96px;
   mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 85%);
 }
@@ -2139,7 +2211,7 @@ html.cx-native .cx-ring { opacity: 0; }
   transition: transform 160ms var(--ease-emphasized), box-shadow 160ms var(--ease-standard);
 }
 @media (min-width: 640px) { .cta-primary { padding: 22px 58px; } }
-.cta-primary:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(80,104,238,0.45); }
+.cta-primary:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(var(--rgb-bloom),0.45); }
 
 .cta-explore {
   font-family: var(--font-mono);
@@ -2166,15 +2238,15 @@ html.cx-native .cx-ring { opacity: 0; }
   padding: 13px clamp(20px, 5vw, 34px);
   color: var(--color-strong);
   border: 1px solid var(--rule);
-  background: linear-gradient(90deg, rgba(34,211,238,0.10), rgba(232,121,249,0.10));
+  background: linear-gradient(90deg, rgba(var(--rgb-cyan),0.10), rgba(var(--rgb-magenta),0.10));
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard),
     box-shadow 160ms var(--ease-standard);
 }
 .cta-explore--lead:hover {
   color: #fff;
-  border-color: rgba(34,211,238,0.7);
-  box-shadow: 0 0 26px -6px rgba(34,211,238,0.5);
+  border-color: rgba(var(--rgb-cyan),0.7);
+  box-shadow: 0 0 26px -6px rgba(var(--rgb-cyan),0.5);
 }
 .cta-explore__arrow {
   width: 9px;
@@ -2290,7 +2362,7 @@ html.cx-native .cx-ring { opacity: 0; }
      blade's edge — the depth cue the flat version was missing. */
   filter:
     drop-shadow(0 14px 22px rgba(0, 0, 0, 0.75))
-    drop-shadow(0 0 14px rgba(103, 232, 249, 0.3));
+    drop-shadow(0 0 14px rgba(var(--rgb-cyan-lift), 0.3));
 }
 .pt__bloom {
   position: absolute;
@@ -2303,13 +2375,13 @@ html.cx-native .cx-ring { opacity: 0; }
     radial-gradient(
       circle,
       rgba(226, 253, 255, 0.46) 0%,
-      rgba(103, 232, 249, 0.28) 18%,
-      rgba(34, 211, 238, 0.15) 34%,
+      rgba(var(--rgb-cyan-lift), 0.28) 18%,
+      rgba(var(--rgb-cyan), 0.15) 34%,
       transparent 58%),
     radial-gradient(
       circle,
-      rgba(232, 121, 249, 0.21) 32%,
-      rgba(232, 121, 249, 0.07) 52%,
+      rgba(var(--rgb-magenta), 0.21) 32%,
+      rgba(var(--rgb-magenta), 0.07) 52%,
       transparent 74%);
   opacity: 0;
   pointer-events: none;
@@ -2406,9 +2478,9 @@ html.cx-native .cx-ring { opacity: 0; }
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(34, 211, 238, 0.5) 22%,
-    rgba(139, 120, 246, 0.55) 50%,
-    rgba(232, 121, 249, 0.5) 78%,
+    rgba(var(--rgb-cyan), 0.5) 22%,
+    rgba(var(--rgb-indigo), 0.55) 50%,
+    rgba(var(--rgb-magenta), 0.5) 78%,
     transparent 100%);
 }
 
@@ -3036,7 +3108,7 @@ html.cx-native .cx-ring { opacity: 0; }
   place-items: center;
   background:
     repeating-linear-gradient(135deg,
-      rgba(148, 163, 184, 0.05) 0 6px,
+      rgba(var(--rgb-slate), 0.05) 0 6px,
       transparent 6px 12px),
     var(--color-void);
   border: 1px dashed var(--hairline);
@@ -3250,7 +3322,7 @@ footer:hover .footer-crest { opacity: 0.8; }
     148deg,
     rgba(var(--accent), 0.9) 0%,
     rgba(var(--accent), 0.18) 38%,
-    rgba(148, 163, 184, 0.16) 62%,
+    rgba(var(--rgb-slate), 0.16) 62%,
     rgba(var(--accent), 0.6) 100%
   );
   transform:
@@ -3662,7 +3734,7 @@ footer:hover .footer-crest { opacity: 0.8; }
   position: relative;
   width: 1px;
   height: clamp(40px, 8vh, 72px);
-  background: linear-gradient(180deg, transparent, rgba(148, 163, 184, 0.42), transparent);
+  background: linear-gradient(180deg, transparent, rgba(var(--rgb-slate), 0.42), transparent);
   overflow: hidden;
 }
 .scroll-rail__bead {
@@ -3706,7 +3778,7 @@ html.pl-locked .scroll-rail { opacity: 0; pointer-events: none; }
    --accent from the frame.
    ================================================================== */
 .hud-frame {
-  --accent: 34, 211, 238;
+  --accent: var(--rgb-cyan);
   --hf-bevel: clamp(12px, 3vw, 26px);
   --hf-clip: polygon(
     0 0,
@@ -3723,7 +3795,7 @@ html.pl-locked .scroll-rail { opacity: 0; pointer-events: none; }
     148deg,
     rgba(var(--accent), 0.7) 0%,
     rgba(var(--accent), 0.16) 40%,
-    rgba(148, 163, 184, 0.12) 64%,
+    rgba(var(--rgb-slate), 0.12) 64%,
     rgba(var(--accent), 0.5) 100%
   );
 }
@@ -3784,7 +3856,7 @@ html.pl-skip #preloader { display: none; }
   position: absolute;
   inset: -10%;
   opacity: var(--pl-content);
-  background-image: repeating-linear-gradient(0deg, rgba(80,104,238,0.06) 0 1px, transparent 1px 84px);
+  background-image: repeating-linear-gradient(0deg, rgba(var(--rgb-bloom),0.06) 0 1px, transparent 1px 84px);
   transform-origin: 50% 100%;
   transform: perspective(900px) rotateX(68deg) translateY(calc(120px + 40px * var(--g))) scale(1.7);
   pointer-events: none;
@@ -3796,7 +3868,7 @@ html.pl-skip #preloader { display: none; }
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.3em;
-  color: rgba(100,116,139,0.9);
+  color: rgba(var(--rgb-slate-dim),0.9);
   opacity: var(--pl-content);
   white-space: nowrap;
 }
@@ -3857,9 +3929,9 @@ html.pl-skip #preloader { display: none; }
   object-fit: contain;
   transform: translate(var(--x, 0px), var(--jy, 0px));
   filter:
-    drop-shadow(calc(-1 * var(--chroma, 5px)) -2px 0 rgba(34, 211, 238, var(--a-alpha, 0.5)))
-    drop-shadow(var(--chroma, 5px) 2px 0 rgba(232, 121, 249, var(--b-alpha, 0.45)))
-    drop-shadow(0 0 var(--glow, 14px) rgba(80, 104, 238, var(--glow-alpha, 0.28)));
+    drop-shadow(calc(-1 * var(--chroma, 5px)) -2px 0 rgba(var(--rgb-cyan), var(--a-alpha, 0.5)))
+    drop-shadow(var(--chroma, 5px) 2px 0 rgba(var(--rgb-magenta), var(--b-alpha, 0.45)))
+    drop-shadow(0 0 var(--glow, 14px) rgba(var(--rgb-bloom), var(--glow-alpha, 0.28)));
 }
 
 /* Torn slivers are the same logotype image; JS sets clip-path / offset. */
@@ -3875,7 +3947,7 @@ html.pl-skip #preloader { display: none; }
 /* --- readout --- */
 .pl-readout { display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 3.5vh, 34px); width: 100%; }
 .pl-sub {
-  color: rgba(34, 211, 238, var(--sub-alpha, 0.55));
+  color: rgba(var(--rgb-cyan), var(--sub-alpha, 0.55));
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(0.95rem, 4vw, 1.625rem);
@@ -3886,14 +3958,14 @@ html.pl-skip #preloader { display: none; }
 .pl-track {
   width: min(460px, 86vw);
   height: 2px;
-  background: rgba(148,163,184,0.18);
+  background: rgba(var(--rgb-slate),0.18);
 }
 .pl-fill {
   display: block;
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #22d3ee, #e879f9);
-  box-shadow: 0 0 18px rgba(80,104,238,0.8);
+  background: linear-gradient(90deg, var(--color-cyan), var(--color-magenta));
+  box-shadow: 0 0 18px rgba(var(--rgb-bloom),0.8);
 }
 .pl-status {
   width: min(460px, 86vw);
@@ -3957,14 +4029,14 @@ html.pl-skip #preloader { display: none; }
      the logo artwork behind still reads through the button. */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 38%, transparent 72%),
-    linear-gradient(100deg, rgba(34, 211, 238, 0.34) 0%, rgba(139, 120, 246, 0.3) 52%, rgba(232, 121, 249, 0.34) 100%),
+    linear-gradient(100deg, rgba(var(--rgb-cyan), 0.34) 0%, rgba(var(--rgb-indigo), 0.3) 52%, rgba(var(--rgb-magenta), 0.34) 100%),
     linear-gradient(180deg, rgba(16, 20, 36, 0.42) 0%, rgba(9, 12, 22, 0.36) 100%);
   backdrop-filter: blur(16px) saturate(1.6);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 10px 30px -12px rgba(0, 0, 0, 0.85),
-    0 0 22px -6px rgba(34, 211, 238, 0.25);
+    0 0 22px -6px rgba(var(--rgb-cyan), 0.25);
 }
 .btn-register--glass:hover,
 .btn-register--glass:focus-visible {
@@ -3973,14 +4045,14 @@ html.pl-skip #preloader { display: none; }
   /* Hover pushes the same gradient up rather than swapping to a flat colour. */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 38%, transparent 72%),
-    linear-gradient(100deg, rgba(34, 211, 238, 0.5) 0%, rgba(139, 120, 246, 0.45) 52%, rgba(232, 121, 249, 0.5) 100%),
+    linear-gradient(100deg, rgba(var(--rgb-cyan), 0.5) 0%, rgba(var(--rgb-indigo), 0.45) 52%, rgba(var(--rgb-magenta), 0.5) 100%),
     linear-gradient(180deg, rgba(16, 20, 36, 0.38) 0%, rgba(9, 12, 22, 0.32) 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(34, 211, 238, 0.6),
+    inset 0 0 0 1px rgba(var(--rgb-cyan), 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.34),
     0 14px 34px -12px rgba(0, 0, 0, 0.85),
-    0 0 32px rgba(34, 211, 238, 0.36),
-    0 0 46px rgba(232, 121, 249, 0.26);
+    0 0 32px rgba(var(--rgb-cyan), 0.36),
+    0 0 46px rgba(var(--rgb-magenta), 0.26);
 }
 /* The sheen reads as a highlight travelling over glass, not a wipe over a fill. */
 .btn-register--glass::after {
@@ -4046,7 +4118,7 @@ html.pl-skip #preloader { display: none; }
   border-radius: 999px;
   background:
     radial-gradient(120% 120% at 30% 20%,
-      rgba(103, 232, 249, 0.10) 0%,
+      rgba(var(--rgb-cyan-lift), 0.10) 0%,
       rgba(6, 8, 14, 0.85) 55%,
       rgba(6, 8, 14, 0.92) 100%);
   backdrop-filter: blur(8px);
@@ -4069,9 +4141,9 @@ html.pl-skip #preloader { display: none; }
 }
 @keyframes audio-glow {
   0%, 100% { box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-cyan) 22%, transparent),
-                          0 8px 28px -14px rgba(103, 232, 249, 0.75); }
+                          0 8px 28px -14px rgba(var(--rgb-cyan-lift), 0.75); }
   50%      { box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-cyan) 40%, transparent),
-                          0 12px 34px -12px rgba(103, 232, 249, 1); }
+                          0 12px 34px -12px rgba(var(--rgb-cyan-lift), 1); }
 }
 
 .audio-toggle:hover,
@@ -4174,7 +4246,7 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   padding: 0.05em 0.4em;
   border: 1px solid var(--hairline-strong);
   border-radius: 4px;
-  background: rgba(103, 232, 249, 0.05);
+  background: rgba(var(--rgb-cyan-lift), 0.05);
 }
 
 /* The arena is the whole thing — canvas fills it, HUD floats on top. */
@@ -4194,14 +4266,14 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   border: 1px solid var(--hairline-strong);
   border-radius: 6px;
   background:
-    radial-gradient(120% 90% at 50% 100%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
-    radial-gradient(70% 60% at 15% 90%, rgba(103, 232, 249, 0.10) 0%, transparent 55%),
-    radial-gradient(70% 60% at 88% 15%, rgba(232, 121, 249, 0.09) 0%, transparent 55%),
+    radial-gradient(120% 90% at 50% 100%, rgba(var(--rgb-indigo), 0.12) 0%, transparent 60%),
+    radial-gradient(70% 60% at 15% 90%, rgba(var(--rgb-cyan-lift), 0.10) 0%, transparent 55%),
+    radial-gradient(70% 60% at 88% 15%, rgba(var(--rgb-magenta), 0.09) 0%, transparent 55%),
     linear-gradient(180deg, rgba(6, 8, 14, 0.85), rgba(6, 8, 14, 0.95));
   box-shadow:
-    0 0 0 1px rgba(103, 232, 249, 0.08),
-    0 24px 80px -32px rgba(99, 102, 241, 0.55),
-    inset 0 0 120px -40px rgba(232, 121, 249, 0.18);
+    0 0 0 1px rgba(var(--rgb-cyan-lift), 0.08),
+    0 24px 80px -32px rgba(var(--rgb-indigo), 0.55),
+    inset 0 0 120px -40px rgba(var(--rgb-magenta), 0.18);
   overflow: hidden;
   isolation: isolate;
 }
@@ -4239,7 +4311,7 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   outline: none;
 }
 .signal-range__canvas:focus-visible {
-  box-shadow: inset 0 0 0 2px rgba(103, 232, 249, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(var(--rgb-cyan-lift), 0.55);
 }
 
 /* HUD — top-right scoring stack. Angular, mono, cyan-lit values. */
@@ -4354,7 +4426,7 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
     var(--color-cyan) 0%,
     var(--color-magenta) 65%,
     var(--color-magenta) 100%);
-  box-shadow: 0 0 12px rgba(103, 232, 249, 0.6);
+  box-shadow: 0 0 12px rgba(var(--rgb-cyan-lift), 0.6);
   transition: width 60ms linear;
 }
 
@@ -4375,9 +4447,9 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   color: var(--paper-dim);
   background:
     linear-gradient(135deg,
-      rgba(103, 232, 249, 0.06) 0%,
+      rgba(var(--rgb-cyan-lift), 0.06) 0%,
       rgba(6, 8, 14, 0.75) 45%,
-      rgba(232, 121, 249, 0.05) 100%);
+      rgba(var(--rgb-magenta), 0.05) 100%);
   border: 1px solid color-mix(in oklab, var(--color-cyan) 32%, transparent);
   border-radius: 0;
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
@@ -4387,7 +4459,7 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.6),
-              0 6px 22px -14px rgba(103, 232, 249, 0.55);
+              0 6px 22px -14px rgba(var(--rgb-cyan-lift), 0.55);
   transition: color 220ms var(--ease-standard),
               border-color 220ms var(--ease-standard),
               transform 180ms var(--ease-out),
@@ -4449,7 +4521,7 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   outline: none;
   transform: translateY(-1px);
   box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.6),
-              0 10px 28px -14px rgba(103, 232, 249, 0.85);
+              0 10px 28px -14px rgba(var(--rgb-cyan-lift), 0.85);
 }
 .signal-range__reset:hover::before,
 .signal-range__reset:focus-visible::before {
@@ -4474,7 +4546,7 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   border-color: var(--color-cyan);
   box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.6),
               0 0 0 1px color-mix(in oklab, var(--color-cyan) 60%, transparent),
-              0 12px 34px -12px rgba(103, 232, 249, 0.95);
+              0 12px 34px -12px rgba(var(--rgb-cyan-lift), 0.95);
 }
 @keyframes sg-reset-spin {
   from { transform: rotate(0deg); }
@@ -4618,164 +4690,201 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
 }
 
 /* ==========================================================================
-   PALETTE TRIALS
+   POLICY PAGES — /terms, /privacy, /refunds
    ==========================================================================
-   The shipped palette is stock Tailwind: #22d3ee is cyan-400, #6366f1 is
-   indigo-500, #e879f9 is fuchsia-400, and the greys are slate. That exact
-   cyan -> indigo -> fuchsia sweep is the most-reached-for gradient in
-   generated design, which is why the site reads as templated: the colours
-   were inherited, not chosen.
-
-   Three alternatives, switchable with ?palette= so they can be judged on the
-   real pages rather than as swatches. Each one:
-     - uses hand-mixed values, none of them a framework default
-     - biases the neutrals toward its own accent instead of neutral slate
-     - narrows the gradient sweep, because a full spectrum is what reads as
-       a default and a tight one reads as a decision
-
-   Once one is chosen these collapse into :root and the attribute goes away.
+   These are the only pages on the site that exist to be READ rather than
+   looked at, so they get the opposite treatment to everything else: the
+   ambient field runs at a third of its density, nothing moves, the measure is
+   narrow, and the HUD vocabulary is reduced to a single hairline and a mono
+   clause number. The house voice is still there — it has just stopped
+   shouting, because a refund policy that performs is a refund policy nobody
+   trusts.
    ========================================================================== */
 
-/* --- A. COASTAL NIGHT ---------------------------------------------------
-   NITK Surathkal is on the Arabian Sea, and the club brochures already draw
-   it that way: deep night water with one warm light on it. Sea-teal against
-   sodium-vapour amber is a true complementary pair, so the page has one
-   warm note to spend and everything else supports it — the opposite of a
-   spectrum. */
-[data-palette="coastal"] {
-  --gradient-cta: linear-gradient(100deg, #1fb6ad 0%, #3b6fd4 55%, #6f9ae0 100%);
-  --cta-glow: rgba(31, 182, 173, 0.55);
-  --bay-1: 31,182,173;
-  --bay-2: 45,140,190;
-  --bay-3: 59,111,212;
-  --bay-4: 90,132,220;
-  --bay-5: 140,120,180;
-  --bay-6: 176,86,127;
-  --color-void: #05070d;
-  --color-panel: #080c14;
-  --color-charcoal: #080c14;
-  --color-charcoal-2: #0d131d;
-  --color-paper: #eef2f4;
-  --color-strong: #dfe7ea;
-  --color-muted: #8fa0ab;
-  --color-dim: #6b7d88;
-  --color-faint: #4d5c66;
-  --color-cyan: #1fb6ad;          /* sea teal */
-  --color-indigo: #3b6fd4;        /* deep water */
-  --color-violet-mid: #4a7fd8;
-  --color-violet: #6f9ae0;
-  --color-orchid: #b0567f;        /* muted coral */
-  --color-magenta: #c06a89;
-  --color-amber: #f0a343;         /* sodium vapour — the one warm note */
-  --paper: #eef2f4;
-  --paper-dim: #8fa0ab;
-  --paper-faint: #6b7d88;
-  --hairline: rgba(143, 160, 171, 0.18);
-  --hairline-strong: rgba(143, 160, 171, 0.34);
-  --rule: rgba(143, 160, 171, 0.34);
-  --glow-violet: rgba(31, 182, 173, 0.55);
-  --glow-blue: rgba(20, 58, 110, 0.38);
-  --glow-purple: rgba(14, 40, 78, 0.44);
-  /* Teal -> deep water only. Amber stays OUT of the gradient so it keeps
-     its force as the accent. */
-  --gradient-impossible: linear-gradient(90deg, #1fb6ad, #3b6fd4 58%, #6f9ae0);
-  --track-technical: 31, 182, 173;
-  --track-startup:   59, 111, 212;
-  --track-talks:     176, 86, 127;
-  --track-care:      240, 163, 67;
-  --track-campus:    111, 154, 224;
+/* --- the three-way switch at the top --------------------------------------
+   Someone who opens one of these usually wants to check all three. */
+.legal-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.legal-switch__item {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--hairline);
+  background: rgba(var(--rgb-ground-2), 0.5);
+  transition: color var(--dur-fast) var(--ease-standard),
+              border-color var(--dur-fast) var(--ease-standard),
+              background-color var(--dur-fast) var(--ease-standard);
+}
+.legal-switch__item:hover {
+  color: var(--paper);
+  border-color: rgba(var(--rgb-cyan), 0.45);
+}
+.legal-switch__item.is-current {
+  color: var(--color-cyan);
+  border-color: rgba(var(--rgb-cyan), 0.55);
+  background: rgba(var(--rgb-cyan), 0.08);
 }
 
-/* --- B. SAME FAMILY, BESPOKE VALUES -------------------------------------
-   Keeps the cyan/violet identity the logo already carries, so nothing that
-   is printed stops matching. Every value is re-mixed off the framework
-   defaults, the greys pick up an indigo cast, and magenta is demoted from a
-   gradient stop to an accent so the sweep stops being a rainbow. */
-[data-palette="bespoke"] {
-  --gradient-cta: linear-gradient(100deg, #2ee0e6 0%, #5560e8 55%, #8f96f0 100%);
-  --cta-glow: rgba(46, 224, 230, 0.55);
-  --bay-1: 46,224,230;
-  --bay-2: 64,168,236;
-  --bay-3: 85,96,232;
-  --bay-4: 110,110,236;
-  --bay-5: 160,100,228;
-  --bay-6: 201,106,224;
-  --color-void: #04050b;
-  --color-panel: #070911;
-  --color-charcoal: #070911;
-  --color-charcoal-2: #0c0f1a;
-  --color-paper: #eef1f7;
-  --color-strong: #dde2ee;
-  --color-muted: #8e99ad;
-  --color-dim: #69738a;
-  --color-faint: #4d5668;
-  --color-cyan: #2ee0e6;
-  --color-indigo: #5560e8;
-  --color-violet-mid: #6a72ea;
-  --color-violet: #8f96f0;
-  --color-orchid: #b863d2;
-  --color-magenta: #c96ae0;
-  --color-amber: #e8923c;
-  --paper: #eef1f7;
-  --paper-dim: #8e99ad;
-  --paper-faint: #69738a;
-  --hairline: rgba(142, 153, 173, 0.18);
-  --hairline-strong: rgba(142, 153, 173, 0.34);
-  --rule: rgba(142, 153, 173, 0.34);
-  --glow-violet: rgba(85, 96, 232, 0.66);
-  --glow-blue: rgba(26, 40, 112, 0.36);
-  --glow-purple: rgba(28, 24, 82, 0.42);
-  --gradient-impossible: linear-gradient(90deg, #2ee0e6, #5560e8 62%, #8f96f0);
-  --track-technical: 46, 224, 230;
-  --track-startup:   85, 96, 232;
-  --track-talks:    201, 106, 224;
-  --track-care:     232, 146, 60;
-  --track-campus:   143, 150, 240;
+/* --- the document ---------------------------------------------------------
+   An <ol>, numbered by CSS counter. The number is information here, not
+   decoration: a numbered clause is the thing you quote back in an email, so
+   it has to be visible AND stable. Rendering it from a counter rather than
+   from the data means inserting a clause renumbers the rest for free. */
+.legal-doc {
+  list-style: none;
+  counter-reset: clause;
+  padding: 0;
+  margin: 2.5rem 0 0;
+}
+.legal-sec {
+  counter-increment: clause;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem 1.5rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--hairline);
+}
+.legal-sec:first-child { border-top: 0; padding-top: 0; }
+
+.legal-sec__h {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--color-paper);
+  margin: 0 0 0.75rem;
+  scroll-margin-top: 7rem;   /* the fixed nav must not cover a linked clause */
 }
 
-/* --- C. INSTRUMENT / LAB ------------------------------------------------
-   Engineering as the metaphor rather than networks: oscilloscope phosphor
-   and PCB copper on near-black. The boldest departure, and the honest cost
-   is that the logo is currently cyan->violet->magenta and would need
-   recolouring to sit on this. */
-[data-palette="lab"] {
-  --gradient-cta: linear-gradient(100deg, #4ee39a 0%, #7fa89b 52%, #b87333 100%);
-  --cta-glow: rgba(78, 227, 154, 0.45);
-  --bay-1: 78,227,154;
-  --bay-2: 105,200,150;
-  --bay-3: 127,168,155;
-  --bay-4: 160,150,110;
-  --bay-5: 184,115,51;
-  --bay-6: 217,154,90;
-  --color-void: #07090a;
-  --color-panel: #0b0f10;
-  --color-charcoal: #0b0f10;
-  --color-charcoal-2: #101615;
-  --color-paper: #e8ecec;
-  --color-strong: #d6dcdb;
-  --color-muted: #8a9695;
-  --color-dim: #6a7674;
-  --color-faint: #4a5553;
-  --color-cyan: #4ee39a;          /* phosphor */
-  --color-indigo: #b87333;        /* copper */
-  --color-violet-mid: #9c8a5e;
-  --color-violet: #7fa89b;
-  --color-orchid: #c98a4a;
-  --color-magenta: #d99a5a;
-  --color-amber: #e0a44e;
-  --paper: #e8ecec;
-  --paper-dim: #8a9695;
-  --paper-faint: #6a7674;
-  --hairline: rgba(138, 150, 149, 0.18);
-  --hairline-strong: rgba(138, 150, 149, 0.34);
-  --rule: rgba(138, 150, 149, 0.34);
-  --glow-violet: rgba(78, 227, 154, 0.42);
-  --glow-blue: rgba(24, 58, 46, 0.40);
-  --glow-purple: rgba(60, 40, 18, 0.40);
-  --gradient-impossible: linear-gradient(90deg, #4ee39a, #7fa89b 55%, #b87333);
-  --track-technical: 78, 227, 154;
-  --track-startup:  184, 115, 51;
-  --track-talks:    217, 154, 90;
-  --track-care:     224, 164, 78;
-  --track-campus:   127, 168, 155;
+/* The heading links to itself, and the clause number IS the link affordance —
+   it sits in the margin, goes teal on hover, and gives anyone quoting a clause
+   a URL for exactly that clause. */
+.legal-sec__anchor {
+  color: inherit;
+  text-decoration: none;
+  display: inline;
+}
+.legal-sec__anchor::before {
+  content: counter(clause, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--paper-faint);
+  margin-right: 0.85rem;
+  vertical-align: 0.15em;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.legal-sec__anchor:hover::before,
+.legal-sec__h:target .legal-sec__anchor::before { color: var(--color-cyan); }
+.legal-sec__anchor:hover { color: var(--color-cyan); }
+
+.legal-sec__p {
+  color: var(--paper-dim);
+  line-height: 1.75;
+  margin: 0 0 0.9rem;
+  max-width: 62ch;           /* a reading measure, not the container's width */
+}
+.legal-sec__p:last-child { margin-bottom: 0; }
+
+.legal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: 62ch;
+}
+.legal-list li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: var(--paper-dim);
+  line-height: 1.65;
+}
+/* A square, not a disc: it is the same mark the HUD uses for a live node, and
+   it keeps these pages inside the site's vocabulary without any other HUD
+   furniture. */
+.legal-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  background: rgba(var(--rgb-cyan), 0.75);
+}
+
+.legal-link {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+  border-bottom: 1px solid rgba(var(--rgb-cyan), 0.35);
+  padding-bottom: 2px;
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.legal-link:hover { border-bottom-color: rgba(var(--rgb-cyan), 0.9); }
+
+/* --- the contact block at the foot ---------------------------------------- */
+.legal-contact {
+  margin-top: 2.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--hairline);
+  background: rgba(var(--rgb-ground-2), 0.55);
+}
+.legal-contact__mail {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--color-cyan);
+  border-bottom: 1px solid rgba(var(--rgb-cyan), 0.35);
+  padding-bottom: 3px;
+  word-break: break-all;     /* the address is long; never blow out the page */
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.legal-contact__mail:hover { border-bottom-color: rgba(var(--rgb-cyan), 0.9); }
+
+/* Wide enough to put the clause number in its own gutter, which is what makes
+   the list read as a legal document rather than as a stack of headings. */
+@media (min-width: 640px) {
+  .legal-sec__h { font-size: 1.25rem; }
+  .legal-contact { padding: 2rem 2.25rem; }
+}
+
+/* --- footer legal row ------------------------------------------------------
+   Stacks under the copyright on a phone, sits opposite it from sm up. */
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.footer-legal__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+.footer-legal__links a {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.footer-legal__links a:hover { color: var(--color-paper); }
+
+@media (min-width: 640px) {
+  .footer-legal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }

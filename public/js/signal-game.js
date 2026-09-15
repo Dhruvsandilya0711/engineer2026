@@ -72,10 +72,10 @@ export function mountSignalGame() {
   // Colours pulled from the site's cascade so this lives inside the palette
   // rather than beside it. --color-* are hex strings; parse to r,g,b once.
   const css = getComputedStyle(document.documentElement);
-  const CYAN    = hex(css.getPropertyValue('--color-cyan')    || '#67e8f9');
-  const MAGENTA = hex(css.getPropertyValue('--color-magenta') || '#e879f9');
-  const INDIGO  = hex(css.getPropertyValue('--color-indigo')  || '#6366f1');
-  const PAPER   = hex(css.getPropertyValue('--paper')         || '#e6e9ef');
+  const CYAN    = hex(css.getPropertyValue('--color-cyan')    || '#1fb6ad');
+  const MAGENTA = hex(css.getPropertyValue('--color-magenta') || '#c06a89');
+  const INDIGO  = hex(css.getPropertyValue('--color-indigo')  || '#3b6fd4');
+  const PAPER   = hex(css.getPropertyValue('--paper')         || '#eef2f4');
 
   const scoreEl  = host.querySelector('[data-js="sg-score"]');
   const streakEl = host.querySelector('[data-js="sg-streak"]');

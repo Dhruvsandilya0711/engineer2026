@@ -1,6 +1,6 @@
 <% const st = regState(event); %>
 <!DOCTYPE html>
-<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
         </a>
 
         <!-- framed hero, in the homepage deck-card idiom -->
-        <div class="hud-frame" style="--accent: 99,102,241">
+        <div class="hud-frame" style="--accent: var(--bay-3)">
           <div class="hud-frame__inner">
             <div class="deck-card__head">
               <span class="deck-card__num"><%= String(index).padStart(2, '0') %></span>

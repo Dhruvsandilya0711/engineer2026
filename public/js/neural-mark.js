@@ -17,16 +17,16 @@
 // ==========================================================================
 
 import * as THREE from '/vendor/three/three.module.js';
-import { hasWebGL } from '/js/cognitrixx-3d.js';
+import { hasWebGL, tokenColor } from '/js/cognitrixx-3d.js';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Site tokens (input.css @theme).
-const CYAN    = new THREE.Color('#22d3ee');
-const INDIGO  = new THREE.Color('#6366f1');
-const VIOLET  = new THREE.Color('#8a9cf4');
-const ORCHID  = new THREE.Color('#d676e0');
-const MAGENTA = new THREE.Color('#e879f9');
+// Site tokens, read from the cascade — see tokenColor in cognitrixx-3d.js.
+const CYAN    = tokenColor('--color-cyan',       '#1fb6ad');
+const INDIGO  = tokenColor('--color-indigo',     '#3b6fd4');
+const VIOLET  = tokenColor('--color-violet',     '#6f9ae0');
+const ORCHID  = tokenColor('--color-orchid',     '#b0567f');
+const MAGENTA = tokenColor('--color-magenta',    '#c06a89');
 
 const TAU = Math.PI * 2;
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -210,7 +210,7 @@ export function createMarkField(host, img, opts = {}) {
 
   // ---- scene -------------------------------------------------------------
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x03030d, 4.2, 15);
+  scene.fog = new THREE.Fog(0x04070f, 4.2, 15);
 
   const FOV = 34;
   const CAM_Y = 0.24, LOOK_Y = 0.10;
@@ -291,7 +291,7 @@ export function createMarkField(host, img, opts = {}) {
 
   // Pool of light the mark throws on the plane below it.
   const poolMat = new THREE.SpriteMaterial({
-    map: bloomTexture(), color: 0xb9a8ff, transparent: true,
+    map: bloomTexture(), color: 0xbfe6e0, transparent: true,
     opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending,
   });
   const pool = new THREE.Sprite(poolMat);

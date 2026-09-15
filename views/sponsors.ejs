@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +31,7 @@
           + `<span class="text-paper">${openSlots}</span> open<br>`
           + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
       %>
-      <%- include('partials/_page-hero', { accent: '232,121,249', num: '06', nav: 'Sponsors', kicker: 'Cognitrixx / partners', title: sponsorTitle, meta: sponsorMeta }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-6)', num: '06', nav: 'Sponsors', kicker: 'Cognitrixx / partners', title: sponsorTitle, meta: sponsorMeta }) %>
 
       <p class="text-[var(--paper-dim)] max-w-xl mt-6">
         ENGINEER is NITK Surathkal's annual technical festival, run by students since
@@ -39,7 +39,7 @@
         here as they are confirmed. Below: who the fest reaches, and who has backed it before.
       </p>
 
-      <div class="hud-frame mt-6" style="--accent: 232,121,249">
+      <div class="hud-frame mt-6" style="--accent: var(--bay-6)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
         <!-- ============ TIERS ============

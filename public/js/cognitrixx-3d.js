@@ -20,16 +20,34 @@ import * as THREE from '/vendor/three/three.module.js';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const AMBER   = new THREE.Color('#e8923c');
-const CYAN    = new THREE.Color('#22d3ee');
-const INDIGO  = new THREE.Color('#6366f1');
-const VIOLET  = new THREE.Color('#8b78f6');
-const MAGENTA = new THREE.Color('#e879f9');
+/**
+ * A THREE.Color read from the stylesheet instead of written here.
+ *
+ * This whole layer used to hold its own copy of the palette as hex literals,
+ * which meant a palette change reached the page and stopped at the canvas —
+ * the field kept rendering the old light over the new ground. Now there is one
+ * source of truth (the --color-* tokens in input.css) and this reads it.
+ *
+ * Module scripts run after the render-blocking stylesheet in <head> has
+ * parsed, so the token always resolves. The fallback is the CURRENT palette's
+ * own value, so if a token is ever renamed the field goes slightly stale
+ * rather than snapping back to a different palette.
+ */
+const CSS = getComputedStyle(document.documentElement);
+export function tokenColor(name, fallback) {
+  return new THREE.Color(CSS.getPropertyValue(name).trim() || fallback);
+}
+
+const AMBER   = tokenColor('--color-amber',      '#f0a343');
+const CYAN    = tokenColor('--color-cyan',       '#1fb6ad');
+const INDIGO  = tokenColor('--color-indigo',     '#3b6fd4');
+const VIOLET  = tokenColor('--color-violet',     '#6f9ae0');
+const MAGENTA = tokenColor('--color-magenta',    '#c06a89');
 const ENGI = [CYAN, VIOLET, MAGENTA];
-// Cool theme ramp for the sitewide background field, and the deep indigo it
+// Cool theme ramp for the sitewide background field, and the deep water it
 // dissolves into at depth so the web reads as distance, not a flat wall.
 const NEBULA = [CYAN, INDIGO, VIOLET, MAGENTA];
-const DEEP   = new THREE.Color('#0e1338');
+const DEEP   = new THREE.Color('#07203a');
 // Signals get theme colours rather than all-cyan.
 const SIGNAL_HUES = [CYAN, MAGENTA, VIOLET, CYAN];
 
@@ -98,7 +116,7 @@ export function createNeuralField(host, opts = {}) {
   // Depth fog: with additive blending, fading fragments toward near-black as
   // they recede makes distant nodes dissolve. That is what lets the field be
   // dense up close yet stay soft and off the foreground in the background.
-  scene.fog = new THREE.Fog(0x03040c, depth * 0.35, depth * 2.15);
+  scene.fog = new THREE.Fog(0x04070f, depth * 0.35, depth * 2.15);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = depth;
 
@@ -174,7 +192,7 @@ export function createNeuralField(host, opts = {}) {
   // depth. Fog is measured in distance from the camera, so the far end fades.
   if (JOURNEY) {
     camera.position.set(0, 0, 0);
-    scene.fog = new THREE.Fog(0x03040c, 9, CORRIDOR * 1.02);
+    scene.fog = new THREE.Fog(0x04070f, 9, CORRIDOR * 1.02);
     const pz = nodeGeo.attributes.position.array;
     for (let i = 0; i < count; i++) {
       pz[i * 3]     = rand(-spread, spread);

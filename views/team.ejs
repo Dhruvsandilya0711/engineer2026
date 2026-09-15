@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,14 +33,14 @@
             + `<span class="text-[var(--paper-faint)]">ENGINEER '26 &middot; NITK Surathkal</span></p>`
           : '';
       %>
-      <%- include('partials/_page-hero', { accent: '128,146,246', num: '04', nav: 'Team', kicker: 'Cognitrixx / the people', title: teamTitle, meta: teamMeta }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-5)', num: '04', nav: 'Team', kicker: 'Cognitrixx / the people', title: teamTitle, meta: teamMeta }) %>
 
       <p class="text-[var(--paper-dim)] max-w-xl mt-6">
         Cognitrixx is a network of intelligent minds — and the ones that built it are students
         at NITK Surathkal who run ENGINEER every year.
       </p>
 
-      <div class="hud-frame mt-6" style="--accent: 128,146,246">
+      <div class="hud-frame mt-6" style="--accent: var(--bay-5)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <% if (totalMembers) { %>

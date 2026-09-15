@@ -21,12 +21,12 @@
   // one too now, so every bay in the bar is a page and none of them is a
   // hash target any more.
   const bayItems = [
-    { n: '01', label: 'Home',     id: 'home',     href: '/',          accent: 'var(--bay-1, 34,211,238)'  },
-    { n: '02', label: 'About',    id: 'about',    href: '/about',     accent: 'var(--bay-2, 80,150,242)'  },
-    { n: '03', label: 'Events',   id: 'events',   href: '/events',    accent: 'var(--bay-3, 108,124,244)' },
-    { n: '04', label: 'Schedule', id: 'schedule', href: '/schedule',  accent: 'var(--bay-4, 128,146,246)' },
-    { n: '05', label: 'Team',     id: 'team',     href: '/team',      accent: 'var(--bay-5, 214,118,226)' },
-    { n: '06', label: 'Sponsors', id: 'sponsors', href: '/sponsors',  accent: 'var(--bay-6, 232,121,249)' },
+    { n: '01', label: 'Home',     id: 'home',     href: '/',          accent: 'var(--bay-1)' },
+    { n: '02', label: 'About',    id: 'about',    href: '/about',     accent: 'var(--bay-2)' },
+    { n: '03', label: 'Events',   id: 'events',   href: '/events',    accent: 'var(--bay-3)' },
+    { n: '04', label: 'Schedule', id: 'schedule', href: '/schedule',  accent: 'var(--bay-4)' },
+    { n: '05', label: 'Team',     id: 'team',     href: '/team',      accent: 'var(--bay-5)' },
+    { n: '06', label: 'Sponsors', id: 'sponsors', href: '/sponsors',  accent: 'var(--bay-6)' },
   ];
   const barVariant = typeof variant  !== 'undefined' ? variant : 'hero';
   const current    = typeof activeNav !== 'undefined' ? activeNav : '';

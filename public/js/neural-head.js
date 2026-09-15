@@ -36,19 +36,19 @@
 // ==========================================================================
 
 import * as THREE from '/vendor/three/three.module.js';
-import { hasWebGL } from '/js/cognitrixx-3d.js';
+import { hasWebGL, tokenColor } from '/js/cognitrixx-3d.js';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Site tokens (input.css @theme). The reference is violet-dominant, which is
-// the register ENGINEER 26 already sits in — so the head is built out of the
-// page palette rather than recoloured after the fact.
-const CYAN    = new THREE.Color('#22d3ee');
-const INDIGO  = new THREE.Color('#6366f1');
-const VIOLET  = new THREE.Color('#8a9cf4');
-const ORCHID  = new THREE.Color('#d676e0');
-const MAGENTA = new THREE.Color('#e879f9');
-const DEEP    = new THREE.Color('#241a63');
+// Site tokens, read from the cascade rather than copied — see tokenColor in
+// cognitrixx-3d.js for why. The head is built out of the page palette so it
+// cannot drift out of it.
+const CYAN    = tokenColor('--color-cyan',       '#1fb6ad');
+const INDIGO  = tokenColor('--color-indigo',     '#3b6fd4');
+const VIOLET  = tokenColor('--color-violet',     '#6f9ae0');
+const ORCHID  = tokenColor('--color-orchid',     '#b0567f');
+const MAGENTA = tokenColor('--color-magenta',    '#c06a89');
+const DEEP    = new THREE.Color('#0d2b4a');
 
 const TAU = Math.PI * 2;
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -263,7 +263,7 @@ export function createNeuralHead(host, opts = {}) {
 
   const scene = new THREE.Scene();
   // Additive fragments faded toward near-black read as distance.
-  scene.fog = new THREE.Fog(0x03030d, 4.4, 15);
+  scene.fog = new THREE.Fog(0x04070f, 4.4, 15);
 
   const FOV = 34;
   // Composition, matched to the reference: the head about 70% of the frame
@@ -542,7 +542,7 @@ export function createNeuralHead(host, opts = {}) {
   // Contact flare: a wide horizontal smear plus a hot core where the neck
   // lands on the plane.
   const flareMat = new THREE.SpriteMaterial({
-    map: bloomTexture(), color: 0xc9b6ff, transparent: true,
+    map: bloomTexture(), color: 0xbfe6e0, transparent: true,
     opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending,
   });
   const flare = new THREE.Sprite(flareMat);

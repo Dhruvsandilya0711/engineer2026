@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,9 +32,9 @@
           + `<span class="text-paper">${events.categories.length}</span> categories<br>`
           + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
       %>
-      <%- include('partials/_page-hero', { accent: '99,102,241', num: '02', nav: 'Events', kicker: 'Cognitrixx / event index', title: eventsTitle, meta: eventsMeta }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-3)', num: '02', nav: 'Events', kicker: 'Cognitrixx / event index', title: eventsTitle, meta: eventsMeta }) %>
 
-      <div class="hud-frame mt-6" style="--accent: 99,102,241">
+      <div class="hud-frame mt-6" style="--accent: var(--bay-3)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <!-- search + filters. A real <form> so this works with JS disabled;

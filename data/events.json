@@ -664,27 +664,27 @@
   "_tracks": {
     "technical": {
       "name": "Technical Events",
-      "accent": "34,211,238",
+      "accent": "31,182,173",
       "blurb": "Bright minds from across the country compete, collaborate and innovate — coding challenges, robotics, workshops and technology-driven competitions."
     },
     "startup": {
       "name": "Startup Pitch",
-      "accent": "99,102,241",
+      "accent": "59,111,212",
       "blurb": "The heartbeat of entrepreneurial creativity, where bright minds converge to showcase disruptive ideas and shape the future of industries."
     },
     "talks": {
       "name": "Engi Talks",
-      "accent": "232,121,249",
+      "accent": "176,86,127",
       "blurb": "Experts from art, administration, politics and defence deliver compelling talks on current issues, in active discussion with the audience."
     },
     "care": {
       "name": "ENGI Care",
-      "accent": "245,158,11",
+      "accent": "240,163,67",
       "blurb": "Our CSR initiative — a testament to making a positive difference in the lives of those around us."
     },
     "campus": {
       "name": "Campus & Expo",
-      "accent": "128,146,246",
+      "accent": "111,154,224",
       "blurb": "The parts of ENGINEER that spill out of the lecture halls and onto the campus itself."
     }
   }

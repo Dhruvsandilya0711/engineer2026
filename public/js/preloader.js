@@ -23,6 +23,14 @@
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// The chroma-split colour on the torn slivers. Read from the palette once here
+// rather than written as a literal in the frame loop: the boot sequence is the
+// first thing anyone sees, so it being the one screen still lit by the old
+// palette was the most visible leak of the lot.
+const CHROMA = 'rgba(' +
+  (getComputedStyle(document.documentElement).getPropertyValue('--rgb-cyan').trim() || '31, 182, 173') +
+  ', 0.95)';
+
 const LOAD_DEFAULT = 2.0;   // reference default
 const LOAD_MAX = 4.0;       // never hang
 const BURST = 0.45;
@@ -178,7 +186,7 @@ export function initPreloader() {
         const hgt = 2 + hash(seed + 2.2) * 8;
         sl.style.display = 'flex';
         sl.style.clipPath = `polygon(0 ${top}%, 100% ${top - 3}%, 100% ${top + hgt}%, 0 ${top + hgt + 3}%)`;
-        sl.style.color = hash(seed + 4.4) > 0.6 ? 'rgba(34,211,238,0.95)' : '#fff';
+        sl.style.color = hash(seed + 4.4) > 0.6 ? CHROMA : '#fff';
         sl.style.transform = `translateX(${((hash(seed + 3.3) - 0.5) * 380 * g).toFixed(2)}px)`;
       });
 

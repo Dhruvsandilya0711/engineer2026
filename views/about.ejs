@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +37,7 @@
           + `<span class="text-paper">3</span> days<br>`
           + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
       %>
-      <%- include('partials/_page-hero', { accent: '80,150,242', num: '02', nav: 'About', kicker: 'Cognitrixx / the festival', title: aboutTitle, meta: aboutMeta }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-2)', num: '02', nav: 'About', kicker: 'Cognitrixx / the festival', title: aboutTitle, meta: aboutMeta }) %>
 
       <p class="text-lg text-[var(--paper-dim)] max-w-2xl mt-8 leading-relaxed" data-reveal>
         ENGINEER is the annual technical festival of the National Institute of Technology
@@ -89,7 +89,7 @@
           </div>
 
           <div data-reveal>
-            <p class="eyebrow mb-4" style="color: rgb(80,150,242)">Cognitrixx / the 2026 theme</p>
+            <p class="eyebrow mb-4" style="color: rgb(var(--bay-2))">Cognitrixx / the 2026 theme</p>
             <h2 id="theme" class="font-display font-bold text-3xl sm:text-4xl leading-[1.08] mb-6">
               A network of intelligence,<br>
               <span class="text-gradient-impossible">and what it rewires.</span>

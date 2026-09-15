@@ -6,7 +6,9 @@
      instrument the homepage deck cards use.
 
      Locals:
-       accent   "r,g,b"          accent for the frame + head
+       accent   "var(--bay-3)"   accent for the frame + head. A TOKEN, not a
+                                 literal triple: it lands in both --accent and
+                                 rgb(), so it must resolve to "r, g, b".
        num      "01"             index chip
        nav      "Events"         short name chip (matches the nav label)
        kicker   "Cognitrixx / …" eyebrow line
