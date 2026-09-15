@@ -1163,7 +1163,6 @@
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   color: var(--color-strong);
   cursor: pointer;
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard),
     background 160ms var(--ease-standard);
@@ -3264,6 +3263,13 @@ footer:hover .footer-crest { opacity: 0.8; }
   z-index: calc(20 - var(--n));
   will-change: transform;
   cursor: pointer;
+  /* Each card casts onto the one behind it. Without this the fan had no
+     separation at all — no border, no shadow — so five translucent plates
+     ran together into one field of overlapping text. drop-shadow rather
+     than box-shadow because the card is clipped to a bevelled hexagon and
+     box-shadow would trace a rectangle around it. Hover grows this (see
+     below); the shared `filter` transition animates between them. */
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.45));
 }
 
 /* Hover / keyboard-focus: the card rises, straightens a little and comes to
@@ -3307,15 +3313,26 @@ footer:hover .footer-crest { opacity: 0.8; }
   clip-path: var(--fc-clip);
   background:
     radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, rgba(8, 10, 18, 0.82) 0%, rgba(4, 5, 10, 0.79) 55%, rgba(7, 8, 15, 0.82) 100%);
+    /* Near-opaque: this is the branch with NO backdrop blur, so anything the
+       fill lets through arrives sharp and readable. */
+    linear-gradient(180deg, rgba(8, 10, 18, 0.95) 0%, rgba(4, 5, 10, 0.93) 55%, rgba(7, 8, 15, 0.95) 100%);
 }
 @media (min-width: 768px) {
   .fancard__plate {
+    /* Frosted, not transparent. At 0.66 the card behind stayed legible
+       THROUGH this one, which is what made the fan confusing to read. Glass
+       is not "see-through" — it is blur plus an edge highlight, and it is
+       the blur that says glass. So the fill goes up until nothing behind is
+       readable, and the blur goes up to carry the material instead.
+       22px against ~14px type destroys legibility outright while still
+       letting the nebula's colour wash through as colour. */
     background:
-      radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.15) 0%, transparent 58%),
-      linear-gradient(180deg, rgba(8, 10, 18, 0.7) 0%, rgba(4, 5, 10, 0.66) 55%, rgba(7, 8, 15, 0.7) 100%);
-    backdrop-filter: blur(18px) saturate(1.15);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+      radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.17) 0%, transparent 58%),
+      linear-gradient(180deg, rgba(8, 10, 18, 0.88) 0%, rgba(4, 5, 10, 0.85) 55%, rgba(7, 8, 15, 0.88) 100%);
+    backdrop-filter: blur(22px) saturate(1.2);
+    /* The rim light. A 1px inset highlight along the top edge is the single
+       cue that reads as a glass sheet catching light, and it costs nothing. */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
   }
 }
 
@@ -3407,7 +3424,14 @@ footer:hover .footer-crest { opacity: 0.8; }
   overscroll-behavior: contain;
 }
 .fancard.is-open .fancard__plate {
-  /* Frosted glass: the base is translucent so the (now lighter) scrim and the
+  /* Frosted glass. The base sat at 0.52 so the field could glow through — but
+       what came through was the PAGE: the heading above and the section below
+       read straight across the card's own text. The mobile rule further down
+       was already at 0.92 and was right; this now matches it. Every glass cue
+       sits ABOVE the base in the layer stack and is untouched — the specular
+       sheen, both accent blooms, the rim and the inner glow — so it is still a
+       lit sheet, just one you can read text on.
+       WAS: the (now lighter) scrim and the
      colourful neural field blur THROUGH the panel, and a saturated backdrop
      blur turns that into a lit, glassy sheet rather than a flat dark one. The
      first gradient is a specular sheen along the top edge; the inset shadows
@@ -3416,9 +3440,8 @@ footer:hover .footer-crest { opacity: 0.8; }
     linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 8%, transparent 22%),
     radial-gradient(150% 105% at 10% -10%, rgba(var(--accent), 0.42) 0%, transparent 60%),
     radial-gradient(135% 100% at 95% 113%, rgba(var(--accent), 0.30) 0%, transparent 58%),
-    linear-gradient(180deg, rgba(24, 30, 52, 0.52) 0%, rgba(15, 19, 34, 0.46) 55%, rgba(21, 26, 46, 0.52) 100%);
+    linear-gradient(180deg, rgba(24, 30, 52, 0.91) 0%, rgba(15, 19, 34, 0.88) 55%, rgba(21, 26, 46, 0.91) 100%);
   backdrop-filter: blur(30px) saturate(1.7) brightness(1.18);
-  -webkit-backdrop-filter: blur(30px) saturate(1.7) brightness(1.18);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 0 46px rgba(var(--accent), 0.14);
@@ -3444,7 +3467,6 @@ footer:hover .footer-crest { opacity: 0.8; }
      at the edges keeps focus on the panel. */
   background: radial-gradient(125% 125% at 50% 42%, rgba(4, 6, 16, 0.34) 0%, rgba(2, 3, 10, 0.66) 100%);
   backdrop-filter: blur(4px) saturate(1.1);
-  -webkit-backdrop-filter: blur(4px) saturate(1.1);
   transition: opacity 0.4s ease;
   cursor: pointer;
 }
@@ -3481,7 +3503,6 @@ footer:hover .footer-crest { opacity: 0.8; }
       radial-gradient(150% 105% at 10% -10%, rgba(var(--accent), 0.4) 0%, transparent 60%),
       linear-gradient(180deg, rgba(16, 20, 36, 0.92) 0%, rgba(11, 14, 26, 0.9) 100%);
     backdrop-filter: blur(14px) saturate(1.35) brightness(1.1);
-    -webkit-backdrop-filter: blur(14px) saturate(1.35) brightness(1.1);
   }
 }
 
@@ -4025,7 +4046,6 @@ html.pl-skip #preloader { display: none; }
       rgba(103, 232, 249, 0.10) 0%,
       rgba(6, 8, 14, 0.85) 55%,
       rgba(6, 8, 14, 0.92) 100%);
-  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: inset 0 0 0 1px rgba(6, 8, 14, 0.55),
               inset 0 0 12px rgba(6, 8, 14, 0.55);
@@ -4238,7 +4258,6 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   background: rgba(6, 8, 14, 0.72);
   border: 1px solid var(--hairline-strong);
   border-radius: 4px;
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   min-width: 64px;
 }

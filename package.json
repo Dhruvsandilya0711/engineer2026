@@ -30,5 +30,13 @@
   },
   "engines": {
     "node": ">=20.6.0"
-  }
+  },
+  "browserslist": [
+    ">0.3%",
+    "last 2 versions",
+    "iOS >= 15",
+    "Safari >= 15",
+    "not dead",
+    "not op_mini all"
+  ]
 }
