@@ -289,8 +289,11 @@
   text-decoration: none;
   color: var(--color-void);
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  background: linear-gradient(100deg, #22d3ee 0%, #8b78f6 52%, #e879f9 100%);
-  box-shadow: 0 6px 20px -8px rgba(34, 211, 238, 0.6);
+  /* The CTA is the most prominent element on every page and was pinned to
+     the stock cyan -> violet -> fuchsia ramp, so no palette could reach it.
+     The fallback is exactly what shipped, so an unset palette is unchanged. */
+  background: var(--gradient-cta, linear-gradient(100deg, #22d3ee 0%, #8b78f6 52%, #e879f9 100%));
+  box-shadow: 0 6px 20px -8px var(--cta-glow, rgba(34, 211, 238, 0.6));
   transition:
     transform var(--dur-fast) var(--ease-emphasized),
     box-shadow var(--dur-base) var(--ease-standard),
@@ -4640,6 +4643,14 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
    warm note to spend and everything else supports it — the opposite of a
    spectrum. */
 [data-palette="coastal"] {
+  --gradient-cta: linear-gradient(100deg, #1fb6ad 0%, #3b6fd4 55%, #6f9ae0 100%);
+  --cta-glow: rgba(31, 182, 173, 0.55);
+  --bay-1: 31,182,173;
+  --bay-2: 45,140,190;
+  --bay-3: 59,111,212;
+  --bay-4: 90,132,220;
+  --bay-5: 140,120,180;
+  --bay-6: 176,86,127;
   --color-void: #05070d;
   --color-panel: #080c14;
   --color-charcoal: #080c14;
@@ -4681,6 +4692,14 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
    defaults, the greys pick up an indigo cast, and magenta is demoted from a
    gradient stop to an accent so the sweep stops being a rainbow. */
 [data-palette="bespoke"] {
+  --gradient-cta: linear-gradient(100deg, #2ee0e6 0%, #5560e8 55%, #8f96f0 100%);
+  --cta-glow: rgba(46, 224, 230, 0.55);
+  --bay-1: 46,224,230;
+  --bay-2: 64,168,236;
+  --bay-3: 85,96,232;
+  --bay-4: 110,110,236;
+  --bay-5: 160,100,228;
+  --bay-6: 201,106,224;
   --color-void: #04050b;
   --color-panel: #070911;
   --color-charcoal: #070911;
@@ -4720,6 +4739,14 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
    is that the logo is currently cyan->violet->magenta and would need
    recolouring to sit on this. */
 [data-palette="lab"] {
+  --gradient-cta: linear-gradient(100deg, #4ee39a 0%, #7fa89b 52%, #b87333 100%);
+  --cta-glow: rgba(78, 227, 154, 0.45);
+  --bay-1: 78,227,154;
+  --bay-2: 105,200,150;
+  --bay-3: 127,168,155;
+  --bay-4: 160,150,110;
+  --bay-5: 184,115,51;
+  --bay-6: 217,154,90;
   --color-void: #07090a;
   --color-panel: #0b0f10;
   --color-charcoal: #0b0f10;
