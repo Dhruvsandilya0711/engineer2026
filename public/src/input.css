@@ -4475,3 +4475,122 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   .signal-range__gauge { left: 10px; bottom: 10px; min-width: 140px; }
   .signal-range__reset { right: 10px; bottom: 10px; }
 }
+
+/* ==========================================================================
+   ABOUT PAGE
+   ========================================================================== */
+
+/* --- the theme rail: the five programme accents, in programme order ---
+   Not decoration. The theme section argues that the five tracks are one
+   idea in different materials, and the rail is that claim drawn: a single
+   continuous line whose colour changes as you travel down it. It runs
+   horizontally above the text on narrow screens, where a tall thin column
+   beside a paragraph would just be a gap. */
+.about-rail {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.about-rail__seg {
+  flex: 1;
+  background: rgb(var(--accent));
+  box-shadow: 0 0 14px rgba(var(--accent), 0.55);
+}
+@media (min-width: 768px) {
+  .about-rail {
+    flex-direction: column;
+    height: auto;
+    width: 3px;
+    min-height: 100%;
+  }
+}
+
+/* --- track rows --- */
+.about-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+}
+.about-track {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1.25rem;
+  align-items: start;
+  padding: 1.5rem;
+  background: var(--charcoal, #0e0e16);
+  position: relative;
+  transition: background 260ms var(--ease-standard);
+}
+/* The accent is a left edge that lights on hover — the row tells you which
+   track it is before you have read the name. */
+.about-track::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: rgb(var(--accent));
+  opacity: 0.55;
+  transition: opacity 260ms var(--ease-standard), box-shadow 260ms var(--ease-standard);
+}
+.about-track:hover { background: rgba(255, 255, 255, 0.022); }
+.about-track:hover::before {
+  opacity: 1;
+  box-shadow: 0 0 16px rgba(var(--accent), 0.75);
+}
+.about-track__num {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgb(var(--accent));
+  padding-top: 0.3rem;
+}
+.about-track__name {
+  font-family: var(--font-display, system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--paper);
+  margin: 0 0 0.35rem;
+}
+.about-track__blurb {
+  color: var(--paper-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 58ch;
+}
+.about-track__count {
+  grid-column: 2;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 1.35rem;
+  color: rgb(var(--accent));
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.75rem;
+}
+.about-track__count-l {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  margin-left: 0.5rem;
+}
+/* Wide enough for a third column: the count moves to the right edge and the
+   row reads as name / description / quantity in one pass. */
+@media (min-width: 640px) {
+  .about-track {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+  .about-track__count {
+    grid-column: 3;
+    margin-top: 0;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .about-track__count-l { display: block; margin-left: 0; }
+}

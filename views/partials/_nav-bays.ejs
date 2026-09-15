@@ -17,14 +17,12 @@
      ========================================================================== -->
 <%
   // One href per destination, the same from every page. Events, Schedule, Team
-  // and Sponsors are real routes, so the bar goes to those PAGES rather than
-  // opening a deck card. Only About, which exists solely as a deck card, stays
-  // a hash target (initFanDeck picks that up and opens the card).
+  // and Sponsors are real routes, so the bar goes to those PAGES. About is
+  // one too now, so every bay in the bar is a page and none of them is a
+  // hash target any more.
   const bayItems = [
     { n: '01', label: 'Home',     id: 'home',     href: '/',          accent: '34,211,238'  },
-    // About points at the intro SECTION, not a deck card: the deck no longer
-    // mirrors the nav, so #about is not a card id any more.
-    { n: '02', label: 'About',    id: 'about',    href: '/#cognitrixx', accent: '80,150,242'  },
+    { n: '02', label: 'About',    id: 'about',    href: '/about',     accent: '80,150,242'  },
     { n: '03', label: 'Events',   id: 'events',   href: '/events',    accent: '108,124,244' },
     { n: '04', label: 'Schedule', id: 'schedule', href: '/schedule',  accent: '128,146,246' },
     { n: '05', label: 'Team',     id: 'team',     href: '/team',      accent: '214,118,226' },

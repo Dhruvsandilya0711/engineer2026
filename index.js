@@ -256,6 +256,17 @@ const SPONSOR_TIERS = [
   { name: 'Silver', accent: '148,163,184' },
 ];
 
+app.get('/about', (req, res) => {
+  res.render('about', {
+    festDates: FEST_DATES,
+    events,
+    // Tracks carry their mapped events, so the page's per-track counts are
+    // derived rather than written down twice and left to drift.
+    tracks,
+    fest,
+  });
+});
+
 app.get('/sponsors', (req, res) => {
   res.render('sponsors', {
     festDates: FEST_DATES,

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="ENGINEER is NITK Surathkal's annual technical festival, run by students since 2005. Cognitrixx is the 2026 edition — <%= festDates.display %>.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="ambient" data-priority="2" data-density="1.04" data-tone="nebula" data-signals="8" data-spread="13" data-rotate="0.010" data-depth="18" class="absolute inset-0"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: 'about' }) %>
+
+  <main class="relative z-10 pt-28 pb-20 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <%
+        // Years, not "editions". The brochure gives a founding year and
+        // nothing about whether every single year ran, so elapsed time is
+        // arithmetic on a stated fact while an edition count would be a
+        // guess printed as history.
+        const years = Number(festDates.start.slice(0, 4)) - fest.founded;
+        const aboutTitle = `Built by students.<br><span class="text-gradient-impossible">Since ${fest.founded}.</span>`;
+        const aboutMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
+          + `<span class="text-paper">${years}</span> years &middot; `
+          + `<span class="text-paper">${events.all.length}</span> events &middot; `
+          + `<span class="text-paper">3</span> days<br>`
+          + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
+      %>
+      <%- include('partials/_page-hero', { accent: '80,150,242', num: '02', nav: 'About', kicker: 'Cognitrixx / the festival', title: aboutTitle, meta: aboutMeta }) %>
+
+      <p class="text-lg text-[var(--paper-dim)] max-w-2xl mt-8 leading-relaxed" data-reveal>
+        ENGINEER is the annual technical festival of the National Institute of Technology
+        Karnataka, Surathkal — organised, funded and run end to end by its students.
+        For <%= years %> years it has turned the campus over to three days of competitions,
+        builds, talks and exhibitions, and pulled in people from across the country to
+        take part.
+      </p>
+
+      <!-- ============ SCALE ============
+           The numbers are the argument, so they get to be the first thing
+           after the lede rather than a footnote at the bottom. They count up
+           on arrival (public/js/about.js) — a figure that lands rather than
+           one that was simply already there. -->
+      <section class="mt-16" aria-labelledby="scale">
+        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+          <h2 id="scale" class="font-display font-semibold text-xl">What it reaches</h2>
+          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">In a normal year</p>
+        </div>
+
+        <ul class="stat-band" data-js="count-band" data-reveal>
+          <% fest.stats.forEach(function (s) { %>
+          <li class="stat">
+            <%# data-count carries the real figure. The element renders it as
+                its own text too, so with JS off or reduced motion on, the
+                number is simply there. %>
+            <p class="stat__v" data-count="<%= s.value %>"><%= s.value %></p>
+            <p class="stat__l"><%= s.label %></p>
+            <p class="stat__n"><%= s.note %></p>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+
+      <%- include('partials/_seam') %>
+
+      <!-- ============ THE THEME ============
+           Cognitrixx is the '26 identity and the reason the rest of the site
+           looks the way it does, so it is explained here rather than left as
+           a word in the masthead. The rail beside it is the five programme
+           accents in order — the theme and the programme are the same
+           object seen twice. -->
+      <section class="mt-16" aria-labelledby="theme">
+        <div class="grid md:grid-cols-[auto_1fr] gap-8 md:gap-10">
+          <div class="about-rail" aria-hidden="true">
+            <% tracks.forEach(function (t) { %>
+            <span class="about-rail__seg" style="--accent: <%= t.accent %>"></span>
+            <% }); %>
+          </div>
+
+          <div data-reveal>
+            <p class="eyebrow mb-4" style="color: rgb(80,150,242)">Cognitrixx / the 2026 theme</p>
+            <h2 id="theme" class="font-display font-bold text-3xl sm:text-4xl leading-[1.08] mb-6">
+              A network of intelligence,<br>
+              <span class="text-gradient-impossible">and what it rewires.</span>
+            </h2>
+            <p class="text-[var(--paper-dim)] leading-relaxed mb-4 max-w-xl">
+              Cognitrixx is the idea that a system built well enough stops describing the
+              world and starts changing it. Not intelligence as a subject to study — as an
+              instrument you point at something.
+            </p>
+            <p class="text-[var(--paper-dim)] leading-relaxed max-w-xl">
+              That is why the programme runs across five tracks rather than one. A combat
+              robot, a Verilog testbench, a telescope built from pipe and mirror and a
+              hackathon for a social problem are the same argument made in different
+              materials: reality isn't fixed, it's engineered.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TRACKS ============
+           Counts are DERIVED from the event data, so a track can never
+           advertise events it does not have. -->
+      <section class="mt-16" aria-labelledby="tracks">
+        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+          <h2 id="tracks" class="font-display font-semibold text-xl">Five ways in</h2>
+          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= tracks.length %> tracks</p>
+        </div>
+
+        <ul class="about-tracks list-none p-0 m-0">
+          <% tracks.forEach(function (t, i) { %>
+          <li class="about-track" style="--accent: <%= t.accent %>" data-reveal>
+            <span class="about-track__num"><%= String(i + 1).padStart(2, '0') %></span>
+            <div class="about-track__body">
+              <h3 class="about-track__name"><%= t.name %></h3>
+              <p class="about-track__blurb"><%= t.blurb %></p>
+            </div>
+            <span class="about-track__count">
+              <%= t.events.length %><span class="about-track__count-l"><%= t.events.length === 1 ? 'event' : 'events' %></span>
+            </span>
+          </li>
+          <% }); %>
+        </ul>
+
+        <a href="/events" class="btn btn-secondary mt-8">See all <%= events.all.length %> events</a>
+      </section>
+
+      <%- include('partials/_seam') %>
+
+      <!-- ============ THE CAMPUS ============ -->
+      <section class="mt-16" aria-labelledby="campus">
+        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+          <h2 id="campus" class="font-display font-semibold text-xl">Where it happens</h2>
+          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">NITK Surathkal</p>
+        </div>
+
+        <p class="text-[var(--paper-dim)] max-w-2xl mb-8" data-reveal>
+          NITK sits on the coast at Surathkal, Karnataka. The fest runs on a campus that
+          already does this work year-round — the research centres below are the reason
+          an event here can borrow a lab rather than stage one.
+        </p>
+
+        <ul class="grid sm:grid-cols-2 gap-px bg-[var(--hairline)] border border-[var(--hairline)] list-none p-0 m-0" data-reveal>
+          <% fest.centres.forEach(function (c) { %>
+          <li class="bg-charcoal p-6">
+            <p class="font-display font-semibold text-paper leading-snug"><%= c.name %></p>
+            <% if (c.note) { %><p class="font-mono text-[0.7rem] text-[var(--paper-faint)] tracking-[0.1em] uppercase mt-2"><%= c.note %></p><% } %>
+          </li>
+          <% }); %>
+        </ul>
+
+        <p class="font-mono text-[0.72rem] text-[var(--paper-faint)] tracking-[0.12em] uppercase mt-6" data-reveal>
+          Research domains &middot; <span class="text-[var(--paper-dim)]"><%= fest.domains.join(' / ') %></span>
+        </p>
+
+        <div class="mt-10">
+          <%- include('partials/_logo-wall', { items: fest.industryPartners, label: 'Industry & research partners' }) %>
+        </div>
+      </section>
+
+      <!-- ============ WHAT IT GROWS ============ -->
+      <section class="mt-16" aria-labelledby="alumni">
+        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+          <h2 id="alumni" class="font-display font-semibold text-xl">What it grows</h2>
+          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= fest.stats.find(s => s.label === 'Alumni startups') ? fest.stats.find(s => s.label === 'Alumni startups').value : '' %> startups</p>
+        </div>
+
+        <p class="text-[var(--paper-dim)] max-w-2xl mb-8" data-reveal>
+          The people who ran ENGINEER go on to build things. These are companies founded
+          or led by NITK alumni — a fair share of them were students at a fest like this
+          one not long before.
+        </p>
+
+        <%- include('partials/_logo-wall', { items: fest.alumniCompanies, muted: true }) %>
+      </section>
+
+    </div>
+  </main>
+
+  <%- include('partials/_final-cta') %>
+  <%- include('partials/_footer') %>
+
+  <script type="module" src="/js/page.js"></script>
+  <script type="module" nonce="<%= nonce %>">
+    import { initCountUp } from '/js/about.js';
+    initCountUp();
+  </script>
+</body>
+</html>
