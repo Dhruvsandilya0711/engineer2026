@@ -21,8 +21,8 @@
 
   <%- include('partials/_nav', { activeNav: 'schedule' }) %>
 
-  <main class="relative z-10 pt-28 pb-20 px-6">
-    <div class="max-w-5xl mx-auto">
+  <main class="relative z-10 pt-28 pb-20">
+    <div class="rail">
 
       <%
         const schedTitle = `Three days.<br><span class="text-gradient-impossible">One sequence.</span>`;
@@ -50,7 +50,7 @@
       <!-- ============ DAYS ============ -->
       <% days.forEach(function(day){ %>
       <section class="mb-14" data-js="day-block" data-day="<%= day.id %>" aria-labelledby="<%= day.id %>-heading">
-        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-6">
+        <div class="section-head">
           <h2 id="<%= day.id %>-heading" class="font-display font-semibold text-xl">
             <%= day.label %>
             <span class="font-mono text-xs tracking-[0.12em] uppercase text-amber ml-3"><%= day.weekday %></span>
@@ -94,8 +94,8 @@
            Real events that exist but have no slot yet. Listing them is more
            useful than hiding them, and avoids implying the line-up is thin. -->
       <% if (unscheduled.length) { %>
-      <section class="mt-20" aria-labelledby="unscheduled-heading">
-        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-6">
+      <section class="mt-16" aria-labelledby="unscheduled-heading">
+        <div class="section-head">
           <h2 id="unscheduled-heading" class="font-display font-semibold text-xl">Awaiting a slot</h2>
           <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= unscheduled.length %> events</p>
         </div>

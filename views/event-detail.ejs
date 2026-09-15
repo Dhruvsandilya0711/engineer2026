@@ -31,13 +31,13 @@
 
   <%- include('partials/_nav', { activeNav: 'events' }) %>
 
-  <main class="relative z-10 pt-24 pb-20">
+  <main class="relative z-10 pt-28 pb-20">
 
     <!-- ============ HERO ============
          Uses the event's own image. No Penrose logo here — that mark belongs
          to ENGINEER itself, not to individual events. -->
-    <header class="px-6 mb-14">
-      <div class="max-w-5xl mx-auto">
+    <header class="mb-14">
+      <div class="rail">
         <a href="/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
           ← Event index
         </a>
@@ -91,8 +91,8 @@
     <!-- ============ META STRIP ============
          Always rendered so the structure is legible, but unknown values say
          TBA rather than inventing a date, time or venue. -->
-    <section class="px-6 mb-16" aria-label="Event details">
-      <div class="max-w-5xl mx-auto">
+    <section class="mb-16" aria-label="Event details">
+      <div class="rail">
         <dl class="detail-meta">
           <div>
             <dt>Date</dt>
@@ -122,8 +122,8 @@
       </div>
     </section>
 
-    <div class="px-6">
-      <div class="max-w-5xl mx-auto grid lg:grid-cols-[1fr_320px] gap-12 items-start">
+    <div>
+      <div class="rail grid lg:grid-cols-[1fr_320px] gap-12 items-start">
 
         <!-- ============ CONTENT ============
              Every block below renders only when that event actually has the
@@ -174,7 +174,7 @@
             <% if (Array.isArray(event.prizes)) { %>
             <ul class="flex flex-col gap-2 list-none p-0 m-0">
               <% event.prizes.forEach(function(p){ %>
-              <li class="flex items-baseline justify-between gap-4 border-b border-[var(--hairline)] pb-2">
+              <li class="section-head">
                 <span class="font-mono text-[0.72rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]"><%= p.place %></span>
                 <span class="font-display font-semibold text-paper"><%= p.amount %></span>
               </li>
@@ -294,8 +294,8 @@
 
     <!-- ============ RELATED ============ -->
     <% if (related.length) { %>
-    <section class="px-6 mt-24">
-      <div class="max-w-5xl mx-auto">
+    <section class="mt-16">
+      <div class="rail">
         <h2 class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-6">
           More in <%= event.category %>
         </h2>

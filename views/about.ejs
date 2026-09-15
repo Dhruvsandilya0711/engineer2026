@@ -21,8 +21,8 @@
 
   <%- include('partials/_nav', { activeNav: 'about' }) %>
 
-  <main class="relative z-10 pt-28 pb-20 px-6">
-    <div class="max-w-5xl mx-auto">
+  <main class="relative z-10 pt-28 pb-20">
+    <div class="rail">
 
       <%
         // Years, not "editions". The brochure gives a founding year and
@@ -53,7 +53,7 @@
            on arrival (public/js/about.js) — a figure that lands rather than
            one that was simply already there. -->
       <section class="mt-16" aria-labelledby="scale">
-        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+        <div class="section-head">
           <h2 id="scale" class="font-display font-semibold text-xl">What it reaches</h2>
           <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">In a normal year</p>
         </div>
@@ -113,7 +113,7 @@
            Counts are DERIVED from the event data, so a track can never
            advertise events it does not have. -->
       <section class="mt-16" aria-labelledby="tracks">
-        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+        <div class="section-head">
           <h2 id="tracks" class="font-display font-semibold text-xl">Five ways in</h2>
           <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= tracks.length %> tracks</p>
         </div>
@@ -140,7 +140,7 @@
 
       <!-- ============ THE CAMPUS ============ -->
       <section class="mt-16" aria-labelledby="campus">
-        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+        <div class="section-head">
           <h2 id="campus" class="font-display font-semibold text-xl">Where it happens</h2>
           <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">NITK Surathkal</p>
         </div>

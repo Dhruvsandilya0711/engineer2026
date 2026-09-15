@@ -13,6 +13,8 @@
    Wired from public/js/site.js -> initAudio().
    ========================================================================== */
 
+import { gainTick } from '/js/click-sfx.js';
+
 const SRC = '/audio/tentative.mp3';
 const START_AT = 25;              // seconds — skip the intro
 // Full clip is 124.26s @ 256 kbps CBR / 44.1 kHz, so the effective loop
@@ -20,6 +22,8 @@ const START_AT = 25;              // seconds — skip the intro
 const VOLUME = 0.091;             // −50% from 0.182, which was itself −25% from 0.243
 const FADE_MS = 450;              // ramp at each loop boundary — hides the seam
 const KEY = 'e26.audio.muted';    // localStorage flag (mute preference)
+const LVL_KEY = 'e26.audio.level';// localStorage — gain column, 0..STEPS
+const STEPS = 7;                  // segments in the gain column
 const POS_KEY = 'e26.audio.pos';  // sessionStorage — carry playhead across pages
 const GEST_KEY = 'e26.audio.gest';// sessionStorage — user has gestured this tab
 
@@ -37,7 +41,6 @@ export function initAudio(whenReady) {
   audio.src = SRC;
   audio.preload = 'auto';
   audio.loop = false;                    // the seek-back is manual (below)
-  audio.volume = VOLUME;
   audio.playsInline = true;
   document.body.appendChild(audio);
 
@@ -85,7 +88,27 @@ export function initAudio(whenReady) {
   // Small linear volume ramp — used at each loop boundary so the seam from
   // the last sample back to the 25s mark doesn't click. Held in a Web Audio
   // GainNode if available, but a manual ramp on audio.volume is enough here.
-  let userVol = VOLUME;
+  // VOLUME is now the TOP of the range rather than a fixed value: the column
+  // scales 0..VOLUME across STEPS, so full column == exactly what the site
+  // played before the control existed. Nobody who never touches it hears a
+  // difference.
+  let level = STEPS;
+  try {
+    const st = parseInt(localStorage.getItem(LVL_KEY), 10);
+    if (Number.isFinite(st) && st >= 0 && st <= STEPS) level = st;
+  } catch (_) {}
+  // Perceptual, not linear. Loudness follows roughly a square law, so a
+  // linear column would put every useful setting in the bottom two segments
+  // and waste the top five.
+  const volFor = (n) => VOLUME * Math.pow(n / STEPS, 2);
+  let userVol = volFor(level);
+  // Set it on the element NOW, not at first play. The old code assigned
+  // VOLUME at construction; moving the value behind the level calculation
+  // left a window where the element sat at the default 1.0. It is muted
+  // through that window so nothing is audible, but anything that unmuted
+  // early would have gone out at full volume — not a gap worth leaving in
+  // something that plays sound.
+  audio.volume = userVol;
   // Ducking — while the visitor is actively engaging with the signal-range
   // game, the music drops to this fraction of userVol so the SFX and their
   // own concentration have room. Restored when they leave the arena.
@@ -160,7 +183,7 @@ export function initAudio(whenReady) {
       await audio.play();
     } catch (_) {
       audio.muted = true;
-      audio.volume = VOLUME;
+      audio.volume = userVol;
       tryPlay();
     }
   });
@@ -175,6 +198,9 @@ export function initAudio(whenReady) {
   // browser will let it play; the button already shows the state we're
   // heading toward.
   let intendedMuted = startMuted;
+  // Assigned when the gain column mounts below; a no-op if it never does
+  // (the column is not rendered on touch-only layouts).
+  let gainPaint = () => {};
   const render = () => {
     for (const b of buttons) {
       b.innerHTML = intendedMuted ? ICON_OFF : ICON_ON;
@@ -220,7 +246,107 @@ export function initAudio(whenReady) {
       else rampVolume(0, effectiveVol(), 200);
       tryPlay();
       render();
+      gainPaint();
     });
+  }
+
+  /* ── THE GAIN COLUMN ──────────────────────────────────────────────────
+     Seven emitter segments stacked above the pill. Click one to jump to it,
+     drag through them to scrub, wheel to step, arrow keys when focused. The
+     top lit segment breathes while the music is actually audible, so the
+     control doubles as a "yes, this is playing" readout — the reason it is a
+     meter shape and not a slider. */
+  const gain = document.querySelector('[data-js="gain"]');
+  const dock = document.querySelector('[data-js="audio-dock"]');
+  if (gain && dock) {
+    const segs = [...gain.querySelectorAll('.gain__seg')];
+    const readout = gain.querySelector('[data-js="gain-readout"]');
+
+    const paintGain = () => {
+      for (const s of segs) {
+        const n = Number(s.dataset.seg);
+        s.classList.toggle('is-lit', n <= level);
+        // Only the highest lit segment breathes — a whole column pulsing
+        // reads as an error state, one tip reads as a live signal.
+        s.classList.toggle('is-tip', n === level && level > 0);
+      }
+      const pct = Math.round((level / STEPS) * 100);
+      if (readout) readout.textContent = String(pct);
+      gain.setAttribute('aria-valuenow', String(level));
+      gain.setAttribute('aria-valuetext', pct + '%');
+      gain.classList.toggle('is-zero', level === 0);
+      // Live only when it can actually be heard.
+      gain.classList.toggle('is-live', !audio.muted && !audio.paused && level > 0);
+    };
+
+    const setLevel = (n, { silent = false } = {}) => {
+      n = Math.max(0, Math.min(STEPS, Math.round(n)));
+      if (n === level) return;
+      level = n;
+      userVol = volFor(level);
+      try { localStorage.setItem(LVL_KEY, String(level)); } catch (_) {}
+      if (!audio.muted && !loopingBack) rampVolume(audio.volume, effectiveVol(), silent ? 0 : 90);
+      // Tick at the new level. It carries the setting as sound, so the column
+      // works before the browser's autoplay gate has let the music through —
+      // you can still hear what you are choosing. The site mute button
+      // silences this too: one switch owns every sound the site makes.
+      if (!silent) gainTick(level, STEPS);
+      paintGain();
+    };
+
+    // Which segment is under this Y? Measured off the stack, so it keeps
+    // working when the column is mid-transition or the layout changes.
+    const levelAtY = (clientY) => {
+      const stack = gain.querySelector('.gain__stack').getBoundingClientRect();
+      const t = 1 - (clientY - stack.top) / stack.height;      // bottom-up
+      return Math.round(t * STEPS);
+    };
+
+    let dragging = false;
+    gain.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      gain.setPointerCapture(e.pointerId);
+      gain.classList.add('is-dragging');
+      setLevel(levelAtY(e.clientY));
+      e.preventDefault();
+    });
+    gain.addEventListener('pointermove', (e) => { if (dragging) setLevel(levelAtY(e.clientY)); });
+    const endDrag = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      gain.classList.remove('is-dragging');
+      try { gain.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+    gain.addEventListener('pointerup', endDrag);
+    gain.addEventListener('pointercancel', endDrag);
+
+    // Wheel, but only once the pointer has actually MOVED inside the dock.
+    // The column opens on hover, and a cursor left parked in the bottom-right
+    // corner opens it without anyone asking — at which point scrolling the
+    // page would quietly change the music volume. A parked cursor generates
+    // no pointermove, so this tells "reaching for the control" apart from
+    // "happens to be resting on it".
+    let engaged = false;
+    dock.addEventListener('pointermove', () => { engaged = true; });
+    dock.addEventListener('pointerleave', () => { engaged = false; });
+    gain.addEventListener('wheel', (e) => {
+      if (!engaged) return;
+      e.preventDefault();
+      setLevel(level + (e.deltaY < 0 ? 1 : -1));
+    }, { passive: false });
+
+    gain.addEventListener('keydown', (e) => {
+      const k = e.key;
+      if (k === 'ArrowUp' || k === 'ArrowRight') { setLevel(level + 1); e.preventDefault(); }
+      else if (k === 'ArrowDown' || k === 'ArrowLeft') { setLevel(level - 1); e.preventDefault(); }
+      else if (k === 'Home') { setLevel(0); e.preventDefault(); }
+      else if (k === 'End') { setLevel(STEPS); e.preventDefault(); }
+    });
+
+    // Keep the live tip honest about what is actually coming out.
+    for (const ev of ['play', 'pause', 'volumechange']) audio.addEventListener(ev, paintGain);
+    paintGain();
+    gainPaint = paintGain;
   }
 
   // Duck / restore — driven by whichever surface on the page wants the

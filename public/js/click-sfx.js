@@ -107,6 +107,50 @@ function strike(hot) {
 }
 
 /**
+ * The gain column's tick — one note per segment as the music level moves.
+ *
+ * Two things are encoded in it, and they are the reason this is a tone and
+ * not a generic click:
+ *
+ *   PITCH  climbs a pentatonic run across the column, so dragging through
+ *          the segments sounds like a scale going up or down. Pentatonic
+ *          because every interval in it is consonant — a chromatic run
+ *          would sound like an error at the halfway point.
+ *   VOLUME tracks the level you just chose, on the same squared curve the
+ *          music itself uses. So the tick is not a confirmation that you
+ *          changed something, it is a PREVIEW of what you changed it to:
+ *          at segment 1 it is a whisper, at 7 it is the loudest the site
+ *          gets. You set the volume by ear instead of by eye.
+ *
+ * Zero is its own sound — a short low thud with no pitch, because there is
+ * no level left to demonstrate.
+ *
+ * @param {number} level  the new level, 0..steps
+ * @param {number} steps  segments in the column
+ */
+const PENTATONIC = [523, 587, 659, 784, 880, 1046, 1175];   // C D E G A C D
+
+export function gainTick(level, steps) {
+  if (!ensure() || muted()) return;
+  if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+
+  if (level <= 0) {
+    partial(150, { type: 'sine', dur: 0.09, vol: 0.10, delay: 0, glide: 0.72 });
+    return;
+  }
+
+  const f = PENTATONIC[Math.min(PENTATONIC.length - 1, level - 1)];
+  // Squared, matching volFor() in audio.js — the tick is as loud, relative
+  // to itself, as the music will be relative to its own ceiling.
+  const amp = Math.pow(level / steps, 2);
+
+  partial(f,     { type: 'triangle', dur: 0.055, vol: 0.05 + 0.22 * amp, delay: 0 });
+  // A fifth underneath, quiet, so the note has a body rather than being a
+  // bare sine — the same two-layer trick the "cold" click uses.
+  partial(f / 2, { type: 'sine',     dur: 0.120, vol: 0.03 + 0.12 * amp, delay: 0.004 });
+}
+
+/**
  * Mount the click tone. Returns a handle with destroy(), or null on a touch
  * device (no cursor for this to be the sound of) or when the visitor has
  * asked for reduced motion — that preference is a request for less of

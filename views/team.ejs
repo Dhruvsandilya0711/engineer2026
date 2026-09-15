@@ -21,8 +21,8 @@
 
   <%- include('partials/_nav', { activeNav: 'team' }) %>
 
-  <main class="relative z-10 pt-28 pb-20 px-6">
-    <div class="max-w-5xl mx-auto">
+  <main class="relative z-10 pt-28 pb-20">
+    <div class="rail">
 
       <%
         const teamTitle = `The network<br><span class="text-gradient-impossible">behind it.</span>`;
@@ -49,7 +49,7 @@
              members themselves, so no empty section can ever appear. -->
         <% groups.forEach(function(g){ %>
         <section class="mb-16" aria-labelledby="group-<%= g.group.replace(/\W+/g,'-').toLowerCase() %>">
-          <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
+          <div class="section-head">
             <h2 id="group-<%= g.group.replace(/\W+/g,'-').toLowerCase() %>" class="font-display font-semibold text-xl"><%= g.group %></h2>
             <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= g.members.length %></p>
           </div>

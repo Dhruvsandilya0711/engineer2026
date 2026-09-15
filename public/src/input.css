@@ -4072,12 +4072,20 @@ html.pl-skip #preloader { display: none; }
    soft outer glow pulses so the button quietly telegraphs "signal
    flowing". Same instrument-panel language as the HUD in the hero
    and the emitter chassis in the game. */
-.audio-toggle {
+/* The dock: pill + gain column as one hover target, so the column does not
+   snap shut in the gap between them. */
+.audio-dock {
   position: fixed;
   right: clamp(0.9rem, 2vw, 1.5rem);
   bottom: clamp(0.9rem, 2vw, 1.5rem);
   z-index: 60;
   isolation: isolate;
+  display: grid;
+  justify-items: center;
+}
+
+.audio-toggle {
+  position: relative;
   width: 54px;
   height: 54px;
   padding: 2px;                              /* space for the border ring */
@@ -4185,8 +4193,8 @@ html.pl-skip #preloader { display: none; }
 }
 
 /* Preloader owns the screen — the audio pill would poke through the wipe. */
-.pl-locked .audio-toggle,
-body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
+.pl-locked .audio-dock,
+body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
 
 
 /* ==================================================================
@@ -4887,4 +4895,204 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
     align-items: center;
     justify-content: space-between;
   }
+}
+
+/* ==========================================================================
+   GAIN COLUMN — the music level, as an instrument rather than a slider
+   ==========================================================================
+   Seven emitter segments stacked above the audio pill, read bottom-up. It is
+   a meter shape on purpose: the top lit segment breathes while the music is
+   actually audible, so the same control that SETS the level also answers "is
+   this thing on?" — which is the question anyone hovering a mute button is
+   really asking.
+
+   Hidden until the dock is hovered or something inside it takes focus, so it
+   costs nothing in the resting state. Hover/focus only, which makes it
+   desktop and keyboard only by design — see the note in _nav.ejs.
+   ========================================================================== */
+.gain {
+  /* Laid out in the dock's grid but lifted out of flow, so showing it never
+     moves the pill. */
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  left: 50%;
+  width: 34px;
+  padding: 0.5rem 0 0.4rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  cursor: ns-resize;
+  touch-action: none;            /* the drag is ours, not the page's */
+
+  /* Closed state. Scaled from the bottom so it GROWS out of the pill. */
+  transform: translateX(-50%) scaleY(0.6);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms var(--ease-standard),
+              transform 260ms var(--ease-emphasized);
+}
+.audio-dock:hover .gain,
+.audio-dock:focus-within .gain {
+  transform: translateX(-50%) scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+.gain:focus-visible {
+  outline: 1px solid rgba(var(--rgb-cyan), 0.7);
+  outline-offset: 3px;
+}
+
+/* The rail behind the stack — the instrument body the emitters sit on. */
+.gain__rail {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--hairline);
+  background:
+    linear-gradient(180deg,
+      rgba(var(--rgb-ground-2), 0.92) 0%,
+      rgba(var(--rgb-ground), 0.88) 100%);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.9),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  z-index: 0;
+}
+
+/* Mono readout at the top, in the HUD's own voice. Only while dragging —
+   the rest of the time the lit count IS the readout. */
+.gain__readout {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: var(--color-cyan);
+  opacity: 0;
+  transition: opacity 160ms var(--ease-standard);
+  font-variant-numeric: tabular-nums;
+}
+.gain.is-dragging .gain__readout { opacity: 1; }
+
+.gain__stack {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 3px;
+  padding: 0 7px;
+  width: 100%;
+}
+
+/* One emitter. Bevelled at the top-right like every other HUD plate on the
+   site, so the column belongs to the same machine as the deck cards. */
+.gain__seg {
+  height: 7px;
+  background: rgba(var(--rgb-slate), 0.16);
+  box-shadow: inset 0 0 0 1px rgba(var(--rgb-slate), 0.22);
+  clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 0 100%);
+  transition: background-color 140ms var(--ease-standard),
+              box-shadow 140ms var(--ease-standard);
+}
+.gain__seg.is-lit {
+  background: rgba(var(--rgb-cyan), 0.85);
+  box-shadow: inset 0 0 0 1px rgba(var(--rgb-cyan-lift), 0.9),
+              0 0 8px -1px rgba(var(--rgb-cyan), 0.55);
+}
+/* The live tip. Only when sound is actually reaching the room. */
+.gain.is-live .gain__seg.is-tip {
+  animation: gain-breathe 1.9s var(--ease-standard) infinite;
+}
+.gain.is-zero .gain__seg { background: rgba(var(--rgb-slate), 0.10); }
+
+@keyframes gain-breathe {
+  0%, 100% { background: rgba(var(--rgb-cyan), 0.85);
+             box-shadow: inset 0 0 0 1px rgba(var(--rgb-cyan-lift), 0.9),
+                         0 0 8px -1px rgba(var(--rgb-cyan), 0.55); }
+  50%      { background: rgba(var(--rgb-cyan-lift), 1);
+             box-shadow: inset 0 0 0 1px rgba(var(--rgb-cyan-lift), 1),
+                         0 0 16px 0 rgba(var(--rgb-cyan), 0.85); }
+}
+
+/* Dragging tightens the whole column — the instrument responding to a hand
+   on it, which is the cheapest possible "you are in control of this". */
+.gain.is-dragging .gain__rail {
+  border-color: rgba(var(--rgb-cyan), 0.45);
+  box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.9),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06),
+              0 0 18px -6px rgba(var(--rgb-cyan), 0.5);
+}
+
+/* Muted: the pill is off, so the column says so rather than sitting there
+   glowing about a level nobody can hear. */
+.audio-dock:has(.audio-toggle:not(.is-on)) .gain__seg.is-lit {
+  background: rgba(var(--rgb-slate), 0.34);
+  box-shadow: inset 0 0 0 1px rgba(var(--rgb-slate), 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gain { transition: opacity 120ms linear; transform: translateX(-50%); }
+  .audio-dock:hover .gain,
+  .audio-dock:focus-within .gain { transform: translateX(-50%); }
+  .gain.is-live .gain__seg.is-tip { animation: none; }
+  .gain__seg { transition: none; }
+}
+
+/* No hover to open it with, and a tap that opened a fader would fight the tap
+   that mutes. Phones have hardware volume keys. */
+@media (hover: none), (pointer: coarse) {
+  .gain { display: none; }
+}
+
+/* ==========================================================================
+   THE RAIL — the site's single content edge
+   ==========================================================================
+   Every horizontal container is this one class. The measure and the side
+   padding live together on the same element, so the PADDING BOX is the
+   content edge and the nav mark, the page body and the footer all start on
+   the same vertical line at every viewport width.
+
+   Before this there were four containers doing the job — 7xl for the nav,
+   6xl for the footer, 5xl/6xl/xl/3xl across the pages — each with its padding
+   on a different side of its max-width. At 1920 that put the nav at 353px,
+   the content at 441px and the footer at 377px, so scrolling a single page
+   stepped the left margin three times.
+
+   box-sizing is border-box sitewide, so max-width INCLUDES the padding:
+   72rem outer leaves a 67rem measure, which is where the pages already were.
+
+   Two variants, for content that genuinely wants to be narrower than the
+   rail. They keep the rail's padding and centring and only tighten the
+   measure, so the side gutter never changes between pages.
+   ========================================================================== */
+.rail {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+/* A policy document, at a reading measure. */
+.rail--read { max-width: 52rem; }
+/* A form. Any wider and the fields outrun the eye between label and input. */
+.rail--form { max-width: 34rem; }
+
+@media (min-width: 640px) {
+  .rail { padding-inline: 2.5rem; }
+}
+
+/* ==========================================================================
+   SECTION HEADER — heading left, label right, rule under both
+   ==========================================================================
+   Repeated on every inner page. It had been written out as a Tailwind string
+   at twelve call sites in three different spellings — pb-3/mb-8, pb-3/mb-6,
+   and pb-2 with a gap and a lighter rule — so the gap under a section title
+   changed depending on which page you were on. One class, one rhythm.
+   ========================================================================== */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--hairline-strong);
+  padding-bottom: 0.75rem;
+  margin-bottom: 2rem;
 }

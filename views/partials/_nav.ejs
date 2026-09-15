@@ -5,7 +5,7 @@
      all exist and are served from index.js. "About" is the one in-page anchor.
      ========================================================================== -->
 <header id="site-nav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300<%= typeof deferred !== 'undefined' && deferred ? ' is-deferred' : '' %>" data-js="nav"<%= typeof deferred !== 'undefined' && deferred ? ' data-deferred' : '' %>>
-  <div class="max-w-7xl mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
+  <div class="rail h-20 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3 shrink-0" aria-label="ENGINEER '26 home">
       <img class="nav-mark" src="/images/engineer26-mark.png" alt="ENGINEER '26 logo" width="399" height="389">
       <span class="font-display font-semibold text-sm tracking-wide hidden sm:inline">ENGINEER&nbsp;'26</span>
@@ -38,11 +38,30 @@
     gets it, and a navigation can start from any of them. %>
 <%- include('_transition') %>
 
-<%# Mute/unmute for the background music. Fixed pill at bottom-right — one
-    control sitewide, out of the reading path. Starts muted for autoplay
-    policies; the user opts in, and the choice sticks (localStorage). %>
-<button type="button" class="audio-toggle" data-js="audio-toggle"
-        aria-pressed="false" aria-label="Unmute background music" title="Unmute music"></button>
+<%# Music control. Fixed dock at bottom-right — one control sitewide, out of
+    the reading path. The pill mutes; hovering it raises a GAIN COLUMN, seven
+    emitter segments read bottom-up like the signal-strength meter the rest of
+    the HUD is built from. Both choices stick (localStorage).
+
+    The column is hover/focus driven, so it is desktop and keyboard only —
+    the same call as the click SFX. A phone has hardware volume keys and no
+    hover state to open it with, and a tap that opened a slider would fight
+    the tap that mutes. %>
+<div class="audio-dock" data-js="audio-dock">
+  <div class="gain" data-js="gain" role="slider" tabindex="0"
+       aria-label="Music volume" aria-orientation="vertical"
+       aria-valuemin="0" aria-valuemax="7" aria-valuenow="7" aria-valuetext="100%">
+    <span class="gain__rail" aria-hidden="true"></span>
+    <span class="gain__readout" data-js="gain-readout" aria-hidden="true">100</span>
+    <span class="gain__stack" aria-hidden="true">
+      <%# Top segment first: the column is read top-down in the DOM and
+          bottom-up on screen, which is what a fader does. %>
+      <% for (let i = 7; i >= 1; i--) { %><span class="gain__seg" data-seg="<%= i %>"></span><% } %>
+    </span>
+  </div>
+  <button type="button" class="audio-toggle" data-js="audio-toggle"
+          aria-pressed="false" aria-label="Unmute background music" title="Unmute music"></button>
+</div>
 
 <!-- mobile drawer -->
 <div id="mobile-drawer" class="fixed inset-0 z-50 bg-void translate-x-full transition-transform duration-300 lg:hidden" data-js="drawer">

@@ -79,7 +79,7 @@ navbar.addEventListener("mouseleave", () => {
 
 })
 
-// initial page reloading wlc page  animation effect 
+// initial page reloading wlc page  animation effect
 function runIntroAnimation() {
     setTimeout(() => {
         logo_image_wlc_page.classList.remove("-translate-x-full")
@@ -131,4 +131,3 @@ if (document.prerendering) {
     runIntroAnimation();
 }
 
- 
