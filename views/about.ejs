@@ -163,32 +163,24 @@
         <p class="font-mono text-[0.72rem] text-[var(--paper-faint)] tracking-[0.12em] uppercase mt-6" data-reveal>
           Research domains &middot; <span class="text-[var(--paper-dim)]"><%= fest.domains.join(' / ') %></span>
         </p>
-
-        <div class="mt-10">
-          <%- include('partials/_logo-wall', { items: fest.industryPartners, label: 'Industry & research partners' }) %>
-        </div>
+        <%# The industry-partner logo wall sat here and was cut: /sponsors
+             runs the same four marks directly beneath the same four centres.
+             The centres stay, because where the fest happens is this page's
+             question; who vouches for it is that page's. %>
       </section>
 
-      <!-- ============ WHAT IT GROWS ============ -->
-      <section class="mt-16" aria-labelledby="alumni">
-        <div class="flex items-baseline justify-between border-b border-[var(--hairline-strong)] pb-3 mb-8">
-          <h2 id="alumni" class="font-display font-semibold text-xl">What it grows</h2>
-          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= fest.stats.find(s => s.label === 'Alumni startups') ? fest.stats.find(s => s.label === 'Alumni startups').value : '' %> startups</p>
-        </div>
-
-        <p class="text-[var(--paper-dim)] max-w-2xl mb-8" data-reveal>
-          The people who ran ENGINEER go on to build things. These are companies founded
-          or led by NITK alumni — a fair share of them were students at a fest like this
-          one not long before.
-        </p>
-
-        <%- include('partials/_logo-wall', { items: fest.alumniCompanies, muted: true }) %>
-      </section>
+      <%# A "What it grows" section ran here: the alumni-company logo wall.
+           Removed as redundant — /sponsors carries that exact wall and the
+           homepage's network card carries it a third time. It also answers a
+           sponsor's question (is this fest worth backing?) rather than a
+           visitor's (what is this fest?), which is the one this page is for. %>
 
     </div>
   </main>
 
-  <%- include('partials/_final-cta') %>
+  <%# No _final-cta here. Events, Schedule, Team, Sponsors and Register all
+       end at the footer, and the closer this page was using is the
+       homepage's own closer repeated word for word. %>
   <%- include('partials/_footer') %>
 
   <script type="module" src="/js/page.js"></script>
