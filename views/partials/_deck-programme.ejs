@@ -20,7 +20,7 @@
 
     <ul class="track-grid mt-8">
       <% tracks.forEach(function (t, i) { %>
-      <li class="track" style="--accent: <%= t.accent %>" data-reveal>
+      <li class="track" style="--accent: var(--track-<%= t.id %>, <%= t.accent %>)" data-reveal>
         <div class="track__head">
           <span class="track__num"><%= String(i + 1).padStart(2, '0') %></span>
           <h3 class="track__name"><%= t.name %></h3>

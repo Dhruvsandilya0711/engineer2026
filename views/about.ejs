@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-palette="<%= typeof palette !== 'undefined' ? palette : '' %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -84,7 +84,7 @@
         <div class="grid md:grid-cols-[auto_1fr] gap-8 md:gap-10">
           <div class="about-rail" aria-hidden="true">
             <% tracks.forEach(function (t) { %>
-            <span class="about-rail__seg" style="--accent: <%= t.accent %>"></span>
+            <span class="about-rail__seg" style="--accent: var(--track-<%= t.id %>, <%= t.accent %>)"></span>
             <% }); %>
           </div>
 
@@ -120,7 +120,7 @@
 
         <ul class="about-tracks list-none p-0 m-0">
           <% tracks.forEach(function (t, i) { %>
-          <li class="about-track" style="--accent: <%= t.accent %>" data-reveal>
+          <li class="about-track" style="--accent: var(--track-<%= t.id %>, <%= t.accent %>)" data-reveal>
             <span class="about-track__num"><%= String(i + 1).padStart(2, '0') %></span>
             <div class="about-track__body">
               <h3 class="about-track__name"><%= t.name %></h3>

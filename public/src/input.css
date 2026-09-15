@@ -4613,3 +4613,142 @@ body:has(#preloader) .audio-toggle { opacity: 0; pointer-events: none; }
   }
   .about-track__count-l { display: block; margin-left: 0; }
 }
+
+/* ==========================================================================
+   PALETTE TRIALS
+   ==========================================================================
+   The shipped palette is stock Tailwind: #22d3ee is cyan-400, #6366f1 is
+   indigo-500, #e879f9 is fuchsia-400, and the greys are slate. That exact
+   cyan -> indigo -> fuchsia sweep is the most-reached-for gradient in
+   generated design, which is why the site reads as templated: the colours
+   were inherited, not chosen.
+
+   Three alternatives, switchable with ?palette= so they can be judged on the
+   real pages rather than as swatches. Each one:
+     - uses hand-mixed values, none of them a framework default
+     - biases the neutrals toward its own accent instead of neutral slate
+     - narrows the gradient sweep, because a full spectrum is what reads as
+       a default and a tight one reads as a decision
+
+   Once one is chosen these collapse into :root and the attribute goes away.
+   ========================================================================== */
+
+/* --- A. COASTAL NIGHT ---------------------------------------------------
+   NITK Surathkal is on the Arabian Sea, and the club brochures already draw
+   it that way: deep night water with one warm light on it. Sea-teal against
+   sodium-vapour amber is a true complementary pair, so the page has one
+   warm note to spend and everything else supports it — the opposite of a
+   spectrum. */
+[data-palette="coastal"] {
+  --color-void: #05070d;
+  --color-panel: #080c14;
+  --color-charcoal: #080c14;
+  --color-charcoal-2: #0d131d;
+  --color-paper: #eef2f4;
+  --color-strong: #dfe7ea;
+  --color-muted: #8fa0ab;
+  --color-dim: #6b7d88;
+  --color-faint: #4d5c66;
+  --color-cyan: #1fb6ad;          /* sea teal */
+  --color-indigo: #3b6fd4;        /* deep water */
+  --color-violet-mid: #4a7fd8;
+  --color-violet: #6f9ae0;
+  --color-orchid: #b0567f;        /* muted coral */
+  --color-magenta: #c06a89;
+  --color-amber: #f0a343;         /* sodium vapour — the one warm note */
+  --paper: #eef2f4;
+  --paper-dim: #8fa0ab;
+  --paper-faint: #6b7d88;
+  --hairline: rgba(143, 160, 171, 0.18);
+  --hairline-strong: rgba(143, 160, 171, 0.34);
+  --rule: rgba(143, 160, 171, 0.34);
+  --glow-violet: rgba(31, 182, 173, 0.55);
+  --glow-blue: rgba(20, 58, 110, 0.38);
+  --glow-purple: rgba(14, 40, 78, 0.44);
+  /* Teal -> deep water only. Amber stays OUT of the gradient so it keeps
+     its force as the accent. */
+  --gradient-impossible: linear-gradient(90deg, #1fb6ad, #3b6fd4 58%, #6f9ae0);
+  --track-technical: 31, 182, 173;
+  --track-startup:   59, 111, 212;
+  --track-talks:     176, 86, 127;
+  --track-care:      240, 163, 67;
+  --track-campus:    111, 154, 224;
+}
+
+/* --- B. SAME FAMILY, BESPOKE VALUES -------------------------------------
+   Keeps the cyan/violet identity the logo already carries, so nothing that
+   is printed stops matching. Every value is re-mixed off the framework
+   defaults, the greys pick up an indigo cast, and magenta is demoted from a
+   gradient stop to an accent so the sweep stops being a rainbow. */
+[data-palette="bespoke"] {
+  --color-void: #04050b;
+  --color-panel: #070911;
+  --color-charcoal: #070911;
+  --color-charcoal-2: #0c0f1a;
+  --color-paper: #eef1f7;
+  --color-strong: #dde2ee;
+  --color-muted: #8e99ad;
+  --color-dim: #69738a;
+  --color-faint: #4d5668;
+  --color-cyan: #2ee0e6;
+  --color-indigo: #5560e8;
+  --color-violet-mid: #6a72ea;
+  --color-violet: #8f96f0;
+  --color-orchid: #b863d2;
+  --color-magenta: #c96ae0;
+  --color-amber: #e8923c;
+  --paper: #eef1f7;
+  --paper-dim: #8e99ad;
+  --paper-faint: #69738a;
+  --hairline: rgba(142, 153, 173, 0.18);
+  --hairline-strong: rgba(142, 153, 173, 0.34);
+  --rule: rgba(142, 153, 173, 0.34);
+  --glow-violet: rgba(85, 96, 232, 0.66);
+  --glow-blue: rgba(26, 40, 112, 0.36);
+  --glow-purple: rgba(28, 24, 82, 0.42);
+  --gradient-impossible: linear-gradient(90deg, #2ee0e6, #5560e8 62%, #8f96f0);
+  --track-technical: 46, 224, 230;
+  --track-startup:   85, 96, 232;
+  --track-talks:    201, 106, 224;
+  --track-care:     232, 146, 60;
+  --track-campus:   143, 150, 240;
+}
+
+/* --- C. INSTRUMENT / LAB ------------------------------------------------
+   Engineering as the metaphor rather than networks: oscilloscope phosphor
+   and PCB copper on near-black. The boldest departure, and the honest cost
+   is that the logo is currently cyan->violet->magenta and would need
+   recolouring to sit on this. */
+[data-palette="lab"] {
+  --color-void: #07090a;
+  --color-panel: #0b0f10;
+  --color-charcoal: #0b0f10;
+  --color-charcoal-2: #101615;
+  --color-paper: #e8ecec;
+  --color-strong: #d6dcdb;
+  --color-muted: #8a9695;
+  --color-dim: #6a7674;
+  --color-faint: #4a5553;
+  --color-cyan: #4ee39a;          /* phosphor */
+  --color-indigo: #b87333;        /* copper */
+  --color-violet-mid: #9c8a5e;
+  --color-violet: #7fa89b;
+  --color-orchid: #c98a4a;
+  --color-magenta: #d99a5a;
+  --color-amber: #e0a44e;
+  --paper: #e8ecec;
+  --paper-dim: #8a9695;
+  --paper-faint: #6a7674;
+  --hairline: rgba(138, 150, 149, 0.18);
+  --hairline-strong: rgba(138, 150, 149, 0.34);
+  --rule: rgba(138, 150, 149, 0.34);
+  --glow-violet: rgba(78, 227, 154, 0.42);
+  --glow-blue: rgba(24, 58, 46, 0.40);
+  --glow-purple: rgba(60, 40, 18, 0.40);
+  --gradient-impossible: linear-gradient(90deg, #4ee39a, #7fa89b 55%, #b87333);
+  --track-technical: 78, 227, 154;
+  --track-startup:  184, 115, 51;
+  --track-talks:    217, 154, 90;
+  --track-care:     224, 164, 78;
+  --track-campus:   127, 168, 155;
+}

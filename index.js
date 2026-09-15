@@ -142,6 +142,43 @@ function teamGroups() {
 }
 
 app.set('view engine', 'ejs');
+
+/**
+ * PALETTE TRIAL. ?palette=coastal|bespoke|lab stamps data-palette on <html>
+ * so the three candidate palettes can be judged on the real pages instead of
+ * as swatches. Whitelisted, because the value is printed into an attribute.
+ * Sticky for the visit via a cookie-free approach: the link carries it.
+ *
+ * TEMPORARY. When one is chosen its tokens move into :root and this goes.
+ */
+const PALETTES = new Set(['coastal', 'bespoke', 'lab']);
+app.use((req, res, next) => {
+  const asked = String(req.query.palette || '');
+
+  // ?palette=off clears it; a valid name sets it; anything else is ignored.
+  if (asked === 'off') {
+    res.setHeader('Set-Cookie', 'e26palette=; Path=/; Max-Age=0; SameSite=Lax');
+    res.locals.palette = '';
+    return next();
+  }
+  if (PALETTES.has(asked)) {
+    // Sticky for the visit, so the whole site can be browsed in one palette
+    // instead of appending the query to every link. Session cookie, no
+    // expiry — it dies with the browser. Not HttpOnly on purpose: it holds
+    // a palette name, nothing else, and there is nothing to protect.
+    res.setHeader('Set-Cookie', `e26palette=${asked}; Path=/; SameSite=Lax`);
+    res.locals.palette = asked;
+    return next();
+  }
+
+  // Fall back to whatever the visit already chose. Parsed by hand rather
+  // than pulling in cookie-parser for one value, and validated against the
+  // same whitelist so a hand-edited cookie cannot reach the attribute.
+  const jar = String(req.headers.cookie || '');
+  const hit = /(?:^|;s*)e26palette=([a-z]+)/.exec(jar);
+  res.locals.palette = hit && PALETTES.has(hit[1]) ? hit[1] : '';
+  next();
+});
 // Express advertises itself by default; there is no reason to tell an
 // attacker which stack to look up exploits for.
 app.disable('x-powered-by');
