@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= doc.title %> — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="<%= doc.lede.slice(0, 150) %>">
+  <%# Policy pages are for the person who came looking for them and for
+      Razorpay's merchant review. Neither needs them in a search index, and a
+      thin legal page competing with /events for the site's own keywords is a
+      net loss. Followed, so the footer links still pass. %>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="<%= origin %>/<%= doc.slug %>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <%# The ambient field runs quieter here than on the content pages. These are
+      pages people read rather than look at, and a nebula moving behind a
+      paragraph of policy is the wrong amount of theatre. %>
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="ambient" data-priority="3" data-density="0.7" data-tone="nebula" data-signals="4" data-spread="16" data-rotate="0.006" data-depth="20" class="absolute inset-0"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <%- include('partials/_nav', { activeNav: '' }) %>
+
+  <main class="relative z-10 pt-28 pb-20 px-6">
+    <div class="max-w-3xl mx-auto">
+<%
+  const meta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
+    + `Last updated <span class="text-paper">${updated}</span><br>`
+    + `<span class="text-[var(--paper-faint)]">ENGINEER '26 &middot; NITK Surathkal</span></p>`;
+%>
+      <%- include('partials/_page-hero', { accent: 'var(--rgb-slate)', num: doc.num, nav: doc.nav, kicker: doc.kicker, title: doc.headline, meta: meta }) %>
+
+      <p class="text-lg text-[var(--paper-dim)] max-w-2xl mt-8 leading-relaxed" data-reveal>
+        <%= doc.lede %>
+      </p>
+
+      <%# ---- The other two policies, as a strip. Someone who lands on one of
+          these pages is usually checking all three, and making them go back to
+          the footer for each is a needless round trip. ---- %>
+      <nav class="legal-switch mt-8" aria-label="Policies" data-reveal>
+        <% siblings.forEach(function (s) { %>
+        <a href="/<%= s.slug %>" class="legal-switch__item<%= s.slug === doc.slug ? ' is-current' : '' %>"
+           <%= s.slug === doc.slug ? 'aria-current="page"' : '' %>><%= s.nav %></a>
+        <% }); %>
+      </nav>
+
+      <%- include('partials/_seam') %>
+
+      <%# ---- The document itself. Numbered, because a policy IS a sequence of
+          clauses and a numbered clause is the thing you quote back at someone
+          in an email — one of the few places on this site where the numbering
+          carries real information rather than decoration. ---- %>
+      <ol class="legal-doc" start="1">
+        <% doc.sections.forEach(function (sec, i) { %>
+        <li class="legal-sec" data-reveal>
+          <h2 class="legal-sec__h" id="s<%= i + 1 %>">
+            <a class="legal-sec__anchor" href="#s<%= i + 1 %>" aria-label="Link to this section"><%= sec.h %></a>
+          </h2>
+          <% (sec.p || []).forEach(function (para) { %>
+          <p class="legal-sec__p"><%= para %></p>
+          <% }); %>
+          <% if (sec.list) { %>
+          <ul class="legal-list">
+            <% sec.list.forEach(function (item) { %>
+            <li><%= item %></li>
+            <% }); %>
+          </ul>
+          <% } %>
+          <% (sec.after || []).forEach(function (para) { %>
+          <p class="legal-sec__p"><%= para %></p>
+          <% }); %>
+          <% if (sec.link) { %>
+          <p class="legal-sec__p">
+            <a href="<%= sec.link.href %>" class="legal-link"><%= sec.link.label %> &rarr;</a>
+          </p>
+          <% } %>
+        </li>
+        <% }); %>
+      </ol>
+
+      <%- include('partials/_seam') %>
+
+      <section class="legal-contact" aria-labelledby="contact" data-reveal>
+        <h2 id="contact" class="font-display font-semibold text-xl mb-3">Getting in touch</h2>
+        <p class="text-[var(--paper-dim)] leading-relaxed mb-4">
+          Anything on this page — a question, a correction, a request about your
+          own data, or a refund — goes to the festival convenor, who is a
+          student and will answer like one.
+        </p>
+        <a href="mailto:<%= contact %>" class="legal-contact__mail"><%= contact %></a>
+        <p class="font-mono text-[0.7rem] text-[var(--paper-faint)] tracking-[0.1em] uppercase mt-4">
+          <%= entity %>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <%- include('partials/_footer') %>
+<%
+  /* Decisions the organising committee still has to make on this document.
+     Rendered as an HTML comment so a maintainer reading the page source is
+     reminded, and a visitor reading the page is not handed a policy that
+     announces it is provisional. Cleared from data/legal.json as each is
+     settled — when the array empties, this block disappears on its own. */
+  if (doc.todo && doc.todo.length) {
+%>
+  <!-- MAINTAINERS — unsettled on this page:
+<% doc.todo.forEach(function (t) { %>       * <%= t.replace(/--/g, '—') %>
+<% }); %>  -->
+<% } %>
+
+  <script type="module" src="/js/page.js"></script>
+</body>
+</html>

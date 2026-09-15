@@ -51,6 +51,10 @@ const host = process.env.HOST || '0.0.0.0';
 const FEST_DATES = { start: '2026-10-23', end: '2026-10-25', display: '23—25 OCTOBER 2026' };
 
 const eventData = JSON.parse(readFileSync(path.join(__dirname, 'data/events.json'), 'utf-8'));
+
+// Terms, privacy and refunds. Read once at boot like every other data file —
+// they change between festivals, not between requests.
+const legal = JSON.parse(readFileSync(path.join(__dirname, 'data/legal.json'), 'utf-8'));
 const allEvents = eventData.events;
 
 // Categories are DERIVED from the actual event data — never a hand-written
@@ -143,42 +147,9 @@ function teamGroups() {
 
 app.set('view engine', 'ejs');
 
-/**
- * PALETTE TRIAL. ?palette=coastal|bespoke|lab stamps data-palette on <html>
- * so the three candidate palettes can be judged on the real pages instead of
- * as swatches. Whitelisted, because the value is printed into an attribute.
- * Sticky for the visit via a cookie-free approach: the link carries it.
- *
- * TEMPORARY. When one is chosen its tokens move into :root and this goes.
- */
-const PALETTES = new Set(['coastal', 'bespoke', 'lab']);
-app.use((req, res, next) => {
-  const asked = String(req.query.palette || '');
-
-  // ?palette=off clears it; a valid name sets it; anything else is ignored.
-  if (asked === 'off') {
-    res.setHeader('Set-Cookie', 'e26palette=; Path=/; Max-Age=0; SameSite=Lax');
-    res.locals.palette = '';
-    return next();
-  }
-  if (PALETTES.has(asked)) {
-    // Sticky for the visit, so the whole site can be browsed in one palette
-    // instead of appending the query to every link. Session cookie, no
-    // expiry — it dies with the browser. Not HttpOnly on purpose: it holds
-    // a palette name, nothing else, and there is nothing to protect.
-    res.setHeader('Set-Cookie', `e26palette=${asked}; Path=/; SameSite=Lax`);
-    res.locals.palette = asked;
-    return next();
-  }
-
-  // Fall back to whatever the visit already chose. Parsed by hand rather
-  // than pulling in cookie-parser for one value, and validated against the
-  // same whitelist so a hand-edited cookie cannot reach the attribute.
-  const jar = String(req.headers.cookie || '');
-  const hit = /(?:^|;s*)e26palette=([a-z]+)/.exec(jar);
-  res.locals.palette = hit && PALETTES.has(hit[1]) ? hit[1] : '';
-  next();
-});
+// The ?palette= trial that lived here is gone: Coastal Night won and its
+// tokens are now :root in public/src/input.css. Nothing reads res.locals
+// .palette any more, and no cookie is set.
 // Express advertises itself by default; there is no reason to tell an
 // attacker which stack to look up exploits for.
 app.disable('x-powered-by');
@@ -287,10 +258,12 @@ app.get('/team', (req, res) => {
 // Sponsors. Tier STRUCTURE only — there is no sponsor data in this codebase and
 // none is invented here, so every slot renders as open (same rule as the deck
 // card in partials/_sponsors.ejs). Wire a real list in once partners confirm.
+// Coral / amber / neutral reads as a descending tier the way fuchsia / amber
+// / slate did, but out of this palette rather than the framework's defaults.
 const SPONSOR_TIERS = [
-  { name: 'Title',  accent: '232,121,249' },
-  { name: 'Gold',   accent: '232,146,60'  },
-  { name: 'Silver', accent: '148,163,184' },
+  { name: 'Title',  accent: 'var(--bay-6)' },
+  { name: 'Gold',   accent: 'var(--rgb-amber)' },
+  { name: 'Silver', accent: 'var(--rgb-slate)' },
 ];
 
 app.get('/about', (req, res) => {
@@ -303,6 +276,31 @@ app.get('/about', (req, res) => {
     fest,
   });
 });
+
+/**
+ * The policy pages: /terms, /privacy, /refunds.
+ *
+ * Registered explicitly rather than as one /:doc parameter route, because a
+ * parameter at the site root would swallow every unmatched top-level path and
+ * turn a typo into a 500 instead of the 404 it should be.
+ *
+ * Razorpay will not activate a live key without all three reachable from the
+ * site, so these are a payment prerequisite as much as a legal one.
+ */
+for (const slug of Object.keys(legal.docs)) {
+  app.get('/' + slug, (req, res) => {
+    res.render('legal', {
+      doc: legal.docs[slug],
+      // Every document, in file order, for the switcher strip at the top.
+      siblings: Object.values(legal.docs),
+      updated: legal.updated,
+      entity: legal.entity,
+      contact: legal.contact,
+      origin: originFor(req),
+      festDates: FEST_DATES,
+    });
+  });
+}
 
 app.get('/sponsors', (req, res) => {
   res.render('sponsors', {

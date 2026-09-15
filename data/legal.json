@@ -1,0 +1,258 @@
+{
+  "_comment": "The three policy documents every site that takes money is expected to publish, and that Razorpay requires on a merchant site before it will activate a live key: terms, privacy, and a refund/cancellation policy. One file, three documents, one view (views/legal.ejs) — so they share a layout and can only differ in words. Anything in a doc's `todo` array is a decision the organising committee has to make and sign off; it renders as an HTML comment on the page, never as visible text.",
+
+  "updated": "16 September 2026",
+  "entity": "ENGINEER, the annual technical festival of the National Institute of Technology Karnataka, Surathkal",
+  "contact": "engineerconvenor@nitk.edu.in",
+
+  "docs": {
+    "terms": {
+      "slug": "terms",
+      "title": "Terms & Conditions",
+      "nav": "Terms",
+      "num": "07",
+      "kicker": "Cognitrixx / the small print",
+      "headline": "The rules<br><span class=\"text-gradient-impossible\">of taking part.</span>",
+      "lede": "These terms cover this website and registration for ENGINEER '26. Registering for an event means you accept them. Individual events also carry their own rules on their own pages — where the two differ, the event page wins.",
+      "todo": [
+        "Confirm the jurisdiction clause with the institute — it currently names the courts at Mangaluru, Dakshina Kannada.",
+        "Confirm whether prize money is paid gross or net of TDS, and above what threshold a PAN is required.",
+        "Confirm the minimum age / school-participant rule per event before registration opens."
+      ],
+      "sections": [
+        {
+          "h": "Who can take part",
+          "p": [
+            "ENGINEER is open to students. Most events are open to any college; a few are restricted to a year, a discipline or a team size, and a few are open to school students. The restriction that applies is the one printed on that event's own page.",
+            "We may ask to see a valid student ID at the venue. If the ID does not match the registration, the registration is not valid."
+          ]
+        },
+        {
+          "h": "Registering",
+          "p": [
+            "A registration is for one named person and one named event. It is not transferable to another person, and it does not carry over to another event.",
+            "The details you enter must be accurate. We use the email address to send your ticket and any change to the event, so a wrong address means you will not hear from us."
+          ]
+        },
+        {
+          "h": "Fees and confirmation",
+          "p": [
+            "Some events are free and some are paid. The fee is shown on the event page and again on the registration form before you pay — you will never be charged an amount you have not seen.",
+            "A paid registration is confirmed when the payment succeeds and the ticket reaches your email. Money leaving your account is not by itself confirmation: if the payment did not complete on our side, see the refund policy."
+          ],
+          "link": { "href": "/refunds", "label": "Refund & cancellation policy" }
+        },
+        {
+          "h": "Conduct on campus",
+          "p": [
+            "NITK Surathkal's campus rules and the institute's code of conduct apply for the whole festival, including the parts of it that happen after dark.",
+            "The organising committee can remove anyone from an event or from the campus for unsafe behaviour, harassment, damage to property, or being under the influence. Removal on those grounds does not come with a refund."
+          ]
+        },
+        {
+          "h": "Changes to the programme",
+          "p": [
+            "A festival of this size moves. Timings, venues, judges, formats and prize structures can change, and events can be cancelled — usually for weather, safety or a speaker who cannot travel.",
+            "Changes are published on this site, and we email registrants of an affected event wherever we have their address. If we cancel an event outright, the refund policy applies."
+          ]
+        },
+        {
+          "h": "Prizes",
+          "p": [
+            "Prizes are awarded on the rules published on each event's page. Where a rule is not published there, the judges' and the organising committee's decision is final.",
+            "Winners will be asked for a college ID and, for a bank transfer, account details in the winner's own name. Any tax on prize money is the winner's responsibility."
+          ]
+        },
+        {
+          "h": "Photography and filming",
+          "p": [
+            "The festival is photographed and filmed, and the footage is used to publicise later editions. Attending an event means you may appear in it.",
+            "If you would rather not, tell the event coordinator at the venue and write to us at the address below, and we will keep you out of published material where we reasonably can."
+          ]
+        },
+        {
+          "h": "What we are and are not responsible for",
+          "p": [
+            "Take part at your own risk. Some events involve machinery, flight, electricity or height, and each of those carries its own safety brief that you are expected to follow.",
+            "We are not liable for personal belongings lost or damaged on campus, for travel and accommodation you book around the festival, or for indirect losses. Nothing here limits liability that the law does not allow us to limit."
+          ]
+        },
+        {
+          "h": "This website",
+          "p": [
+            "The design, text, code and marks on this site belong to ENGINEER and NITK Surathkal. Event brochures and logos belong to the clubs and partners that made them.",
+            "What you build at the festival stays yours. Submitting a project to an event does not transfer any right in it to us beyond showing and describing it as part of the festival."
+          ]
+        },
+        {
+          "h": "Governing law",
+          "p": [
+            "These terms are governed by the laws of India, and the courts at Mangaluru, Dakshina Kannada, Karnataka have jurisdiction."
+          ]
+        }
+      ]
+    },
+
+    "privacy": {
+      "slug": "privacy",
+      "title": "Privacy Policy",
+      "nav": "Privacy",
+      "num": "08",
+      "kicker": "Cognitrixx / the small print",
+      "headline": "What we collect,<br><span class=\"text-gradient-impossible\">and what we don't.</span>",
+      "lede": "Short version: we ask for the four things it takes to put you on an event list and get a ticket to you, we never see your card details, and this site sets no cookies and runs no analytics or advertising trackers of any kind.",
+      "todo": [
+        "Confirm the retention period below with whoever holds the accounts — it currently says the festival year plus one, for audit.",
+        "Name the email provider used for ticket delivery once it is chosen (SMTP host is configured by env var, not in code).",
+        "If a self-hosted font copy replaces Google Fonts, delete the Google Fonts entry from the third-parties list."
+      ],
+      "sections": [
+        {
+          "h": "What we ask you for",
+          "p": ["Only at the point you register for an event:"],
+          "list": [
+            "Your full name.",
+            "Your roll number or college ID.",
+            "Your email address.",
+            "The event you are registering for."
+          ],
+          "after": ["That is the whole registration record. We do not ask for your address, your date of birth, your gender, or your phone number."]
+        },
+        {
+          "h": "Payments",
+          "p": [
+            "Paid events are processed by Razorpay. Your card number, UPI ID, netbanking credentials and CVV are entered on Razorpay's own checkout and never reach this site or its servers — we could not store them if we wanted to.",
+            "What we do store against your registration is the Razorpay order ID, the payment ID and the amount, which is what lets us confirm a payment and issue the right ticket. Razorpay handles that data under its own privacy policy."
+          ]
+        },
+        {
+          "h": "The Signal Range leaderboard",
+          "p": [
+            "If you play the game on the homepage and submit a score, we store the display name you type, the score, the streak, shots, hits and how long the run lasted.",
+            "We also store a one-way salted hash of your IP address — not the address itself. It exists only so the rate limiter can tell two submissions apart, it cannot be reversed back into an address, and it is never shown to anyone."
+          ]
+        },
+        {
+          "h": "What stays in your browser",
+          "p": [
+            "Your sound on/off choice, the music playhead, the name you last used on the leaderboard and whether you have already seen the boot sequence are kept in your own browser's local storage.",
+            "Those never leave your device and are never sent to us. Clearing your browser data clears them."
+          ]
+        },
+        {
+          "h": "No cookies, no trackers",
+          "p": [
+            "This site sets no cookies at all — not for analytics, not for advertising, not for preferences.",
+            "There is no Google Analytics, no advertising pixel, no session recording and no third-party tracking script anywhere on it. We do not sell, rent or share your data with anyone for marketing, and there is nothing to opt out of because nothing is switched on."
+          ]
+        },
+        {
+          "h": "Who else is involved",
+          "p": ["Three third parties touch this site, and that is the complete list:"],
+          "list": [
+            "Razorpay — processes payments for paid events.",
+            "Our email provider — delivers your ticket. It sees your name, email address and event.",
+            "Google Fonts — serves two of the typefaces. Your browser fetches them from Google directly, which means Google sees your IP address the way it would for any file loaded from another domain."
+          ],
+          "after": ["The site is hosted by NITK's Centre for Computing (CCC) on engineer.nitk.ac.in, and the registration data sits on the institute's infrastructure."]
+        },
+        {
+          "h": "Why we are allowed to hold it",
+          "p": [
+            "You give us the registration details so that we can enter you into an event; we use them for that and for telling you about that event. Under the Digital Personal Data Protection Act, 2023, that is consent you give for a stated purpose, and we do not use the data for a different one."
+          ]
+        },
+        {
+          "h": "How long we keep it",
+          "p": [
+            "Registration and payment records are kept through the festival and for one year afterwards, which is what the accounts need. After that they are deleted or reduced to counts that identify nobody.",
+            "Leaderboard entries are cleared at the end of the festival."
+          ]
+        },
+        {
+          "h": "Your rights",
+          "p": [
+            "You can ask us what we hold about you, ask us to correct it, or ask us to delete it. Write to the address below from the email address you registered with and we will act on it.",
+            "Deleting a registration before the event means it is withdrawn — we cannot hold a place on a list with no name on it."
+          ]
+        },
+        {
+          "h": "Keeping it safe",
+          "p": [
+            "The site is served over HTTPS. Payment confirmations are verified by signature before a registration is marked paid, so a confirmation cannot be forged, and ticket download links are signed so one person's link cannot be edited into someone else's ticket.",
+            "There are no user accounts and no passwords on this site, so there is no password of yours for us to lose."
+          ]
+        },
+        {
+          "h": "Participants under 18",
+          "p": [
+            "Some events are open to school students. If you are under 18, a parent or guardian should register on your behalf and is treated as the person giving consent under this policy."
+          ]
+        },
+        {
+          "h": "Changes",
+          "p": [
+            "If this policy changes, the date at the top of the page changes with it. Material changes before the festival will also go out to registrants by email."
+          ]
+        }
+      ]
+    },
+
+    "refunds": {
+      "slug": "refunds",
+      "title": "Refund & Cancellation Policy",
+      "nav": "Refunds",
+      "num": "09",
+      "kicker": "Cognitrixx / the small print",
+      "headline": "If the money<br><span class=\"text-gradient-impossible\">has to come back.</span>",
+      "lede": "This covers registration fees paid through this site. It does not cover anything you book around the festival — travel, stay, or tickets bought from anyone who is not us.",
+      "todo": [
+        "DECIDE: the cancellation window. It currently says fees are non-refundable once paid, except where we cancel. Many fests allow a full refund up to 7 days before the event — pick one and say so here.",
+        "DECIDE: whether a registration can be transferred to another person or another event instead of refunded. The terms currently say no.",
+        "CONFIRM: the refund turnaround. 5–7 working days is Razorpay's usual settlement window back to the original method; check against the account the fest actually uses."
+      ],
+      "sections": [
+        {
+          "h": "If you change your mind",
+          "p": [
+            "Registration fees are non-refundable once paid. Places are capped per event, and a paid registration takes a place out of circulation that somebody else could have had.",
+            "A registration cannot be moved to a different person or a different event."
+          ]
+        },
+        {
+          "h": "If we cancel or reschedule",
+          "p": [
+            "If we cancel an event outright, everyone registered for it is refunded in full. You do not need to ask — we process it from the registration list.",
+            "If we move an event to a different day or time within the festival and you can no longer make it, write to us and we will refund you in full."
+          ]
+        },
+        {
+          "h": "If the payment went wrong",
+          "p": [
+            "If money left your account but no ticket arrived, the payment did not complete on our side. Banks reverse these automatically, usually within 5–7 working days.",
+            "If it has been longer than that, email us with the amount, the date and the Razorpay payment ID from your bank statement, and we will trace it. The same applies if you were charged twice for one registration — the duplicate is refunded in full."
+          ]
+        },
+        {
+          "h": "How a refund reaches you",
+          "p": [
+            "Refunds go back through Razorpay to the method you paid with. We cannot send a refund to a different card, a different UPI ID or a different account.",
+            "Expect 5–7 working days from the day we process it for the money to appear, depending on your bank."
+          ]
+        },
+        {
+          "h": "Not showing up",
+          "p": [
+            "A registration that is not used is not refunded. If something has happened and you cannot attend, tell us before the event rather than after — we cannot do much once the event has run."
+          ]
+        },
+        {
+          "h": "Asking for a refund",
+          "p": [
+            "Email us from the address you registered with, with your name, roll number, the event, and the Razorpay payment ID from your ticket email. We will reply with a decision within three working days."
+          ]
+        }
+      ]
+    }
+  }
+}

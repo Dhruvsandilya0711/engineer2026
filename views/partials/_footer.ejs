@@ -40,7 +40,7 @@
             it was reachable from the top bar but not from here, which is
             exactly where someone scrolled to the bottom goes looking. %>
         <a href="/sponsors" class="tap-target hover:text-paper transition-colors">Sponsors</a>
-        <a href="/#cognitrixx" class="tap-target hover:text-paper transition-colors">About</a>
+        <a href="/about" class="tap-target hover:text-paper transition-colors">About</a>
         <a href="/" class="tap-target hover:text-paper transition-colors">Home</a>
       </nav>
     </div>
@@ -60,7 +60,17 @@
     </div>
   </div>
 
-  <div class="max-w-6xl mx-auto mt-14 pt-6 border-t border-[var(--hairline)] font-mono text-[0.65rem] text-[var(--paper-faint)]">
-    © 2026 ENGINEER, NITK Surathkal.
+  <%# The legal row. Kept out of the Navigate column on purpose: these are
+       not places to go and look around, they are documents you consult, and
+       the bottom rule is where everyone has been trained to find them. %>
+  <div class="footer-legal max-w-6xl mx-auto mt-14 pt-6 border-t border-[var(--hairline)]">
+    <p class="font-mono text-[0.65rem] text-[var(--paper-faint)]">
+      © 2026 ENGINEER, NITK Surathkal.
+    </p>
+    <nav class="footer-legal__links" aria-label="Policies">
+      <a href="/terms" class="tap-target">Terms</a>
+      <a href="/privacy" class="tap-target">Privacy</a>
+      <a href="/refunds" class="tap-target">Refunds</a>
+    </nav>
   </div>
 </footer>
