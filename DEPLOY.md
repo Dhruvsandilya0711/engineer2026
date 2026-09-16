@@ -184,23 +184,30 @@ sudo cp /etc/nginx/sites-available/engineer /etc/nginx/sites-available/engineer.
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-Then check from **outside** the campus network — a phone on mobile data is the
-easiest honest test:
+Then check all ten routes. Use `http://` — port 443 is closed until CCC
+issues a certificate:
 
 ```bash
 for p in / /about /events /schedule /team /sponsors /register /terms /privacy /refunds; do
-  printf '%-11s %s\n' "$p" "$(curl -s -o /dev/null -w '%{http_code}' https://engineer.nitk.ac.in$p)"
+  printf '%-11s %s
+' "$p" "$(curl -s -o /dev/null -w '%{http_code}' http://engineer.nitk.ac.in$p)"
 done
 ```
 
 All ten should be `200`. Then confirm the proxy headers actually arrived:
 
 ```bash
-curl -s https://engineer.nitk.ac.in/ | grep -o '<link rel="canonical"[^>]*>'
+curl -s http://engineer.nitk.ac.in/ | grep -o '<link rel="canonical"[^>]*>'
 ```
 
-It must say `https://engineer.nitk.ac.in`. If it says `http://`, step 4 did not
-take.
+The canonical must match the scheme the server really answers on. One
+claiming `https://` while 443 is closed points every search engine and every
+shared link at a dead address — so it stays `http://` until TLS lands, and
+changes the same day it does.
+
+Test from a phone **on mobile data** as well as campus wifi. That is the one
+check that tells you whether anyone off campus can reach the site at all —
+see the note at the top about the `10.x` address.
 
 **Rollback** is one command:
 
