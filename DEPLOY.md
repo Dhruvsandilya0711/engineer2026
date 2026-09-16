@@ -225,6 +225,65 @@ sudo cp /etc/nginx/sites-available/engineer.2025.bak /etc/nginx/sites-available/
 
 ---
 
+## The database
+
+**Hosted MongoDB is not reachable from this container.** Outbound TCP 27017 is
+blocked by the campus firewall — tested with
+
+```bash
+timeout 5 bash -c 'cat < /dev/null > /dev/tcp/portquiz.net/27017' && echo OPEN || echo BLOCKED
+```
+
+which returns BLOCKED. So Atlas and every other managed MongoDB is out until
+CCC opens that port, and the database runs on the container itself.
+
+Installed: **MongoDB 8.0**, from MongoDB's own apt repo (it is not in Ubuntu's).
+Note that 5.0 and later require **AVX** on the CPU — check with
+`grep -o -m1 avx /proc/cpuinfo` before installing, and fall back to 4.4 if it
+is absent.
+
+```
+DBURL=mongodb://127.0.0.1:27017/engineer26
+```
+
+Bound to loopback, which with 27017 blocked outbound means nothing off the
+container can reach it either way.
+
+Confirm it took by restarting and reading the boot banner — it must say
+`Registration store: mongo — connected`, not `file`:
+
+```bash
+sudo systemctl restart engineer26 && sleep 3 && journalctl -u engineer26 -n 8 --no-pager
+```
+
+Watch the timestamps. `journalctl` run immediately after a restart will show
+you the PREVIOUS boot, because the app has not written its banner yet — which
+looks exactly like the change having failed.
+
+### Backups are nobody else's job
+
+Registrations exist only on this container. A nightly dump is in the
+`engineer` user's crontab:
+
+```
+0 3 * * * mongodump --db=engineer26 --out=/home/engineer/backups/$(date +\%F) --quiet
+```
+
+The `\%` is required — an unescaped `%` in a crontab is a newline.
+
+Two things this does NOT do, and both need a decision before the festival:
+
+* **Nothing rotates the dumps.** They accumulate one directory per night
+  forever. The data is tiny so it will not fill a 29 TB pool, but add a
+  `find /home/engineer/backups -maxdepth 1 -mtime +30 -exec rm -rf {} +` if
+  you want it tidy.
+* **Nothing copies them off the box.** A dump sitting on the same container as
+  the database it came from does not survive that container being rebuilt,
+  which is the exact failure it exists to protect against. Get them onto
+  something else before registration opens.
+
+---
+
 ## Taking it down and putting it back
 
 The site can be hidden and restored without rebuilding anything. Two named
