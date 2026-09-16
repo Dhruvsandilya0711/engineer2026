@@ -1,10 +1,49 @@
 # Deploying ENGINEER '26 to the CCC container
 
-The Central Computer Centre has assigned a container for `engineer` and it
-currently runs the 2025 site. This is how the 2026 site goes onto it without
-taking 2025 down until the last step.
+The Central Computer Centre has assigned a container for `engineer`. This is
+how the 2026 site goes onto it without taking the current page down until the
+last step.
 
 Everything here is run **on the container**, as the `engineer` user.
+
+## What is actually there right now
+
+Probed from a machine on the campus network, so this is measured, not assumed:
+
+| | |
+|---|---|
+| `engineer.nitk.ac.in` resolves to | `10.14.0.138` — a private address, so the name only answers inside the campus network |
+| Web server | **nginx/1.18.0 (Ubuntu)** |
+| Port 80 | **open**, serving a 469-byte static HTML file last modified 1 Oct 2025 |
+| Port 443 | **CLOSED — there is no HTTPS on this host at all** |
+| Port 3000 | closed (nothing running yet) |
+
+Two things follow from that, and they change the order of the work:
+
+**1. The "2025 site" is a placeholder, not an app.** 469 bytes of static HTML
+being served by nginx from disk. There is no Node process, no database and no
+application to migrate — so the cutover is just pointing one nginx `location`
+block at a port. That makes this much easier than it sounded.
+
+**2. There is no TLS, and that is a blocker for two things.** Not for putting
+the site up — it will work fine over plain HTTP — but:
+
+- **Razorpay will not operate over HTTP.** Live keys need an HTTPS checkout
+  page. So payments cannot go live until CCC issues a certificate.
+- `PUBLIC_ORIGIN` must match reality. Set it to `http://engineer.nitk.ac.in`
+  today and change it to `https://` the day TLS lands, or every canonical URL
+  and emailed ticket link will point at a scheme the server does not answer.
+
+Only CCC can fix this — they hold the domain and the certificate. **Ask them
+for TLS on `engineer.nitk.ac.in` now**, in the same thread as the container
+request, because a certificate request inside an institution is measured in
+days and it gates payments.
+
+Also worth confirming with them: whether the name resolves to anything from
+*outside* the campus network. `10.14.0.138` is an RFC1918 address, so as
+things stand a parent or a participant from another college cannot reach the
+site from home or on mobile data. If that is the intent for a public
+registration page, it needs a public address or a NAT rule — again, CCC.
 
 ---
 
@@ -67,7 +106,7 @@ nano ~/engineer26/.env
 | Variable | Now | Why |
 |---|---|---|
 | `DBURL` | **ask CCC** | Without it, registrations go to `data/registrations.json` on the container's disk. That works, but it is a file on a container that CCC may rebuild. Get the Mongo string before registration opens. |
-| `PUBLIC_ORIGIN` | already set to `https://engineer.nitk.ac.in` | Ticket QR codes and emailed links are built from this. It cannot be read from a request, because a `Host` header is attacker-controlled. |
+| `PUBLIC_ORIGIN` | bootstrap sets `https://...` — **change it to `http://engineer.nitk.ac.in` until CCC issues a certificate**, then change it back | Ticket QR codes and emailed links are built from this. It cannot be read from a request, because a `Host` header is attacker-controlled. Pointing it at a scheme the server does not answer breaks every link it generates. |
 | `LEADERBOARD_SALT`, `RANGE_SECRET`, `TICKET_SECRET`, `ADMIN_TOKEN` | generated | **Never regenerate these.** Rotating `TICKET_SECRET` breaks every ticket link already emailed. |
 
 Everything else can stay empty. With no Razorpay keys, **payments are off,
@@ -104,7 +143,15 @@ addresses.
 
 ## 4. Point the web server at it
 
-Hand `deploy/nginx.conf.example` to whoever owns the vhost. Three things are
+The server is nginx/1.18.0 on Ubuntu, so the vhost is almost certainly
+`/etc/nginx/sites-available/`. Find the one that answers for this host:
+
+```bash
+grep -rl "engineer" /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null
+nginx -T 2>/dev/null | grep -n "server_name\|root\|listen"
+```
+
+Hand `deploy/nginx.conf.example` to whoever owns it. Three things are
 **required**; the rest is optional hygiene:
 
 ```nginx
@@ -180,6 +227,8 @@ Not blockers for putting the site up, but they are real:
 
 | Item | Status |
 |---|---|
+| **TLS on the domain** | **Missing — port 443 is closed.** CCC must issue it. Blocks Razorpay entirely, and should be in place before registration opens regardless. |
+| **Public reachability** | `engineer.nitk.ac.in` resolves to a private `10.x` address. Confirm with CCC whether it answers from outside campus. |
 | **Razorpay KYC** | Not started. Live keys need it and it takes days, not hours. Until then every event is free. |
 | **Refund policy decisions** | `/refunds` ships with my defaults — non-refundable, no transfers. Three decisions are flagged in `data/legal.json` under `todo`. |
 | **Legal review** | The three policy pages are written from what the code actually does, but no one qualified has read them. Get a staff advisor to, before real money moves. |
