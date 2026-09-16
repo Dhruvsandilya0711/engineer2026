@@ -225,6 +225,39 @@ sudo cp /etc/nginx/sites-available/engineer.2025.bak /etc/nginx/sites-available/
 
 ---
 
+## Taking it down and putting it back
+
+The site can be hidden and restored without rebuilding anything. Two named
+configs, one symlink target, one reload each way.
+
+**Down** — visitors get the old static page, which looks like nothing
+happened:
+
+```bash
+sudo cp /etc/nginx/sites-available/engi /etc/nginx/sites-available/engi.2026
+sudo cp /etc/nginx/sites-available/engi.2025.bak /etc/nginx/sites-available/engi
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+**Up**:
+
+```bash
+sudo cp /etc/nginx/sites-available/engi.2026 /etc/nginx/sites-available/engi
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+**Leave `engineer26.service` running throughout.** It listens on 127.0.0.1
+only, so while nginx points elsewhere nobody outside the container can reach
+it — and going live again is a config reload rather than a restart, with no
+install step and nothing that can fail.
+
+Do NOT use `systemctl stop engineer26` to hide the site. nginx would then
+serve **502 Bad Gateway** to every visitor, which reads as broken rather than
+as deliberate, and it is the state a monitoring system would page someone
+about.
+
+---
+
 ## 6. Updating later
 
 ```bash
