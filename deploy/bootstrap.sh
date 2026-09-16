@@ -18,7 +18,7 @@ set -euo pipefail
 
 APP_USER="${APP_USER:-engineer}"
 APP_DIR="${APP_DIR:-/home/$APP_USER/engineer26}"
-REPO="${REPO:-https://github.com/wildcodesmith/engineer_nitk26.git}"
+REPO="${REPO:-https://github.com/Dhruvsandilya0711/engineer2026.git}"
 BRANCH="${BRANCH:-main}"
 PORT="${PORT:-3000}"
 
@@ -132,12 +132,23 @@ kill $SMOKE_PID 2>/dev/null || true
 trap - EXIT
 [ -z "$FAILED" ] || die "these routes did not return 200:$FAILED"
 
+# ── 8. Stage the unit with node's real path ────────────────────────────────
+# Resolved HERE, at install time, on the machine that will run it. nvm puts
+# node under $HOME and systemd's PATH does not include $HOME, so a unit that
+# says `env node` starts, fails with 127, and restart-loops silently.
+say "Preparing the systemd unit"
+NODE_BIN="$(command -v node)"
+sed "s|^ExecStart=.*|ExecStart=$NODE_BIN index.js|" deploy/engineer26.service > /tmp/engineer26.service
+echo "    ExecStart=$NODE_BIN index.js"
+echo "    staged at /tmp/engineer26.service — install it in the next step"
+
 say "Bootstrap complete"
 cat <<EOF
 
   Next, from DEPLOY.md:
     1. Fill in DBURL in $APP_DIR/.env          (ask CCC for the connection string)
-    2. Install the service:  sudo cp deploy/engineer26.service /etc/systemd/system/
+    2. Install the service (note: /tmp, not deploy/ — it has node's real path):
+                             sudo cp /tmp/engineer26.service /etc/systemd/system/
                              sudo systemctl daemon-reload
                              sudo systemctl enable --now engineer26
     3. Point the web server at 127.0.0.1:$PORT  (deploy/nginx.conf.example)

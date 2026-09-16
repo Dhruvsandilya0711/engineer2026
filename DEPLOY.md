@@ -77,7 +77,7 @@ ssh engineer@10.14.0.138
 ```
 
 ```bash
-git clone https://github.com/wildcodesmith/engineer_nitk26.git ~/engineer26 && cd ~/engineer26 && bash deploy/bootstrap.sh
+git clone https://github.com/Dhruvsandilya0711/engineer2026.git ~/engineer26 && cd ~/engineer26 && bash deploy/bootstrap.sh
 ```
 
 `deploy/bootstrap.sh` is idempotent — safe to re-run — and it does not touch
@@ -118,11 +118,19 @@ payments existed** — there is no half-on state.
 ## 3. Run it as a service
 
 ```bash
-sudo cp ~/engineer26/deploy/engineer26.service /etc/systemd/system/
+sudo cp /tmp/engineer26.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now engineer26
 systemctl status engineer26
 ```
+
+> **`/tmp`, not `deploy/`.** bootstrap.sh stages a copy there with the absolute
+> path to *this machine's* node substituted in. The one in `deploy/` carries a
+> placeholder, because the right path is not knowable until install time — an
+> nvm install puts node under `$HOME`, and systemd runs services with a bare
+> `PATH` that contains no home directory. A unit that says `env node` starts,
+> exits 127, and restart-loops with nothing but
+> `/usr/bin/env: 'node': No such file or directory` in the journal.
 
 ```bash
 curl -I http://127.0.0.1:3000/

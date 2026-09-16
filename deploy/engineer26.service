@@ -25,7 +25,18 @@ WorkingDirectory=/home/engineer/engineer26
 # The app loads .env itself (import 'dotenv/config'), so there is no
 # EnvironmentFile here. Keeping it in one place means `npm start` by hand and
 # the service read exactly the same configuration.
-ExecStart=/usr/bin/env node index.js
+# ExecStart is REWRITTEN BY bootstrap.sh with the absolute path to node.
+#
+# This line is only the fallback for a system-wide install. It must not be
+# `/usr/bin/env node`: systemd starts services with a bare PATH and nothing
+# else, so a node installed by nvm — which lives under ~/.nvm/versions/... —
+# is invisible to it and the unit dies at exec with status 203/127 before a
+# single line reaches the log.
+#
+# `bash -lc` looks like the fix and is not: Ubuntu's default ~/.bashrc returns
+# early for non-interactive shells, and nvm's init sits below that guard.
+# Only an absolute path is reliable, so bootstrap.sh resolves one.
+ExecStart=/usr/bin/node index.js
 
 # Bind to loopback only. CCC's web server is the thing facing the world; the
 # app has no business also answering on the container's LAN address.
@@ -51,7 +62,12 @@ SyslogIdentifier=engineer26
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ProtectHome=read-only
+# NOT ProtectHome=read-only. The app lives in /home/engineer and has to write
+# data/ — and if nvm is in play it also reads its node from /home. The
+# ReadWritePaths carve-out below is the real protection: everything outside
+# those two directories is read-only to this process anyway, via
+# ProtectSystem=strict.
+ProtectHome=false
 ReadWritePaths=/home/engineer/engineer26/data /home/engineer/engineer26/public/src
 ProtectKernelTunables=true
 ProtectKernelModules=true
