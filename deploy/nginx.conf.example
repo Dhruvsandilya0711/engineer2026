@@ -1,0 +1,79 @@
+# ===========================================================================
+#  ENGINEER '26 — reverse proxy, for engineer.nitk.ac.in
+#
+#  CCC already terminates TLS and serves the 2025 site, so this is a
+#  REFERENCE for whoever owns that config, not a drop-in. The parts that
+#  actually matter to this app are marked REQUIRED — the rest is the usual
+#  hygiene and CCC may already have their own version of it.
+#
+#  If the front end is Apache rather than nginx, the same three requirements
+#  are:  ProxyPreserveHost On, RequestHeader set X-Forwarded-Proto "https",
+#  and mod_proxy_wstunnel is NOT needed (no websockets here).
+# ===========================================================================
+
+server {
+    listen 443 ssl http2;
+    server_name engineer.nitk.ac.in;
+
+    # ssl_certificate / ssl_certificate_key — CCC's existing pair.
+
+    # 2 MB is generous: the largest thing a visitor posts is a registration
+    # form of four short text fields. Nothing here accepts an upload.
+    client_max_body_size 2m;
+
+    # ---- REQUIRED ---------------------------------------------------------
+    # The app runs `app.set('trust proxy', 1)`, so it reads these three to
+    # learn the real scheme, host and client IP. Without X-Forwarded-Proto
+    # every canonical URL, og:image and emailed ticket link advertises
+    # http:// on an https:// page, and the registration rate limiter keys
+    # every visitor to the proxy's own address instead of theirs.
+    location / {
+        proxy_pass         http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+
+        proxy_connect_timeout 5s;
+        proxy_read_timeout   30s;
+    }
+    # ---- /REQUIRED --------------------------------------------------------
+
+    # Fingerprinted-ish static assets. The fonts and the Three.js bundle in
+    # /vendor never change without their filename changing.
+    location ~* ^/(fonts|vendor)/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Images and audio are large (31 MB of images, 3.8 MB of audio) and
+    # change rarely. A day is short enough to fix a wrong image the same
+    # afternoon and long enough to matter on a phone on campus wifi.
+    location ~* ^/(images|audio)/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        expires 1d;
+        add_header Cache-Control "public";
+    }
+
+    # NOTE ON HEADERS: the app already sets its own CSP, X-Frame-Options,
+    # X-Content-Type-Options, Referrer-Policy, Permissions-Policy and HSTS
+    # (lib/security.js), and the CSP carries a per-request nonce. Do NOT add
+    # a second CSP here — two CSP headers are intersected, and a static one
+    # cannot know the nonce, so it would kill every inline script on the site.
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+}
+
+server {
+    listen 80;
+    server_name engineer.nitk.ac.in;
+    return 301 https://$host$request_uri;
+}

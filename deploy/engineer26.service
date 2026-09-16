@@ -1,0 +1,66 @@
+# ===========================================================================
+#  ENGINEER '26 / Cognitrixx — systemd unit
+#
+#    sudo cp deploy/engineer26.service /etc/systemd/system/
+#    sudo systemctl daemon-reload
+#    sudo systemctl enable --now engineer26
+#    systemctl status engineer26
+#    journalctl -u engineer26 -f          # live logs
+#
+#  Adjust User/WorkingDirectory if the site does not live in
+#  /home/engineer/engineer26.
+# ===========================================================================
+[Unit]
+Description=ENGINEER '26 (Cognitrixx) — NITK Surathkal
+Documentation=https://github.com/wildcodesmith/engineer_nitk26
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=engineer
+Group=engineer
+WorkingDirectory=/home/engineer/engineer26
+
+# The app loads .env itself (import 'dotenv/config'), so there is no
+# EnvironmentFile here. Keeping it in one place means `npm start` by hand and
+# the service read exactly the same configuration.
+ExecStart=/usr/bin/env node index.js
+
+# Bind to loopback only. CCC's web server is the thing facing the world; the
+# app has no business also answering on the container's LAN address.
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+Environment=NODE_ENV=production
+
+Restart=always
+RestartSec=3
+# Five failures inside a minute means it is crash-looping on something a
+# restart will not fix. Stop, and leave it stopped, so the logs are readable.
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=engineer26
+
+# ---- Hardening -----------------------------------------------------------
+# This process serves the public internet and handles personal data
+# (names, roll numbers, emails). It needs to read its own directory, write
+# data/, and nothing else on the machine.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/engineer/engineer26/data /home/engineer/engineer26/public/src
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+# It makes outbound HTTPS (Razorpay, SMTP, Mongo) and listens on TCP.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target
