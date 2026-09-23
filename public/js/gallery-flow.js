@@ -26,15 +26,27 @@ export function initGalleryFlow() {
   const cards = [...ring.querySelectorAll('.gflow__card')];
   const baseAngle = cards.map(c => parseFloat(c.dataset.a) || 0);
   const isSmall = window.innerWidth < 768;
-  let radius = parseFloat(getComputedStyle(stage).getPropertyValue('--radius')) || 560;
+  // Same formula as --radius in input.css: the frames close the loop edge to
+  // edge. CSS cannot hand back a resolved calc() through a custom property,
+  // so it is measured here from the card width the stylesheet settled on.
+  const measureRadius = () => {
+    const gap = parseFloat(getComputedStyle(stage).getPropertyValue('--gap')) || 0;
+    return (cards.length * (ring.offsetWidth + gap)) / (2 * Math.PI) || 560;
+  };
+  let radius = measureRadius();
   const degPerPx = () => 57.2958 / radius;
 
   // Auto motion off under reduced motion, but the user can still operate the
   // controls (that's user-initiated, which reduced-motion allows).
+  // All speeds are deg/frame, tuned at the radius below. The radius now grows
+  // with the number of photos, and the same angle covers more ground on a
+  // bigger cylinder — so they are scaled to keep the on-screen speed as tuned.
+  const TUNED_R = isSmall ? 360 : 1000;
   const BASE = REDUCED_MOTION ? 0 : (isSmall ? 0.11 : 0.155);   // +50% flow speed
   const COUPLE = REDUCED_MOTION ? 0 : (isSmall ? 0.033 : 0.045);
   const HOLD = 1.6;      // deg/frame while a button is held
   const NUDGE = 4.5;     // deg impulse on a button tap / keypress
+  const k = () => TUNED_R / radius;
 
   let angle = 0, vel = 0;
   let held = 0;                 // -1 / 0 / +1 from the buttons
@@ -62,7 +74,7 @@ export function initGalleryFlow() {
       vel = drag.mom;               // carry the throw velocity for release
     } else {
       const sv = Math.max(-70, Math.min(70, scrollState.velocity || 0));
-      const drive = BASE * (0.3 + 0.7 * inView) + sv * COUPLE + held * HOLD;
+      const drive = (BASE * (0.3 + 0.7 * inView) + sv * COUPLE + held * HOLD) * k();
       vel += (drive - vel) * 0.07;  // ease toward target -> momentum + settle
       angle += vel;
     }
@@ -83,7 +95,7 @@ export function initGalleryFlow() {
     const on = entries[0]?.isIntersecting;
     if (on && !running) {
       running = true;
-      radius = parseFloat(getComputedStyle(stage).getPropertyValue('--radius')) || radius;
+      radius = measureRadius();
       raf = requestAnimationFrame(frame);
     } else if (!on && running) {
       running = false; cancelAnimationFrame(raf); raf = null;
@@ -91,23 +103,32 @@ export function initGalleryFlow() {
   }, { threshold: 0 });
   vis.observe(section);
 
-  window.addEventListener('resize', () => {
-    radius = parseFloat(getComputedStyle(stage).getPropertyValue('--radius')) || radius;
-  }, { passive: true });
+  window.addEventListener('resize', () => { radius = measureRadius(); }, { passive: true });
 
   // --- drag / swipe scrub -------------------------------------------------
+  // The pointer is captured only once a gesture is known to be a horizontal
+  // drag. Capturing on pointerdown would retarget the click of a plain tap to
+  // the stage, and a tap on a frame has to reach its link to open the photo.
+  // A drag, conversely, must never open one — `dragged` swallows that click.
+  let dragged = false;
   stage.addEventListener('pointerdown', (e) => {
     if (e.target.closest('.gflow__nav')) return;   // buttons manage themselves
-    drag.on = true; drag.locked = false; drag.mom = 0;
+    drag.on = true; drag.locked = false; drag.mom = 0; dragged = false;
     drag.sx = drag.lx = e.clientX; drag.sy = e.clientY;
-    try { stage.setPointerCapture(e.pointerId); } catch {}
   });
+  // Links and images are natively draggable; that would steal the gesture.
+  stage.addEventListener('dragstart', (e) => e.preventDefault());
+  stage.addEventListener('click', (e) => {
+    if (dragged) { e.preventDefault(); e.stopPropagation(); dragged = false; }
+  }, true);
   stage.addEventListener('pointermove', (e) => {
     if (drag.on) {
       const totX = e.clientX - drag.sx, totY = e.clientY - drag.sy;
       if (!drag.locked && (Math.abs(totX) > 6 || Math.abs(totY) > 6)) {
         drag.locked = true;
         if (Math.abs(totY) > Math.abs(totX)) { drag.on = false; return; } // vertical -> let the page scroll
+        dragged = true;
+        try { stage.setPointerCapture(e.pointerId); } catch {}
       }
       if (drag.on) {
         const d = -(e.clientX - drag.lx) * degPerPx();

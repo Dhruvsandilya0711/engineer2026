@@ -20,6 +20,7 @@ import {
 import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/js/site.js';
 import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
+import { initGalleryLightbox } from '/js/gallery-lightbox.js';
 import { initPreloader } from '/js/preloader.js';
 import { initPageTransition } from '/js/page-transition.js';
 import { mountNeuralMark } from '/js/neural-mark.js';
@@ -251,6 +252,7 @@ function initFanDeck() {
   registerEventsRail();
   initFanDeck();
   initGalleryFlow();
+  initGalleryLightbox();
   initDots(ctx);
 
   await entryDone;

@@ -1205,14 +1205,17 @@
 
 /* --- the curved moving field (a 3D cylinder of frames) ------------------ */
 .gflow__stage {
-  /* Larger cylinder = a wider, gentler sweep. Radius and card size scale
-     together so the 14 frames still fill the arc (no awkward gaps) while the
-     whole carousel reads bigger and flatter. */
-  --radius: 1000px;
-  --card-w: 300px;
-  --card-h: 380px;
+  /* The stills are wide cinema frames (~2.4:1), so the cards are landscape.
+     The radius is DERIVED from the frame count (--n, set by the template) so
+     the frames always close the loop edge to edge with a fixed gap — add or
+     remove a photo and the cylinder resizes itself. gallery-flow.js computes
+     the same number in JS; keep the two formulas in step. */
+  --card-w: 420px;
+  --card-h: 250px;
+  --gap: 26px;
+  --radius: calc(var(--n, 14) * (var(--card-w) + var(--gap)) / 6.2832);
   position: relative;
-  height: clamp(360px, 60vh, 520px);
+  height: clamp(320px, 50vh, 440px);
   overflow: hidden;
   perspective: 1500px;
   perspective-origin: calc(50% + var(--pox, 0) * 1%) calc(50% + var(--poy, 0) * 1%);
@@ -1289,7 +1292,12 @@
   backdrop-filter: blur(7px);
 }
 
-.gflow__link { position: relative; display: block; width: 100%; height: 100%; text-decoration: none; }
+.gflow__link {
+  position: relative; display: block; width: 100%; height: 100%; text-decoration: none;
+  cursor: zoom-in;
+  -webkit-user-drag: none; user-select: none;  /* a drag turns the ring, never lifts the image */
+}
+.gflow__link:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: -2px; }
 .gflow__card img {
   width: 100%; height: 100%;
   object-fit: cover; display: block;
@@ -1344,6 +1352,80 @@
 .gflow__lines span:nth-child(2) { top: 54%; background: linear-gradient(90deg, transparent, rgba(var(--rgb-indigo),0.45), transparent); }
 .gflow__lines span:nth-child(3) { top: 74%; }
 
+/* --- lightbox -----------------------------------------------------------
+   Native <dialog> in the top layer, so it sits above the custom cursor too;
+   the native pointer comes back while it is open. */
+.glb {
+  width: 100vw; height: 100dvh; max-width: none; max-height: none;
+  margin: 0; padding: clamp(12px, 3vw, 40px);
+  border: 0; background: transparent; color: var(--color-paper);
+  overflow: hidden;
+}
+.glb[open] { display: flex; align-items: center; justify-content: center; }
+.glb::backdrop { background: rgba(3, 4, 9, 0.9); backdrop-filter: blur(6px); }
+html.cx-active .glb, html.cx-active .glb * { cursor: auto; }
+html.cx-active .glb button { cursor: pointer; }
+
+.glb__fig {
+  margin: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  max-width: min(1600px, 100%);
+  touch-action: pan-y;
+}
+.glb__media { position: relative; line-height: 0; }
+.glb__img {
+  display: block;
+  width: auto; height: auto;
+  max-width: 100%;
+  /* leave room for the caption below and the buttons around */
+  max-height: calc(100dvh - clamp(12px, 3vw, 40px) * 2 - 110px);
+  border: 1px solid var(--hairline-strong);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+  background: #05060c;
+  user-select: none; -webkit-user-drag: none;
+}
+.glb__cap { width: 100%; max-width: 70ch; text-align: center; }
+.glb__meta {
+  margin: 0 0 6px;
+  font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(var(--rgb-cyan), 0.9);
+}
+.glb__alt { margin: 0; font-size: 0.95rem; }
+.glb__credit {
+  margin: 6px 0 0;
+  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em;
+  color: var(--paper-dim);
+}
+
+.glb__btn {
+  position: absolute; z-index: 2;
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(6, 8, 14, 0.7);
+  border: 1px solid var(--hairline-strong);
+  color: var(--color-strong);
+  cursor: pointer;
+  transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard);
+}
+.glb__btn:hover, .glb__btn:focus-visible { color: var(--color-cyan); border-color: var(--color-cyan); outline: none; }
+.glb__close { top: clamp(10px, 2.5vw, 26px); right: clamp(10px, 2.5vw, 26px); }
+.glb__close::before, .glb__close::after {
+  content: ""; position: absolute; width: 16px; height: 2px; background: currentColor;
+}
+.glb__close::before { transform: rotate(45deg); }
+.glb__close::after { transform: rotate(-45deg); }
+.glb__prev, .glb__next { top: 50%; transform: translateY(-50%); height: 68px; }
+.glb__prev { left: clamp(6px, 2vw, 26px); }
+.glb__next { right: clamp(6px, 2vw, 26px); }
+.glb__prev::before, .glb__next::before {
+  content: ""; width: 11px; height: 11px;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+}
+.glb__prev::before { transform: rotate(135deg); margin-left: 4px; }
+.glb__next::before { transform: rotate(-45deg); margin-right: 4px; }
+/* Phones swipe the photo; the arrows would sit on top of it. */
+@media (max-width: 767px) { .glb__prev, .glb__next { display: none; } }
+
 .gflow__tag {
   position: absolute; right: clamp(14px, 4vw, 40px); bottom: 12px; z-index: 2;
   font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.24em;
@@ -1356,11 +1438,11 @@
    stream, never a vertical grid. */
 @media (max-width: 767px) {
   .gflow__stage {
-    --radius: 360px;
-    --card-w: 138px;
-    --card-h: 198px;
+    --card-w: 214px;
+    --card-h: 128px;
+    --gap: 14px;
     perspective: 760px;
-    height: clamp(260px, 44vh, 340px);
+    height: clamp(200px, 32vh, 250px);
   }
 }
 

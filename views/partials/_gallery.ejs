@@ -1,35 +1,40 @@
 <!-- ==========================================================================
      GALLERY — COGNITRIXX neural archive. A continuous CURVED image stream: the
-     event photographs sit on a large 3D cylinder and flow horizontally through
-     the neural field. Because a cylinder is a closed loop, the flow is
-     seamless with no duplicated DOM and only the real images ever loaded.
+     photographs sit on a large 3D cylinder and flow horizontally through the
+     neural field. Because a cylinder is a closed loop, the flow is seamless
+     with no duplicated DOM and only the real images ever loaded.
 
      Motion is driven by the global Lenis velocity with inertia
      (public/js/gallery-flow.js); depth is CSS 3D (perspective + rotateY), so no
      extra WebGL canvas — the neural spine already flows behind. Distinct in
      personality from the deliberate Events rail: this one never stops turning.
 
-     Built from the real event images (server derives `gallery`).
+     Stills from past ENGINEER aftermovies — data/gallery.json. The ring loads
+     the 640px thumbs; a frame opens full size in the lightbox below
+     (public/js/gallery-lightbox.js). Each link points at the full image, so
+     with no JS — or no <dialog> — a tap still shows the photo.
      ========================================================================== -->
 <% const N = gallery.length || 1; %>
-<section id="gallery" class="gflow" data-js="gallery" aria-label="ENGINEER '26 gallery">
+<section id="gallery" class="gflow" data-js="gallery" aria-label="ENGINEER gallery">
   <div class="gflow__head">
     <div data-reveal>
       <h2 class="font-display font-bold text-3xl sm:text-5xl">Gallery</h2>
     </div>
   </div>
 
-  <div class="gflow__stage" data-js="gflow-stage">
+  <div class="gflow__stage" data-js="gflow-stage" style="--n: <%= N %>;">
     <div class="gflow__lines" aria-hidden="true"><span></span><span></span><span></span></div>
 
     <div class="gflow__ring" data-js="gflow-ring">
       <% gallery.forEach(function (g, i) { %>
       <figure class="gflow__card" style="--rot: <%= (i * 360 / N).toFixed(4) %>deg;" data-a="<%= (i * 360 / N).toFixed(4) %>">
-        <a href="/events/<%= g.slug %>" class="gflow__link">
-          <img src="<%= g.image %>" alt="<%= g.caption %>" loading="lazy" decoding="async">
+        <a href="<%= g.src %>" class="gflow__link" data-js="gflow-open" data-i="<%= i %>"
+           data-full="<%= g.src %>" data-w="<%= g.width %>" data-h="<%= g.height %>"
+           data-cat="<%= g.category %>" data-credit="<%= g.credit %>">
+          <img src="<%= g.thumb %>" alt="<%= g.alt %>" width="640" height="<%= Math.round(640 * g.height / g.width) %>" loading="lazy" decoding="async" draggable="false">
           <span class="gflow__grain" aria-hidden="true"></span>
-          <span class="gflow__frame">FRAME <%= String(i + 1).padStart(2, '0') %></span>
-          <span class="gflow__cap"><%= g.caption %></span>
+          <span class="gflow__frame" aria-hidden="true"><%= String(i + 1).padStart(2, '0') %> · <%= g.category %></span>
+          <span class="gflow__cap" aria-hidden="true"><%= g.alt %></span>
         </a>
       </figure>
       <% }); %>
@@ -41,4 +46,22 @@
     <button type="button" class="gflow__nav gflow__nav--prev" data-js="gflow-prev" aria-label="Scroll gallery left"></button>
     <button type="button" class="gflow__nav gflow__nav--next" data-js="gflow-next" aria-label="Scroll gallery right"></button>
   </div>
+
+  <!-- Lightbox. A native modal <dialog>: focus trap, Esc and an inert page
+       come from the browser, not from script. -->
+  <dialog class="glb" data-js="glb" aria-label="Gallery photo">
+    <figure class="glb__fig">
+      <div class="glb__media">
+        <img class="glb__img" data-js="glb-img" alt="">
+      </div>
+      <figcaption class="glb__cap">
+        <p class="glb__meta"><span data-js="glb-count"></span> · <span data-js="glb-cat"></span></p>
+        <p class="glb__alt" data-js="glb-alt"></p>
+        <p class="glb__credit">Still from: <span data-js="glb-credit"></span></p>
+      </figcaption>
+    </figure>
+    <button type="button" class="glb__btn glb__close" data-js="glb-close" aria-label="Close photo"></button>
+    <button type="button" class="glb__btn glb__prev" data-js="glb-prev" aria-label="Previous photo"></button>
+    <button type="button" class="glb__btn glb__next" data-js="glb-next" aria-label="Next photo"></button>
+  </dialog>
 </section>
