@@ -90,9 +90,9 @@ const events = {
   categories,
 };
 
-// Gallery is DERIVED from the real event photographs already in the repo —
-// no separate gallery dataset is invented.
-const gallery = allEvents.filter(e => e.image).map(e => ({ image: e.image, caption: e.name, slug: e.slug }));
+// Gallery: stills from past ENGINEER aftermovies, supplied by the organising
+// team. See data/gallery.json for provenance and credits.
+const gallery = JSON.parse(readFileSync(path.join(__dirname, 'data/gallery.json'), 'utf-8')).images;
 
 const schedule = JSON.parse(readFileSync(path.join(__dirname, 'data/schedule.json'), 'utf-8'));
 const teamData = JSON.parse(readFileSync(path.join(__dirname, 'data/team.json'), 'utf-8'));
