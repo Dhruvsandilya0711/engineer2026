@@ -11,17 +11,19 @@
 // copy), so the network is the campus, rearranged — nothing drawn from
 // nothing.
 //
-// Each dot is a spring toward where the scroll wants it, so the handover
-// eases rather than snapping.
-//
-// A Higgsfield scrub video can replace the photo layer: see _rewire.ejs.
+// THE HIGGS FIELD. The pointer is a field that gives dots mass. Each dot is
+// a spring toward where the scroll wants it; inside the field its mass goes
+// up, so it answers the spring sluggishly, swells, warms to amber and is
+// drawn toward the pointer. Leave, and the mass drains away and it snaps
+// back. Scroll while holding the field over the picture and you can watch
+// heavy dots lag behind the rest.
 //
 // 2D canvas only — the page already runs WebGL fields; this must stay cheap
 // on a phone. Paused off screen; one static frame per scroll under reduced
 // motion.
 // ==========================================================================
 
-import { REDUCED_MOTION } from '/js/scroll.js';
+import { REDUCED_MOTION, IS_TOUCH } from '/js/scroll.js';
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const smooth = (a, b, v) => { const t = clamp01((v - a) / (b - a)); return t * t * (3 - 2 * t); };
@@ -29,6 +31,7 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 // Site palette (tokens in input.css).
 const LANE_RGB = [[31, 182, 173], [59, 111, 212], [111, 154, 224], [192, 106, 137], [31, 182, 173], [59, 111, 212]];
+const AMBER = [240, 163, 67];
 
 export function mountRewire() {
   const section = document.querySelector('[data-js="rewire"]');
@@ -48,6 +51,7 @@ export function mountRewire() {
   let laneOrder = [];          // per lane: particle indices sorted by target x
   let p = 0, lastP = -1;
   let raf = 0, running = false, onScreen = false;
+  const field = { x: 0, y: 0, on: false, r: small ? 90 : 140, s: 0 };
 
   function resize() {
     const r = canvas.getBoundingClientRect();
@@ -55,6 +59,7 @@ export function mountRewire() {
     W = Math.max(1, r.width); H = Math.max(1, r.height);
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    field.r = Math.min(W, H) * (small ? 0.2 : 0.15);
   }
 
   // "cover" placement of the photo in the canvas, in canvas px.
@@ -102,7 +107,7 @@ export function mountRewire() {
         u, v, c: [d[i], d[i + 1], d[i + 2]],
         lane: 0, tu: 0,
         // live state (canvas px), spring-driven
-        x: 0, y: 0, vx: 0, vy: 0,
+        x: 0, y: 0, vx: 0, vy: 0, m: 1, glow: 0,
         stagger: 0, jitter: rnd() * Math.PI * 2,
       });
     }
@@ -143,10 +148,27 @@ export function mountRewire() {
 
   function step(dt, now) {
     const c = cover();
+    const f = field;
+    f.s += ((f.on ? 1 : 0) - f.s) * 0.12;
     for (const q of pts) {
       const t = target(q, c);
       q.tm = t.m;
-      const kspring = 0.09, damp = 0.78;
+      // Mass from the Higgs field: up to ~9x inside it, draining outside.
+      let want = 1;
+      if (f.s > 0.01) {
+        const dx = q.x - f.x, dy = q.y - f.y;
+        const d2 = dx * dx + dy * dy, r2 = f.r * f.r;
+        if (d2 < r2) {
+          const k = 1 - Math.sqrt(d2) / f.r;
+          want = 1 + 8 * k * f.s;
+          // Heavy dots are drawn in toward the field's centre.
+          q.vx -= dx * 0.0025 * k * f.s * dt;
+          q.vy -= dy * 0.0025 * k * f.s * dt;
+        }
+      }
+      q.m += (want - q.m) * 0.15;
+      q.glow = (q.m - 1) / 8;
+      const kspring = 0.09 / q.m, damp = Math.pow(0.78, 1 / Math.sqrt(q.m));
       q.vx = (q.vx + (t.x - q.x) * kspring * dt) * damp;
       q.vy = (q.vy + (t.y - q.y) * kspring * dt) * damp;
       q.x += q.vx * dt; q.y += q.vy * dt;
@@ -213,9 +235,20 @@ export function mountRewire() {
       const lift = 0.55 * (1 - m);
       let r = pr + (255 - pr) * lift, g = pg + (255 - pg) * lift, b = pb + (255 - pb) * lift;
       r += (lr - r) * m; g += (lg - g) * m; b += (lb - b) * m;
-      const size = small ? 1.6 : 1.9;
-      ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${dotA * 0.8})`;
+      if (q.glow > 0.02) { r += (AMBER[0] - r) * q.glow; g += (AMBER[1] - g) * q.glow; b += (AMBER[2] - b) * q.glow; }
+      const size = (small ? 1.6 : 1.9) + q.glow * 3.2;
+      ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${dotA * (0.75 + 0.25 * q.glow)})`;
       ctx.fillRect(q.x - size / 2, q.y - size / 2, size, size);
+    }
+
+    // The field itself: a faint ring where the pointer is.
+    if (field.s > 0.02) {
+      ctx.strokeStyle = `rgba(240,163,67,${0.35 * field.s})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(field.x, field.y, field.r, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = `rgba(240,163,67,${0.7 * field.s})`;
+      ctx.font = '10px "Space Mono", monospace';
+      ctx.fillText('HIGGS FIELD · m ↑', field.x + field.r * 0.72, field.y - field.r * 0.72);
     }
   }
 
@@ -268,6 +301,15 @@ export function mountRewire() {
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (onScreen) start(); });
   window.addEventListener('resize', () => { resize(); placeAll(true); if (REDUCED_MOTION) still(); }, { passive: true });
   if (REDUCED_MOTION) window.addEventListener('scroll', still, { passive: true });
+
+  // ---- the field follows the pointer / finger ---------------------------
+  const at = (e) => { const r = canvas.getBoundingClientRect(); field.x = e.clientX - r.left; field.y = e.clientY - r.top; };
+  const sticky = section.querySelector('.rewire__sticky');
+  sticky.addEventListener('pointermove', (e) => { at(e); if (!IS_TOUCH || e.buttons) field.on = true; });
+  sticky.addEventListener('pointerdown', (e) => { at(e); field.on = true; });
+  sticky.addEventListener('pointerleave', () => { field.on = false; });
+  sticky.addEventListener('pointerup', () => { if (IS_TOUCH) field.on = false; });
+  sticky.addEventListener('pointercancel', () => { field.on = false; });
 
   return { destroy() { stop(); } };
 }
