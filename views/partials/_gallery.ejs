@@ -32,6 +32,12 @@
            data-full="<%= g.src %>" data-w="<%= g.width %>" data-h="<%= g.height %>"
            data-cat="<%= g.category %>" data-credit="<%= g.credit %>">
           <img src="<%= g.thumb %>" alt="<%= g.alt %>" width="640" height="<%= Math.round(640 * g.height / g.width) %>" loading="lazy" decoding="async" draggable="false">
+          <% if (g.loop) { %>
+          <%# Optional motion loop (e.g. a Higgsfield animation of this still).
+              Never preloaded; gallery-flow.js plays it only while the frame is
+              at the front of the ring. %>
+          <video class="gflow__loop" data-src="<%= g.loop %>" muted loop playsinline preload="none" aria-hidden="true"></video>
+          <% } %>
           <span class="gflow__grain" aria-hidden="true"></span>
           <span class="gflow__frame" aria-hidden="true"><%= String(i + 1).padStart(2, '0') %> · <%= g.category %></span>
           <span class="gflow__cap" aria-hidden="true"><%= g.alt %></span>

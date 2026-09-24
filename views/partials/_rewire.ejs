@@ -1,0 +1,41 @@
+<!-- ==========================================================================
+     REWIRE REALITY — the theme, done to a real photograph.
+
+     A pinned, scroll-scrubbed canvas (public/js/rewire.js). It opens on the
+     real NITK campus aerial from the ENGINEER '22 aftermovie; as you scroll,
+     the photograph gives way to its own edges, sampled as dots, and those
+     dots are rewired onto ordered signal traces with pulses running along
+     them. Nothing is invented: every dot is a point the camera actually saw.
+
+     The HIGGS FIELD: your pointer (or finger) is a field that gives the dots
+     mass. Inside it they get heavy — they slow, swell and gather toward you —
+     and they drop it again the moment you leave.
+
+     A Higgsfield-generated scrub video can replace the photo layer: put it at
+     public/video/rewire.mp4 and the server passes it in (index.js).
+     ========================================================================== -->
+<section id="rewire" class="rewire" data-js="rewire" aria-label="Rewire reality">
+  <div class="rewire__sticky">
+    <canvas class="rewire__canvas" data-js="rewire-canvas" aria-hidden="true"></canvas>
+    <img class="rewire__src" data-js="rewire-src" src="/images/gallery/full/campus-aerial.webp" alt="" width="1920" height="1020" loading="lazy" decoding="async">
+    <% if (rewireVideo) { %>
+    <video class="rewire__src" data-js="rewire-video" src="<%= rewireVideo %>" muted playsinline preload="auto" aria-hidden="true"></video>
+    <% } %>
+
+    <div class="rewire__copy">
+      <p class="rewire__kicker">Cognitrixx / Rewire reality</p>
+      <div class="rewire__lines">
+        <h2 class="rewire__line is-active" data-rw-line="0">Reality, as shot.</h2>
+        <h2 class="rewire__line" data-rw-line="1">Every edge is a <span class="text-cyan">signal.</span></h2>
+        <h2 class="rewire__line" data-rw-line="2"><span class="text-gradient-impossible">Rewire it.</span></h2>
+      </div>
+      <p class="rewire__hint">
+        <span class="when-hover">Move through the field — it gives the signal mass.</span>
+        <span class="when-touch">Touch the field — it gives the signal mass.</span>
+      </p>
+    </div>
+
+    <p class="rewire__credit">NITK Surathkal from the air · still from the Engineer 2022 aftermovie</p>
+    <div class="rewire__meter" aria-hidden="true"><span data-js="rewire-meter"></span></div>
+  </div>
+</section>

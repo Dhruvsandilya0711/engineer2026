@@ -5178,3 +5178,67 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
   padding-bottom: 0.75rem;
   margin-bottom: 2rem;
 }
+
+/* ==================================================================
+   REWIRE REALITY — a real photograph rewired by scroll, with a Higgs
+   field under the pointer. Canvas + logic: public/js/rewire.js.
+   ================================================================== */
+.rewire { position: relative; height: 320vh; }
+.rewire__sticky {
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  touch-action: pan-y;               /* the page keeps vertical scrolling */
+}
+.rewire__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.rewire__src { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.rewire__copy {
+  position: absolute; left: 0; right: 0; top: clamp(4.5rem, 11vh, 7rem);
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem); text-align: center; pointer-events: none; z-index: 2;
+}
+.rewire__kicker {
+  font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--color-cyan); margin: 0 0 0.8rem;
+}
+.rewire__lines { position: relative; font-size: clamp(1.7rem, 6vw, 3.6rem); height: 2.3em; }
+.rewire__line {
+  position: absolute; inset: 0; margin: 0;
+  font-family: var(--font-display); font-weight: 700; font-size: 1em; line-height: 1.1;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 420ms var(--ease-standard), transform 520ms var(--ease-standard);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
+}
+.rewire__line.is-active { opacity: 1; transform: none; }
+.rewire__hint {
+  margin: 0.9rem 0 0; font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--color-amber, #f0a343);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+.rewire__credit {
+  position: absolute; left: 4.5rem; right: 4.5rem; bottom: 1.1rem; margin: 0; text-align: center; z-index: 2;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.08em; color: var(--paper-dim);
+  pointer-events: none;
+}
+.rewire__meter {
+  position: absolute; left: 50%; bottom: 3.6rem; width: min(260px, 50vw); height: 2px; transform: translateX(-50%);
+  background: var(--hairline); z-index: 2;
+}
+.rewire__meter span {
+  display: block; height: 100%; background: linear-gradient(90deg, var(--color-cyan), var(--color-indigo));
+  transform-origin: left; transform: scaleX(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rewire { height: auto; }
+  .rewire__sticky { position: relative; height: 80vh; }
+  .rewire__line { transition: none; }
+}
+
+/* Living gallery: the front frame breathes; a motion loop, when a frame has
+   one, fades in over its still once it is actually playing. */
+@keyframes gflow-push { from { transform: scale(1); } to { transform: scale(1.1); } }
+.gflow__card.is-front img { animation: gflow-push 7s ease-in-out infinite alternate; filter: none; }
+.gflow__loop {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 500ms var(--ease-standard); pointer-events: none;
+}
+.gflow__loop.is-playing { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .gflow__card.is-front img { animation: none; } }

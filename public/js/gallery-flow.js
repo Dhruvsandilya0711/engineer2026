@@ -54,13 +54,39 @@ export function initGalleryFlow() {
   const drag = { on: false, locked: false, sx: 0, sy: 0, lx: 0, mom: 0 };
   let raf = null, running = false;
 
+  // The frame nearest the front is "live": its still slowly pushes in (CSS)
+  // and, if it has a motion loop, that loop plays — one video at a time, and
+  // only this one is ever fetched.
+  let frontIdx = -1;
+  function setFront(i) {
+    if (i === frontIdx) return;
+    const prev = cards[frontIdx];
+    if (prev) {
+      prev.classList.remove('is-front');
+      const v = prev.querySelector('.gflow__loop');
+      if (v) { v.pause(); v.classList.remove('is-playing'); }
+    }
+    frontIdx = i;
+    const card = cards[i];
+    if (!card) return;
+    card.classList.add('is-front');
+    const v = card.querySelector('.gflow__loop');
+    if (v && !REDUCED_MOTION) {
+      if (!v.src) v.src = v.dataset.src;
+      v.play().then(() => v.classList.add('is-playing')).catch(() => {});
+    }
+  }
+
   function paint() {
     ring.style.transform =
       `translateZ(${-radius}px) rotateY(${angle.toFixed(3)}deg) rotateX(${tilt.x.toFixed(2)}deg)`;
+    let best = -1, bestFront = -2;
     for (let i = 0; i < cards.length; i++) {
       const front = Math.cos((baseAngle[i] + angle) * RAD);
       cards[i].style.opacity = Math.max(0.14, Math.min(1, 0.34 + front * 0.78)).toFixed(3);
+      if (front > bestFront) { bestFront = front; best = i; }
     }
+    setFront(best);
   }
   paint(); // initial render (covers the reduced-motion static case)
 

@@ -21,6 +21,7 @@ import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone,
 import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initGalleryLightbox } from '/js/gallery-lightbox.js';
+import { mountRewire } from '/js/rewire.js';
 import { initPreloader } from '/js/preloader.js';
 import { initPageTransition } from '/js/page-transition.js';
 import { mountNeuralMark } from '/js/neural-mark.js';
@@ -253,6 +254,7 @@ function initFanDeck() {
   initFanDeck();
   initGalleryFlow();
   initGalleryLightbox();
+  mountRewire();
   initDots(ctx);
 
   await entryDone;
