@@ -5180,8 +5180,8 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
 }
 
 /* ==================================================================
-   REWIRE REALITY — a real photograph rewired by scroll, with a Higgs
-   field under the pointer. Canvas + logic: public/js/rewire.js.
+   REWIRE REALITY — a real photograph rewired by scroll.
+   Canvas + logic: public/js/rewire.js.
    ================================================================== */
 .rewire { position: relative; height: 320vh; }
 .rewire__sticky {
@@ -5207,11 +5207,6 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
 }
 .rewire__line.is-active { opacity: 1; transform: none; }
-.rewire__hint {
-  margin: 0.9rem 0 0; font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--color-amber, #f0a343);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.9);
-}
 .rewire__credit {
   position: absolute; left: 4.5rem; right: 4.5rem; bottom: 1.1rem; margin: 0; text-align: center; z-index: 2;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
