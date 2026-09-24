@@ -3,7 +3,7 @@ import 'dotenv/config';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import path from 'path'
-import {readFileSync, existsSync} from 'fs';
+import {readFileSync} from 'fs';
 import {networkInterfaces} from 'os';
 import crypto from 'crypto';
 import {
@@ -93,11 +93,6 @@ const events = {
 // Gallery: stills from past ENGINEER aftermovies, supplied by the organising
 // team. See data/gallery.json for provenance and credits.
 const gallery = JSON.parse(readFileSync(path.join(__dirname, 'data/gallery.json'), 'utf-8')).images;
-
-// Rewire section: an optional scrub video (e.g. made in Higgsfield) replaces
-// the photo layer when it exists. Checked once at boot — restart to pick up a
-// newly added file.
-const rewireVideo = existsSync(path.join(__dirname, 'public/video/rewire.mp4')) ? '/video/rewire.mp4' : null;
 
 const schedule = JSON.parse(readFileSync(path.join(__dirname, 'data/schedule.json'), 'utf-8'));
 const teamData = JSON.parse(readFileSync(path.join(__dirname, 'data/team.json'), 'utf-8'));
@@ -203,7 +198,6 @@ app.get('/', (req, res) => {
     events,
     scheduleDays: resolvedDays(),
     gallery,
-    rewireVideo,
     regState,
     teamTotal: groups.reduce((n, g) => n + g.members.length, 0),
     teamGroupCount: groups.length,
