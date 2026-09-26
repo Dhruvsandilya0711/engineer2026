@@ -1,0 +1,661 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO from the event's own real data only — no invented copy. -->
+  <title>Wright Flight — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="Aeromodelling, from the bench to the air. Bring the aircraft you built and fly it — control, endurance and handling all count once it leaves your hands.">
+  <link rel="canonical" href="https://dhruvsandilya0711.github.io/engineer2026/events/wright-flight">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Wright Flight — ENGINEER '26">
+  <meta property="og:description" content="Aeromodelling, from the bench to the air. Bring the aircraft you built and fly it — control, endurance and handling all count once it leaves your hands.">
+  <meta property="og:url" content="https://dhruvsandilya0711.github.io/engineer2026/events/wright-flight">
+  <meta property="og:image" content="https://dhruvsandilya0711.github.io/engineer2026/images/wright_flight.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/engineer2026/images/engineer26-mark.png">
+  <link href="/engineer2026/src/output.css" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="ambient" data-priority="2" data-density="0.9" data-tone="nebula" data-signals="6" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <!-- ==========================================================================
+     Primary navigation — fixed top bar, transparent over the hero, resolves
+     to a solid charcoal bar after ~80px of scroll (public/js/main.js).
+     Links out to the real routes: /events /schedule /team /sponsors /register
+     all exist and are served from index.js. "About" is the one in-page anchor.
+     ========================================================================== -->
+<header id="site-nav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300" data-js="nav">
+  <div class="rail h-20 flex items-center justify-between">
+    <a href="/engineer2026/" class="flex items-center gap-3 shrink-0" aria-label="ENGINEER '26 home">
+      <img class="nav-mark" src="/engineer2026/images/engineer26-mark.png" alt="ENGINEER '26 logo" width="399" height="389">
+      <span class="font-display font-semibold text-sm tracking-wide hidden sm:inline">ENGINEER&nbsp;'26</span>
+    </a>
+
+    
+    <nav aria-label="Site" class="hidden lg:block">
+      <!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+
+<ul class="baybar baybar--bar">
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-1);">
+    <a href="/engineer2026/"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">01</span>
+        <span class="bay__label">Home</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-2);">
+    <a href="/engineer2026/about"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">02</span>
+        <span class="bay__label">About</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
+    <a href="/engineer2026/events"
+       class="bay is-active"
+       
+       aria-current="page">
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">03</span>
+        <span class="bay__label">Events</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
+    <a href="/engineer2026/schedule"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">04</span>
+        <span class="bay__label">Schedule</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-5);">
+    <a href="/engineer2026/team"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">05</span>
+        <span class="bay__label">Team</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-6);">
+    <a href="/engineer2026/sponsors"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">06</span>
+        <span class="bay__label">Sponsors</span>
+      </span>
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <a href="/engineer2026/register" class="btn-register hidden sm:inline-flex" data-js="magnetic">Register</a>
+      <button type="button" class="hud-menu hud-menu--bar lg:hidden"
+        data-js="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+        <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<div class="scroll-progress" data-js="scroll-progress" aria-hidden="true"></div>
+
+
+<!-- ==========================================================================
+     SCROLL RAIL — the word SCROLL set vertically down the left edge, with a
+     bead running the track beside it.
+
+     Included from _nav.ejs so every page gets it. Near the bottom it flips to
+     TOP and runs the bead upward; it is a real <button> throughout, so the
+     affordance is also the control (public/js/site.js → initScrollRail).
+     ========================================================================== -->
+<button type="button" class="scroll-rail" data-js="scroll-rail" aria-label="Scroll down">
+  <span class="scroll-rail__word" data-js="scroll-rail-word">Scroll</span>
+  <span class="scroll-rail__track" aria-hidden="true"><span class="scroll-rail__bead"></span></span>
+</button>
+
+
+
+<!-- ==========================================================================
+     PAGE TRANSITION — the ENGINEER '26 mark, shattered into blades that wind
+     into a spiral and unwind back out. Modelled on the Cognizance loader the
+     brief references: dark blades pinwheeling around a bright core, each with
+     a lit leading edge, over a radial bloom.
+
+     Every blade is the SAME logo image clipped to its own angular wedge, so
+     the mark is genuinely torn apart rather than approximated — assembled, the
+     wedges reconstruct the logo exactly. `mix-blend-mode: screen` drops the
+     artwork's black field, so the white line art floats on the veil.
+
+     Driven by public/js/page-transition.js. Included from _nav.ejs, so it is
+     present on every page.
+     ========================================================================== -->
+
+
+<script nonce="OorhM555eFCloqeOCc4Y0g==">
+  (function () {
+    // Tells the stylesheet script is running, so motion-only hidden poses
+    // (headline masks, the hero entrance) apply. With JS off they never do.
+    document.documentElement.classList.add('js');
+    var KEY = 'engi26.pt', arriving = false;
+    try {
+      arriving = sessionStorage.getItem(KEY) === '1';
+      if (arriving) sessionStorage.removeItem(KEY);
+    } catch (e) {}
+    if (!arriving) return;
+
+    var doc = document;
+    doc.documentElement.classList.add('pt-arriving');
+    // Tell page-transition.js the arrival is already handled here.
+    window.__engiPtArrival = true;
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function done(veil) {
+      veil.classList.remove('is-active', 'is-revealing');
+      doc.documentElement.classList.remove('pt-arriving');
+    }
+    function play() {
+      var veil = doc.getElementById('page-transition');
+      if (!veil) { doc.documentElement.classList.remove('pt-arriving'); return; }
+      veil.classList.add('is-active');
+      if (reduced) { setTimeout(function () { done(veil); }, 120); return; }
+      requestAnimationFrame(function () {
+        veil.classList.add('is-revealing');
+        setTimeout(function () { done(veil); }, 380);
+      });
+    }
+    if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', play);
+    else play();
+  })();
+</script>
+<div id="page-transition" class="pt" data-js="page-transition" aria-hidden="true">
+  <span class="pt__bloom"></span>
+  <div class="pt__mark">
+    
+    <span class="pt__blade" style="--i: 0; --n: 12; clip-path: polygon(50% 50%, 50.00% -46.00%, 62.53% -45.18%, 74.85% -42.73%, 86.74% -38.69%, 98.00% -33.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 1; --n: 12; clip-path: polygon(50% 50%, 98.00% -33.14%, 108.44% -26.16%, 117.88% -17.88%, 126.16% -8.44%, 133.14% 2.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 2; --n: 12; clip-path: polygon(50% 50%, 133.14% 2.00%, 138.69% 13.26%, 142.73% 25.15%, 145.18% 37.47%, 146.00% 50.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 3; --n: 12; clip-path: polygon(50% 50%, 146.00% 50.00%, 145.18% 62.53%, 142.73% 74.85%, 138.69% 86.74%, 133.14% 98.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 4; --n: 12; clip-path: polygon(50% 50%, 133.14% 98.00%, 126.16% 108.44%, 117.88% 117.88%, 108.44% 126.16%, 98.00% 133.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 5; --n: 12; clip-path: polygon(50% 50%, 98.00% 133.14%, 86.74% 138.69%, 74.85% 142.73%, 62.53% 145.18%, 50.00% 146.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 6; --n: 12; clip-path: polygon(50% 50%, 50.00% 146.00%, 37.47% 145.18%, 25.15% 142.73%, 13.26% 138.69%, 2.00% 133.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 7; --n: 12; clip-path: polygon(50% 50%, 2.00% 133.14%, -8.44% 126.16%, -17.88% 117.88%, -26.16% 108.44%, -33.14% 98.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 8; --n: 12; clip-path: polygon(50% 50%, -33.14% 98.00%, -38.69% 86.74%, -42.73% 74.85%, -45.18% 62.53%, -46.00% 50.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 9; --n: 12; clip-path: polygon(50% 50%, -46.00% 50.00%, -45.18% 37.47%, -42.73% 25.15%, -38.69% 13.26%, -33.14% 2.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 10; --n: 12; clip-path: polygon(50% 50%, -33.14% 2.00%, -26.16% -8.44%, -17.88% -17.88%, -8.44% -26.16%, 2.00% -33.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 11; --n: 12; clip-path: polygon(50% 50%, 2.00% -33.14%, 13.26% -38.69%, 25.15% -42.73%, 37.47% -45.18%, 50.00% -46.00%);"></span>
+    
+  </div>
+</div>
+
+
+
+<div class="audio-dock" data-js="audio-dock">
+  <div class="gain" data-js="gain" role="slider" tabindex="0"
+       aria-label="Music volume" aria-orientation="vertical"
+       aria-valuemin="0" aria-valuemax="7" aria-valuenow="7" aria-valuetext="100%">
+    <span class="gain__rail" aria-hidden="true"></span>
+    <span class="gain__readout" data-js="gain-readout" aria-hidden="true">100</span>
+    <span class="gain__stack" aria-hidden="true">
+      
+      <span class="gain__seg" data-seg="7"></span><span class="gain__seg" data-seg="6"></span><span class="gain__seg" data-seg="5"></span><span class="gain__seg" data-seg="4"></span><span class="gain__seg" data-seg="3"></span><span class="gain__seg" data-seg="2"></span><span class="gain__seg" data-seg="1"></span>
+    </span>
+  </div>
+  <button type="button" class="audio-toggle" data-js="audio-toggle"
+          aria-pressed="false" aria-label="Unmute background music" title="Unmute music"></button>
+</div>
+
+<!-- mobile drawer -->
+<div id="mobile-drawer" class="drawer fixed inset-0 z-50 bg-void translate-x-full lg:hidden" data-js="drawer">
+  
+  <img class="drawer__mark" src="/engineer2026/images/engineer26-mark.png" alt="" aria-hidden="true" width="399" height="389" loading="lazy" decoding="async">
+  <div class="flex items-center justify-between px-6 h-20 relative">
+    <span class="font-display font-semibold text-sm tracking-wide">ENGINEER&nbsp;'26</span>
+    <button type="button" class="hud-menu is-close"
+      data-js="nav-close" aria-label="Close menu">
+      <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+  
+  <nav aria-label="Mobile" class="flex flex-col px-6 mt-6">
+    <!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+
+<ul class="baybar baybar--drawer">
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-1);">
+    <a href="/engineer2026/"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">01</span>
+        <span class="bay__label">Home</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-2);">
+    <a href="/engineer2026/about"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">02</span>
+        <span class="bay__label">About</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
+    <a href="/engineer2026/events"
+       class="bay is-active"
+       data-js="drawer-link"
+       aria-current="page">
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">03</span>
+        <span class="bay__label">Events</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
+    <a href="/engineer2026/schedule"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">04</span>
+        <span class="bay__label">Schedule</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-5);">
+    <a href="/engineer2026/team"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">05</span>
+        <span class="bay__label">Team</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-6);">
+    <a href="/engineer2026/sponsors"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">06</span>
+        <span class="bay__label">Sponsors</span>
+      </span>
+    </a>
+  </li>
+  
+</ul>
+
+    <a href="/engineer2026/register" class="btn-register drawer__cta mt-8" data-js="drawer-link">Register</a>
+  </nav>
+  <p class="drawer__foot" aria-hidden="true">Cognitrixx &mdash; Rewire Reality</p>
+</div>
+
+
+  <main class="relative z-10 pt-28 pb-20">
+
+    <!-- ============ HERO ============
+         Uses the event's own image. No Penrose logo here — that mark belongs
+         to ENGINEER itself, not to individual events. -->
+    <header class="mb-14">
+      <div class="rail">
+        <a href="/engineer2026/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
+          ← Event index
+        </a>
+
+        <!-- framed hero, in the homepage deck-card idiom -->
+        <div class="hud-frame page-hero" style="--accent: var(--bay-3)">
+          <div class="hud-frame__inner" data-spotlight style="--spot: var(--bay-3)">
+            <span class="page-hero__scan" aria-hidden="true"></span>
+            <div class="deck-card__head">
+              <span class="deck-card__num">08</span>
+              <span class="deck-card__name">Aeromodelling</span>
+              <span class="deck-card__slab" aria-hidden="true"></span>
+              <span class="deck-card__line" aria-hidden="true"></span>
+              <a class="deck-card__go" href="/engineer2026/events">Index &rarr;</a>
+            </div>
+            <div class="hud-frame__body">
+              <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+                <div>
+                  <h1 class="page-hero__title mb-6" data-split>Wright Flight</h1>
+                  <span class="status-pill status-pill--live">Registration open</span>
+                </div>
+
+                
+                <figure class="detail-figure relative overflow-hidden" data-img-reveal>
+                  
+                  <img src="/engineer2026/images/wright_flight.png" alt="Wright Flight at ENGINEER '26"
+                    class="w-full aspect-[4/3] object-cover">
+                  
+                  <!-- subtle Cognitrixx corner annotation -->
+                  <figcaption class="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-2 bg-void/80 font-mono text-[0.6rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">
+                    <span>wright-flight</span>
+                    <span class="text-cyan">ENGI/26</span>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ META STRIP ============
+         Always rendered so the structure is legible, but unknown values say
+         TBA rather than inventing a date, time or venue. -->
+    <section class="mb-16" aria-label="Event details">
+      <div class="rail">
+        <dl class="detail-meta">
+          <div>
+            <dt>Date</dt>
+            <dd class="is-tba">TBA</dd>
+          </div>
+          <div>
+            <dt>Time</dt>
+            <dd class="is-tba">TBA</dd>
+          </div>
+          <div>
+            <dt>Venue</dt>
+            <dd class="is-tba">TBA</dd>
+          </div>
+          <div>
+            <dt>Category</dt>
+            <dd>Aeromodelling</dd>
+          </div>
+          
+          
+        </dl>
+      </div>
+    </section>
+
+    <div>
+      <div class="rail grid lg:grid-cols-[1fr_320px] gap-12 items-start">
+
+        <!-- ============ CONTENT ============
+             Every block below renders only when that event actually has the
+             data. Nothing is fabricated and no empty section is shown. -->
+        <div>
+          
+          <section class="mb-12">
+            <h2 class="font-display font-semibold text-xl mb-4">About</h2>
+            <p class="text-[var(--paper-dim)] leading-relaxed">Aeromodelling, from the bench to the air. Bring the aircraft you built and fly it — control, endurance and handling all count once it leaves your hands.</p>
+          </section>
+          
+
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+          
+          
+          <section class="border border-dashed border-[var(--hairline-strong)] p-8">
+            <p class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-amber mb-3">Awaiting brief</p>
+            <h2 class="font-display font-semibold text-xl mb-3">Full details publish here</h2>
+            <p class="text-sm text-[var(--paper-dim)] max-w-lg">
+              The rules, timeline, prizes, eligibility and team requirements for Wright Flight go live
+              once the organising team confirms them. What you see above is what the event is; none of the
+              specifics are settled yet.
+            </p>
+          </section>
+          
+        </div>
+
+        <!-- ============ REGISTRATION PANEL ============ -->
+        <aside class="lg:sticky lg:top-28">
+          <div class="border border-[var(--hairline)] bg-charcoal p-6">
+            <p class="font-mono text-[0.65rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-4">Registration</p>
+            <p class="font-display font-medium text-lg mb-2">Registration open</p>
+
+            
+              <p class="text-sm text-[var(--paper-dim)] mb-6">
+                Registration for ENGINEER '26 is open. Sign up for Wright Flight and the
+                organising team will contact you with details as they are confirmed.
+              </p>
+              <a href="/engineer2026/register?event=Wright%20Flight"
+                 class="btn btn-primary w-full justify-center" data-js="magnetic">Register for this event</a>
+            
+
+            
+          </div>
+
+          
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============ RELATED ============ -->
+    
+    <section class="mt-16">
+      <div class="rail">
+        <h2 class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-6">
+          More in Aeromodelling
+        </h2>
+        <ol class="event-index">
+          
+          <li class="event-row">
+            <a href="/engineer2026/events/drone-race" class="event-row__link" data-img="/engineer2026/images/drone_race.png">
+              <span class="event-row__idx">01</span>
+              <span class="event-row__thumb md:hidden">
+                <img src="/engineer2026/images/drone_race.png" alt="" loading="lazy" aria-hidden="true">
+                
+              </span>
+              <span class="event-row__name">FPV Drone Racing</span>
+              <span class="event-row__cat">Aeromodelling</span>
+              <span class="status-pill status-pill--live">Registration open</span>
+              <span class="event-row__go" aria-hidden="true">→</span>
+            </a>
+          </li>
+          
+        </ol>
+      </div>
+    </section>
+    
+  </main>
+
+  <!-- ==========================================================================
+     FOOTER — minimal, premium.
+
+     The NITK crest sits in the identity block: the brochure carries it on
+     every page, and it is the institutional signal a sponsor or a parent
+     looks for. Extracted from the brochure cover to white-on-transparent
+     line art (public/images/nitk-crest.png) so it reads on the dark ground.
+
+     Contact details are the ones published in the ENGINEER '26 sponsorship
+     brochure (p15). Only the ORG addresses are listed here — the marketing
+     heads' personal mobiles live on /sponsors, where someone actually
+     negotiating a tier will look, rather than on every page of the site.
+     ========================================================================== -->
+<footer id="footer" class="site-footer relative z-10 border-t border-[var(--hairline)] pt-16 pb-0">
+  <div class="rail grid sm:grid-cols-3 gap-12">
+    <div>
+      <div class="flex items-center gap-3 mb-4">
+        <img src="/engineer2026/images/engineer26-mark.png" alt="" aria-hidden="true"
+             class="w-8 h-8 object-contain" width="399" height="389" loading="lazy" decoding="async">
+        <span class="font-display font-semibold text-sm">ENGINEER&nbsp;'26</span>
+      </div>
+      <p class="font-mono text-xs tracking-[0.15em] uppercase text-[var(--paper-faint)]">Cognitrixx — Rewire Reality</p>
+
+      <div class="flex items-center gap-3 mt-5">
+        <img src="/engineer2026/images/nitk-crest.png" alt="" aria-hidden="true"
+             class="footer-crest" width="256" height="245" loading="lazy" decoding="async">
+        <p class="font-mono text-[0.62rem] leading-[1.5] tracking-[0.08em] uppercase text-[var(--paper-faint)]">
+          National Institute of<br>Technology Karnataka<br>
+          <span class="text-[var(--paper-dim)]">Surathkal</span>
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Navigate</p>
+      <nav class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)]">
+        <a href="/engineer2026/events" class="tap-target footer-link">Events</a>
+        <a href="/engineer2026/schedule" class="tap-target footer-link">Schedule</a>
+        <a href="/engineer2026/team" class="tap-target footer-link">Team</a>
+        
+        <a href="/engineer2026/sponsors" class="tap-target footer-link">Sponsors</a>
+        <a href="/engineer2026/about" class="tap-target footer-link">About</a>
+        <a href="/engineer2026/" class="tap-target footer-link">Home</a>
+      </nav>
+    </div>
+
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Contact</p>
+      <ul class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
+        <li><a href="mailto:engineerconvenor@nitk.edu.in" class="tap-target footer-link">engineerconvenor@nitk.edu.in</a></li>
+      </ul>
+      <p class="font-mono text-[0.62rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mt-6 mb-3">Follow</p>
+      <ul class="flex flex-wrap gap-x-4 gap-y-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
+        <li><a href="https://www.instagram.com/engineernitk" class="tap-target footer-link" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/engineer-nitk" class="tap-target footer-link" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.facebook.com/EngineerNITK" class="tap-target footer-link" rel="noopener">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <div class="footer-legal rail mt-14 pt-6 border-t border-[var(--hairline)]">
+    <p class="font-mono text-[0.65rem] text-[var(--paper-faint)]">
+      © 2026 ENGINEER, NITK Surathkal.
+    </p>
+    <nav class="footer-legal__links" aria-label="Policies">
+      <a href="/engineer2026/terms" class="tap-target">Terms</a>
+      <a href="/engineer2026/privacy" class="tap-target">Privacy</a>
+      <a href="/engineer2026/refunds" class="tap-target">Refunds</a>
+    </nav>
+  </div>
+
+  
+  <div class="footer-mega" aria-hidden="true">
+    <div class="footer-mega__mark" data-spotlight></div>
+  </div>
+</footer>
+
+
+  <script type="module" src="/engineer2026/js/motion.js"></script>
+  <script type="module" src="/engineer2026/js/page.js"></script>
+</body>
+</html>
