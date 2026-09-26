@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/engineer26-mark.png">
   <link href="/src/output.css" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
@@ -78,7 +79,7 @@
         <% results.forEach(function(evt, i){ const st = regState(evt); %>
         <li class="event-row" data-js="event-item"
             data-name="<%= evt.name.toLowerCase() %>" data-cat="<%= evt.category %>">
-          <a href="/events/<%= evt.slug %>" class="event-row__link" data-img="<%= evt.image %>">
+          <a href="/events/<%= evt.slug %>" class="event-row__link" data-preview="<%= evt.image || '' %>">
             <span class="event-row__idx"><%= String(i + 1).padStart(2, '0') %></span>
 
             <span class="event-row__thumb md:hidden">
@@ -133,14 +134,9 @@
     </div>
   </main>
 
-  <!-- Desktop hover preview. Decorative only (aria-hidden): it never carries
-       information that isn't already in the row. -->
-  <div class="event-preview" data-js="event-preview" aria-hidden="true">
-    <img alt="" data-js="event-preview-img">
-  </div>
-
   <%- include('partials/_footer') %>
 
+  <script type="module" src="/js/motion.js"></script>
   <script type="module" src="/js/page.js"></script>
   <script type="module" src="/js/events-filter.js"></script>
 </body>

@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+  <link rel="icon" type="image/png" href="/images/engineer26-mark.png">
   <link href="/src/output.css" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
@@ -34,12 +35,14 @@
         section) -> GALLERY -> FINAL REWIRE -> FOOTER.
         The NITK section is gone: the campus is already named in the hero
         kicker, the About card and the footer. %>
-    <%- include('partials/_hero', { festDates }) %>
+    <%- include('partials/_hero', { festDates, fest, events }) %>
     <%- include('partials/_cognitrixx-intro', { festDates }) %>
     <%- include('partials/_transformation') %>
     <%- include('partials/_seam') %>
     <%- include('partials/_deck', { fest, events, tracks, proshows }) %>
-    <%- include('partials/_seam') %>
+    <%# The programme as a kinetic band of real event names — the one place
+        on the homepage the events themselves are on show. %>
+    <%- include('partials/_event-marquee', { events }) %>
     <%- include('partials/_signal-range') %>
     <%- include('partials/_seam') %>
     <%- include('partials/_gallery', { gallery }) %>
@@ -49,6 +52,7 @@
 
   <%- include('partials/_footer') %>
 
+  <script type="module" src="/js/motion.js"></script>
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>

@@ -79,14 +79,18 @@ export function initDots(ctx) {
       end: 'bottom top',     // element's bottom leaves the viewport top
       scrub: true,
       onUpdate(self) {
-        // 0 at the centre of travel, 1 at both edges.
-        const edge = Math.abs(self.progress * 2 - 1);
+        // 0 through the lower half of travel, rising to 1 at the top edge.
+        // Exit only: content arriving from below is the headline masks' and
+        // the reveals' job, and dotting it as well made text that was still
+        // being read look broken. It still dissolves as it leaves upward and
+        // rebuilds on the way back down.
+        const edge = Math.max(0, self.progress * 2 - 1);
         // Hold solid through the middle band, then ramp to fully dispersed.
         const p = Math.min(1, Math.max(0, (edge - SOLID_BAND) / (1 - SOLID_BAND)));
         setDots(el, p, ownsMask);
       },
       onLeave: () => setDots(el, 1, ownsMask),
-      onLeaveBack: () => setDots(el, 1, ownsMask),
+      onLeaveBack: () => setDots(el, 0, ownsMask),
     });
   });
 

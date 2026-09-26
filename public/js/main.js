@@ -35,9 +35,23 @@ function registerNarrative(ctx, subject) {
   if (!section || !stages?.length) return;
 
 
+  const count = section.querySelector('[data-js="tf-count"]');
+  const fill = section.querySelector('[data-js="tf-fill"]');
+  let current = -1;
+
+  // Stages behind the active one are marked is-past, so the outgoing label
+  // leaves UPWARD while the incoming one rises from below — the labels read
+  // as a sequence travelling one way, not a crossfade in place.
   const setStage = (i) => {
-    stages.forEach(s => s.classList.toggle('is-active', Number(s.dataset.stage) === i));
+    if (i === current) return;
+    current = i;
+    stages.forEach(s => {
+      const n = Number(s.dataset.stage);
+      s.classList.toggle('is-active', n === i);
+      s.classList.toggle('is-past', n < i);
+    });
     dots?.forEach(d => d.classList.toggle('is-active', Number(d.dataset.dot) === i));
+    if (count) count.textContent = String(i + 1).padStart(2, '0');
   };
 
   if (!ctx) {
@@ -45,6 +59,7 @@ function registerNarrative(ctx, subject) {
     section.style.height = 'auto';
     section.querySelector('.sticky')?.classList.remove('sticky', 'h-screen');
     setStage(0);
+    if (fill) fill.style.transform = 'scaleX(1)';
     subject?.setProgress(1);
     return;
   }
@@ -57,6 +72,7 @@ function registerNarrative(ctx, subject) {
     onUpdate(self) {
       subject?.setProgress(self.progress);
       setStage(Math.min(5, Math.floor(self.progress * 6)));
+      if (fill) fill.style.transform = `scaleX(${self.progress.toFixed(4)})`;
     },
   });
 }

@@ -8,8 +8,8 @@
     reads as a transition rather than an edge. Only static text chapters take
     it — the pinned transformation, the game canvas and the gallery run their
     own scroll machinery and must not be scrubbed underneath it. %>
-<section id="cognitrixx" class="relative intro-y px-6" data-seam>
-  <div class="max-w-4xl mx-auto text-center" data-seam-inner>
+<section id="cognitrixx" class="manifesto relative px-6" data-seam>
+  <div class="max-w-5xl mx-auto text-center" data-seam-inner>
     <!-- Chapter dateline — the fest's "when + where" as an instrument
          stamp above the thesis. Cyan periods echo the HUD chrome and the
          motto in the hero above; the hairlines either side frame it as a
@@ -21,11 +21,16 @@
       <span class="intro-when__w">Join Us</span>
       <span class="intro-when__rule" aria-hidden="true"></span>
     </p>
-    <h2 class="font-display font-bold text-4xl sm:text-6xl leading-[1.05] mt-6" data-reveal>
+    <%# The thesis, at poster size. Each line rises out of its own mask
+        (data-split → public/js/motion.js). %>
+    <h2 class="chapter-title mt-8" data-split>
       Reality isn't fixed.<br>
       <span class="text-gradient-impossible">It's engineered.</span>
     </h2>
-    <p class="font-body text-base sm:text-lg text-[var(--paper-dim)] max-w-xl mx-auto mt-8" data-reveal>
+    <%# The explanation is "rewired" as it is read: every word starts dim and
+        lights in reading order as the paragraph scrolls through the screen.
+        With motion off it is simply lit. %>
+    <p class="manifesto__lede" data-highlight>
       Cognitrixx is the network of intelligence behind ENGINEER '26 — the idea that a system smart enough,
       and engineered well enough, can rewire what's possible.
     </p>

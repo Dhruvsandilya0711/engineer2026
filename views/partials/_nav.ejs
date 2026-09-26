@@ -22,13 +22,17 @@
 
     <div class="flex items-center gap-4">
       <a href="/register" class="btn-register hidden sm:inline-flex" data-js="magnetic">Register</a>
-      <button type="button" class="lg:hidden w-11 h-11 flex items-center justify-center border border-[var(--hairline-strong)]"
+      <button type="button" class="hud-menu hud-menu--bar lg:hidden"
         data-js="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
-        <span class="font-mono text-sm">☰</span>
+        <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
       </button>
     </div>
   </div>
 </header>
+
+<%# How far through the page you are: a spectrum hairline across the very top
+    of the viewport, above the header, on every page (public/js/motion.js). %>
+<div class="scroll-progress" data-js="scroll-progress" aria-hidden="true"></div>
 
 <%# Vertical SCROLL / TOP rail — chrome, so it rides along with the nav
     and appears on every page. %>
@@ -64,12 +68,15 @@
 </div>
 
 <!-- mobile drawer -->
-<div id="mobile-drawer" class="fixed inset-0 z-50 bg-void translate-x-full transition-transform duration-300 lg:hidden" data-js="drawer">
-  <div class="flex items-center justify-between px-6 h-20">
-    <span class="font-display font-semibold text-sm">ENGINEER&nbsp;'26</span>
-    <button type="button" class="w-11 h-11 flex items-center justify-center border border-[var(--hairline-strong)]"
+<div id="mobile-drawer" class="drawer fixed inset-0 z-50 bg-void translate-x-full lg:hidden" data-js="drawer">
+  <%# The Penrose mark stands behind the menu as a large, dim watermark — the
+      same artwork, untouched, just set back. %>
+  <img class="drawer__mark" src="/images/engineer26-mark.png" alt="" aria-hidden="true" width="399" height="389" loading="lazy" decoding="async">
+  <div class="flex items-center justify-between px-6 h-20 relative">
+    <span class="font-display font-semibold text-sm tracking-wide">ENGINEER&nbsp;'26</span>
+    <button type="button" class="hud-menu is-close"
       data-js="nav-close" aria-label="Close menu">
-      <span class="font-mono text-sm">✕</span>
+      <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
   </div>
   <%# The phone gets the SAME bay segments as the desktop bar, stacked — one
@@ -80,6 +87,7 @@
           drawerLinks: true,
           activeNav: (typeof activeNav !== 'undefined' ? activeNav : '')
         }) %>
-    <a href="/register" class="btn-register mt-8" data-js="drawer-link">Register</a>
+    <a href="/register" class="btn-register drawer__cta mt-8" data-js="drawer-link">Register</a>
   </nav>
+  <p class="drawer__foot" aria-hidden="true">Cognitrixx &mdash; Rewire Reality</p>
 </div>

@@ -14,8 +14,28 @@
     long as the bundle takes. This parser-blocking gate runs before the overlay
     element even exists, so the skip costs nothing. Same for JS-off, where
     nothing would ever remove the overlay. %>
+<%# It also starts the hero's entrance (html.hero-go, see _hero.ejs). With no
+    boot sequence to wait for, the entrance plays as soon as the hero paints —
+    or just after the page-transition veil lifts, when that is what is
+    covering it. On a first visit preloader.js sets hero-go itself, at the
+    moment its shutter opens. The last timer is a failsafe: whatever happens
+    to the bundle, the hero is never left waiting in its hidden pose. %>
 <script nonce="<%= nonce %>">
-  try { if (sessionStorage.getItem('engi26.loaded') === '1') document.documentElement.classList.add('pl-skip'); } catch (e) {}
+  (function () {
+    var html = document.documentElement, skip = false, arriving = false;
+    html.classList.add('js');
+    try {
+      skip = sessionStorage.getItem('engi26.loaded') === '1';
+      arriving = sessionStorage.getItem('engi26.pt') === '1';
+    } catch (e) {}
+    var go = function () {
+      if (html.classList.contains('hero-go')) return;
+      window.__heroGoAt = performance.now();
+      html.classList.add('hero-go');
+    };
+    if (skip) { html.classList.add('pl-skip'); setTimeout(go, arriving ? 320 : 60); }
+    setTimeout(go, 7000);
+  })();
 </script>
 <noscript><style>#preloader { display: none; }</style></noscript>
 <div id="preloader" role="status" aria-live="polite" aria-label="Loading ENGINEER '26">

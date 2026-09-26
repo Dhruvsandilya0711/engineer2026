@@ -11,7 +11,7 @@
      heads' personal mobiles live on /sponsors, where someone actually
      negotiating a tier will look, rather than on every page of the site.
      ========================================================================== -->
-<footer id="footer" class="relative z-10 border-t border-[var(--hairline)] py-12">
+<footer id="footer" class="site-footer relative z-10 border-t border-[var(--hairline)] pt-16 pb-0">
   <div class="rail grid sm:grid-cols-3 gap-12">
     <div>
       <div class="flex items-center gap-3 mb-4">
@@ -34,28 +34,28 @@
     <div>
       <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Navigate</p>
       <nav class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)]">
-        <a href="/events" class="tap-target hover:text-paper transition-colors">Events</a>
-        <a href="/schedule" class="tap-target hover:text-paper transition-colors">Schedule</a>
-        <a href="/team" class="tap-target hover:text-paper transition-colors">Team</a>
+        <a href="/events" class="tap-target footer-link">Events</a>
+        <a href="/schedule" class="tap-target footer-link">Schedule</a>
+        <a href="/team" class="tap-target footer-link">Team</a>
         <%# Sponsors is a real route and the end of the partnership funnel —
             it was reachable from the top bar but not from here, which is
             exactly where someone scrolled to the bottom goes looking. %>
-        <a href="/sponsors" class="tap-target hover:text-paper transition-colors">Sponsors</a>
-        <a href="/about" class="tap-target hover:text-paper transition-colors">About</a>
-        <a href="/" class="tap-target hover:text-paper transition-colors">Home</a>
+        <a href="/sponsors" class="tap-target footer-link">Sponsors</a>
+        <a href="/about" class="tap-target footer-link">About</a>
+        <a href="/" class="tap-target footer-link">Home</a>
       </nav>
     </div>
 
     <div>
       <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Contact</p>
       <ul class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
-        <li><a href="mailto:engineerconvenor@nitk.edu.in" class="tap-target hover:text-paper transition-colors">engineerconvenor@nitk.edu.in</a></li>
+        <li><a href="mailto:engineerconvenor@nitk.edu.in" class="tap-target footer-link">engineerconvenor@nitk.edu.in</a></li>
       </ul>
       <p class="font-mono text-[0.62rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mt-6 mb-3">Follow</p>
       <ul class="flex flex-wrap gap-x-4 gap-y-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
-        <li><a href="https://www.instagram.com/engineernitk" class="tap-target hover:text-paper transition-colors" rel="noopener">Instagram</a></li>
-        <li><a href="https://www.linkedin.com/company/engineer-nitk" class="tap-target hover:text-paper transition-colors" rel="noopener">LinkedIn</a></li>
-        <li><a href="https://www.facebook.com/EngineerNITK" class="tap-target hover:text-paper transition-colors" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/engineernitk" class="tap-target footer-link" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/engineer-nitk" class="tap-target footer-link" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.facebook.com/EngineerNITK" class="tap-target footer-link" rel="noopener">Facebook</a></li>
       </ul>
     </div>
   </div>
@@ -72,5 +72,12 @@
       <a href="/privacy" class="tap-target">Privacy</a>
       <a href="/refunds" class="tap-target">Refunds</a>
     </nav>
+  </div>
+
+  <%# The sign-off: the official logotype set edge to edge, hollow, and lit
+      from wherever the cursor is. It is a CSS mask of the same PNG the hero
+      uses, so the lettering is the brand's own and never retyped. %>
+  <div class="footer-mega" aria-hidden="true">
+    <div class="footer-mega__mark" data-spotlight></div>
   </div>
 </footer>

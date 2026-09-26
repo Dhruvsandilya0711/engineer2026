@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/engineer26-mark.png">
   <link href="/src/output.css" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
@@ -159,7 +160,7 @@
           <% if (errors.userEvent) { %><p id="err-userEvent" class="form-error"><%= errors.userEvent %></p><% } %>
         </div>
 
-        <button type="submit" class="btn btn-primary justify-center mt-2">Complete registration</button>
+        <button type="submit" class="btn-register btn-register--xl mt-2" data-js="magnetic">Complete registration</button>
 
         <%# This promised "No payment is taken and no pass is issued"
              unconditionally. The moment an event can carry a fee that became a
@@ -181,6 +182,7 @@
   </main>
 
   <%- include('partials/_footer') %>
+  <script type="module" src="/js/motion.js"></script>
   <script type="module" src="/js/page.js"></script>
   <%# The heading follows the picker. Server-rendered above for the ?event=
       case and for JS-off visitors; this only keeps it in step afterwards. %>

@@ -85,41 +85,6 @@ if (form) {
   form.addEventListener('submit', (e) => { e.preventDefault(); apply(); });
 }
 
-// --- Desktop hover preview (decorative; adds no new information) ----------
-const preview = document.querySelector('[data-js="event-preview"]');
-const previewImg = document.querySelector('[data-js="event-preview-img"]');
-const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-if (preview && previewImg && canHover && !reduced) {
-  let raf = null, tx = 0, ty = 0, cx = 0, cy = 0;
-
-  const render = () => {
-    cx += (tx - cx) * 0.16;
-    cy += (ty - cy) * 0.16;
-    preview.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    raf = requestAnimationFrame(render);
-  };
-
-  document.querySelectorAll('.event-row__link').forEach((link) => {
-    link.addEventListener('pointerenter', () => {
-      // Some events have no photograph yet. Without this the panel would
-      // stay open still showing the LAST event's image, captioning one
-      // event with another's picture.
-      const src = link.dataset.img;
-      if (!src) { preview.classList.remove('is-visible'); return; }
-      if (previewImg.getAttribute('src') !== src) previewImg.src = src;
-      preview.classList.add('is-visible');
-      if (!raf) raf = requestAnimationFrame(render);
-    });
-    link.addEventListener('pointerleave', () => {
-      preview.classList.remove('is-visible');
-      if (raf) { cancelAnimationFrame(raf); raf = null; }
-    });
-  });
-
-  window.addEventListener('pointermove', (e) => {
-    tx = e.clientX + 28;
-    ty = e.clientY - 110;
-  }, { passive: true });
-}
+// The desktop hover preview that used to live here is now the shared
+// [data-preview] plate in public/js/motion.js — the same one the homepage's
+// event band uses — so the rows carry data-preview instead of data-img.

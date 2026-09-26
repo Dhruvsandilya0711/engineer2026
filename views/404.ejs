@@ -7,10 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/engineer26-mark.png">
   <link href="/src/output.css" rel="stylesheet">
 </head>
-<body class="bg-void text-paper min-h-screen flex items-center justify-center px-6">
-  <main class="text-center max-w-md">
+<body class="err-page bg-void text-paper min-h-screen flex items-center justify-center px-6 overflow-hidden">
+  <%# Same horizon the homepage stands on, and the status code set huge and
+      hollow behind the message, flickering like a signal that dropped. %>
+  <div class="err-bg" aria-hidden="true">
+    <div class="hero-horizon"><div class="hero-horizon__plane"></div><span class="hero-horizon__glow"></span><span class="hero-horizon__line"></span></div>
+  </div>
+  <main class="relative text-center max-w-md">
+    <p class="err-code" aria-hidden="true"><%= (typeof status !== "undefined" && status >= 500) ? status : 404 %></p>
     <%# This page answers BOTH 404 and 500 — the error handler renders it
         rather than shipping a second near-identical template. It was telling
         people their request was "not found" when the server had actually
@@ -19,7 +26,7 @@
     <p class="font-mono text-xs tracking-[0.16em] uppercase text-cyan mb-4">
       <%= serverError ? "500 / server error" : "404 / page not found" %>
     </p>
-    <h1 class="font-display font-bold text-4xl sm:text-5xl text-gradient-impossible mb-4">Signal lost</h1>
+    <h1 class="font-display font-bold text-5xl sm:text-6xl text-gradient-impossible mb-4">Signal lost</h1>
     <p class="text-[var(--paper-dim)] mb-8">
       <% if (serverError) { %>
         Something broke on our side. Nothing you did caused it, and nothing you
@@ -28,7 +35,7 @@
         <code class="font-mono text-sm"><%= url %></code> isn't a page on ENGINEER '26.
       <% } %>
     </p>
-    <a href="/" class="btn btn-primary">Return home</a>
+    <a href="/" class="btn-register btn-register--xl">Return home</a>
   </main>
 </body>
 </html>

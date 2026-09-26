@@ -29,6 +29,16 @@
       <!-- ============ NARRATION ============ -->
       <div class="tf-copy">
         <div class="tf-mid">
+        <%# Where you are in the six stages: a large index and a meter that
+            fills as the section scrolls. Driven by registerNarrative() in
+            public/js/main.js from the same ScrollTrigger as the labels. The
+            stage label itself is the readable content, so this is hidden
+            from assistive tech rather than read out on every step. %>
+        <div class="tf-meter" aria-hidden="true">
+          <span class="tf-meter__n" data-js="tf-count">01</span>
+          <span class="tf-meter__of">/ 06</span>
+          <span class="tf-meter__bar"><span class="tf-meter__fill" data-js="tf-fill"></span></span>
+        </div>
         <div class="tf-stages" data-js="transform-stages">
           <span class="transform-stage is-active font-display font-bold" data-stage="0">Neural Network</span>
           <span class="transform-stage font-display font-bold" data-stage="1">Information</span>

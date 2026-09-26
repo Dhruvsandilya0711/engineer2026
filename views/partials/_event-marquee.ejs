@@ -1,0 +1,52 @@
+<!-- ==========================================================================
+     EVENT BAND — the programme as two kinetic rows of names.
+
+     Every name is a real event from data/events.json and links to its own
+     page; nothing is invented and nothing is listed that the /events index
+     does not also carry. The rows travel in opposite directions and follow
+     the scroll (speeding up, turning with it) — public/js/motion.js →
+     initMarquees. On a fine pointer, hovering a name floats that event's
+     photograph beside the cursor (initPreviews) and slows the row so it can
+     be clicked.
+
+     Each row renders its set twice so the loop is seamless. The second copy
+     is aria-hidden and out of the tab order: a screen reader or a keyboard
+     meets each event exactly once.
+     ========================================================================== -->
+<%
+  const half = Math.ceil(events.all.length / 2);
+  const rows = [events.all.slice(0, half), events.all.slice(half)];
+%>
+<section class="evband" aria-labelledby="evband-title">
+  <div class="evband__head rail">
+    <h2 id="evband-title" class="chapter-title chapter-title--md" data-split>
+      <%= events.all.length %> events.<br>
+      <span class="text-gradient-impossible">Three days.</span>
+    </h2>
+    <a href="/events" class="evband__all" data-js="magnetic">
+      <span>Browse the index</span>
+      <span class="evband__all-arrow" aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <% rows.forEach(function (row, r) { %>
+  <div class="mq evband__row<%= r ? ' evband__row--alt' : '' %>" data-marquee data-marquee-hover>
+    <div class="mq__track" style="--mq-dur: <%= r ? 74 : 66 %>s">
+      <% for (let copy = 0; copy < 2; copy++) { %>
+      <ul class="mq__group"<%- copy ? ' aria-hidden="true"' : '' %>>
+        <% row.forEach(function (e) { %>
+        <li class="evband__cell">
+          <a class="evband__item" href="/events/<%= e.slug %>"
+             data-preview="<%= e.image || '' %>"<%- copy ? ' tabindex="-1"' : '' %>>
+            <span class="evband__cat"><%= e.category %></span>
+            <span class="evband__name"><%= e.name %></span>
+          </a>
+        </li>
+        <li class="evband__sep" aria-hidden="true"></li>
+        <% }); %>
+      </ul>
+      <% } %>
+    </div>
+  </div>
+  <% }); %>
+</section>

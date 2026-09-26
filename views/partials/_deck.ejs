@@ -32,12 +32,12 @@
 %>
 <section class="fandeck" id="deck" data-js="fandeck" aria-label="Explore ENGINEER '26">
 
-  <div class="fandeck__intro" data-reveal>
-    <h2 class="font-display font-bold text-3xl sm:text-5xl">Inside the fest</h2>
+  <div class="fandeck__intro">
+    <h2 class="chapter-title chapter-title--md" data-split>Inside the fest</h2>
     <%# A phone cannot hover, so it is told what it CAN do. CSS-only rather
          than a JS swap: the wrong line must never be the one that shows while
          a script is still loading. %>
-    <p class="fandeck__lead">
+    <p class="fandeck__lead" data-reveal>
       <span class="when-hover">Hover a card &middot; click to open</span>
       <span class="when-touch">Tap a card to open it</span>
     </p>
@@ -52,7 +52,10 @@
       <button class="fancard__hit" type="button" data-js="fancard-open"
               aria-expanded="false" aria-label="Open <%= c.name %>"></button>
 
-      <div class="fancard__plate">
+      <div class="fancard__plate" data-spotlight style="--spot: <%= c.accent %>;">
+        <%# The card's number, set huge and hollow behind the face — the
+            deck reads as five numbered plates from across the room. %>
+        <span class="fancard__index" aria-hidden="true"><%= c.num %></span>
         <div class="deck-card__head">
           <span class="deck-card__num"><%= c.num %></span>
           <span class="deck-card__name"><%= c.name %></span>

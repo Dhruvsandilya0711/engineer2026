@@ -19,6 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/engineer26-mark.png">
   <link href="/src/output.css" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
@@ -43,8 +44,9 @@
         </a>
 
         <!-- framed hero, in the homepage deck-card idiom -->
-        <div class="hud-frame" style="--accent: var(--bay-3)">
-          <div class="hud-frame__inner">
+        <div class="hud-frame page-hero" style="--accent: var(--bay-3)">
+          <div class="hud-frame__inner" data-spotlight style="--spot: var(--bay-3)">
+            <span class="page-hero__scan" aria-hidden="true"></span>
             <div class="deck-card__head">
               <span class="deck-card__num"><%= String(index).padStart(2, '0') %></span>
               <span class="deck-card__name"><%= event.category %></span>
@@ -55,9 +57,7 @@
             <div class="hud-frame__body">
               <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
                 <div>
-                  <h1 class="font-display font-extrabold text-[clamp(2.2rem,5.5vw,3.8rem)] leading-[0.98] mb-6">
-                    <%= event.name %>
-                  </h1>
+                  <h1 class="page-hero__title mb-6" data-split><%= event.name %></h1>
                   <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
                 </div>
 
@@ -65,7 +65,7 @@
                     Pitch entries came from the brochure without one. An empty
                     src would make the browser re-request this page as an image,
                     so the plate stands in until real art exists. %>
-                <figure class="relative border border-[var(--hairline)] overflow-hidden">
+                <figure class="detail-figure relative overflow-hidden" data-img-reveal>
                   <% if (event.image) { %>
                   <img src="<%= event.image %>" alt="<%= event.name %> at ENGINEER '26"
                     class="w-full aspect-[4/3] object-cover">
@@ -323,6 +323,7 @@
 
   <%- include('partials/_footer') %>
 
+  <script type="module" src="/js/motion.js"></script>
   <script type="module" src="/js/page.js"></script>
 </body>
 </html>

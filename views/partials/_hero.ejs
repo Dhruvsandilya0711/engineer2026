@@ -1,30 +1,44 @@
 <!-- ==========================================================================
-     HERO — design handoff (design_handoff_engineer26_homepage).
+     HERO — design handoff (design_handoff_engineer26_homepage), revamped.
 
      Order per spec: HUD status bar → nav bays → kicker → sliced wordmark →
-     status strip → COGNITRIXX → tagline → rule → date → CTA → countdown.
+     COGNITRIXX → tagline → CTA → countdown → motto, now closed by a ticker.
 
      The handoff is authored at desktop (108px wordmark, six bays in one row,
      40px gutters). This site is mobile-forward, so the composition is rebuilt
      for the phone and grows into the desktop layout: bays go 2 → 3 → 6 across,
      the wordmark is clamped, and the HUD chrome sheds its side labels where
      there is no room for them.
+
+     ENTRANCE. Every [data-hero] element plays one choreographed sequence,
+     ordered by its --hd delay (ms). It is CSS, keyed to html.hero-go, so it
+     never waits on the JS bundle: the preloader sets hero-go as its shutter
+     opens, and the inline gate in _entry.ejs sets it straight away on a
+     repeat visit. public/js/motion.js only adds what needs a pointer or a
+     scroll position (parallax, the label decode, the scroll-away).
      ========================================================================== -->
-<section id="top" class="relative min-h-[100svh] flex flex-col overflow-hidden">
+<section id="top" class="relative min-h-[100svh] flex flex-col overflow-hidden" data-hero-root>
 
   <div data-field="hero" data-priority="1" data-density="0.66" data-tone="nebula"
        data-signals="5" data-spread="12" data-rotate="0.015"
        class="absolute inset-0 z-0" aria-hidden="true"></div>
 
-  <!-- twin radial glows + square grid, both inert -->
+  <!-- Atmosphere, back to front: the two water glows, a slow aurora, the
+       square grid, and the horizon floor the whole composition stands on. -->
   <div class="hero-glows absolute inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
+  <div class="hero-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="hero-grid absolute inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
+  <div class="hero-horizon" data-hero style="--hd: 0" aria-hidden="true">
+    <div class="hero-horizon__plane"></div>
+    <span class="hero-horizon__glow"></span>
+    <span class="hero-horizon__line"></span>
+  </div>
 
   <!-- ============ HUD CHROME ============
        One row, evenly spaced: the mark, the nav bar, then the status readout.
        Nothing is stacked on anything and the gap is shared, so the three read
        as one instrument panel rather than three crowded fragments. -->
-  <div class="hud-navrow relative z-10 pt-7 sm:pt-9">
+  <div class="hud-navrow relative z-10 pt-7 sm:pt-9" data-hero style="--hd: 150">
     <a href="/" class="flex items-center shrink-0" aria-label="ENGINEER '26 home">
       <img class="hud-mark" src="/images/engineer26-mark.png" alt="ENGINEER '26" width="399" height="389">
     </a>
@@ -39,12 +53,12 @@
           on at widths where it squeezes the bays. %>
       <span class="hud-label hud-session">Session 26.0</span>
       <span class="hud-rule hud-session w-[34px]"></span>
-      <span class="hud-label" style="color: var(--color-cyan);">Online</span>
+      <span class="hud-label hud-online">Online</span>
       <!-- Below the nav bar's breakpoint the six bays would be unreadable, so
            the menu lives in the drawer — this is its handle on the hero. -->
       <button type="button" class="hud-menu" data-js="nav-toggle" aria-label="Open menu"
               aria-expanded="false" aria-controls="mobile-drawer">
-        <span aria-hidden="true">&#9776;</span>
+        <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
       </button>
     </div>
   </div>
@@ -54,12 +68,14 @@
        to viewport HEIGHT, which is what pushed the countdown off-screen. -->
   <div class="hero-main relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6">
 
-    <p class="hero-kicker" data-reveal>NITK Surathkal&rsquo;s</p>
+    <p class="hero-kicker" data-hero style="--hd: 300"><span data-scramble="700">NITK Surathkal&rsquo;s</span></p>
 
     <!-- Official ENGINEER'26 logotype — the custom angular lettering, extracted
          from the supplied artwork to a transparent PNG (planet/tagline/HUD
-         removed) so it sits as clean type over the hero. -->
-    <h1 class="wm-img" data-reveal aria-label="ENGINEER '26">
+         removed) so it sits as clean type over the hero. It arrives through a
+         scan beam, and a light sheen crosses it at rest; both are CSS masks of
+         this same image, so the lettering itself is never redrawn. -->
+    <h1 class="wm-img" data-hero style="--hd: 420" aria-label="ENGINEER '26">
       <img src="/images/engineer26-wordmark.png?v=2" width="1796" height="314"
            alt="ENGINEER '26" fetchpriority="high">
     </h1>
@@ -68,56 +84,78 @@
         by print texture. Rebuilt here in the site's own register: same
         gradient and the same wide tracking, but the erosion becomes a
         dot-matrix scan so the word reads as an instrument readout rather
-        than distressed print. Hairline ticks either side frame it the way
-        the brochure's side rails frame the cover. %>
-    <p class="cgx" data-reveal>
+        than distressed print. It decodes out of signal noise on arrival. %>
+    <p class="cgx" data-hero style="--hd: 950">
       <span class="cgx__rule" aria-hidden="true"></span>
-      <span class="cgx__word">Cognitrixx</span>
+      <span class="cgx__word" data-scramble="1000" data-scramble-delay="950">Cognitrixx</span>
       <span class="cgx__rule" aria-hidden="true"></span>
     </p>
 
-    <p class="font-mono text-[clamp(0.72rem,3.2vw,0.94rem)] tracking-[0.44em] text-[var(--color-muted)] uppercase" data-reveal>Rewire Reality</p>
-
-    <!-- The dateline used to live here; it moved to the "Reality isn't fixed"
-         section below so this fold carries identity + the way in, and the
-         "when" lands as a proper chapter stamp on the next screen. -->
+    <p class="hero-tagline" data-hero style="--hd: 1150">Rewire Reality</p>
 
     <!-- One action. REGISTER already sits on this screen as bay 06, and the
          deck closes on a full REGISTER card, so a third copy of the same
          destination was the only thing the old primary CTA added. What the
          fold actually needs is the way *into* the page. -->
-    <a href="#deck" class="cta-explore cta-explore--lead" data-js="magnetic" data-reveal>
+    <a href="#deck" class="cta-explore cta-explore--lead" data-js="magnetic" data-hero style="--hd: 1300">
       <%# Not "Explore events": this scrolls to #deck, and the deck is Scale,
            Programme, ENGI Care, After Dark and Network — the whole festival,
-           of which events are one card. The label was promising a narrower
-           destination than the one it goes to. %>
+           of which events are one card. %>
       <span>Explore us</span>
       <span class="cta-explore__arrow" aria-hidden="true"></span>
     </a>
-    <span class="block h-px bg-[var(--rule)] w-[min(230px,70vw)]" aria-hidden="true"></span>
 
-    <div class="countdown-row" data-js="countdown"
-         data-target="<%= festDates.start %>T00:00:00+05:30" aria-live="polite"
-         aria-label="Countdown to ENGINEER '26">
-      <div class="cd"><span class="cd__n" data-unit="days">00</span><span class="cd__l">Days</span></div>
-      <span class="cd__sep">:</span>
-      <div class="cd"><span class="cd__n" data-unit="hours">00</span><span class="cd__l">Hrs</span></div>
-      <span class="cd__sep">:</span>
-      <div class="cd"><span class="cd__n" data-unit="minutes">00</span><span class="cd__l">Min</span></div>
-      <span class="cd__sep">:</span>
-      <div class="cd"><span class="cd__n cd__n--sec" data-unit="seconds">00</span><span class="cd__l">Sec</span></div>
+    <div class="countdown-row" data-js="countdown" data-hero style="--hd: 1400"
+         data-target="<%= festDates.start %>T00:00:00+05:30"
+         role="timer" aria-label="Countdown to ENGINEER '26">
+      <div class="cd" style="--ci: 0"><span class="cd__n" data-unit="days">00</span><span class="cd__l">Days</span></div>
+      <span class="cd__sep" aria-hidden="true">:</span>
+      <div class="cd" style="--ci: 1"><span class="cd__n" data-unit="hours">00</span><span class="cd__l">Hrs</span></div>
+      <span class="cd__sep" aria-hidden="true">:</span>
+      <div class="cd" style="--ci: 2"><span class="cd__n" data-unit="minutes">00</span><span class="cd__l">Min</span></div>
+      <span class="cd__sep" aria-hidden="true">:</span>
+      <div class="cd cd--sec" style="--ci: 3"><span class="cd__n cd__n--sec" data-unit="seconds">00</span><span class="cd__l">Sec</span></div>
     </div>
 
-    <!-- The three-word ENGINEER manifesto — the festival's long-standing
-         strap since it moved online. Rendered as mono/uppercase to match
-         the HUD chrome, with cyan periods as instrument marks. -->
     <%# Set exactly as the brochure sets it — THINK. CREATE. ENGINEER, with no
         period after the last word. The two dots are separators, not sentence
         punctuation, so a third one was our addition rather than the brand's. %>
-    <p class="hero-motto" aria-label="Think. Create. Engineer" data-reveal>
+    <p class="hero-motto" aria-label="Think. Create. Engineer" data-hero style="--hd: 1600">
       <span class="hero-motto__word">Think</span><span class="hero-motto__dot">.</span>
       <span class="hero-motto__word">Create</span><span class="hero-motto__dot">.</span>
       <span class="hero-motto__word">Engineer</span>
     </p>
+  </div>
+
+  <%# The ticker. Decorative: every fact on it is stated again, in reading
+      order, further down the page — so it is hidden from assistive tech
+      rather than read out twice (or forever). Only facts the site already
+      carries: the dates, the campus, the theme, the founding year and the
+      event count derived from data/events.json. %>
+  <%
+    const tickerItems = [
+      'Think. Create. Engineer',
+      festDates.display,
+      'NITK Surathkal',
+      'Cognitrixx',
+      'Rewire Reality',
+      'Since ' + fest.founded,
+      events.all.length + ' events',
+      'Three days',
+    ];
+  %>
+  <div class="hero-ticker" data-hero style="--hd: 1750" aria-hidden="true">
+    <div class="mq" data-marquee>
+      <div class="mq__track" style="--mq-dur: 46s">
+        <% for (let copy = 0; copy < 2; copy++) { %>
+        <ul class="mq__group">
+          <% for (let rep = 0; rep < 2; rep++) { tickerItems.forEach(function (t, i) { %>
+          <li class="mq__item<%= i % 3 === 1 ? ' mq__item--lit' : '' %>"><%= t %></li>
+          <li class="mq__sep"></li>
+          <% }); } %>
+        </ul>
+        <% } %>
+      </div>
+    </div>
   </div>
 </section>
