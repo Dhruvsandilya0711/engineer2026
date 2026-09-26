@@ -17,3 +17,6 @@ data/leaderboard.json
 *.zip
 screenshots$num-*.png
 public/.DS_Store
+
+# Static export for GitHub Pages (scripts/export-static.mjs)
+dist/
