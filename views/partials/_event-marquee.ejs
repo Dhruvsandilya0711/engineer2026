@@ -1,14 +1,12 @@
 <!-- ==========================================================================
-     EVENT SHOWCASE — the programme as a slow reel of event plates.
+     EVENT BAND — the programme as two slim kinetic rows of names.
 
-     Every plate is a real event from data/events.json and links to its own
-     page; nothing is invented. Events that have no photograph yet get a
-     lit plate in their track's accent rather than a broken image.
-
-     The reel is a CSS loop (public/js/motion.js → initMarquees only nudges
-     its speed with scroll and slows it under the cursor). It renders the set
-     twice for a seamless loop; the second copy is aria-hidden and out of the
-     tab order, so a keyboard or screen reader meets each event once.
+     Every name is a real event from data/events.json and links to its own
+     page; nothing is invented. The rows are a CSS loop (public/js/motion.js
+     → initMarquees only nudges their speed with scroll and slows them under
+     the cursor). Each renders its set twice for a seamless loop; the second
+     copy is aria-hidden and out of the tab order, so a keyboard or screen
+     reader meets each event once.
      ========================================================================== -->
 <%
   const trackAccent = { technical: 'var(--bay-1)', startup: 'var(--bay-3)', talks: 'var(--bay-6)', care: 'var(--rgb-amber)', campus: 'var(--bay-4)' };
@@ -23,24 +21,22 @@
     <a href="/events" class="btn btn-secondary evband__all" data-js="magnetic" data-reveal>Browse all events</a>
   </div>
 
-  <div class="mq evband__reel" data-marquee data-marquee-hover>
-    <div class="mq__track" style="--mq-dur: 120s">
+  <%# Two slim rows of real event names, travelling against each other.
+      Type only — the gallery below is the photographic moment, so this band
+      does not repeat it. Hovering a name floats that event's photo beside
+      the cursor (data-preview) and slows the row. %>
+  <% const half = Math.ceil(events.all.length / 2); %>
+  <% [events.all.slice(0, half), events.all.slice(half)].forEach(function (row, r) { %>
+  <div class="mq evband__row<%= r ? ' evband__row--alt' : '' %>" data-marquee data-marquee-hover>
+    <div class="mq__track" style="--mq-dur: <%= r ? 90 : 80 %>s">
       <% for (let copy = 0; copy < 2; copy++) { %>
       <ul class="mq__group"<%- copy ? ' aria-hidden="true"' : '' %>>
-        <% events.all.forEach(function (e) { %>
-        <li class="evcard" style="--accent: <%= trackAccent[e.track] || 'var(--bay-1)' %>">
-          <a class="evcard__link" href="/events/<%= e.slug %>"<%- copy ? ' tabindex="-1"' : '' %>>
-            <span class="evcard__media">
-              <% if (e.image) { %>
-              <img src="<%= e.image %>" alt="" loading="lazy" decoding="async" draggable="false">
-              <% } else { %>
-              <span class="evcard__plate" aria-hidden="true"></span>
-              <% } %>
-            </span>
-            <span class="evcard__body">
-              <span class="evcard__cat"><%= e.category %></span>
-              <span class="evcard__name"><%= e.name %></span>
-            </span>
+        <% row.forEach(function (e) { %>
+        <li class="evband__cell" style="--accent: <%= trackAccent[e.track] || 'var(--bay-1)' %>">
+          <a class="evband__item" href="/events/<%= e.slug %>"
+             data-preview="<%= e.image || '' %>"<%- copy ? ' tabindex="-1"' : '' %>>
+            <span class="evband__cat"><%= e.category %></span>
+            <span class="evband__name"><%= e.name %></span>
           </a>
         </li>
         <% }); %>
@@ -48,4 +44,5 @@
       <% } %>
     </div>
   </div>
+  <% }); %>
 </section>
