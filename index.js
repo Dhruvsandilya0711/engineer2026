@@ -147,6 +147,12 @@ function teamGroups() {
 
 app.set('view engine', 'ejs');
 
+// Cache-buster for the stylesheet and entry scripts. Browsers (and GitHub
+// Pages' 10-minute cache) otherwise keep serving the previous output.css
+// after a deploy, pairing new markup with old styles. ASSET_VERSION pins it
+// (the static export passes the commit); otherwise it changes every boot.
+app.locals.assetV = process.env.ASSET_VERSION || Date.now().toString(36);
+
 // The ?palette= trial that lived here is gone: Coastal Night won and its
 // tokens are now :root in public/src/input.css. Nothing reads res.locals
 // .palette any more, and no cookie is set.
