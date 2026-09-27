@@ -5950,116 +5950,151 @@ html.pl-locked .scroll-progress { opacity: 0; }
 
 
 /* ==========================================================================
-   R7. EVENT SHOWCASE — a slow reel of event plates
+   R7. EVENT BAND — two crossing HUD tapes
    ========================================================================== */
 .evband {
   position: relative;
-  padding-block: clamp(3.5rem, 10vh, 6.5rem) clamp(3rem, 8vh, 5rem);
+  padding-block: clamp(3.5rem, 10vh, 6.5rem) clamp(3.5rem, 9vh, 6rem);
   overflow: hidden;
 }
-.evband__head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 1.25rem clamp(1.25rem, 3vw, 2.5rem);
-  margin-bottom: clamp(2rem, 5vh, 3rem);
-}
-/* The count, set as a hollow numeral: the one big gesture in the band. */
-.evband__count {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(4.5rem, 10vw, 8rem);
-  line-height: 0.8;
-  letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(var(--rgb-cyan-lift), 0.55);
-  background: linear-gradient(180deg, rgba(var(--rgb-cyan), 0.18), transparent 80%);
-  -webkit-background-clip: text;
-          background-clip: text;
-}
-.evband__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.5rem, 3vw, 2.3rem);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: var(--color-paper);
-}
-.evband__lead {
-  margin: 0.7rem 0 0;
-  max-width: 46ch;
-  font-size: 0.86rem;
-  line-height: 1.6;
-  color: var(--color-muted);
-}
-.evband__all { white-space: nowrap; }
-@media (max-width: 767px) {
-  .evband__head { grid-template-columns: auto minmax(0, 1fr); }
-  .evband__all { grid-column: 1 / -1; justify-self: start; }
+.evband__head { margin-bottom: clamp(2.5rem, 6vh, 4rem); }
+.evband__bar {
+  padding-inline: 0;
+  margin-bottom: clamp(1.2rem, 3vh, 2rem);
+  background: none;
+  border-bottom: 0;
 }
 
-.evband__row {
+.evband__tapes {
   position: relative;
-  padding-block: clamp(0.9rem, 2vh, 1.3rem);
-  border-top: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, rgba(var(--rgb-slate), 0.22) 20%, rgba(var(--rgb-slate), 0.22) 80%, transparent) 1;
+  padding-block: clamp(3rem, 8vh, 5rem);
 }
-.evband__row--alt { border-bottom: 1px solid transparent; }
-.evband__row--alt .mq__track { animation-direction: reverse; }
-.mq:focus-within .mq__track { animation-play-state: paused; }
-.evband__cell {
+/* A tape: the nav bar's spectrum hairline wrapped round a strip of dark
+   glass, run edge to edge and tilted. */
+.evtape {
+  position: relative;
+  width: 112vw;
+  margin-left: -6vw;
+  padding-block: 1px;
+  background: linear-gradient(90deg,
+    rgba(var(--rgb-cyan), 0.7) 0%,
+    rgba(var(--rgb-indigo), 0.55) 40%,
+    rgba(128, 146, 246, 0.55) 62%,
+    rgba(var(--rgb-magenta), 0.7) 100%);
+  box-shadow: 0 18px 50px rgba(2, 4, 12, 0.6), 0 0 34px rgba(var(--rgb-bloom), 0.2);
+}
+.evtape--a { transform: rotate(-3.2deg); z-index: 2; }
+.evtape--b {
+  transform: rotate(3.2deg);
+  /* Pulled up by one full tape so the two share a centre line and cross
+     there as an X, diverging toward the edges. */
+  margin-top: calc(-1 * clamp(52px, 6.4vh, 64px) - 2px);
+  z-index: 1;
+  background: linear-gradient(90deg,
+    rgba(var(--rgb-magenta), 0.6) 0%,
+    rgba(var(--rgb-indigo), 0.5) 45%,
+    rgba(var(--rgb-cyan), 0.6) 100%);
+}
+.evtape .mq {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 45%, transparent 75%),
+    linear-gradient(180deg, rgba(12, 16, 30, 0.94), rgba(6, 8, 16, 0.96));
+  mask-image: none;
+}
+/* The lower tape carries a faint hazard hatch, so the two read as layers. */
+.evtape--b .mq {
+  background:
+    repeating-linear-gradient(112deg, rgba(var(--rgb-slate), 0.05) 0 8px, transparent 8px 18px),
+    linear-gradient(180deg, rgba(10, 13, 24, 0.95), rgba(5, 7, 14, 0.97));
+}
+.evtape--b .mq__track { animation-direction: reverse; }
+.evtape .mq:hover .mq__track,
+.evtape .mq:focus-within .mq__track { animation-play-state: paused; }
+
+/* A segment: the .bay, laid end to end. */
+.evchip-cell {
   flex: none;
   display: flex;
+  border-right: 1px solid rgba(var(--rgb-slate), 0.14);
+}
+.evchip {
+  position: relative;
+  display: flex;
   align-items: center;
-}
-/* A small diamond in the event's track colour between names. */
-.evband__cell::after {
-  content: "";
-  width: 5px; height: 5px;
-  margin-inline: clamp(1.4rem, 3vw, 2.6rem);
-  transform: rotate(45deg);
-  background: rgba(var(--accent), 0.8);
-  box-shadow: 0 0 8px rgba(var(--accent), 0.6);
-}
-.evband__item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.75rem;
+  gap: 12px;
+  height: clamp(52px, 6.4vh, 64px);
+  padding: 0 44px 0 clamp(16px, 1.8vw, 24px);
+  overflow: hidden;
   text-decoration: none;
   white-space: nowrap;
 }
-.evband__cat {
+.evchip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(115% 150% at 50% 122%,
+    rgba(var(--bay-accent), 0.6) 0%,
+    rgba(var(--bay-accent), 0.18) 44%,
+    transparent 74%);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-standard);
+}
+.evchip::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgb(var(--bay-accent)) 20%, rgb(var(--bay-accent)) 80%, transparent);
+  box-shadow: 0 0 14px rgba(var(--bay-accent), 0.9);
+  transform: scaleX(0);
+  transition: transform 320ms var(--ease-emphasized);
+}
+.evchip:hover::before, .evchip:focus-visible::before { opacity: 1; }
+.evchip:hover::after, .evchip:focus-visible::after { transform: scaleX(1); }
+.evchip__idx {
+  position: relative;
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(var(--accent), 0.9);
-  transform: translateY(-0.2em);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgb(var(--bay-accent));
 }
-.evband__name {
+.evchip__name {
+  position: relative;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.35rem, 2.8vw, 2.2rem);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: rgba(var(--rgb-paper), 0.82);
-  background: linear-gradient(90deg, rgb(var(--accent)), var(--color-violet)) 0 0 / 0% 100% no-repeat;
-  -webkit-background-clip: text;
-          background-clip: text;
-  transition: background-size 0.6s var(--ease-reveal), color 0.3s;
+  font-weight: 700;
+  font-size: clamp(0.92rem, 1.35vw, 1.12rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-strong);
+  transition: color 220ms, text-shadow 220ms;
 }
-.evband__row--alt .evband__name {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(var(--rgb-paper), 0.4);
+.evchip__cat {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-dim);
 }
-.evband__item:hover .evband__name,
-.evband__item:focus-visible .evband__name {
-  color: transparent;
-  background-size: 100% 100%;
-  -webkit-text-stroke-color: transparent;
+.evchip__slab {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 22px;
+  background: repeating-linear-gradient(112deg, rgba(var(--bay-accent), 0.95) 0 6px, transparent 6px 13px);
+  opacity: 0.22;
+  transition: opacity 260ms;
 }
-.evband__item:focus-visible { outline-offset: 4px; }
+.evchip:hover .evchip__name,
+.evchip:focus-visible .evchip__name { color: #fff; text-shadow: 0 0 16px rgba(var(--bay-accent), 0.8); }
+.evchip:hover .evchip__slab { opacity: 0.65; }
+.evchip:focus-visible { outline-offset: -3px; }
+@media (max-width: 640px) {
+  .evchip__cat { display: none; }
+  .evtape--a { transform: rotate(-6deg); }
+  .evtape--b { transform: rotate(6deg); }
+}
+
 
 
 /* ==========================================================================

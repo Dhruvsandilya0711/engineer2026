@@ -1,48 +1,59 @@
 <!-- ==========================================================================
-     EVENT BAND — the programme as two slim kinetic rows of names.
+     EVENT BAND — the programme on two crossing HUD tapes.
 
-     Every name is a real event from data/events.json and links to its own
-     page; nothing is invented. The rows are a CSS loop (public/js/motion.js
-     → initMarquees only nudges their speed with scroll and slows them under
-     the cursor). Each renders its set twice for a seamless loop; the second
-     copy is aria-hidden and out of the tab order, so a keyboard or screen
-     reader meets each event once.
+     Each tape is built from the same parts as the nav bar: a glass plate
+     with the spectrum hairline, and bay-style segments (index, label, hatch
+     slab, floor bloom on hover) — one segment per real event from
+     data/events.json, each linking to its page. The tapes cross at a slight
+     angle and run against each other.
+
+     The travel is a CSS loop (public/js/motion.js → initMarquees nudges its
+     speed with scroll and slows it under the cursor). Each tape renders its
+     set twice for a seamless loop; the second copy is aria-hidden and out of
+     the tab order, so a keyboard or screen reader meets each event once.
      ========================================================================== -->
 <%
   const trackAccent = { technical: 'var(--bay-1)', startup: 'var(--bay-3)', talks: 'var(--bay-6)', care: 'var(--rgb-amber)', campus: 'var(--bay-4)' };
+  const half = Math.ceil(events.all.length / 2);
+  const tapes = [events.all.slice(0, half), events.all.slice(half)];
 %>
-<section class="evband" aria-labelledby="evband-title">
-  <div class="evband__head rail">
-    <div class="evband__count" aria-hidden="true"><%= events.all.length %></div>
-    <div class="evband__intro">
-      <h2 id="evband-title" class="evband__title" data-split>Events across<br>three days</h2>
-      <p class="evband__lead" data-reveal>Robotics, aeromodelling, hackathons, talks and the campus itself — five tracks, one programme.</p>
+<section class="evband" aria-labelledby="evband-title" style="--accent: var(--bay-3)">
+  <div class="rail evband__head">
+    <div class="deck-card__head evband__bar">
+      <span class="deck-card__num">03</span>
+      <span class="deck-card__name">Programme</span>
+      <span class="deck-card__slab" aria-hidden="true"></span>
+      <span class="deck-card__line" aria-hidden="true"></span>
+      <a class="deck-card__go" href="/events">All <%= events.all.length %> &rarr;</a>
     </div>
-    <a href="/events" class="btn btn-secondary evband__all" data-js="magnetic" data-reveal>Browse all events</a>
+    <h2 id="evband-title" class="chapter-title chapter-title--md" data-split>
+      <%= events.all.length %> events.<br><span class="text-gradient-impossible">Three days.</span>
+    </h2>
   </div>
 
-  <%# Two slim rows of real event names, travelling against each other.
-      Type only — the gallery below is the photographic moment, so this band
-      does not repeat it. Hovering a name floats that event's photo beside
-      the cursor (data-preview) and slows the row. %>
-  <% const half = Math.ceil(events.all.length / 2); %>
-  <% [events.all.slice(0, half), events.all.slice(half)].forEach(function (row, r) { %>
-  <div class="mq evband__row<%= r ? ' evband__row--alt' : '' %>" data-marquee data-marquee-hover>
-    <div class="mq__track" style="--mq-dur: <%= r ? 90 : 80 %>s">
-      <% for (let copy = 0; copy < 2; copy++) { %>
-      <ul class="mq__group"<%- copy ? ' aria-hidden="true"' : '' %>>
-        <% row.forEach(function (e) { %>
-        <li class="evband__cell" style="--accent: <%= trackAccent[e.track] || 'var(--bay-1)' %>">
-          <a class="evband__item" href="/events/<%= e.slug %>"
-             data-preview="<%= e.image || '' %>"<%- copy ? ' tabindex="-1"' : '' %>>
-            <span class="evband__cat"><%= e.category %></span>
-            <span class="evband__name"><%= e.name %></span>
-          </a>
-        </li>
-        <% }); %>
-      </ul>
-      <% } %>
+  <div class="evband__tapes">
+    <% tapes.forEach(function (tape, t) { %>
+    <div class="evtape evtape--<%= t ? 'b' : 'a' %>">
+      <div class="mq" data-marquee data-marquee-hover>
+        <div class="mq__track" style="--mq-dur: <%= t ? 95 : 85 %>s">
+          <% for (let copy = 0; copy < 2; copy++) { %>
+          <ul class="mq__group"<%- copy ? ' aria-hidden="true"' : '' %>>
+            <% tape.forEach(function (e) { const n = events.all.indexOf(e) + 1; %>
+            <li class="evchip-cell" style="--bay-accent: <%= trackAccent[e.track] || 'var(--bay-1)' %>">
+              <a class="evchip" href="/events/<%= e.slug %>"
+                 data-preview="<%= e.image || '' %>"<%- copy ? ' tabindex="-1"' : '' %>>
+                <span class="evchip__idx"><%= String(n).padStart(2, '0') %></span>
+                <span class="evchip__name"><%= e.name %></span>
+                <span class="evchip__cat"><%= e.category %></span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
     </div>
+    <% }); %>
   </div>
-  <% }); %>
 </section>
