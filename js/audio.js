@@ -5,15 +5,30 @@
    from the 25-second mark. When it reaches the end it seeks back to 25s and
    keeps going — the intro before 25s is never heard again.
 
-   Muted by default (browser autoplay policies + politeness). The user opts
-   in with the header button; the choice persists in localStorage so it
-   sticks page-to-page. Volume held at 0.091 — this is background, not a
-   speaker demo.
+   Plays by default; the pill mutes, and the choice persists in localStorage
+   so it sticks page-to-page. Volume tops out at 0.091 — this is background,
+   not a speaker demo.
+
+   AUTOPLAY. Browsers refuse sound until the visitor has tapped, clicked or
+   pressed a key — scrolling does not count. So the song starts silently and
+   is brought up on the first real activation. Unmuting on anything else
+   makes Chrome PAUSE the element, which is the "song stops by itself" bug
+   this used to have (it listened for scroll/wheel/touchstart).
+
+   BACKGROUND. On a phone, closing the browser or switching apps only hides
+   the page, so the song kept playing. It now pauses whenever the page is
+   hidden and picks up again when it comes back.
+
+   VOLUME. iOS ignores HTMLMediaElement.volume entirely, so on iPhone/iPad
+   the song played at full device volume and every fade was a no-op. Where
+   volume is ignored, the element is routed through a Web Audio GainNode
+   instead. Every level change goes through one fade that cancels the last,
+   so ducking, the gain column and the loop seam cannot fight each other.
 
    Wired from public/js/site.js -> initAudio().
    ========================================================================== */
 
-import { gainTick } from '/engineer2026/js/click-sfx.js?v=451aed0';
+import { gainTick } from '/engineer2026/js/click-sfx.js?v=aefa414';
 
 const SRC = '/engineer2026/audio/tentative.mp3';
 const START_AT = 25;              // seconds — skip the intro
@@ -115,15 +130,46 @@ export function initAudio(whenReady) {
   const DUCK_FACTOR = 0.32;
   let ducked = false;
   const effectiveVol = () => audio.muted ? 0 : (ducked ? userVol * DUCK_FACTOR : userVol);
-  const rampVolume = (from, to, ms) => {
-    const steps = Math.max(1, Math.round(ms / 16));
-    let i = 0;
-    const iv = setInterval(() => {
-      i++;
-      audio.volume = from + (to - from) * (i / steps);
-      if (i >= steps) { clearInterval(iv); audio.volume = to; }
-    }, 16);
-    return () => clearInterval(iv);
+
+  // iOS ignores element volume (it always reads back 1). Detected once; where
+  // it is ignored, a GainNode carries the level instead. The graph can only
+  // be built inside a user gesture (AudioContext rules), so ensureGraph() is
+  // called from the gesture paths below.
+  const VOLUME_WORKS = (() => { try { const a = new Audio(); a.volume = 0.5; return a.volume === 0.5; } catch (_) { return true; } })();
+  let ctx = null;
+  let gainNode = null;
+  const ensureGraph = () => {
+    if (VOLUME_WORKS || gainNode) { ctx?.resume?.().catch(() => {}); return; }
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      ctx = new AC();
+      gainNode = ctx.createGain();
+      gainNode.gain.value = audio.volume;
+      ctx.createMediaElementSource(audio).connect(gainNode).connect(ctx.destination);
+      audio.volume = 1;
+      ctx.resume?.().catch(() => {});
+    } catch (_) { ctx = null; gainNode = null; }
+  };
+  const getVol = () => (gainNode ? gainNode.gain.value : audio.volume);
+  const setVolNow = (v) => {
+    v = Math.max(0, Math.min(1, v));
+    if (gainNode) gainNode.gain.value = v; else audio.volume = v;
+  };
+  // ONE fade at a time: a new one cancels whatever was running, so two
+  // callers can never leave the level stepping back and forth.
+  let fadeRaf = 0;
+  const fadeTo = (to, ms = 0) => {
+    cancelAnimationFrame(fadeRaf);
+    const from = getVol();
+    if (!ms || document.hidden) { setVolNow(to); return; }
+    const t0 = performance.now();
+    const step = (now) => {
+      const p = Math.min(1, (now - t0) / ms);
+      setVolNow(from + (to - from) * p);
+      if (p < 1) fadeRaf = requestAnimationFrame(step);
+    };
+    fadeRaf = requestAnimationFrame(step);
   };
 
   // The custom loop: instead of `audio.loop = true` (which restarts at 0 and
@@ -135,12 +181,12 @@ export function initAudio(whenReady) {
   const loopBack = () => {
     if (loopingBack) return;
     loopingBack = true;
-    rampVolume(audio.volume, 0, FADE_MS);
+    fadeTo(0, FADE_MS);
     setTimeout(() => {
       audio.currentTime = START_AT;
       const play = audio.play();
       const finish = () => {
-        rampVolume(0, effectiveVol(), FADE_MS);
+        fadeTo(effectiveVol(), FADE_MS);
         loopingBack = false;
       };
       if (play && play.then) play.then(finish, finish); else finish();
@@ -157,98 +203,147 @@ export function initAudio(whenReady) {
   });
 
   // Default is UNMUTED — the site wants the music on; muting is the opt-out.
-  // First-ever page load on a fresh tab still needs a user gesture (browser
-  // policy — no way around it), but once ANY interaction has happened in
-  // this tab we mark sessionStorage and every subsequent navigation plays
-  // audibly from the start.
   const savedMuted = localStorage.getItem(KEY);
   const startMuted = savedMuted === '1';
-  let hasGesture = false;
-  try { hasGesture = sessionStorage.getItem(GEST_KEY) === '1'; } catch (_) {}
+  let intendedMuted = startMuted;
   audio.muted = true;                    // start silent so autoplay is allowed
   const tryPlay = () => audio.play().catch(() => {});
-  // Wait for buffer + preloader (whenReady) before the first play — this is
-  // what stops the audible half-second stall after the preloader wipe.
-  gateReady.then(async () => {
-    if (startMuted) { tryPlay(); return; }
-    // Attempt UNMUTED autoplay first — this succeeds on any domain the
-    // browser has already granted autoplay privilege to (localhost, and
-    // production once Media Engagement Index has built up), and on same-tab
-    // navigations after any prior gesture. If the browser refuses, we
-    // silently fall back to muted playback and wait for a natural gesture
-    // (scroll, wheel, touch — see below).
+  const audible = () => !audio.paused && !audio.muted;
+
+  // Activation events only. Scroll, wheel and touchstart are deliberately
+  // absent: they are not user activation, so unmuting on them gets the
+  // element paused. A tap ends in pointerup/touchend; a click, a key.
+  const ACTIVATION = ['pointerdown', 'pointerup', 'touchend', 'mousedown', 'keydown', 'click'];
+  let armed = false;
+  const arm = () => {
+    if (armed) return;
+    armed = true;
+    for (const t of ACTIVATION) window.addEventListener(t, unlock, { capture: true, passive: true });
+  };
+  const disarm = () => {
+    armed = false;
+    for (const t of ACTIVATION) window.removeEventListener(t, unlock, true);
+  };
+
+  // Bring the song up with sound. Resolves true when it is actually audible;
+  // on refusal it falls back to silent playback and stays armed for the next
+  // activation rather than giving up.
+  const startAudible = async () => {
+    ensureGraph();
     audio.muted = false;
-    audio.volume = userVol;
+    setVolNow(0);
     try {
       await audio.play();
+      if (ctx && ctx.state !== 'running') await ctx.resume();
+      fadeTo(effectiveVol(), 400);
+      disarm();
+      return true;
     } catch (_) {
       audio.muted = true;
-      audio.volume = userVol;
+      setVolNow(effectiveVol());
       tryPlay();
+      arm();
+      return false;
+    } finally {
+      render();
+    }
+  };
+
+  function unlock(e) {
+    // The pill handles its own clicks.
+    if (e && e.target && e.target.closest && e.target.closest('[data-js="audio-toggle"]')) return;
+    // Where the browser can tell us, ignore events that did not activate.
+    if (navigator.userActivation && !navigator.userActivation.isActive) return;
+    try { sessionStorage.setItem(GEST_KEY, '1'); } catch (_) {}
+    if (intendedMuted) { ensureGraph(); disarm(); return; }
+    if (!audible()) startAudible();
+    else disarm();
+  }
+
+  // First play waits for buffer + preloader (whenReady), which stops the
+  // half-second stall after the wipe. Sound is tried first — it is allowed
+  // wherever the browser already trusts the site — then silent + armed.
+  gateReady.then(async () => {
+    if (startMuted) { tryPlay(); arm(); return; }
+    audio.muted = false;
+    setVolNow(effectiveVol());
+    try {
+      await audio.play();
+      render();
+    } catch (_) {
+      audio.muted = true;
+      tryPlay();
+      arm();
+      render();
     }
   });
 
-  // Wire every button carrying data-js="audio-toggle" — the nav partial
-  // ships one, but we'll upgrade any that appear (e.g. the mobile drawer).
-  const buttons = [...document.querySelectorAll('[data-js="audio-toggle"]')];
-  if (!buttons.length) return;
+  // Hidden page (app switched, browser closed, tab backgrounded): pause, and
+  // resume on return if it was playing. bfcache restores get the same.
+  let resumeOnShow = false;
+  const onHide = () => {
+    if (!audio.paused) resumeOnShow = true;
+    audio.pause();
+    savePos();
+  };
+  const onShow = async () => {
+    if (!resumeOnShow) return;
+    resumeOnShow = false;
+    if (intendedMuted) { tryPlay(); return; }
+    try {
+      if (ctx && ctx.state !== 'running') await ctx.resume();
+      if (ctx && ctx.state !== 'running') throw new Error('suspended');
+      await audio.play();
+    } catch (_) {
+      // Needs a fresh tap (iOS can insist): play silently until then.
+      audio.muted = true;
+      tryPlay();
+      arm();
+    }
+    render();
+  };
+  document.addEventListener('visibilitychange', () => (document.hidden ? onHide() : onShow()));
+  window.addEventListener('pagehide', onHide);
+  window.addEventListener('pageshow', (e) => { if (e.persisted) { resumeOnShow = true; onShow(); } });
 
-  // The button reflects INTENT, not the momentary silent-autoplay state.
-  // Until the first user gesture, `audio.muted` is forced to true so the
-  // browser will let it play; the button already shows the state we're
-  // heading toward.
-  let intendedMuted = startMuted;
-  // Assigned when the gain column mounts below; a no-op if it never does
-  // (the column is not rendered on touch-only layouts).
+  // Wire every button carrying data-js="audio-toggle".
+  const buttons = [...document.querySelectorAll('[data-js="audio-toggle"]')];
+
+  // The pill shows INTENT (on/off) and, separately, whether sound is really
+  // coming out (is-live), so "on but waiting for a tap" never looks broken.
   let gainPaint = () => {};
-  const render = () => {
+  function render() {
     for (const b of buttons) {
       b.innerHTML = intendedMuted ? ICON_OFF : ICON_ON;
       b.setAttribute('aria-pressed', String(!intendedMuted));
       b.setAttribute('aria-label', intendedMuted ? 'Unmute background music' : 'Mute background music');
       b.title = intendedMuted ? 'Unmute music' : 'Mute music';
       b.classList.toggle('is-on', !intendedMuted);
+      b.classList.toggle('is-live', !intendedMuted && audible());
     }
-  };
+    gainPaint();
+  }
+  for (const ev of ['play', 'pause', 'volumechange']) audio.addEventListener(ev, render);
   render();
 
-  // If the user had previously unmuted, unmute on the first interaction that
-  // ISN'T the audio button itself — that gesture satisfies the browser's
-  // audible autoplay policy. Ignoring the button avoids a race where the
-  // user clicks it expecting a state change and lands back where they
-  // started.
-  // Catch the first NATURAL gesture — not just a click. Browsers count
-  // pointerdown / keydown / wheel / touchstart / mousedown as activating
-  // gestures, and every visitor does one of those within a second or two
-  // (they scroll). `mousemove` alone does NOT count and is not listened to.
-  // The audio button itself is excluded so its own click doesn't race.
-  const GESTURE_EVENTS = ['pointerdown', 'keydown', 'wheel', 'touchstart', 'mousedown', 'click', 'scroll'];
-  const firstGesture = (e) => {
-    if (e && e.target && e.target.closest && e.target.closest('[data-js="audio-toggle"]')) return;
-    hasGesture = true;
-    try { sessionStorage.setItem(GEST_KEY, '1'); } catch (_) {}
-    if (!intendedMuted && audio.muted) {
-      audio.muted = false;
-      audio.volume = userVol;
-      tryPlay();
-      render();
-    }
-    for (const t of GESTURE_EVENTS) window.removeEventListener(t, firstGesture, true);
-  };
-  for (const t of GESTURE_EVENTS) window.addEventListener(t, firstGesture, { capture: true, passive: true });
-
   for (const b of buttons) {
-    b.addEventListener('click', () => {
+    b.addEventListener('click', async () => {
+      try { sessionStorage.setItem(GEST_KEY, '1'); } catch (_) {}
+      // On, but the browser has been holding it silent: this tap is the
+      // permission it was waiting for — start the sound, do not mute.
+      if (!intendedMuted && !audible()) { await startAudible(); return; }
       intendedMuted = !intendedMuted;
-      audio.muted = intendedMuted;
       localStorage.setItem(KEY, intendedMuted ? '1' : '0');
-      if (intendedMuted) audio.volume = 0;
-      else rampVolume(0, effectiveVol(), 200);
-      tryPlay();
+      if (intendedMuted) {
+        fadeTo(0, 160);
+        setTimeout(() => { if (intendedMuted) audio.muted = true; render(); }, 170);
+      } else {
+        await startAudible();
+      }
       render();
-      gainPaint();
     });
   }
+  if (!buttons.length) return;
 
   /* ── THE GAIN COLUMN ──────────────────────────────────────────────────
      Seven emitter segments stacked above the pill. Click one to jump to it,
@@ -285,7 +380,7 @@ export function initAudio(whenReady) {
       level = n;
       userVol = volFor(level);
       try { localStorage.setItem(LVL_KEY, String(level)); } catch (_) {}
-      if (!audio.muted && !loopingBack) rampVolume(audio.volume, effectiveVol(), silent ? 0 : 90);
+      if (!audio.muted && !loopingBack) fadeTo(effectiveVol(), silent ? 0 : 120);
       // Tick at the new level. It carries the setting as sound, so the column
       // works before the browser's autoplay gate has let the music through —
       // you can still hear what you are choosing. The site mute button
@@ -299,7 +394,12 @@ export function initAudio(whenReady) {
     const levelAtY = (clientY) => {
       const stack = gain.querySelector('.gain__stack').getBoundingClientRect();
       const t = 1 - (clientY - stack.top) / stack.height;      // bottom-up
-      return Math.round(t * STEPS);
+      // ceil, not round: anywhere inside segment n selects n. Rounding put
+      // the boundary through the middle of each segment, so clicking the
+      // centre of one landed on its neighbour half the time. Below the
+      // bottom segment is zero.
+      if (t <= 0) return 0;
+      return Math.min(STEPS, Math.ceil(t * STEPS));
     };
 
     let dragging = false;
@@ -343,10 +443,10 @@ export function initAudio(whenReady) {
       else if (k === 'End') { setLevel(STEPS); e.preventDefault(); }
     });
 
-    // Keep the live tip honest about what is actually coming out.
-    for (const ev of ['play', 'pause', 'volumechange']) audio.addEventListener(ev, paintGain);
-    paintGain();
+    // Keep the live tip honest about what is actually coming out (render()
+    // calls this on every play / pause / volume change).
     gainPaint = paintGain;
+    paintGain();
   }
 
   // Duck / restore — driven by whichever surface on the page wants the
@@ -356,13 +456,13 @@ export function initAudio(whenReady) {
     if (ducked) return;
     ducked = true;
     if (audio.muted) return;
-    rampVolume(audio.volume, effectiveVol(), 220);
+    fadeTo(effectiveVol(), 220);
   };
   const restore = () => {
     if (!ducked) return;
     ducked = false;
     if (audio.muted) return;
-    rampVolume(audio.volume, effectiveVol(), 260);
+    fadeTo(effectiveVol(), 260);
   };
   document.addEventListener('e26:music:duck', duck);
   document.addEventListener('e26:music:restore', restore);
