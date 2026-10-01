@@ -6717,15 +6717,14 @@ select.form-input {
 /* The finale: the dynamic mark replaces the old flat artwork behind the
    closing line. Brighter than the old 0.2 wash, because only part of it is
    ever lit. */
-.finale__mark.dynmark {
-  position: absolute;
-  animation: dm-orbit 7.5s linear infinite, finale-float 12s ease-in-out infinite;
-}
+/* The finale's mark: the logo as drawn, static and fully lit. */
 .finale__mark {
   width: min(70vh, 86vw);
-  opacity: 0.55;
+  height: auto;
+  opacity: 0.4;
   mix-blend-mode: normal;
   filter: none;
+  animation: none;
 }
 
 /* The page foot: the same mark, large and quiet behind the footer. */
