@@ -23,7 +23,7 @@
 // asked for either.
 // ==========================================================================
 
-import { INTERACTIVE, TEXTUAL } from '/engineer2026/js/cursor.js?v=aefa414';
+import { INTERACTIVE, TEXTUAL } from '/engineer2026/js/cursor.js?v=2ca83a4';
 
 const MUTE_KEY = 'e26.audio.muted';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
