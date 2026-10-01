@@ -11,21 +11,21 @@
 // _hero.ejs and re-importing that module here.
 // ==========================================================================
 
-import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js';
+import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=dc95370';
 import {
   initScroll, registerReveals, registerSeams, registerParallax,
   scrollState, REDUCED_MOTION,
   scrollTo, stopScroll, startScroll,
-} from '/engineer2026/js/scroll.js';
-import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js';
-import { initDots } from '/engineer2026/js/dots.js';
-import { initGalleryFlow } from '/engineer2026/js/gallery-flow.js';
-import { initGalleryLightbox } from '/engineer2026/js/gallery-lightbox.js';
-import { initPreloader } from '/engineer2026/js/preloader.js';
-import { initPageTransition } from '/engineer2026/js/page-transition.js';
-import { mountNeuralMark } from '/engineer2026/js/neural-mark.js';
-import { mountSignalGame } from '/engineer2026/js/signal-game.js';
-import { mountLeaderboard } from '/engineer2026/js/leaderboard.js';
+} from '/engineer2026/js/scroll.js?v=dc95370';
+import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=dc95370';
+import { initDots } from '/engineer2026/js/dots.js?v=dc95370';
+import { initGalleryFlow } from '/engineer2026/js/gallery-flow.js?v=dc95370';
+import { initGalleryLightbox } from '/engineer2026/js/gallery-lightbox.js?v=dc95370';
+import { initPreloader } from '/engineer2026/js/preloader.js?v=dc95370';
+import { initPageTransition } from '/engineer2026/js/page-transition.js?v=dc95370';
+import { mountNeuralMark } from '/engineer2026/js/neural-mark.js?v=dc95370';
+import { mountSignalGame } from '/engineer2026/js/signal-game.js?v=dc95370';
+import { mountLeaderboard } from '/engineer2026/js/leaderboard.js?v=dc95370';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
 function registerNarrative(ctx, subject) {
