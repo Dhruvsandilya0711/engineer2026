@@ -6268,31 +6268,6 @@ html.pl-locked .scroll-progress { opacity: 0; }
   0%, 100% { transform: translate3d(0, -1.5%, 0) scale(1); }
   50%      { transform: translate3d(0, 1.5%, 0) scale(1.03); }
 }
-.finale__rings {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-.finale__rings span {
-  grid-area: 1 / 1;
-  width: min(62vh, 80vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--rgb-cyan), 0.5);
-  box-shadow: 0 0 40px rgba(var(--rgb-cyan), 0.18), inset 0 0 40px rgba(var(--rgb-indigo), 0.15);
-  animation: finale-ping 6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
-  opacity: 0;
-}
-.finale__rings span:nth-child(2) { animation-delay: 2s; }
-.finale__rings span:nth-child(3) { animation-delay: 4s; }
-@keyframes finale-ping {
-  0%   { transform: scale(0.35); opacity: 0; }
-  15%  { opacity: 0.8; }
-  100% { transform: scale(1.6); opacity: 0; }
-}
 .finale__title {
   font-family: var(--font-display);
   font-weight: 700;
@@ -6308,8 +6283,7 @@ html.pl-locked .scroll-progress { opacity: 0; }
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
 @media (prefers-reduced-motion: reduce) {
-  .finale__mark, .finale__rings span { animation: none; }
-  .finale__rings span { opacity: 0.25; }
+  .finale__mark { animation: none; }
 }
 
 
