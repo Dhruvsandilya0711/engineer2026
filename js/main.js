@@ -11,21 +11,21 @@
 // _hero.ejs and re-importing that module here.
 // ==========================================================================
 
-import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=4f9f143';
+import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=993f819';
 import {
   initScroll, registerReveals, registerSeams, registerParallax,
   scrollState, REDUCED_MOTION,
   scrollTo, stopScroll, startScroll,
-} from '/engineer2026/js/scroll.js?v=4f9f143';
-import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=4f9f143';
-import { initDots } from '/engineer2026/js/dots.js?v=4f9f143';
-import { initGalleryFlow } from '/engineer2026/js/gallery-flow.js?v=4f9f143';
-import { initGalleryLightbox } from '/engineer2026/js/gallery-lightbox.js?v=4f9f143';
-import { initPreloader } from '/engineer2026/js/preloader.js?v=4f9f143';
-import { initPageTransition } from '/engineer2026/js/page-transition.js?v=4f9f143';
-import { mountNeuralMark } from '/engineer2026/js/neural-mark.js?v=4f9f143';
-import { mountSignalGame } from '/engineer2026/js/signal-game.js?v=4f9f143';
-import { mountLeaderboard } from '/engineer2026/js/leaderboard.js?v=4f9f143';
+} from '/engineer2026/js/scroll.js?v=993f819';
+import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=993f819';
+import { initDots } from '/engineer2026/js/dots.js?v=993f819';
+import { initGalleryFlow } from '/engineer2026/js/gallery-flow.js?v=993f819';
+import { initGalleryLightbox } from '/engineer2026/js/gallery-lightbox.js?v=993f819';
+import { initPreloader } from '/engineer2026/js/preloader.js?v=993f819';
+import { initPageTransition } from '/engineer2026/js/page-transition.js?v=993f819';
+import { mountNeuralMark } from '/engineer2026/js/neural-mark.js?v=993f819';
+import { mountSignalGame } from '/engineer2026/js/signal-game.js?v=993f819';
+import { mountLeaderboard } from '/engineer2026/js/leaderboard.js?v=993f819';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
 function registerNarrative(ctx, subject) {
