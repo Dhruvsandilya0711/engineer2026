@@ -41,7 +41,7 @@ const routes = [
 const SEGMENTS = [
   'images', 'js', 'vendor', 'src', 'fonts', 'audio',
   'events', 'schedule', 'team', 'sponsors', 'about', 'register',
-  ...legalDocs, 'api', 'ticket',
+  ...legalDocs, 'api', 'ticket', 'favicon\\.ico',
 ];
 const segmentPath = new RegExp(
   `(["'\`(])\\/(?=(?:${SEGMENTS.join('|')})(?:[/?#"'\`)]|$))`, 'g');
