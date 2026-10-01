@@ -16,8 +16,10 @@
        meta     HTML (optional)  right-aligned meta block
        go       {href,label}     (optional) head link, label may be HTML
      ========================================================================== -->
-<header class="hud-frame" style="--accent: <%= accent %>">
-  <div class="hud-frame__inner">
+<header class="hud-frame page-hero" style="--accent: <%= accent %>">
+  <div class="hud-frame__inner" data-spotlight style="--spot: <%= accent %>">
+    <%# A scan of light that crosses the plate once as the page arrives. %>
+    <span class="page-hero__scan" aria-hidden="true"></span>
     <div class="deck-card__head">
       <span class="deck-card__num"><%= num %></span>
       <span class="deck-card__name"><%= nav %></span>
@@ -28,11 +30,11 @@
       <% } %>
     </div>
     <div class="page-hero__body">
-      <p class="eyebrow mb-4" style="color: rgb(<%= accent %>)"><%= kicker %></p>
+      <p class="eyebrow mb-4" style="color: rgb(<%= accent %>)"><span data-scramble="750"><%= kicker %></span></p>
       <%# On a narrow frame (a max-w-xl page) title + meta can't share a row —
           pass stack:true so the meta drops below instead of overflowing. %>
       <div class="flex flex-col gap-5 <%= (typeof stack !== 'undefined' && stack) ? '' : 'lg:flex-row lg:items-end lg:justify-between' %>">
-        <h1 class="page-hero__title"><%- title %></h1>
+        <h1 class="page-hero__title" data-split><%- title %></h1>
         <% if (typeof meta !== 'undefined' && meta) { %>
         <div class="shrink-0 <%= (typeof stack !== 'undefined' && stack) ? '' : 'lg:text-right' %>"><%- meta %></div>
         <% } %>

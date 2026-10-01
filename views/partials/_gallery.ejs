@@ -17,9 +17,10 @@
 <% const N = gallery.length || 1; %>
 <section id="gallery" class="gflow" data-js="gallery" aria-label="ENGINEER gallery">
   <div class="gflow__head">
-    <div data-reveal>
-      <h2 class="font-display font-bold text-3xl sm:text-5xl">Gallery</h2>
-    </div>
+    <h2 class="chapter-title chapter-title--md" data-split>Gallery</h2>
+    <%# Provenance, not decoration: every frame on the ring is a still from a
+        past ENGINEER aftermovie (data/gallery.json). %>
+    <p class="gflow__sub" data-reveal>Stills from past ENGINEER aftermovies &mdash; drag the ring, open any frame.</p>
   </div>
 
   <div class="gflow__stage" data-js="gflow-stage" style="--n: <%= N %>;">

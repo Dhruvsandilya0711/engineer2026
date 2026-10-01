@@ -60,7 +60,17 @@ export function initPreloader() {
   let seen = false;
   try { seen = sessionStorage.getItem('engi26.loaded') === '1'; } catch { /* private mode */ }
 
+  // The hero's entrance (see _hero.ejs) starts the moment the shutter
+  // opens, so the page is already assembling as the bands collapse off it.
+  const heroGo = () => {
+    const html = document.documentElement;
+    if (html.classList.contains('hero-go')) return;
+    window.__heroGoAt = performance.now();
+    html.classList.add('hero-go');
+  };
+
   if (seen || REDUCED_MOTION) {
+    heroGo();
     el.classList.add('is-instant');
     setTimeout(finish, REDUCED_MOTION ? 200 : 0);
     return Promise.resolve();
@@ -146,6 +156,7 @@ export function initPreloader() {
 
       const f = Math.floor(T * 20);            // 20fps quantised frame index
       const wipe = T > burstEnd ? clamp01((T - burstEnd) / WIPE) : 0;
+      if (T > burstEnd) heroGo();
 
       // ---- readouts
       if (pctEl) pctEl.textContent = String(pct).padStart(3, '0') + '%';

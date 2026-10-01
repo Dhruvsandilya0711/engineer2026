@@ -9,7 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link href="/src/output.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/cognitrixx-mark-64.png">
+  <link href="/src/output.css?v=<%= assetV %>" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -56,7 +57,7 @@
             <li class="surface-card p-6 sm:p-7 text-center" data-reveal>
               <p class="font-mono text-[0.6rem] tracking-[0.2em] uppercase mb-3" style="color: rgb(<%= t.accent %>)"><%= String(i + 1).padStart(2, '0') %> / <%= t.name %></p>
               <p class="font-display font-semibold text-lg mb-2"><%= t.name %></p>
-              <p class="font-mono text-[0.62rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">Open slot</p>
+              <p class="font-mono text-[0.62rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">Coming soon</p>
             </li>
             <% }); %>
           </ul>
@@ -185,6 +186,7 @@ Every tier above is still open for ENGINEER '26. Confirmed partners appear here
 
   <%- include('partials/_footer') %>
 
-  <script type="module" src="/js/page.js"></script>
+  <script type="module" src="/js/motion.js?v=<%= assetV %>"></script>
+  <script type="module" src="/js/page.js?v=<%= assetV %>"></script>
 </body>
 </html>

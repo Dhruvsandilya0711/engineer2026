@@ -1,0 +1,15 @@
+<%# ==========================================================================
+    DYNAMIC MARK — the Cognitrixx logo, lit one part at a time.
+
+    Three copies of the same artwork, stacked: a dim base that keeps the whole
+    form readable, and two lit copies, each masked by a conic sweep that
+    travels round the logo's centre. Only the arm under a sweep glows, so the
+    light runs round the triangle face by face instead of the mark sitting
+    uniformly lit. The second sweep trails the first at half strength.
+    Pure CSS (registered --dm-a angle); reduced motion shows the mark lit.
+    ========================================================================== %>
+<div class="dynmark<%= typeof extra !== 'undefined' ? ' ' + extra : '' %>" aria-hidden="true">
+  <img class="dynmark__base" src="/images/cognitrixx-mark-1024.webp" srcset="/images/cognitrixx-mark-1024.webp 1024w, /images/cognitrixx-mark-2048.webp 2015w" sizes="(max-width: 640px) 100vw, 70vh" alt="" width="2015" height="1971" loading="lazy" decoding="async">
+  <img class="dynmark__lit" src="/images/cognitrixx-mark-1024.webp" srcset="/images/cognitrixx-mark-1024.webp 1024w, /images/cognitrixx-mark-2048.webp 2015w" sizes="(max-width: 640px) 100vw, 70vh" alt="" width="2015" height="1971" loading="lazy" decoding="async">
+  <img class="dynmark__lit dynmark__lit--trail" src="/images/cognitrixx-mark-1024.webp" srcset="/images/cognitrixx-mark-1024.webp 1024w, /images/cognitrixx-mark-2048.webp 2015w" sizes="(max-width: 640px) 100vw, 70vh" alt="" width="2015" height="1971" loading="lazy" decoding="async">
+</div>

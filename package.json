@@ -11,7 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node index.js",
     "build:css": "tailwindcss -i ./public/src/input.css -o ./public/src/output.css --minify",
-    "watch:css": "tailwindcss -i ./public/src/input.css -o ./public/src/output.css --watch"
+    "watch:css": "tailwindcss -i ./public/src/input.css -o ./public/src/output.css --watch",
+    "export:static": "node scripts/export-static.mjs"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.3.3",

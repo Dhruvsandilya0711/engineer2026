@@ -85,13 +85,30 @@ export function initCountdown() {
       minutes: el.querySelector('[data-unit="minutes"]'),
       seconds: el.querySelector('[data-unit="seconds"]'),
     };
+    // A digit that changes drops in from above rather than swapping in place,
+    // so the readout visibly ticks. Only on a CHANGE: the first paint just
+    // writes the numbers, and a unit that did not move stays still.
+    let first = true;
+    const set = (node, value) => {
+      if (!node || node.textContent === value) return;
+      node.textContent = value;
+      if (first || REDUCED_MOTION || !node.animate) return;
+      node.animate(
+        [
+          { transform: 'translateY(-38%)', opacity: 0, filter: 'blur(3px)' },
+          { transform: 'translateY(0)', opacity: 1, filter: 'blur(0)' },
+        ],
+        { duration: 420, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      );
+    };
     function tick() {
       const diff = Math.max(0, target - Date.now());
       const s = Math.floor(diff / 1000);
-      if (units.days) units.days.textContent = String(Math.floor(s / 86400)).padStart(2, '0');
-      if (units.hours) units.hours.textContent = String(Math.floor((s % 86400) / 3600)).padStart(2, '0');
-      if (units.minutes) units.minutes.textContent = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
-      if (units.seconds) units.seconds.textContent = String(s % 60).padStart(2, '0');
+      set(units.days, String(Math.floor(s / 86400)).padStart(2, '0'));
+      set(units.hours, String(Math.floor((s % 86400) / 3600)).padStart(2, '0'));
+      set(units.minutes, String(Math.floor((s % 3600) / 60)).padStart(2, '0'));
+      set(units.seconds, String(s % 60).padStart(2, '0'));
+      first = false;
     }
     tick();
     setInterval(tick, 1000);

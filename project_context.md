@@ -90,6 +90,29 @@ Superseded the earlier Unbounded/IBM Plex system. Now:
 Colour roles kept distinct (do not flatten): amber = Cognitrixx neural energy,
 blue/violet/magenta = ENGINEER Penrose identity, cyan = technical signal.
 
+### The revamp layer (Sep 2026) — "same circuitry, turned up"
+Palette, faces, bevels and all content are unchanged; scale, light and motion
+were raised. Everything lives in the `R1`–`R13` block at the end of
+`public/src/input.css` (unlayered, so it wins over the component layer) and in
+`public/js/motion.js`, which is loaded as its **own** `<script type="module">`
+on every page so it never waits for three.js to download.
+
+| Hook | Does |
+|---|---|
+| `data-split` | Headline `<br>`-lines rise out of masks on arrival (`.sl` / `.sl__i`) |
+| `data-scramble="ms"` | Label decodes out of glyph noise on arrival |
+| `data-marquee` + `.mq__track` | CSS-looped band; JS modulates `playbackRate` with scroll velocity/direction. `animation-direction: reverse` on a row makes it counter-rotate |
+| `data-highlight` | Paragraph lights word by word as it scrolls (GSAP scrub) |
+| `data-spotlight` (+ `--spot: r,g,b`) | Cursor-following light on a surface (fine pointer only) |
+| `data-preview="/img"` | Floating photo plate that trails the cursor over links |
+| `data-img-reveal` | Photo wipes open on arrival |
+| `data-hero` + `--hd` (ms) | Hero entrance, pure CSS, keyed to `html.hero-go` (set by preloader at wipe start, or the inline gate in `_entry.ejs` on repeat visits; 7s failsafe) |
+
+Hidden poses are always scoped to `html.js` (set inline in `_transition.ejs`)
+and `prefers-reduced-motion: no-preference`, so JS-off and reduced-motion get a
+complete static page. `[data-reveal]` was fixed the same way — it used to be
+opacity 0 forever with JS off.
+
 ### Working and verified
 - **Preloader** — 4 phases, measured **3.51s** total (reference 3.30s). Shard base offsets,
   torn slivers, chroma split, rolling scanlines, 9-band shutter wipe. First-visit only
