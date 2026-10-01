@@ -28,7 +28,7 @@
    Wired from public/js/site.js -> initAudio().
    ========================================================================== */
 
-import { gainTick } from '/engineer2026/js/click-sfx.js?v=2ca83a4';
+import { gainTick } from '/engineer2026/js/click-sfx.js?v=5293c0a';
 
 const SRC = '/engineer2026/audio/tentative.mp3';
 const START_AT = 25;              // seconds — skip the intro
@@ -402,8 +402,34 @@ export function initAudio(whenReady) {
       return Math.min(STEPS, Math.ceil(t * STEPS));
     };
 
+    // STICKY OPEN. Hover alone was too fragile: the column is a narrow
+    // strip, and drifting a few pixels off it mid-drag (or letting go just
+    // outside it) shut it under the hand, with no way back short of
+    // re-hovering the pill. Once opened it now stays open until the pointer
+    // has been away for a beat, or the visitor clicks elsewhere / presses
+    // Escape. CSS still opens it instantly on hover and on keyboard focus.
     let dragging = false;
+    let closeTimer = 0;
+    const openGain = () => { clearTimeout(closeTimer); dock.classList.add('is-open'); };
+    const closeGain = () => { clearTimeout(closeTimer); dock.classList.remove('is-open'); };
+    const scheduleClose = (ms = 1200) => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        if (dragging || dock.matches(':hover') || dock.matches(':focus-within')) return;
+        closeGain();
+      }, ms);
+    };
+    dock.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') openGain(); });
+    dock.addEventListener('pointerleave', () => scheduleClose());
+    document.addEventListener('pointerdown', (e) => {
+      if (!dock.contains(e.target)) closeGain();
+    }, true);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dock.classList.contains('is-open')) { closeGain(); gain.blur(); }
+    });
+
     gain.addEventListener('pointerdown', (e) => {
+      openGain();
       dragging = true;
       gain.setPointerCapture(e.pointerId);
       gain.classList.add('is-dragging');
@@ -416,6 +442,9 @@ export function initAudio(whenReady) {
       dragging = false;
       gain.classList.remove('is-dragging');
       try { gain.releasePointerCapture(e.pointerId); } catch (_) {}
+      // Let go outside the dock: the column waits for the pointer to come
+      // back instead of vanishing on release.
+      scheduleClose(1600);
     };
     gain.addEventListener('pointerup', endDrag);
     gain.addEventListener('pointercancel', endDrag);
@@ -432,6 +461,7 @@ export function initAudio(whenReady) {
     gain.addEventListener('wheel', (e) => {
       if (!engaged) return;
       e.preventDefault();
+      openGain();
       setLevel(level + (e.deltaY < 0 ? 1 : -1));
     }, { passive: false });
 
