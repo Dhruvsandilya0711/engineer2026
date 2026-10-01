@@ -91,6 +91,24 @@ await cp('public', OUT, {
   filter: (src) => !/\.DS_Store$|input\.css$/.test(src),
 });
 await rebaseTree(path.join(OUT, 'js'), ['.js']);
+
+// Version every site module, not just the entry scripts. Pages lets
+// browsers keep a file for 10 minutes, and an unversioned import (say
+// neural-mark.js) would otherwise survive a deploy while the page around
+// it changed. Every reference gets the same ?v=, in the HTML and in the
+// imports, so each module is still loaded exactly once.
+const VERSION = process.env.ASSET_VERSION || Date.now().toString(36);
+const jsRef = new RegExp(`(${BASE}/js/[\\w-]+\\.js)(?:\\?v=[\\w-]+)?(?=["'\`])`, 'g');
+async function versionTree(dir, exts) {
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) await versionTree(p, exts);
+    else if (exts.includes(path.extname(entry.name))) {
+      await writeFile(p, (await readFile(p, 'utf8')).replace(jsRef, `$1?v=${VERSION}`));
+    }
+  }
+}
+await versionTree(OUT, ['.js', '.html']);
 await rebaseTree(path.join(OUT, 'src'), ['.css']);
 
 // The three vendor mounts index.js serves straight from node_modules.
