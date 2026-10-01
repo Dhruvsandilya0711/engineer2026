@@ -6676,7 +6676,7 @@ select.form-input {
 }
 .dynmark {
   position: relative;
-  aspect-ratio: 1009 / 987;
+  aspect-ratio: 2015 / 1971;
   --dm-a: 0deg;
   animation: dm-orbit 7.5s linear infinite;
 }
@@ -6689,15 +6689,15 @@ select.form-input {
   display: block;
 }
 /* The whole form, held dim. */
-.dynmark__base { filter: brightness(0.32) saturate(0.6); }
+.dynmark__base { filter: brightness(0.4) saturate(0.7); }
 /* The lit copy, seen only through a sweep about the logo's centre — so the
    light sits on one arm of the triangle at a time and travels round it. */
 .dynmark__lit {
-  filter: brightness(1.2) saturate(1.15) drop-shadow(0 0 18px rgba(var(--rgb-indigo), 0.6));
+  filter: brightness(1.15) saturate(1.1) drop-shadow(0 0 22px rgba(var(--rgb-indigo), 0.55));
   -webkit-mask-image: conic-gradient(from var(--dm-a) at 50% 54%,
-    transparent 0deg, #000 30deg, #000 85deg, transparent 125deg, transparent 360deg);
+    transparent 0deg, rgba(0,0,0,0.6) 25deg, #000 50deg, #000 80deg, rgba(0,0,0,0.6) 105deg, transparent 135deg, transparent 360deg);
           mask-image: conic-gradient(from var(--dm-a) at 50% 54%,
-    transparent 0deg, #000 30deg, #000 85deg, transparent 125deg, transparent 360deg);
+    transparent 0deg, rgba(0,0,0,0.6) 25deg, #000 50deg, #000 80deg, rgba(0,0,0,0.6) 105deg, transparent 135deg, transparent 360deg);
 }
 /* A fainter second pass, a third of a turn behind. */
 .dynmark__lit--trail {
