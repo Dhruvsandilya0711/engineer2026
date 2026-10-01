@@ -82,9 +82,9 @@
         <% } else { %>
         <!-- Honest empty day: nothing is scheduled, so nothing is shown. -->
         <div class="border border-dashed border-[var(--hairline)] py-12 px-6 text-center">
-          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-amber mb-3">Not yet scheduled</p>
+          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-amber mb-3">Coming soon</p>
           <p class="text-sm text-[var(--paper-dim)] max-w-md mx-auto">
-            Sessions for <%= day.label %> publish here once times and venues are confirmed.
+            Sessions, times and venues for <%= day.label %> are coming soon.
           </p>
         </div>
         <% } %>
@@ -97,7 +97,7 @@
       <% if (unscheduled.length) { %>
       <section class="mt-16" aria-labelledby="unscheduled-heading">
         <div class="section-head">
-          <h2 id="unscheduled-heading" class="font-display font-semibold text-xl">Awaiting a slot</h2>
+          <h2 id="unscheduled-heading" class="font-display font-semibold text-xl">Timings coming soon</h2>
           <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= unscheduled.length %> events</p>
         </div>
         <p class="text-sm text-[var(--paper-dim)] mb-6 max-w-2xl">
@@ -121,8 +121,8 @@
       <aside class="mt-16 border-l-2 border-amber/50 pl-5 py-2">
         <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-amber mb-2">Status</p>
         <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
-The timetable is still being built. Every time shown here is a confirmed one, so
-          check back — events move into the schedule as the organising team fixes them.
+The full timetable is coming soon — events move into the schedule as the
+          organising team fixes them.
         </p>
       </aside>
         </div></div></div>

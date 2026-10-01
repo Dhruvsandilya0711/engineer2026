@@ -96,15 +96,15 @@
         <dl class="detail-meta">
           <div>
             <dt>Date</dt>
-            <dd class="<%= event.date ? '' : 'is-tba' %>"><%= event.date || 'TBA' %></dd>
+            <dd class="<%= event.date ? '' : 'is-tba' %>"><%= event.date || 'Coming soon' %></dd>
           </div>
           <div>
             <dt>Time</dt>
-            <dd class="<%= event.time ? '' : 'is-tba' %>"><%= event.time || 'TBA' %></dd>
+            <dd class="<%= event.time ? '' : 'is-tba' %>"><%= event.time || 'Coming soon' %></dd>
           </div>
           <div>
             <dt>Venue</dt>
-            <dd class="<%= event.venue ? '' : 'is-tba' %>"><%= event.venue || 'TBA' %></dd>
+            <dd class="<%= event.venue ? '' : 'is-tba' %>"><%= event.venue || 'Coming soon' %></dd>
           </div>
           <div>
             <dt>Category</dt>
@@ -226,12 +226,11 @@
           %>
           <% if (!hasAnyDetail) { %>
           <section class="border border-dashed border-[var(--hairline-strong)] p-8">
-            <p class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-amber mb-3">Awaiting brief</p>
-            <h2 class="font-display font-semibold text-xl mb-3">Full details publish here</h2>
+            <p class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-amber mb-3">Coming soon</p>
+            <h2 class="font-display font-semibold text-xl mb-3">Full details coming soon</h2>
             <p class="text-sm text-[var(--paper-dim)] max-w-lg">
-              The rules, timeline, prizes, eligibility and team requirements for <%= event.name %> go live
-              once the organising team confirms them. What you see above is what the event is; none of the
-              specifics are settled yet.
+              The rules, timeline, prizes, eligibility and team requirements for <%= event.name %> are coming
+              soon. What you see above is what the event is; the specifics publish here once confirmed.
             </p>
           </section>
           <% } %>
@@ -259,12 +258,12 @@
                 <% } else if (event.registration === 'closed') { %>
                   Registration for this event has closed.
                 <% } else { %>
-                  The ENGINEER '26 registration portal isn't live yet. When it opens,
+                  Registrations for ENGINEER '26 open soon. When they do,
                   you'll be able to enter <%= event.name %> from this panel.
                 <% } %>
               </p>
               <button type="button" class="btn btn-secondary w-full justify-center" disabled aria-disabled="true">
-                <%= event.registration === 'completed' || event.registration === 'closed' || event.registration === 'full' ? 'Unavailable' : 'Not open yet' %>
+                <%= event.registration === 'completed' || event.registration === 'closed' || event.registration === 'full' ? 'Unavailable' : 'Coming soon' %>
               </button>
             <% } %>
 

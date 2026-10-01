@@ -46,6 +46,21 @@
       <div class="hud-frame mt-6" style="--accent: var(--bay-6)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
+      <% if (status === 'soon') { %>
+        <div class="soon-panel" role="status">
+          <p class="soon-panel__tag">Coming soon</p>
+          <h2 class="font-display font-semibold text-2xl mb-3">Registrations open soon</h2>
+          <p class="text-sm text-[var(--paper-dim)] mb-6">
+            Registration for ENGINEER '26 isn't open yet. Event details, rules and timings are being
+            finalised — this page opens for sign-ups as soon as they are.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/events" class="btn btn-secondary">Browse events</a>
+            <a href="/schedule" class="btn btn-secondary">See the schedule</a>
+          </div>
+        </div>
+      <% } %>
+
       <% if (status === 'success') { %>
         <div class="border border-[rgba(63,191,143,.45)] bg-charcoal p-7 mb-8" role="status">
           <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-success mb-3">Registered</p>
@@ -110,7 +125,7 @@
         </div>
       <% } %>
 
-      <% if (status !== 'success' && status !== 'pay') { %>
+      <% if (status !== 'success' && status !== 'pay' && status !== 'soon') { %>
       <form method="post" action="/register" novalidate class="flex flex-col gap-5" data-js="register-form">
 
         <div>

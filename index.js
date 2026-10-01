@@ -72,7 +72,16 @@ const REGISTRATION_STATES = {
   full:          { label: 'Event full',             tone: 'closed', actionable: false },
   completed:     { label: 'Completed',              tone: 'closed', actionable: false },
 };
-const regState = (e) => REGISTRATION_STATES[e.registration] || REGISTRATION_STATES.not_open;
+// One switch for the whole registration system. Off by default: until it
+// is turned on, every event reads "Coming soon", the register page shows a
+// coming-soon panel instead of the form, and a POST is refused rather than
+// recorded. Set REGISTRATION_OPEN=true to go live; per-event states in
+// data/events.json then apply as before.
+const REGISTRATION_OPEN = process.env.REGISTRATION_OPEN === 'true';
+const COMING_SOON = { label: 'Coming soon', tone: 'idle', actionable: false, soon: true };
+const regState = (e) => REGISTRATION_OPEN
+  ? (REGISTRATION_STATES[e.registration] || REGISTRATION_STATES.not_open)
+  : COMING_SOON;
 
 /**
  * The site's public origin. PUBLIC_ORIGIN wins when set, because it is the
@@ -379,6 +388,7 @@ async function eventFees() {
 }
 
 app.get('/register', async (req, res) => {
+  if (!REGISTRATION_OPEN) return renderRegister(res, { status: 'soon' });
   renderRegister(res, {
     values: { userName: '', userRollNumber: '', userEvent: req.query.event || '', userMail: '' },
     fees: await eventFees(),
@@ -397,6 +407,11 @@ const registerLimit = requestLimit({
 });
 
 app.post('/register', registerLimit, async (req, res) => {
+  // Closed means closed: nothing is validated or written while the switch
+  // is off, whatever a stale tab or a script posts.
+  if (!REGISTRATION_OPEN) return res.status(403).render('register', {
+    festDates: FEST_DATES, events, values: {}, errors: {}, status: 'soon', payment: null, fees: {},
+  });
   const { valid, errors, value } = validate(req.body || {});
   // Needed by every path that re-renders the form: coming back with an error
   // must not drop the prices out of the event picker.
