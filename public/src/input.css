@@ -6717,28 +6717,15 @@ select.form-input {
 /* The finale: the dynamic mark replaces the old flat artwork behind the
    closing line. Brighter than the old 0.2 wash, because only part of it is
    ever lit. */
-/* The finale's mark: the logo as drawn, static and fully lit. */
+/* The finale's mark: the logo as drawn, static and fully lit, sitting
+   squarely behind REWIRE REALITY. */
 .finale__mark {
-  width: min(70vh, 86vw);
+  width: min(66vh, 84vw);
   height: auto;
-  opacity: 0.4;
+  top: 44%;
+  opacity: 0.5;
   mix-blend-mode: normal;
   filter: none;
   animation: none;
 }
 
-/* The page foot: the same mark, large and quiet behind the footer. */
-.footer-dynmark {
-  position: absolute;
-  right: -6%;
-  top: 4%;
-  width: min(560px, 70vw);
-  opacity: 0.32;
-  pointer-events: none;
-  z-index: 0;
-}
-.site-footer > .rail,
-.site-footer > .footer-mega { position: relative; z-index: 1; }
-@media (max-width: 640px) {
-  .footer-dynmark { right: -30%; top: 2%; width: 110vw; opacity: 0.22; }
-}
