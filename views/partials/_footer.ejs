@@ -12,11 +12,13 @@
      negotiating a tier will look, rather than on every page of the site.
      ========================================================================== -->
 <footer id="footer" class="site-footer relative z-10 border-t border-[var(--hairline)] pt-16 pb-0">
+  <%# The page ends on the logo working in the background: lit arm by arm. %>
+  <%- include('_dynamic-mark', { extra: 'footer-dynmark' }) %>
   <div class="rail grid sm:grid-cols-3 gap-12">
     <div>
       <div class="flex items-center gap-3 mb-4">
-        <img src="/images/engineer26-mark.png" alt="" aria-hidden="true"
-             class="w-8 h-8 object-contain" width="399" height="389" loading="lazy" decoding="async">
+        <img src="/images/cognitrixx-mark-256.png" alt="" aria-hidden="true"
+             class="w-8 h-8 object-contain" width="256" height="250" loading="lazy" decoding="async">
         <span class="font-display font-semibold text-sm">ENGINEER&nbsp;'26</span>
       </div>
       <p class="font-mono text-xs tracking-[0.15em] uppercase text-[var(--paper-faint)]">Cognitrixx — Rewire Reality</p>

@@ -6,7 +6,7 @@
   <%# Radar rings pulsing out from behind the mark — the network sending one
       last signal. Pure CSS, transform and opacity only. %>
   <div class="finale__rings" aria-hidden="true"><span></span><span></span><span></span></div>
-  <img src="/images/engineer26logo.png" alt="" aria-hidden="true" class="finale__mark">
+  <%- include('_dynamic-mark', { extra: 'finale__mark' }) %>
 
   <div class="relative">
     <h2 class="finale__title" data-split>

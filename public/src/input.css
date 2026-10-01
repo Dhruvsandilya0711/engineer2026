@@ -6656,3 +6656,90 @@ select.form-input {
   88% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .err-code { animation: none; } }
+
+
+/* ==========================================================================
+   R14. THE COGNITRIXX MARK — and its dynamic, part-by-part lighting
+   ========================================================================== */
+/* The new mark carries its own colour and glow, so the white-line-art halos
+   the old mark needed are pulled right back. */
+.nav-mark, .hud-mark {
+  filter: drop-shadow(0 0 10px rgba(var(--rgb-indigo), 0.45));
+}
+.hud-mark { width: clamp(56px, 6vw, 70px); }
+.drawer__mark { opacity: 0.12; }
+
+@property --dm-a {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+.dynmark {
+  position: relative;
+  aspect-ratio: 1009 / 987;
+  --dm-a: 0deg;
+  animation: dm-orbit 7.5s linear infinite;
+}
+.dynmark img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* The whole form, held dim. */
+.dynmark__base { filter: brightness(0.32) saturate(0.6); }
+/* The lit copy, seen only through a sweep about the logo's centre — so the
+   light sits on one arm of the triangle at a time and travels round it. */
+.dynmark__lit {
+  filter: brightness(1.2) saturate(1.15) drop-shadow(0 0 18px rgba(var(--rgb-indigo), 0.6));
+  -webkit-mask-image: conic-gradient(from var(--dm-a) at 50% 54%,
+    transparent 0deg, #000 30deg, #000 85deg, transparent 125deg, transparent 360deg);
+          mask-image: conic-gradient(from var(--dm-a) at 50% 54%,
+    transparent 0deg, #000 30deg, #000 85deg, transparent 125deg, transparent 360deg);
+}
+/* A fainter second pass, a third of a turn behind. */
+.dynmark__lit--trail {
+  opacity: 0.45;
+  -webkit-mask-image: conic-gradient(from calc(var(--dm-a) + 200deg) at 50% 54%,
+    transparent 0deg, #000 25deg, #000 60deg, transparent 100deg, transparent 360deg);
+          mask-image: conic-gradient(from calc(var(--dm-a) + 200deg) at 50% 54%,
+    transparent 0deg, #000 25deg, #000 60deg, transparent 100deg, transparent 360deg);
+}
+@keyframes dm-orbit { to { --dm-a: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .dynmark { animation: none; }
+  .dynmark__base { filter: none; }
+  .dynmark__lit { display: none; }
+}
+
+/* The finale: the dynamic mark replaces the old flat artwork behind the
+   closing line. Brighter than the old 0.2 wash, because only part of it is
+   ever lit. */
+.finale__mark.dynmark {
+  position: absolute;
+  animation: dm-orbit 7.5s linear infinite, finale-float 12s ease-in-out infinite;
+}
+.finale__mark {
+  width: min(70vh, 86vw);
+  opacity: 0.55;
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+/* The page foot: the same mark, large and quiet behind the footer. */
+.footer-dynmark {
+  position: absolute;
+  right: -6%;
+  top: 4%;
+  width: min(560px, 70vw);
+  opacity: 0.32;
+  pointer-events: none;
+  z-index: 0;
+}
+.site-footer > .rail,
+.site-footer > .footer-mega { position: relative; z-index: 1; }
+@media (max-width: 640px) {
+  .footer-dynmark { right: -30%; top: 2%; width: 110vw; opacity: 0.22; }
+}
