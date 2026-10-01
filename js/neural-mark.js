@@ -8,7 +8,7 @@
 // reads as a solid extruded object. That is the whole trick.
 //
 // Sampling the PNG rather than shipping a mesh means the mark stays a single
-// source of truth: change public/images/cognitrixx-mark-1024.webp and this follows,
+// source of truth: change public/images/engineer26-mark.png and this follows,
 // with no export step and nothing to keep in sync.
 //
 // Cost control matches cognitrixx-3d.js: DPR capped, paused off-screen and on
@@ -594,7 +594,7 @@ export function createMarkField(host, img, opts = {}) {
  * otherwise the section's ScrollTrigger would scrub against nothing for the
  * first few hundred milliseconds and the mark would arrive at the wrong state.
  */
-export function mountNeuralMark(src = '/engineer2026/images/cognitrixx-mark-1024.webp') {
+export function mountNeuralMark(src = '/engineer2026/images/engineer26-mark.png') {
   const host = document.querySelector('[data-js="neural-mark"]');
   if (!host) return null;
   if (!hasWebGL()) { host.classList.add('is-static'); return null; }
