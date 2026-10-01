@@ -6760,3 +6760,63 @@ select.form-input {
   box-shadow: 0 0 8px currentColor;
   animation: online-pulse 2.4s ease-in-out infinite;
 }
+
+/* ==========================================================================
+   R15. AUDIO DOCK — steadier control
+   ========================================================================== */
+/* An invisible bridge across the gap between the column and the pill, so
+   moving the cursor up to the column never leaves the dock's hover. */
+.gain::after {
+  content: "";
+  position: absolute;
+  left: -14px; right: -14px;
+  top: 0;
+  bottom: -0.9rem;
+  z-index: -1;
+}
+/* Opens at once, closes after a beat: a cursor that slips off for a moment
+   no longer snaps it shut under the hand. */
+.gain { transition-delay: 220ms; }
+.audio-dock:hover .gain,
+.audio-dock:focus-within .gain { transition-delay: 0ms; }
+
+/* The pill only lifts on real hover. On a touch screen :hover sticks after
+   a tap, which left the button sitting nudged and spun up. */
+@media (hover: none), (pointer: coarse) {
+  .audio-toggle:hover { transform: none; }
+  .audio-toggle:hover::before { opacity: 0.55; animation-duration: 6.5s; }
+  .audio-toggle.is-on:hover::before { opacity: 0.95; animation-duration: 4.2s; }
+  .audio-toggle:hover svg { transform: none; }
+}
+/* On = the intent; glowing = sound is actually coming out. Until the browser
+   lets it play (first tap), the pill shows on, without the pulse. */
+.audio-toggle.is-on { animation: none; }
+.audio-toggle.is-on.is-live { animation: audio-glow 3s var(--ease-standard) infinite; }
+.audio-toggle.is-on:not(.is-live) { color: rgba(var(--rgb-cyan), 0.7); }
+@media (prefers-reduced-motion: reduce) {
+  .audio-toggle.is-on.is-live { animation: none; }
+}
+
+/* ==========================================================================
+   R16. FINALE LOGO — light, not a slab
+   Screen blending drops the logo's dark body completely, so only its neon
+   lines and nodes light the page; a radial mask then quiets the middle
+   where REWIRE REALITY sits, keeping the words clean over it.
+   ========================================================================== */
+.finale__mark {
+  top: 50%;
+  width: min(62vh, 80vw);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+  filter: saturate(1.1);
+  -webkit-mask-image: radial-gradient(closest-side at 50% 50%, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.4) 50%, #000 92%);
+          mask-image: radial-gradient(closest-side at 50% 50%, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.4) 50%, #000 92%);
+}
+.finale__title { text-shadow: 0 2px 30px rgba(var(--rgb-ground), 0.75), 0 0 60px rgba(var(--rgb-bloom), 0.25); }
+/* Gradient text is transparent glyphs over a clipped background, so a
+   text-shadow shows THROUGH the letters and dulls them. The gradient line
+   takes its separation from a drop-shadow instead, which sits behind. */
+.finale__title .text-gradient-impossible {
+  text-shadow: none;
+  filter: drop-shadow(0 2px 16px rgba(var(--rgb-ground), 0.85));
+}
