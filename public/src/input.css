@@ -6794,3 +6794,28 @@ select.form-input {
   text-shadow: none;
   filter: drop-shadow(0 2px 16px rgba(var(--rgb-ground), 0.85));
 }
+
+/* ---- volume column: sticky open + a bigger target ---------------------- */
+/* .is-open is set by audio.js once the column has been reached for, and
+   held until the pointer has been away for a beat — so it no longer shuts
+   the moment the cursor slips off the strip. */
+.audio-dock.is-open .gain {
+  transform: translateX(-50%) scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0ms;
+}
+/* Wider column, taller segments: easier to hit. */
+.gain { width: 40px; }
+.gain__seg { height: 9px; }
+.gain__stack { gap: 4px; }
+/* The invisible grab zone now pads every side of the column, not just the
+   gap below it. */
+.gain::after {
+  left: -18px; right: -18px;
+  top: -14px;
+  bottom: -0.9rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .audio-dock.is-open .gain { transform: translateX(-50%); }
+}
