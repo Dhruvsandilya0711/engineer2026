@@ -22,11 +22,19 @@ Every frame was rendered on an exact 1/60 s clock, so motion is perfectly even.
 | `desktop/01_preloader_to_hero.mp4` | 00:04–00:06 "REWIRING REALITY" | First-visit boot screen counting to 100%, glitch burst, wipe into the hero |
 | `desktop/02_hero.mp4` | 00:06–00:08.3 "THINK / CREATE / ENGINEER" | Hero entrance, then idle with the live countdown |
 | `desktop/03_signal_game.mp4` | 00:08.3–00:10 "FIRE THE SIGNAL / HIT THE BULLSEYE" | Scroll-in to "Fire the signal.", name typed, run started, six real hits (score 0 → 300, streak ×6) |
+| `desktop/04_leaderboard_top_the_board.mp4` | 00:10–00:11 "TOP THE BOARD" | The real board: ₹2,500 highest score · ₹2,500 longest streak, server-verified, "No runs yet — be first"; the prize rules then expand |
 | `desktop/05_transformation_rewire.mp4` | 00:14–00:15 "REWIRE REALITY" | Pinned section through all six stages; "Engineering" is at ~6.3 s |
+| `desktop/06_deck_inside_the_fest_scale.mp4` | 00:15–00:17 stats shots (the "SCALE" window behind the photos) | "Inside the fest" fan, hover across the cards, Scale card opens at ~5.6 s: 15K+ / 200+ / 250+ / 50+ / 20+ |
+| `desktop/11_about_stats_15k_footfall.mp4` | 00:15–00:17 stats shots (alternative) | About page; the stats count up to 15K+ footfall, 200+ colleges, 250+ alumni startups |
+| `desktop/08_events_every_event_one_system.mp4` | 00:17–00:18 "EVERY EVENT. ONE SYSTEM." | /events entrance, scroll down the list, event photos trail the cursor over the rows |
+| `desktop/07_deck_network_backed_by_the_whole_graph.mp4` | 00:19–00:20 "BACKED BY THE WHOLE GRAPH" | Network card opens at ~2.6 s on "Backed by the whole graph." and scrolls through every logo wall to "Partner with us" |
+| `desktop/09_gallery_inside_the_fest.mp4` | 00:20–00:21 "INSIDE THE FEST" | Gallery ring turning with the scroll, then dragged and flicked |
+| `desktop/10_register_final_step.mp4` | 00:23–00:24 "REGISTER. FINAL STEP" | Finale with the new mark, cursor clicks "Register for ENGINEER '26" at ~3.3 s, page transition to /register |
 
 Desktop clips are 1920×1200 (16:10).
 
-More clips (deck cards, events, gallery, register, leaderboard, phone shots) are still rendering and will be added here.
+Not made yet: the phone shots (00:13 "PLAY FROM ANYWHERE", 00:18 "ALSO IN YOUR POCKET") and fresh
+screenshots for the 00:21–00:23 "network of intelligent minds" sphere.
 
 ## Things to know
 
