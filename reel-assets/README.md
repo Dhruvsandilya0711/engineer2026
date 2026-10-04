@@ -33,8 +33,20 @@ Every frame was rendered on an exact 1/60 s clock, so motion is perfectly even.
 
 Desktop clips are 1920×1200 (16:10).
 
-Not made yet: the phone shots (00:13 "PLAY FROM ANYWHERE", 00:18 "ALSO IN YOUR POCKET") and fresh
-screenshots for the 00:21–00:23 "network of intelligent minds" sphere.
+### Phone clips (1170×2532, iPhone aspect)
+
+| File | Reel shot it replaces | Notes |
+|---|---|---|
+| `mobile/M1_game_play_from_anywhere.mp4` | 00:13–00:14 "PLAY FROM ANYWHERE" | Touch play: name typed, run started, six hits (streak ×6). On phones the site's Save/Load buttons cover the SCORE box, which is a layout bug on the site |
+| `mobile/M2_hero_also_in_your_pocket.mp4` | 00:18–00:19 "ALSO IN YOUR POCKET" | Phone hero entrance and idle with the live countdown; the menu drawer opens at ~10 s |
+
+## Stills for the "network of intelligent minds" sphere (00:21–00:23)
+
+`stills/desktop/` holds 1920×1200 JPEG screenshots of the current site to use as the floating cards.
+
+## Logo
+
+`logo/cognitrixx-mark-latest.png`: the current Cognitrixx mark, 2015×1971, transparent background.
 
 ## Things to know
 
