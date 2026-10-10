@@ -7921,6 +7921,7 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   letter-spacing: 0.18em;
   line-height: 1.45;
   text-transform: uppercase;
+  text-wrap: balance;
   color: rgb(var(--spot));
 }
 
