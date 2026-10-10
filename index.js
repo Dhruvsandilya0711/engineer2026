@@ -301,17 +301,6 @@ app.get('/team', (req, res) => {
   });
 });
 
-// Sponsors. Tier STRUCTURE only — there is no sponsor data in this codebase and
-// none is invented here, so every slot renders as open (same rule as the deck
-// card in partials/_sponsors.ejs). Wire a real list in once partners confirm.
-// Coral / amber / neutral reads as a descending tier the way fuchsia / amber
-// / slate did, but out of this palette rather than the framework's defaults.
-const SPONSOR_TIERS = [
-  { name: 'Title',  accent: 'var(--bay-6)' },
-  { name: 'Gold',   accent: 'var(--rgb-amber)' },
-  { name: 'Silver', accent: 'var(--rgb-slate)' },
-];
-
 app.get('/about', (req, res) => {
   res.render('about', {
     festDates: FEST_DATES,
@@ -348,14 +337,9 @@ for (const slug of Object.keys(legal.docs)) {
   });
 }
 
+// Sponsors: a showcase of who has backed the fest, from data/fest.json.
 app.get('/sponsors', (req, res) => {
-  res.render('sponsors', {
-    festDates: FEST_DATES,
-    tiers: SPONSOR_TIERS,
-    openSlots: SPONSOR_TIERS.length,
-    eventCount: allEvents.length,
-    fest,
-  });
+  res.render('sponsors', { festDates: FEST_DATES, fest });
 });
 
 app.get('/events/:slug', (req, res, next) => {

@@ -6488,10 +6488,6 @@ section.border-dashed {
 }
 .stat { background: rgba(var(--rgb-ground), 0.88); }
 .stat__v { font-size: clamp(1.8rem, 5vw, 2.9rem); }
-.logo-wall__cell { background: rgba(var(--rgb-ground), 0.9); transition: background 0.3s; }
-.logo-wall__cell:hover { background: rgba(var(--rgb-cyan), 0.06); }
-.logo-wall__cell img { transition: opacity 0.3s ease, transform 0.5s var(--ease-reveal); }
-.logo-wall__cell:hover img { transform: scale(1.08); }
 
 /* ---- forms ---------------------------------------------------------------- */
 .form-input {
@@ -6762,4 +6758,155 @@ select.form-input {
 }
 @media (prefers-reduced-motion: reduce) {
   .audio-dock.is-open .gain { transform: translateX(-50%); }
+}
+
+/* ==========================================================================
+   R17. LOGO WALL — a lit instrument panel
+   The tiles are opaque, so the 1px gaps between them ARE the grid. A light
+   that follows the cursor (data-spotlight sets --mx/--my) is painted on
+   the wall behind the tiles, which means only the grid lines catch it: the
+   light reads as running through the wiring rather than washing the logos.
+   ========================================================================== */
+.logo-wall {
+  --lw-c: var(--rgb-cyan);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(240px circle at var(--mx, -999px) var(--my, -999px),
+      rgba(var(--lw-c), 0.85), rgba(var(--lw-c), 0.18) 45%, transparent 72%),
+    var(--hairline);
+}
+.logo-wall--lg { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+/* The generic spotlight fill, kept faint: the grid carries the light here. */
+.logo-wall[data-spotlight]::after {
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--lw-c), 0.07), transparent 65%);
+}
+/* A slow sheen crossing the wall, so it is alive before anyone touches it. */
+.logo-wall::before {
+  content: "";
+  position: absolute;
+  inset: -20% -60%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.05) 50%, transparent 58%);
+  transform: translateX(-60%);
+  animation: lw-sheen 9s var(--ease-standard) infinite;
+}
+@keyframes lw-sheen {
+  0%, 55% { transform: translateX(-60%); }
+  100%    { transform: translateX(60%); }
+}
+
+.logo-wall__cell {
+  position: relative;
+  background: rgba(var(--rgb-ground), 0.94);
+  transition: background 0.35s var(--ease-standard);
+}
+.logo-wall--lg .logo-wall__cell { padding: 1.2rem 1.4rem; }
+.logo-wall__cell img {
+  opacity: 0.58;
+  transition: opacity 0.35s ease, transform 0.6s var(--ease-reveal), filter 0.35s ease;
+}
+
+/* HUD brackets: four L-shaped corners that close in on hover. */
+.logo-wall__cell::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  pointer-events: none;
+  --b: rgb(var(--lw-c));
+  background:
+    linear-gradient(var(--b), var(--b)) top left    / 12px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) top left    / 1px 12px no-repeat,
+    linear-gradient(var(--b), var(--b)) top right   / 12px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) top right   / 1px 12px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom left / 12px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom left / 1px 12px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom right/ 12px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom right/ 1px 12px no-repeat;
+  opacity: 0;
+  transform: scale(1.12);
+  transition: opacity 0.3s ease, transform 0.45s var(--ease-reveal);
+}
+/* One scan line passes over the mark when it is picked up. */
+.logo-wall__cell::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 0;
+  height: 40%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(var(--lw-c), 0.16) 85%, rgba(var(--lw-c), 0.6) 100%);
+  opacity: 0;
+  transform: translateY(-100%);
+}
+.logo-wall__idx {
+  position: absolute;
+  top: 6px; left: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--paper-faint);
+  opacity: 0.45;
+  transition: color 0.3s, opacity 0.3s;
+}
+.logo-wall__name {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 6px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(var(--lw-c));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline: 0.5rem;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.3s ease, transform 0.4s var(--ease-reveal);
+}
+
+.logo-wall__cell:hover { background: rgba(var(--rgb-ground), 0.8); }
+.logo-wall__cell:hover img,
+.logo-wall--muted .logo-wall__cell:hover img {
+  opacity: 1;
+  transform: scale(1.07) translateY(-4px);
+  filter: drop-shadow(0 0 14px rgba(var(--lw-c), 0.55));
+}
+.logo-wall__cell:hover::before { opacity: 1; transform: scale(1); }
+.logo-wall__cell:hover::after { animation: lw-scan 0.75s var(--ease-standard) both; }
+.logo-wall__cell:hover .logo-wall__idx { color: rgb(var(--lw-c)); opacity: 1; }
+.logo-wall__cell:hover .logo-wall__name { opacity: 1; transform: none; }
+@keyframes lw-scan {
+  0%   { opacity: 0; transform: translateY(-100%); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(250%); }
+}
+
+/* No hover on a touch screen, so the marks sit brighter from the start. */
+@media (hover: none) {
+  .logo-wall__cell img { opacity: 0.82; }
+  .logo-wall--muted .logo-wall__cell img { opacity: 0.6; }
+}
+
+/* The tiles cascade in as the wall arrives (data-reveal adds is-visible). */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .logo-wall[data-reveal] .logo-wall__cell { opacity: 0; }
+  html.js .logo-wall[data-reveal].is-visible .logo-wall__cell {
+    animation: lw-in 0.7s var(--ease-reveal) both;
+    animation-delay: calc(var(--i) * 26ms);
+  }
+}
+@keyframes lw-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); filter: blur(4px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-wall::before { animation: none; opacity: 0; }
+  .logo-wall__cell:hover::after { animation: none; }
 }
