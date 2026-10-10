@@ -1,0 +1,82 @@
+<%#
+  One team card in the org tree. Front: the photo ring (initials until a
+  photo is added in data/team.json), name and post. Back: the punchline.
+  It flips on hover; touch has no hover, so public/js/team.js flips it on
+  a tap. Both faces are in the DOM, so a screen reader hears the line too.
+
+  Every card rises in from depth rather than sliding in from its side: a
+  card on the right sliding in from off-screen widened a phone's page.
+  The article itself never moves, so it stays a steady hover target while
+  .tcard__body lifts, leans toward the cursor and .tcard__flip turns over.
+  The faces carry no filter or clip-path of their own (only their children
+  do): either one on a back-face-hidden element is what lets Safari paint
+  the hidden face through the visible one.
+
+  No serial number on the card: the wings stack one after another on a
+  phone, so any running number read out of order there.
+
+  Params: m (member), accent (an "r, g, b" triple or a var holding one),
+  counter ({ n }).
+%>
+<%
+  counter.n++;
+  const w = String(m.name || '').trim().split(/\s+/).filter(Boolean);
+  const ini = w.length ? (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase() : '?';
+  // The punchline never breaks inside a hyphenated word ("to-do" was
+  // splitting into "to-" / "do" on a narrow card).
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const line = String(m.tagline || m.role || '').split(/(\S+-\S+)/)
+    .map((part, i) => (i % 2 ? `<span class="tcard__nb">${esc(part)}</span>` : esc(part))).join('');
+%>
+<li class="tcard-cell" data-reveal="depth" style="--ci: <%= counter.n %>">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: <%= accent %>">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__brand" aria-hidden="true">ENGI/26</span>
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  <% if (m.image) { %>
+                  <img src="<%= m.image %>" alt="<%= m.name %>" loading="lazy">
+                  <% } else { %>
+                  <span class="tcard__mono" aria-hidden="true"><%= ini %></span>
+                  <% } %>
+                </span>
+              </div>
+              <p class="tcard__name"><%= m.name %></p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post"><%= m.role %></p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__brand" aria-hidden="true">ENGI/26</span>
+              <span class="tcard__wm" aria-hidden="true"><%= ini %></span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line"><%- line %></p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig"><%= m.name %></p>
+              <p class="tcard__post"><%= m.role %></p>
+              <% if (m.email || m.linkedin) { %>
+              <p class="tcard__links">
+                <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
+                <% if (m.linkedin) { %><a href="<%= m.linkedin %>" rel="noopener noreferrer" target="_blank" aria-label="<%= m.name %> on LinkedIn">LinkedIn</a><% } %>
+              </p>
+              <% } %>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>

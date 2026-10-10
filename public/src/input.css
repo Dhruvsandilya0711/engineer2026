@@ -7484,3 +7484,518 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   .reg-filter__label { width: auto; padding-top: 0; }
   .reg-filter__go { padding: 0 16px; }
 }
+
+
+/* ==========================================================================
+   R20. TEAM TREE — the org chart as premium ID cards
+   A spine from the Convenor, three wings whose rows line up across the
+   page, and the secretaries along the base. It floats on the page's own
+   field: no panel behind it and no connector lines. Each person is a
+   black-glass card with a metallic edge that turns over to their
+   punchline: on hover with a mouse, on a tap (team.js) on a phone, on
+   focus from the keyboard. With a mouse it also leans toward the cursor
+   (motion.js → [data-tilt]) and catches a glare where the pointer is.
+   ========================================================================== */
+@property --tc-ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.tree {
+  --tgap: clamp(14px, 1.4vw, 22px);          /* between cards in a group */
+  --wpad: clamp(6px, 0.7vw, 12px);           /* inside each wing column */
+  --trow: clamp(36px, 4.2vw, 68px);          /* between tiers */
+  position: relative;
+  margin-top: clamp(40px, 6vw, 84px);
+  container-type: inline-size;
+}
+/* On a desktop the tree is wider than the text rail and centred on the
+   viewport, so six cards across still leaves each one room to be big. The
+   side margin keeps it clear of the fixed scroll rail on the left. */
+@media (min-width: 1024px) {
+  .tree {
+    --stage: min(96rem, 100vw - 2 * clamp(40px, 4.2vw, 64px));
+    width: var(--stage);
+    margin-inline: calc(50% - var(--stage) / 2);
+  }
+}
+/* Card width follows the tree's real width: two cards (or two single-card
+   posts) sit side by side inside one wing, a third of the tree. */
+.tree > * { --tw: clamp(128px, calc((100cqw / 3 - 2 * var(--wpad) - var(--tgap)) / 2), 240px); }
+
+/* A low gold light behind the top of the spine, nothing more. */
+.tree::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -140px;
+  width: min(1100px, 100%);
+  height: 820px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(34% 30% at 50% 28%, rgba(242, 192, 104, 0.12), transparent 72%),
+    radial-gradient(55% 46% at 50% 58%, rgba(242, 192, 104, 0.04), transparent 76%);
+  pointer-events: none;
+}
+
+.tree__group {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tgap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: calc(var(--tw) * 2 + var(--tgap));
+}
+
+/* ---- spine: Convenor → chiefs → marketing → growth ------------------ */
+.tree__spine {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--trow);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tree__tier { display: flex; justify-content: center; }
+
+/* ---- wings: three columns, rows aligned across them ----------------- */
+.tree__wings {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: var(--trow);
+  margin-top: calc(var(--trow) * 1.6);
+}
+.tree__cell {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: var(--tgap);
+  padding: 0 var(--wpad);
+}
+
+/* ---- base: the secretaries ------------------------------------------ */
+.tree__base {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: calc(var(--tgap) * 1.5);
+  margin-top: calc(var(--trow) * 1.6);
+}
+
+.tree-note {
+  margin-top: clamp(44px, 6vw, 76px);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+/* ---- the card -------------------------------------------------------- */
+.tcard-cell { width: var(--tw); }
+.tcard {
+  --cut: calc(var(--tw) * 0.085);
+  --shape: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  --lift: 0px;
+  position: relative;
+  display: block;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The floor shadow stays where it is while the card rises off it. */
+.tcard__shadow {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 16%;
+  bottom: -4%;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.75);
+  filter: blur(18px);
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
+}
+.tcard__shadow::after {
+  content: "";
+  position: absolute;
+  inset: 4% 6%;
+  border-radius: inherit;
+  background: rgb(var(--spot));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.tcard__body {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: perspective(1200px) translateY(var(--lift)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tcard__flip {
+  position: relative;
+  aspect-ratio: 3 / 4.1;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.22, 0.9, 0.24, 1);
+}
+@media (hover: hover) {
+  .tcard:hover { --lift: -10px; }
+  .tcard:hover .tcard__flip { transform: rotateY(180deg); }
+  .tcard:hover .tcard__shadow { transform: scale(1.06) translateY(6px); opacity: 0.85; }
+  .tcard:hover .tcard__shadow::after { opacity: 0.45; }
+}
+.tcard.is-open { --lift: -6px; }
+.tcard.is-open .tcard__flip,
+.tcard:focus-visible .tcard__flip { transform: rotateY(180deg); }
+.tcard.is-open .tcard__shadow::after,
+.tcard:focus-visible .tcard__shadow::after { opacity: 0.45; }
+
+.tcard__face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: rotateY(0deg) translateZ(1px);
+}
+.tcard__back { transform: rotateY(180deg) translateZ(1px); }
+
+/* Each face: a metallic gradient edge (the 1px frame) around black glass.
+   The edge turns into a running light while the card is turned over. */
+.tcard__frame {
+  position: relative;
+  height: 100%;
+  padding: 1px;
+  /* clip-path only clips paint; the running light below is twice the
+     card's size, and without this it widened a phone's page to fit it. */
+  overflow: hidden;
+  clip-path: var(--shape);
+  background: linear-gradient(158deg,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(var(--spot), 0.95) 12%,
+    rgba(var(--spot), 0.2) 34%,
+    rgba(255, 255, 255, 0.07) 58%,
+    rgba(var(--spot), 0.3) 82%,
+    rgba(var(--spot), 0.85) 100%);
+}
+.tcard__frame::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from var(--tc-ang),
+    transparent 0deg, rgba(var(--spot), 1) 40deg, #fff 64deg, transparent 100deg,
+    transparent 180deg, rgba(var(--spot), 1) 220deg, #fff 244deg, transparent 280deg);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  animation: tcard-spin 3.4s linear infinite;
+  animation-play-state: paused;
+}
+@keyframes tcard-spin { to { --tc-ang: 360deg; } }
+@media (hover: hover) {
+  .tcard:hover .tcard__frame::before { opacity: 1; animation-play-state: running; }
+}
+.tcard.is-open .tcard__frame::before,
+.tcard:focus-visible .tcard__frame::before { opacity: 1; animation-play-state: running; }
+
+.tcard__in {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  clip-path: var(--shape);
+  background: #06080e;
+}
+/* Glass catches the light along its top edge. */
+.tcard__in::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 24%);
+  pointer-events: none;
+}
+.tcard__front .tcard__in {
+  padding: calc(var(--tw) * 0.155) calc(var(--tw) * 0.07) calc(var(--tw) * 0.085);
+  background:
+    radial-gradient(70% 46% at 50% 33%, rgba(var(--spot), 0.2), transparent 70%),
+    radial-gradient(110% 50% at 50% 115%, rgba(var(--spot), 0.1), transparent 62%),
+    radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1.3px) 0 0 / 11px 11px,
+    linear-gradient(180deg, #0c1019 0%, #07090f 52%, #05060a 100%);
+}
+
+.tcard__brand,
+.tcard__hint {
+  position: absolute;
+  top: calc(var(--tw) * 0.062);
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, calc(var(--tw) * 0.042), 0.6rem);
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+.tcard__brand {
+  left: calc(var(--cut) + 7px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(var(--spot), 0.9);
+}
+.tcard__brand::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--spot));
+  box-shadow: 0 0 8px rgba(var(--spot), 0.9);
+}
+
+/* The photo ring: a metallic rim, a dark lens and a slow orbit. */
+.tcard__photo {
+  position: relative;
+  flex: none;
+  width: 60%;
+  aspect-ratio: 1;
+  margin-top: calc(var(--tw) * 0.02);
+  padding: 2px;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg,
+    rgba(var(--spot), 1), #fff 12%, rgba(var(--spot), 0.9) 24%,
+    rgba(var(--spot), 0.2) 46%, rgba(255, 255, 255, 0.75) 64%,
+    rgba(var(--spot), 0.5) 80%, rgba(var(--spot), 1));
+  box-shadow:
+    0 0 0 5px rgba(5, 7, 12, 0.92),
+    0 0 0 6px rgba(var(--spot), 0.28),
+    0 0 42px rgba(var(--spot), 0.3);
+}
+.tcard__disc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 28%, rgba(var(--spot), 0.32), #070a12 70%);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.8);
+}
+.tcard__disc img { width: 100%; height: 100%; object-fit: cover; }
+.tcard__mono {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--tw) * 0.19);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  background: linear-gradient(160deg, #fff 22%, rgb(var(--spot)) 64%, rgba(var(--spot), 0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 18px rgba(var(--spot), 0.45));
+}
+.tcard__orbit {
+  position: absolute;
+  inset: -13%;
+  border-radius: 50%;
+  border: 1px dashed rgba(var(--spot), 0.36);
+  animation: tcard-orbit 16s linear infinite;
+}
+.tcard__orbit i {
+  position: absolute;
+  top: 50%;
+  left: -3.5px;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(var(--spot), 0.5), 0 0 14px rgb(var(--spot));
+}
+@keyframes tcard-orbit { to { transform: rotate(360deg); } }
+
+.tcard__name {
+  margin-top: auto;
+  max-width: 100%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.8rem, calc(var(--tw) * 0.084), 1.16rem);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tcard__rule {
+  display: block;
+  flex: none;
+  width: calc(var(--tw) * 0.16);
+  height: 1px;
+  margin: calc(var(--tw) * 0.04) auto calc(var(--tw) * 0.034);
+  background: linear-gradient(90deg, transparent, rgb(var(--spot)), transparent);
+  box-shadow: 0 0 8px rgba(var(--spot), 0.6);
+}
+.tcard__post {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, calc(var(--tw) * 0.045), 0.64rem);
+  letter-spacing: 0.18em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: rgb(var(--spot));
+}
+
+/* What to do with it: a turn arrow for a mouse, "Tap" on a phone. */
+.tcard__hint {
+  right: calc(var(--tw) * 0.065);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+.tcard__hint::before { content: "\21BB"; }
+@media (hover: none) {
+  .tcard__hint { color: rgb(var(--spot)); }
+  .tcard__hint::before { content: "Tap \21BB"; }
+}
+
+/* A band of light crosses each card now and then, never two at once. */
+.tcard__shine {
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  z-index: 3;
+  width: 55%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.06) 42%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.06) 58%, transparent 80%);
+  transform: translateX(-110%);
+  animation: tcard-shine 9s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  animation-delay: calc(var(--ci, 0) * -0.71s);
+}
+@keyframes tcard-shine {
+  0%, 76% { transform: translateX(-110%); }
+  100%    { transform: translateX(210%); }
+}
+/* The glare sits where the pointer is (motion.js sets --px / --py). The
+   back face is mirrored, so its x runs the other way. */
+.tcard__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--px, 50%) var(--py, 30%), rgba(255, 255, 255, 0.15), transparent 48%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tcard__back .tcard__glare {
+  background: radial-gradient(circle at calc(100% - var(--px, 50%)) var(--py, 30%), rgba(255, 255, 255, 0.13), transparent 48%);
+}
+@media (hover: hover) { .tcard:hover .tcard__glare { opacity: 1; } }
+
+/* Over the gold cards the cursor's light (cursor.js) turns gold too; its
+   usual cyan-to-magenta bloom put a pink haze on every card it touched. */
+html:has(.tcard:hover) .cx-glow {
+  background: radial-gradient(circle at 50% 50%,
+    rgba(255, 216, 146, 0.2) 0%,
+    rgba(242, 192, 104, 0.13) 36%,
+    rgba(242, 192, 104, 0.05) 58%,
+    transparent 72%);
+}
+
+/* ---- the back: the punchline ---------------------------------------- */
+.tcard__back .tcard__in {
+  justify-content: center;
+  padding: calc(var(--tw) * 0.14) calc(var(--tw) * 0.09) calc(var(--tw) * 0.1);
+  text-align: center;
+  background:
+    radial-gradient(85% 55% at 50% 0%, rgba(var(--spot), 0.18), transparent 70%),
+    radial-gradient(70% 45% at 50% 108%, rgba(var(--spot), 0.1), transparent 70%),
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1.3px) 0 0 / 11px 11px,
+    linear-gradient(180deg, #0c1019 0%, #07090f 55%, #05060a 100%);
+}
+.tcard__quote {
+  display: block;
+  flex: none;
+  height: 0.42em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--tw) * 0.38);
+  line-height: 0.95;
+  color: rgb(var(--spot));
+  text-shadow: 0 0 26px rgba(var(--spot), 0.65);
+}
+.tcard__line {
+  position: relative;
+  margin-top: calc(var(--tw) * 0.03);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.84rem, calc(var(--tw) * 0.09), 1.24rem);
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: #fff;
+  text-wrap: balance;
+}
+.tcard__nb { white-space: nowrap; }
+/* The person's initials, huge and hollow, behind the punchline. */
+.tcard__wm {
+  position: absolute;
+  right: -0.08em;
+  bottom: -0.2em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--tw) * 0.62);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(var(--spot), 0.2);
+  pointer-events: none;
+  user-select: none;
+}
+.tcard__back .tcard__rule { margin-top: calc(var(--tw) * 0.075); }
+.tcard__sig {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.66rem, calc(var(--tw) * 0.058), 0.8rem);
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.84);
+}
+.tcard__back .tcard__post { margin-top: 3px; }
+.tcard__links { margin-top: 8px; display: flex; gap: 10px; font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.tcard__links a { color: var(--paper-dim); text-decoration: none; }
+.tcard__links a:hover { color: var(--color-cyan); }
+
+/* ---- phone & small tablet: one column -------------------------------- */
+@media (max-width: 1023.98px) {
+  .tree {
+    --tgap: 12px;
+    --trow: 30px;
+    /* Borrow a little of the side gutter: the cards get that much bigger. */
+    margin-inline: -10px;
+  }
+  /* Two cards to a row, sized from the tree's own width. */
+  .tree > * { --tw: min(232px, calc((100cqw - var(--tgap)) / 2 - 1px)); }
+  .tree__group { max-width: 100%; }
+  .tree__wings { display: flex; flex-direction: column; align-items: center; row-gap: 0; margin-top: var(--trow); }
+  .tree__cell { order: var(--o); width: 100%; padding: 0 0 var(--trow); }
+  .tree__cell.is-empty { display: none; }
+  .tree__base { gap: var(--tgap); margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcard__orbit, .tcard__frame::before { animation: none; }
+  .tcard__shine { display: none; }
+  .tcard__body, .tcard__flip, .tcard__shadow { transition: none; }
+}
