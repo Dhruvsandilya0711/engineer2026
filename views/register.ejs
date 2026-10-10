@@ -35,8 +35,8 @@
       <%
         const regTitle = `Register.<br><span class="text-gradient-impossible">Pick your event.</span>`;
         const regMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
-          + `<span class="text-paper">${open.length}</span> open &middot; `
-          + `<span class="text-paper">${soon.length}</span> opening soon<br>`
+          + `<span class="text-paper">${totals.open}</span> open &middot; `
+          + `<span class="text-paper">${totals.soon}</span> opening soon<br>`
           + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
       %>
       <%- include('partials/_page-hero', { accent: 'var(--bay-6)', num: '06', nav: 'Register', kicker: 'Cognitrixx / join the system', title: regTitle, meta: regMeta }) %>
@@ -49,18 +49,76 @@
       <div class="hud-frame mt-6" style="--accent: var(--bay-6)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
-        <% if (open.length) { %>
-        <section aria-labelledby="open-now">
+        <%
+          // One searchable string per event: name, category and club.
+          const hay = (e) => [e.name, e.category, e.organisedBy || ''].join(' ').toLowerCase();
+          const statuses = [['all', 'All'], ['open', 'Open now'], ['soon', 'Opening soon']];
+        %>
+        <!-- ============ SEARCH + FILTERS ============
+             A real GET form, so it works with JavaScript off; register-filter.js
+             upgrades it to instant filtering and keeps the URL in step. -->
+        <form method="get" action="" class="reg-filter" data-js="reg-filter"
+              data-status="<%= status %>" data-category="<%= activeCategory %>"
+              data-total="<%= totals.open + totals.soon %>" role="search">
+          <%# The current choices ride along as hidden fields; a chip's own
+              value comes after them, and the server takes the last one. %>
+          <input type="hidden" name="status" value="<%= status %>">
+          <input type="hidden" name="category" value="<%= activeCategory %>">
+
+          <div class="reg-filter__search">
+            <label for="reg-search" class="sr-only">Search events</label>
+            <span class="reg-filter__icon" aria-hidden="true">&#8981;</span>
+            <input id="reg-search" type="search" name="q" value="<%= query %>"
+                   placeholder="Search events or clubs&hellip;"
+                   autocomplete="off" data-js="reg-search" class="reg-filter__input">
+            <button type="submit" class="reg-filter__go">Search</button>
+          </div>
+
+          <div class="reg-filter__row" role="group" aria-label="Registration status">
+            <span class="reg-filter__label">Show</span>
+            <div class="reg-filter__chips">
+            <% statuses.forEach(function (s2) { %>
+            <button type="submit" name="status" value="<%= s2[0] %>" data-js="reg-status" data-val="<%= s2[0] %>"
+                    class="cat-chip<%= status === s2[0] ? ' is-active' : '' %>" aria-pressed="<%= status === s2[0] %>">
+              <%= s2[1] %>
+              <span class="cat-chip__n"><%= s2[0] === 'all' ? totals.open + totals.soon : s2[0] === 'open' ? totals.open : totals.soon %></span>
+            </button>
+            <% }); %>
+            </div>
+          </div>
+
+          <div class="reg-filter__row" role="group" aria-label="Category">
+            <span class="reg-filter__label">Type</span>
+            <div class="reg-filter__chips">
+            <button type="submit" name="category" value="All" data-js="reg-cat" data-val="All"
+                    class="cat-chip<%= activeCategory === 'All' ? ' is-active' : '' %>" aria-pressed="<%= activeCategory === 'All' %>">All</button>
+            <% categories.forEach(function (c) { %>
+            <button type="submit" name="category" value="<%= c.name %>" data-js="reg-cat" data-val="<%= c.name %>"
+                    class="cat-chip<%= activeCategory === c.name ? ' is-active' : '' %>" aria-pressed="<%= activeCategory === c.name %>">
+              <%= c.name %> <span class="cat-chip__n"><%= c.count %></span>
+            </button>
+            <% }); %>
+            </div>
+          </div>
+        </form>
+
+        <p class="reg-filter__count" aria-live="polite">
+          <span data-js="reg-count"><%= open.length + soon.length %></span> shown
+          <button type="button" class="reg-filter__reset" data-js="reg-reset"<%- (query || status !== 'all' || activeCategory !== 'All') ? '' : ' hidden' %>>Clear filters</button>
+        </p>
+
+        <section aria-labelledby="open-now" data-js="reg-section"<%- open.length ? '' : ' hidden' %>>
           <div class="section-head">
             <h2 id="open-now" class="font-display font-semibold text-xl">
               Open now <span class="reg-live" aria-hidden="true"></span>
             </h2>
-            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= open.length %> events</p>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><span data-js="reg-section-count"><%= open.length %></span> events</p>
           </div>
 
           <ul class="reg-grid">
-            <% open.forEach(function (e, i) { const s0 = e.sessions[0]; %>
-            <li class="reg-cell" data-reveal style="--ci: <%= i %>">
+            <% open.forEach(function (e, i) { %>
+            <li class="reg-cell" data-reveal style="--ci: <%= i %>"
+                data-js="reg-item" data-status="open" data-cat="<%= e.category %>" data-search="<%= hay(e) %>">
               <div class="reg-card" data-spotlight style="--spot: var(--bay-6)">
                 <div class="reg-card__top">
                   <span class="reg-card__idx"><%= String(i + 1).padStart(2, '0') %></span>
@@ -83,12 +141,11 @@
             <% }); %>
           </ul>
         </section>
-        <% } %>
 
-        <section class="<%= open.length ? 'mt-16' : '' %>" aria-labelledby="opening-soon">
+        <section class="mt-16" aria-labelledby="opening-soon" data-js="reg-section"<%- soon.length ? '' : ' hidden' %>>
           <div class="section-head">
             <h2 id="opening-soon" class="font-display font-semibold text-xl">Opening soon</h2>
-            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= soon.length %> events</p>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><span data-js="reg-section-count"><%= soon.length %></span> events</p>
           </div>
           <p class="text-sm text-[var(--paper-dim)] max-w-2xl mb-6">
             Registration links for these are coming soon. Each event's page will carry its link
@@ -96,7 +153,7 @@
           </p>
           <ul class="reg-soon">
             <% soon.forEach(function (e) { %>
-            <li>
+            <li data-js="reg-item" data-status="soon" data-cat="<%= e.category %>" data-search="<%= hay(e) %>">
               <a href="/events/<%= e.slug %>" class="reg-soon__chip">
                 <%= e.name %>
                 <span class="reg-soon__cat">/ <%= e.category %></span>
@@ -106,6 +163,13 @@
           </ul>
         </section>
 
+        <div class="reg-empty" data-js="reg-empty"<%- (open.length + soon.length) ? ' hidden' : '' %>>
+          <p class="font-mono text-xs tracking-[0.2em] uppercase text-amber mb-4">No match</p>
+          <h2 class="font-display font-semibold text-2xl mb-3">Nothing here for that</h2>
+          <p class="text-[var(--paper-dim)] text-sm max-w-sm mx-auto mb-8">Try a different search, type or status.</p>
+          <a href="/register" class="btn btn-secondary" data-js="reg-reset-link">Clear filters</a>
+        </div>
+
         </div></div></div>
     </div>
   </main>
@@ -114,5 +178,6 @@
 
   <script type="module" src="/js/motion.js?v=<%= assetV %>"></script>
   <script type="module" src="/js/page.js?v=<%= assetV %>"></script>
+  <script type="module" src="/js/register-filter.js?v=<%= assetV %>"></script>
 </body>
 </html>
