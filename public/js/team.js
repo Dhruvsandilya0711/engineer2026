@@ -1,12 +1,12 @@
 // ==========================================================================
-// TEAM — tap to flip a card to its punchline.
+// TEAM — tap to open a card's punchline.
 //
-// On a mouse the card flips on hover (pure CSS). A touch screen has no
-// hover, so a tap toggles .is-open instead: one card open at a time, and a
-// tap anywhere else closes it. Enter / Space do the same from the keyboard.
+// On a mouse the punchline unfolds on hover (pure CSS). A touch screen has
+// no hover, so a tap toggles .is-open instead: one card open at a time, and
+// a tap anywhere else closes it. Enter / Space do the same from the keyboard.
 // ==========================================================================
 
-const cards = [...document.querySelectorAll('[data-js="team-card"][aria-expanded]')];
+const cards = [...document.querySelectorAll('.crew[aria-expanded]')];
 let open = null;
 
 function setOpen(card, on) {
@@ -30,5 +30,5 @@ cards.forEach((card) => {
 });
 
 document.addEventListener('click', (e) => {
-  if (open && !e.target.closest('[data-js="team-card"]')) { setOpen(open, false); open = null; }
+  if (open && !e.target.closest('.crew')) { setOpen(open, false); open = null; }
 });

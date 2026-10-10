@@ -331,38 +331,12 @@ app.get('/schedule', (req, res) => {
   });
 });
 
-// The org tree (data/team.json → tree), with every name resolved to its
-// member once here. Names that match nobody are reported at boot rather
-// than silently dropping a card.
-function teamTree() {
-  const t = teamData.tree;
-  if (!t) return null;
-  const byName = new Map((teamData.members || []).map(m => [m.name, m]));
-  const group = (g) => ({ post: g.post, people: (g.people || []).map(n => byName.get(n)).filter(Boolean) });
-  const wings = ['left', 'centre', 'right'].map(id => ({ id, rows: ((t.wings || {})[id] || []).map(row => row.map(group)) }));
-  const tree = { spine: (t.spine || []).map(group), wings, base: (t.base || []).map(group) };
-  tree.rows = Math.max(0, ...wings.map(w => w.rows.length));
-  tree.total = [...tree.spine, ...wings.flatMap(w => w.rows.flat()), ...tree.base]
-    .reduce((n, g) => n + g.people.length, 0);
-  return tree;
-}
-{
-  const names = new Set((teamData.members || []).map(m => m.name));
-  const t = teamData.tree || {};
-  const placed = [...(t.spine || []), ...Object.values(t.wings || {}).flat(2), ...(t.base || [])]
-    .flatMap(g => (g && g.people) || []);
-  const unknown = placed.filter(n => !names.has(n));
-  if (unknown.length) console.warn('  ! team tree names with no member:', unknown.join(', '));
-}
-
 app.get('/team', (req, res) => {
   const groups = teamGroups();
-  const tree = teamTree();
   res.render('team', {
     festDates: FEST_DATES,
     groups,
-    tree,
-    totalMembers: tree ? tree.total : groups.reduce((n, g) => n + g.members.length, 0),
+    totalMembers: groups.reduce((n, g) => n + g.members.length, 0),
   });
 });
 
