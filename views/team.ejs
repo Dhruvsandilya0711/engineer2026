@@ -31,8 +31,7 @@
         const teamTitle = `The network<br><span class="text-gradient-impossible">behind it.</span>`;
         const teamMeta = totalMembers
           ? `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
-            + `<span class="text-paper">${totalMembers}</span> members &middot; `
-            + `<span class="text-paper">${groups.length}</span> teams<br>`
+            + `<span class="text-paper">${totalMembers}</span> members<br>`
             + `<span class="text-[var(--paper-faint)]">ENGINEER '26 &middot; NITK Surathkal</span></p>`
           : '';
       %>
@@ -58,42 +57,48 @@
           };
           let n = 0;
         %>
-        <% groups.forEach(function(g, gi){ const lead = gi === 0; %>
+        <% groups.forEach(function(g){ %>
         <section class="mb-16" aria-labelledby="group-<%= g.group.replace(/\W+/g,'-').toLowerCase() %>">
           <div class="section-head">
             <h2 id="group-<%= g.group.replace(/\W+/g,'-').toLowerCase() %>" class="font-display font-semibold text-xl"><%= g.group %></h2>
-            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= g.members.length %></p>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= g.members.length %> members</p>
           </div>
 
-          <ul class="crew-grid<%= lead ? ' crew-grid--lead' : '' %>">
+          <%# One grid, one card size for everyone. The reveal sits on the
+              <li> and the card inside it, so the entrance and the hover tilt
+              never fight over one transform. The accent walks the six nav-bay
+              colours, so the wall reads as a spectrum. %>
+          <ul class="crew-grid">
             <% g.members.forEach(function(m){ n++; %>
-            <%# The reveal sits on the <li> and the card inside it, so the
-                entrance and the hover lift never fight over one transform. %>
             <li class="crew-cell" data-reveal style="--ci: <%= n %>">
-            <div class="crew<%= m.name ? '' : ' crew--tba' %>" data-spotlight style="--spot: var(--bay-<%= lead ? 5 : 1 %>)">
-              <div class="crew__photo">
-                <% if (m.image) { %>
-                  <img src="<%= m.image %>" alt="<%= m.name %>" loading="lazy">
-                <% } else { %>
-                  <%# Placeholder until the photo arrives: a HUD frame with the
-                      person's initials, so the grid already reads as people. %>
-                  <span class="crew__mono" aria-hidden="true"><%= m.name ? initials(m.name) : '?' %></span>
-                  <span class="crew__ph" aria-hidden="true">Photo coming soon</span>
-                <% } %>
-                <span class="crew__scan" aria-hidden="true"></span>
+            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-tilt="7" style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
+              <div class="crew__in">
+                <div class="crew__photo">
+                  <% if (m.image) { %>
+                    <img src="<%= m.image %>" alt="<%= m.name %>" loading="lazy">
+                  <% } else { %>
+                    <%# Placeholder until the photo arrives: the person's
+                        initials in a lit frame, so the grid already reads as
+                        people. %>
+                    <span class="crew__rings" aria-hidden="true"></span>
+                    <span class="crew__mono" aria-hidden="true"><%= m.name ? initials(m.name) : '?' %></span>
+                    <span class="crew__ph" aria-hidden="true">Photo soon</span>
+                  <% } %>
+                </div>
+                <span class="crew__holo" aria-hidden="true"></span>
                 <span class="crew__idx" aria-hidden="true"><%= String(n).padStart(2, '0') %></span>
+                <div class="crew__plate">
+                  <p class="crew__name"><%= m.name || 'Coming soon' %></p>
+                  <p class="crew__role"><%= m.role %></p>
+                  <% if (m.email || m.linkedin) { %>
+                  <p class="crew__links">
+                    <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
+                    <% if (m.linkedin) { %><a href="<%= m.linkedin %>" rel="noopener noreferrer" target="_blank" aria-label="<%= m.name %> on LinkedIn">LinkedIn</a><% } %>
+                  </p>
+                  <% } %>
+                </div>
               </div>
-              <div class="crew__body">
-                <p class="crew__name"><%= m.name || 'Coming soon' %></p>
-                <p class="crew__role"><%= m.role %></p>
-                <% if (m.email || m.linkedin) { %>
-                <p class="crew__links">
-                  <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
-                  <% if (m.linkedin) { %><a href="<%= m.linkedin %>" rel="noopener noreferrer" target="_blank" aria-label="<%= m.name %> on LinkedIn">LinkedIn</a><% } %>
-                </p>
-                <% } %>
-              </div>
-            </div>
+            </article>
             </li>
             <% }); %>
           </ul>

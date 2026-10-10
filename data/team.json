@@ -1,5 +1,5 @@
 {
-  "_note": "Team roster for ENGINEER '26, from the organising team's core team list (Engi26_Core). Roll numbers in that list are deliberately NOT copied here: this file is published on /team. A member with name null is a role whose holder is not announced yet; the page shows it as coming soon. Groups are derived from `group`, in file order. Add `image` paths as photos arrive and the placeholder tile is replaced; no code change needed.",
+  "_note": "Team roster for ENGINEER '26, from the organising team's core team list (Engi26_Core). Roll numbers in that list are deliberately NOT copied here: this file is published on /team. A member with name null is a role whose holder is not announced yet; the page shows it as coming soon. Everyone is in one group, Team, in the list's order. Add `image` paths as photos arrive and the placeholder tile is replaced; no code change needed.",
   "_memberShape": {
     "name": "string, or null while the role's holder is still to be announced",
     "role": "string — required, e.g. 'Convenor', 'Technical Head'",
@@ -18,17 +18,9 @@
   },
   "members": [
     {
-      "name": "Prof. Govinda Raj Mandela",
-      "role": "Dean (Student Welfare)",
-      "group": "Leadership",
-      "image": null,
-      "email": null,
-      "linkedin": null
-    },
-    {
       "name": "Akash Raut",
       "role": "Convenor",
-      "group": "Leadership",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -36,7 +28,7 @@
     {
       "name": "Ramu H M",
       "role": "Secretary",
-      "group": "Leadership",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -44,7 +36,7 @@
     {
       "name": "Likith P Gujjar",
       "role": "Joint Secretary",
-      "group": "Leadership",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -52,7 +44,7 @@
     {
       "name": "Premdeep Mali",
       "role": "PG Secretary",
-      "group": "Leadership",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -60,7 +52,7 @@
     {
       "name": "Chaitanya Deshmukh",
       "role": "Marketing Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -68,7 +60,7 @@
     {
       "name": "Vedant Sabnis",
       "role": "Marketing Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -76,7 +68,7 @@
     {
       "name": "Prajwal Meshram",
       "role": "Chief Coordinator",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -84,7 +76,7 @@
     {
       "name": "Dhananjay Mode",
       "role": "Chief Coordinator",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -92,7 +84,7 @@
     {
       "name": "Sambhav Powar",
       "role": "Finance Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -100,7 +92,7 @@
     {
       "name": "Soham Palkrit",
       "role": "Technical Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -108,7 +100,7 @@
     {
       "name": "Dhruv Sandilya",
       "role": "ENGI-Care Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -116,7 +108,7 @@
     {
       "name": "Harsh S K",
       "role": "Production Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -124,7 +116,7 @@
     {
       "name": "Satwik Gurav",
       "role": "Production Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -132,7 +124,7 @@
     {
       "name": "Karthik Thippeswamy",
       "role": "Media Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -140,7 +132,7 @@
     {
       "name": "Abhishek M",
       "role": "Media Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -148,7 +140,7 @@
     {
       "name": "Atharva Muthal",
       "role": "Creative Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -156,7 +148,7 @@
     {
       "name": "Aditi Sinhal",
       "role": "Outreaching Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -164,7 +156,7 @@
     {
       "name": "Soham Jain",
       "role": "Curation Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -172,7 +164,7 @@
     {
       "name": "Aayush Dubey",
       "role": "ENGI-Talks In-charge",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -180,7 +172,7 @@
     {
       "name": "Aniket Kakad",
       "role": "Operations Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -188,7 +180,7 @@
     {
       "name": "Anuj Patil",
       "role": "Artist Hospitality Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -196,7 +188,7 @@
     {
       "name": "Karthik Gurikar",
       "role": "Student Hospitality Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -204,7 +196,7 @@
     {
       "name": "Mohan Kumar M E",
       "role": "Student Hospitality Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -212,7 +204,7 @@
     {
       "name": "Nandeesh Trivedi",
       "role": "Local Marketing Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -220,7 +212,7 @@
     {
       "name": "Shivakumar Hiremath",
       "role": "ENGI-Stalls In-charge",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -228,7 +220,7 @@
     {
       "name": "Abhishek H N",
       "role": "ENGI-Stalls In-charge",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -236,7 +228,7 @@
     {
       "name": null,
       "role": "ENGI-Force Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -244,7 +236,7 @@
     {
       "name": "Ganesh Madhav Rajesh",
       "role": "ENGI-Gaming Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -252,7 +244,7 @@
     {
       "name": "Adhil Ali",
       "role": "ENGI-Gaming Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
@@ -260,7 +252,7 @@
     {
       "name": "Shatayu Raut",
       "role": "Logistics Head",
-      "group": "Core team",
+      "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null
