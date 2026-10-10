@@ -429,11 +429,34 @@ async function eventFees() {
 // out to their organisers' forms. (The on-site form in register-form.ejs is
 // kept, and only used, behind REGISTRATION_OPEN=true at POST.)
 app.get('/register', (req, res) => {
-  const open = allEvents.filter(e => e.registrationUrl);
+  // Search and filters work without JavaScript: the form GETs back here and
+  // the lists are filtered server-side; public/js/register-filter.js then
+  // does the same thing instantly in the page. A chip submits its own value
+  // after the hidden copy of the current one, so the LAST value wins.
+  const last = (v) => [].concat(v ?? '').pop().toString().trim();
+  const q = last(req.query.q);
+  const status = ['open', 'soon'].includes(last(req.query.status)) ? last(req.query.status) : 'all';
+  const category = categories.includes(last(req.query.category)) ? last(req.query.category) : 'All';
+
+  const needle = q.toLowerCase();
+  const matches = (e) =>
+    (!needle || [e.name, e.category, e.organisedBy || ''].join(' ').toLowerCase().includes(needle))
+    && (category === 'All' || e.category === category);
+
+  const openAll = allEvents.filter(e => e.registrationUrl);
+  const soonAll = allEvents.filter(e => !e.registrationUrl);
+  const open = status === 'soon' ? [] : openAll.filter(matches);
+  const soon = status === 'open' ? [] : soonAll.filter(matches);
+
   res.render('register', {
     festDates: FEST_DATES,
     open: open.map(e => ({ ...e, st: regState(e), sessions: sessionsFor(e.slug) })),
-    soon: allEvents.filter(e => !e.registrationUrl),
+    soon,
+    totals: { open: openAll.length, soon: soonAll.length },
+    categories: categories.map(c => ({ name: c, count: allEvents.filter(e => e.category === c).length })),
+    query: q,
+    status,
+    activeCategory: category,
   });
 });
 
