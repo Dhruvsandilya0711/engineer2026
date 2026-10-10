@@ -1,5 +1,5 @@
 {
-  "_comment": "The three policy documents every site that takes money is expected to publish, and that Razorpay requires on a merchant site before it will activate a live key: terms, privacy, and a refund/cancellation policy. One file, three documents, one view (views/legal.ejs) — so they share a layout and can only differ in words. Anything in a doc's `todo` array is a decision the organising committee has to make and sign off; it renders as an HTML comment on the page, never as visible text.",
+  "_comment": "The site's policy documents: terms and privacy (the refund page was removed). One file, one view (views/legal.ejs) — so they share a layout and can only differ in words. Anything in a doc's `todo` array is a decision the organising committee has to make and sign off; it renders as an HTML comment on the page, never as visible text.",
 
   "updated": "16 September 2026",
   "entity": "ENGINEER, the annual technical festival of the National Institute of Technology Karnataka, Surathkal",
@@ -38,9 +38,8 @@
           "h": "Fees and confirmation",
           "p": [
             "Some events are free and some are paid. The fee is shown on the event page and again on the registration form before you pay — you will never be charged an amount you have not seen.",
-            "A paid registration is confirmed when the payment succeeds and the ticket reaches your email. Money leaving your account is not by itself confirmation: if the payment did not complete on our side, see the refund policy."
-          ],
-          "link": { "href": "/refunds", "label": "Refund & cancellation policy" }
+            "A paid registration is confirmed when the payment succeeds and the ticket reaches your email. Money leaving your account is not by itself confirmation: if the payment did not complete on our side, write to us with the payment ID and we will trace it."
+          ]
         },
         {
           "h": "Conduct on campus",
@@ -53,7 +52,7 @@
           "h": "Changes to the programme",
           "p": [
             "A festival of this size moves. Timings, venues, judges, formats and prize structures can change, and events can be cancelled — usually for weather, safety or a speaker who cannot travel.",
-            "Changes are published on this site, and we email registrants of an affected event wherever we have their address. If we cancel an event outright, the refund policy applies."
+            "Changes are published on this site, and we email registrants of an affected event wherever we have their address. If we cancel an event outright, everyone registered for it is refunded in full."
           ]
         },
         {
@@ -193,63 +192,6 @@
           "h": "Changes",
           "p": [
             "If this policy changes, the date at the top of the page changes with it. Material changes before the festival will also go out to registrants by email."
-          ]
-        }
-      ]
-    },
-
-    "refunds": {
-      "slug": "refunds",
-      "title": "Refund & Cancellation Policy",
-      "nav": "Refunds",
-      "num": "09",
-      "kicker": "Cognitrixx / the small print",
-      "headline": "If the money<br><span class=\"text-gradient-impossible\">has to come back.</span>",
-      "lede": "This covers registration fees paid through this site. It does not cover anything you book around the festival — travel, stay, or tickets bought from anyone who is not us.",
-      "todo": [
-        "DECIDE: the cancellation window. It currently says fees are non-refundable once paid, except where we cancel. Many fests allow a full refund up to 7 days before the event — pick one and say so here.",
-        "DECIDE: whether a registration can be transferred to another person or another event instead of refunded. The terms currently say no.",
-        "CONFIRM: the refund turnaround. 5–7 working days is Razorpay's usual settlement window back to the original method; check against the account the fest actually uses."
-      ],
-      "sections": [
-        {
-          "h": "If you change your mind",
-          "p": [
-            "Registration fees are non-refundable once paid. Places are capped per event, and a paid registration takes a place out of circulation that somebody else could have had.",
-            "A registration cannot be moved to a different person or a different event."
-          ]
-        },
-        {
-          "h": "If we cancel or reschedule",
-          "p": [
-            "If we cancel an event outright, everyone registered for it is refunded in full. You do not need to ask — we process it from the registration list.",
-            "If we move an event to a different day or time within the festival and you can no longer make it, write to us and we will refund you in full."
-          ]
-        },
-        {
-          "h": "If the payment went wrong",
-          "p": [
-            "If money left your account but no ticket arrived, the payment did not complete on our side. Banks reverse these automatically, usually within 5–7 working days.",
-            "If it has been longer than that, email us with the amount, the date and the Razorpay payment ID from your bank statement, and we will trace it. The same applies if you were charged twice for one registration — the duplicate is refunded in full."
-          ]
-        },
-        {
-          "h": "How a refund reaches you",
-          "p": [
-            "Refunds go back through Razorpay to the method you paid with. We cannot send a refund to a different card, a different UPI ID or a different account.",
-            "Expect 5–7 working days from the day we process it for the money to appear, depending on your bank."
-          ]
-        },
-        {
-          "h": "Not showing up",
-          "p": [
-            "A registration that is not used is not refunded. If something has happened and you cannot attend, tell us before the event rather than after — we cannot do much once the event has run."
-          ]
-        },
-        {
-          "h": "Asking for a refund",
-          "p": [
-            "Email us from the address you registered with, with your name, roll number, the event, and the Razorpay payment ID from your ticket email. We will reply with a decision within three working days."
           ]
         }
       ]
