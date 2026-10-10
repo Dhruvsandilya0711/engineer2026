@@ -6980,7 +6980,7 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
   display: grid;
   place-items: center;
   background:
-    radial-gradient(70% 55% at 50% 36%, rgba(var(--spot), 0.38), transparent 70%),
+    radial-gradient(70% 55% at 50% 30%, rgba(var(--spot), 0.38), transparent 70%),
     radial-gradient(120% 80% at 100% 100%, rgba(var(--rgb-cyan), 0.12), transparent 60%),
     radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.4px) 0 0 / 14px 14px,
     linear-gradient(180deg, rgba(var(--rgb-ground), 0.4), rgb(var(--rgb-ground)));
@@ -6997,7 +6997,7 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
 /* Concentric rings behind the initials, like a lens or a radar scope. */
 .crew__rings {
   position: absolute;
-  left: 50%; top: 36%;
+  left: 50%; top: 30%;
   width: 78%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
@@ -7010,7 +7010,7 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
 .crew:hover .crew__rings { transform: translate(-50%, -50%) scale(1.12) rotate(20deg); }
 .crew__mono {
   position: absolute;
-  left: 0; right: 0; top: 36%;
+  left: 0; right: 0; top: 30%;
   transform: translateY(-50%);
   text-align: center;
   font-family: var(--font-display);
@@ -7116,6 +7116,21 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
   background: rgb(var(--spot));
   box-shadow: 0 0 8px rgb(var(--spot));
 }
+/* The punchline: a quoted aside under the role, on the card at all times
+   (touch has no hover), brightening when the card is picked up. */
+.crew__line {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.72rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.62);
+  transition: color 0.3s ease;
+}
+.crew__line::before { content: "\201C"; color: rgb(var(--spot)); margin-right: 1px; }
+.crew__line::after { content: "\201D"; color: rgb(var(--spot)); margin-left: 1px; }
+.crew:hover .crew__line { color: #fff; }
 .crew__links { margin-top: 7px; display: flex; gap: 12px; font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .crew__links a { color: var(--paper-dim); text-decoration: none; }
 .crew__links a:hover { color: var(--color-cyan); }

@@ -90,6 +90,7 @@
                 <div class="crew__plate">
                   <p class="crew__name"><%= m.name || 'Coming soon' %></p>
                   <p class="crew__role"><%= m.role %></p>
+                  <% if (m.tagline) { %><p class="crew__line"><%= m.tagline %></p><% } %>
                   <% if (m.email || m.linkedin) { %>
                   <p class="crew__links">
                     <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
