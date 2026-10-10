@@ -7,7 +7,8 @@
     "image": "string path or null — falls back to a typographic monogram tile when null",
     "email": "string or null",
     "linkedin": "string URL or null",
-    "tagline": "string or null — a one-line punchline shown on the card"
+    "tagline": "string or null — a one-line punchline shown on the card",
+    "initials": "string, optional — the monogram on the card while there is no photo; defaults to the first letters of the first and last word of the name"
   },
   "_exampleMember": {
     "name": "",
@@ -29,7 +30,7 @@
     },
     {
       "name": "Chaitanya Deshmukh",
-      "role": "Marketing Head",
+      "role": "Head of Marketing",
       "group": "Team",
       "image": null,
       "email": null,
@@ -38,7 +39,7 @@
     },
     {
       "name": "Vedant Sabnis",
-      "role": "Marketing Head",
+      "role": "Head of Marketing",
       "group": "Team",
       "image": null,
       "email": null,
@@ -47,7 +48,7 @@
     },
     {
       "name": "Nikhil Ragnekar",
-      "role": "Growth Expert",
+      "role": "Head of Growth",
       "group": "Team",
       "image": null,
       "email": null,
@@ -74,7 +75,7 @@
     },
     {
       "name": "Sambhav Powar",
-      "role": "Finance Head",
+      "role": "Head of Finance",
       "group": "Team",
       "image": null,
       "email": null,
@@ -83,7 +84,7 @@
     },
     {
       "name": "Soham Palkrit",
-      "role": "Technical Head",
+      "role": "Head of Technology",
       "group": "Team",
       "image": null,
       "email": null,
@@ -92,7 +93,7 @@
     },
     {
       "name": "Dhruv Sandilya",
-      "role": "ENGI-Care Head",
+      "role": "Chief Advisor & Head, ENGI-Care",
       "group": "Team",
       "image": null,
       "email": null,
@@ -110,7 +111,7 @@
     },
     {
       "name": "Harsh S K",
-      "role": "Production Head",
+      "role": "Head of Production",
       "group": "Team",
       "image": null,
       "email": null,
@@ -119,7 +120,7 @@
     },
     {
       "name": "Satwik Gurav",
-      "role": "Production Head",
+      "role": "Head of Production",
       "group": "Team",
       "image": null,
       "email": null,
@@ -128,7 +129,8 @@
     },
     {
       "name": "Karthik Thippeswamy",
-      "role": "Media Head",
+      "initials": "K",
+      "role": "Head of Media",
       "group": "Team",
       "image": null,
       "email": null,
@@ -137,7 +139,7 @@
     },
     {
       "name": "Abhishek M",
-      "role": "Media Head",
+      "role": "Head of Media",
       "group": "Team",
       "image": null,
       "email": null,
@@ -146,7 +148,7 @@
     },
     {
       "name": "Atharva Muthal",
-      "role": "Creative Head",
+      "role": "Head of Creative",
       "group": "Team",
       "image": null,
       "email": null,
@@ -155,7 +157,7 @@
     },
     {
       "name": "Aditi Sinhal",
-      "role": "Outreaching Head",
+      "role": "Head of Outreach",
       "group": "Team",
       "image": null,
       "email": null,
@@ -164,7 +166,7 @@
     },
     {
       "name": "Soham Jain",
-      "role": "Curation Head",
+      "role": "Head of Curation",
       "group": "Team",
       "image": null,
       "email": null,
@@ -173,7 +175,7 @@
     },
     {
       "name": "Aayush Dubey",
-      "role": "ENGI-Talks In-charge",
+      "role": "Head, ENGI-Talks",
       "group": "Team",
       "image": null,
       "email": null,
@@ -182,7 +184,7 @@
     },
     {
       "name": "Aniket Kakad",
-      "role": "Operations Head",
+      "role": "Head of Operations",
       "group": "Team",
       "image": null,
       "email": null,
@@ -191,7 +193,7 @@
     },
     {
       "name": "Anuj Patil",
-      "role": "Hospitality Head",
+      "role": "Head of Hospitality",
       "group": "Team",
       "image": null,
       "email": null,
@@ -200,7 +202,7 @@
     },
     {
       "name": "Karthik Gurikar",
-      "role": "Hospitality Head",
+      "role": "Head of Hospitality",
       "group": "Team",
       "image": null,
       "email": null,
@@ -209,7 +211,7 @@
     },
     {
       "name": "Mohan Kumar M E",
-      "role": "Hospitality Head",
+      "role": "Head of Hospitality",
       "group": "Team",
       "image": null,
       "email": null,
@@ -218,7 +220,7 @@
     },
     {
       "name": "Nandeesh Trivedi",
-      "role": "Local Marketing Head",
+      "role": "Head of Local Marketing",
       "group": "Team",
       "image": null,
       "email": null,
@@ -227,7 +229,7 @@
     },
     {
       "name": "Shivakumar Hiremath",
-      "role": "ENGI-Stalls In-charge",
+      "role": "Head, ENGI-Stalls",
       "group": "Team",
       "image": null,
       "email": null,
@@ -236,7 +238,7 @@
     },
     {
       "name": "Abhishek H N",
-      "role": "ENGI-Stalls In-charge",
+      "role": "Head, ENGI-Stalls",
       "group": "Team",
       "image": null,
       "email": null,
@@ -245,7 +247,7 @@
     },
     {
       "name": "Thanish P M",
-      "role": "ENGI-Force Head",
+      "role": "Head, ENGI-Force",
       "group": "Team",
       "image": null,
       "email": null,
@@ -254,7 +256,7 @@
     },
     {
       "name": "Ganesh Madhav Rajesh",
-      "role": "ENGI-Gaming Head",
+      "role": "Head, ENGI-Gaming",
       "group": "Team",
       "image": null,
       "email": null,
@@ -263,7 +265,7 @@
     },
     {
       "name": "Adhil Ali",
-      "role": "ENGI-Gaming Head",
+      "role": "Head, ENGI-Gaming",
       "group": "Team",
       "image": null,
       "email": null,
@@ -272,7 +274,7 @@
     },
     {
       "name": "Shatayu Raut",
-      "role": "Logistics Head",
+      "role": "Head of Logistics",
       "group": "Team",
       "image": null,
       "email": null,
@@ -325,19 +327,19 @@
       },
       [
         {
-          "post": "Marketing Head",
+          "post": "Head of Marketing",
           "people": [
             "Chaitanya Deshmukh"
           ]
         },
         {
-          "post": "Growth Expert",
+          "post": "Head of Growth",
           "people": [
             "Nikhil Ragnekar"
           ]
         },
         {
-          "post": "Marketing Head",
+          "post": "Head of Marketing",
           "people": [
             "Vedant Sabnis"
           ]
@@ -348,13 +350,13 @@
       "left": [
         [
           {
-            "post": "Finance Head",
+            "post": "Head of Finance",
             "people": [
               "Sambhav Powar"
             ]
           },
           {
-            "post": "Technical Head",
+            "post": "Head of Technology",
             "people": [
               "Soham Palkrit"
             ]
@@ -362,13 +364,13 @@
         ],
         [
           {
-            "post": "Creative Head",
+            "post": "Head of Creative",
             "people": [
               "Atharva Muthal"
             ]
           },
           {
-            "post": "Curation Head",
+            "post": "Head of Curation",
             "people": [
               "Soham Jain"
             ]
@@ -376,7 +378,7 @@
         ],
         [
           {
-            "post": "Production Heads",
+            "post": "Heads of Production",
             "people": [
               "Harsh S K",
               "Satwik Gurav"
@@ -385,7 +387,7 @@
         ],
         [
           {
-            "post": "ENGI-Stalls In-charges",
+            "post": "Heads, ENGI-Stalls",
             "people": [
               "Shivakumar Hiremath",
               "Abhishek H N"
@@ -398,7 +400,7 @@
         [],
         [
           {
-            "post": "Logistics Head",
+            "post": "Head of Logistics",
             "people": [
               "Shatayu Raut"
             ]
@@ -406,7 +408,7 @@
         ],
         [
           {
-            "post": "Hospitality Head",
+            "post": "Head of Hospitality",
             "people": [
               "Mohan Kumar M E"
             ]
@@ -416,7 +418,7 @@
       "right": [
         [
           {
-            "post": "ENGI-Care Head",
+            "post": "Chief Advisor & Head, ENGI-Care",
             "people": [
               "Dhruv Sandilya"
             ]
@@ -430,7 +432,7 @@
         ],
         [
           {
-            "post": "Media Heads",
+            "post": "Heads of Media",
             "people": [
               "Karthik Thippeswamy",
               "Abhishek M"
@@ -439,13 +441,13 @@
         ],
         [
           {
-            "post": "Operations Head",
+            "post": "Head of Operations",
             "people": [
               "Aniket Kakad"
             ]
           },
           {
-            "post": "ENGI-Force Head",
+            "post": "Head, ENGI-Force",
             "people": [
               "Thanish P M"
             ]
@@ -453,7 +455,7 @@
         ],
         [
           {
-            "post": "Hospitality Heads",
+            "post": "Heads of Hospitality",
             "people": [
               "Anuj Patil",
               "Karthik Gurikar"
@@ -465,7 +467,7 @@
     "base": {
       "left": [
         {
-          "post": "ENGI-Gaming Heads",
+          "post": "Heads, ENGI-Gaming",
           "people": [
             "Ganesh Madhav Rajesh",
             "Adhil Ali"
@@ -474,7 +476,7 @@
       ],
       "centre": [
         {
-          "post": "Outreaching Head",
+          "post": "Head of Outreach",
           "people": [
             "Aditi Sinhal"
           ]
@@ -482,13 +484,13 @@
       ],
       "right": [
         {
-          "post": "Local Marketing Head",
+          "post": "Head of Local Marketing",
           "people": [
             "Nandeesh Trivedi"
           ]
         },
         {
-          "post": "ENGI-Talks In-charge",
+          "post": "Head, ENGI-Talks",
           "people": [
             "Aayush Dubey"
           ]

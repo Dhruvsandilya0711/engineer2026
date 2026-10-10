@@ -21,7 +21,9 @@
 <%
   counter.n++;
   const w = String(m.name || '').trim().split(/\s+/).filter(Boolean);
-  const ini = w.length ? (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase() : '?';
+  // The monogram: data/team.json can set it (`initials`); otherwise the
+  // first letters of the first and last word of the name.
+  const ini = m.initials || (w.length ? (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase() : '?');
   // The punchline never breaks inside a hyphenated word ("to-do" was
   // splitting into "to-" / "do" on a narrow card).
   const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
