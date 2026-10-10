@@ -7489,8 +7489,9 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
 /* ==========================================================================
    R20. TEAM TREE — the org chart as premium ID cards
    A spine from the Convenor, three wings whose rows line up across the
-   page, and the secretaries along the base. It floats on the page's own
-   field: no panel behind it and no connector lines. Each person is a
+   page, and a base row on the same three columns. It floats on the page's
+   own field with no panel behind it; thin gold lines (team-lines.js) flow
+   between the cards. Each person is a
    black-glass card with a metallic edge that turns over to their
    punchline: on hover with a mouse, on a tap (team.js) on a phone, on
    focus from the keyboard. With a mouse it also leans toward the cursor
