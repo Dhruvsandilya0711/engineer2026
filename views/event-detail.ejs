@@ -264,7 +264,14 @@
             <p class="font-mono text-[0.65rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-4">Registration</p>
             <p class="font-display font-medium text-lg mb-2"><%= st.label %></p>
 
-            <% if (st.actionable) { %>
+            <% if (st.external) { %>
+              <p class="text-sm text-[var(--paper-dim)] mb-6">
+                Registration for <%= event.name %> is open and handled by the organisers on
+                <%= st.host %>. The button opens their form in a new tab.
+              </p>
+              <a href="<%= st.url %>" target="_blank" rel="noopener noreferrer"
+                 class="btn btn-primary w-full justify-center" data-js="magnetic">Register on <%= st.host %> &#8599;</a>
+            <% } else if (st.actionable) { %>
               <p class="text-sm text-[var(--paper-dim)] mb-6">
                 Registration for ENGINEER '26 is open. Sign up for <%= event.name %> and the
                 organising team will contact you with details as they are confirmed.
@@ -280,8 +287,8 @@
                 <% } else if (event.registration === 'closed') { %>
                   Registration for this event has closed.
                 <% } else { %>
-                  Registrations for ENGINEER '26 open soon. When they do,
-                  you'll be able to enter <%= event.name %> from this panel.
+                  Registration for <%= event.name %> opens soon. When it does,
+                  the link to the organisers' form appears here.
                 <% } %>
               </p>
               <button type="button" class="btn btn-secondary w-full justify-center" disabled aria-disabled="true">

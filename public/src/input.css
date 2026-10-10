@@ -7055,3 +7055,131 @@ select.form-input {
   .crew:hover { transform: none; }
   .crew:hover .crew__scan { animation: none; }
 }
+
+/* ==========================================================================
+   R19. REGISTER — a directory of external forms
+   Open events are glass cards (the crew-card material) whose whole lower
+   edge is the way out: a bright bar naming the host the form lives on.
+   Events not open yet sit below as quiet chips.
+   ========================================================================== */
+.reg-live {
+  display: inline-block;
+  width: 8px; height: 8px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--color-success);
+  box-shadow: 0 0 0 0 rgba(var(--rgb-cyan), 0.6);
+  animation: reg-pulse 2s ease-out infinite;
+}
+@keyframes reg-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--rgb-cyan), 0.55); }
+  100% { box-shadow: 0 0 0 12px rgba(var(--rgb-cyan), 0); }
+}
+.reg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: clamp(12px, 1.8vw, 20px);
+  margin: 0; padding: 0; list-style: none;
+}
+.reg-cell { display: flex; }
+html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 10) * 50ms); }
+.reg-card {
+  --cut: 16px;
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 0;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  background:
+    radial-gradient(120% 70% at 0% 0%, rgba(var(--spot), 0.18), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.05));
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  transition: transform 0.5s var(--ease-reveal), box-shadow 0.4s ease;
+}
+.reg-card:hover {
+  transform: translateY(-5px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 0 0 1px rgba(var(--spot), 0.45),
+    0 20px 44px -20px rgba(var(--spot), 0.6);
+}
+.reg-card__top { display: flex; align-items: center; gap: 0.7rem; }
+.reg-card__idx,
+.reg-card__cat {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.reg-card__idx { color: rgb(var(--spot)); }
+.reg-card__cat { color: var(--paper-faint); flex: 1; }
+.reg-card__name {
+  margin-top: 0.9rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  line-height: 1.15;
+}
+.reg-card__name a { color: var(--paper); text-decoration: none; transition: color 0.2s; }
+.reg-card__name a:hover { color: var(--color-cyan); }
+.reg-card__meta {
+  margin: 0.7rem 0 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+.reg-card__go {
+  margin: auto -18px 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.95rem 18px 1.05rem;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-void);
+  background: linear-gradient(100deg, rgb(var(--rgb-cyan)), rgb(var(--bay-3)) 60%, rgb(var(--bay-6)));
+  background-size: 160% 100%;
+  background-position: 0% 0;
+  transition: background-position 0.6s var(--ease-standard), letter-spacing 0.4s ease;
+}
+.reg-card__go:hover { background-position: 100% 0; letter-spacing: 0.16em; }
+.reg-card__host {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+.reg-soon { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.reg-soon__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.03);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+  text-decoration: none;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.reg-soon__chip:hover { border-color: var(--color-cyan); color: var(--color-cyan); background: rgba(var(--rgb-cyan), 0.06); }
+.reg-soon__cat { color: var(--paper-faint); }
+@media (prefers-reduced-motion: reduce) {
+  .reg-live { animation: none; }
+  .reg-card { transition: none; }
+  .reg-card:hover { transform: none; }
+}
