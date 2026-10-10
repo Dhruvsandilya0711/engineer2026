@@ -24,8 +24,9 @@ import { securityHeaders, rateLimit as requestLimit, errorHandler } from './lib/
 import {
   initLeaderboardStore, leaderboardMode, hasStableSalt,
   hashIp, validateName, rateLimit, saveRun, topRuns, rankFor, hideRun,
-  issueSession, verifySession, sessionUsed,
+  issueSession, verifySession, sessionUsed, reviewQueue,
 } from './lib/leaderboard.js';
+import { checkClient, checkPace, reviewReasons } from './lib/antibot.js';
 // The SAME simulation the browser runs. Replaying a submitted trace through
 // it is what makes a leaderboard score a fact rather than a claim.
 import { replay } from './public/js/range-sim.js';
@@ -653,6 +654,10 @@ app.get('/api/range/leaderboard', async (req, res) => {
 // cannot mint thousands of sessions looking for a soft one.
 app.post('/api/range/session', async (req, res) => {
   try {
+    // An automated browser gets no seed, so it can still play but never
+    // has a run the board will take.
+    const client = checkClient(req.body?.env);
+    if (!client.ok) return res.status(403).json({ ok: false, error: client.reason });
     const gate = await rateLimit(hashIp(clientIp(req)), 'session');
     if (!gate.ok) return res.status(429).json({ ok: false, error: gate.reason });
     res.json({ ok: true, session: issueSession() });
@@ -664,6 +669,9 @@ app.post('/api/range/session', async (req, res) => {
 app.post('/api/range/score', async (req, res) => {
   try {
     const body = req.body || {};
+
+    const client = checkClient(body.env);
+    if (!client.ok) return res.status(403).json({ ok: false, errors: { form: client.reason } });
 
     const nameCheck = validateName(body.name);
     if (!nameCheck.valid) return res.status(400).json({ ok: false, errors: { name: nameCheck.error } });
@@ -680,11 +688,17 @@ app.post('/api/range/score', async (req, res) => {
 
     // THE authoritative step. Nothing the client claimed about its own run is
     // consulted — only the seed it was issued and the inputs it recorded.
-    const outcome = replay(session.seed, body.shots);
+    // Power is derived from each shot's hold, not taken from the trace, and
+    // the audit feeds the bot checks below.
+    const outcome = replay(session.seed, body.shots, { requirePress: true, audit: true });
     if (!outcome.ok) return res.status(400).json({ ok: false, errors: { form: outcome.reason } });
     if (outcome.score === 0 && outcome.streak === 0) {
       return res.status(400).json({ ok: false, errors: { form: 'Nothing to save yet.' } });
     }
+    const pace = checkPace(session.issuedAt, outcome.ticks);
+    if (!pace.ok) return res.status(400).json({ ok: false, errors: { form: pace.reason } });
+    // Machine-perfect play is saved but held back until someone looks at it.
+    const review = reviewReasons(outcome.audit);
 
     const value = {
       name: nameCheck.name,
@@ -697,7 +711,10 @@ app.post('/api/range/score', async (req, res) => {
       runMs: Math.round(outcome.ticks * (1000 / 60)),
     };
 
-    const { id } = await saveRun(value, ipHash, session.sessionId);
+    const { id } = await saveRun(value, ipHash, session.sessionId, review);
+    if (review.length) {
+      return res.json({ ok: true, id, verified: true, review: true, run: value });
+    }
     const [scoreRank, streakRank] = await Promise.all([
       rankFor('score', value.score),
       rankFor('streak', value.streak),
@@ -728,6 +745,14 @@ function tokenMatches(sent, expected) {
 // off it; this is the way to do that without a database client. Requires
 // ADMIN_TOKEN to be set — with no token configured the route stays closed
 // rather than defaulting to open.
+// Runs lib/antibot.js held back. Approve one with POST /api/range/hide and
+// { id, hidden: false }. Same ADMIN_TOKEN, same closed-by-default rule.
+app.get('/api/range/review', async (req, res) => {
+  const token = process.env.ADMIN_TOKEN;
+  if (!token || !tokenMatches(req.get('x-admin-token'), token)) return res.status(404).end();
+  res.json({ ok: true, runs: await reviewQueue() });
+});
+
 app.post('/api/range/hide', async (req, res) => {
   const token = process.env.ADMIN_TOKEN;
   if (!token || !tokenMatches(req.get('x-admin-token'), token)) return res.status(404).end();

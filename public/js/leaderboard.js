@@ -111,7 +111,10 @@ export function mountLeaderboard() {
       const res = await fetch('/api/range/score', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ name, session: run.session, shots: run.shotTrace }),
+        body: JSON.stringify({
+          name, session: run.session, shots: run.shotTrace,
+          env: { webdriver: navigator.webdriver === true },
+        }),
       });
       const data = await res.json();
 
@@ -125,6 +128,14 @@ export function mountLeaderboard() {
       // Report the SERVER's figure. If it ever differs from what the player
       // watched, the number that went on the board is the honest one to show.
       const v = data.run || {};
+      // Saved, but held back by the bot checks (lib/antibot.js) until the
+      // organisers look at it. Say so plainly rather than show a rank.
+      if (data.review) {
+        say(`Saved as “${name}”: ${v.score} pts, streak ×${v.streak}. It was precise enough `
+          + 'that it’s held for a quick review before it appears on the board.', 'good');
+        busy = false;
+        return;
+      }
       say(`Saved as “${name}”: ${v.score} pts, streak ×${v.streak} — `
         + `#${data.rank.score} on score, #${data.rank.streak} on streak.`, 'good');
       await refresh();
