@@ -80,7 +80,7 @@
       <!-- ============ THE THEME ============
            Cognitrixx is the '26 identity and the reason the rest of the site
            looks the way it does, so it is explained here rather than left as
-           a word in the masthead. The rail beside it is the five programme
+           a word in the masthead. The rail beside it is the programme
            accents in order — the theme and the programme are the same
            object seen twice. -->
       <section class="mt-16" aria-labelledby="theme">
@@ -103,9 +103,9 @@
               instrument you point at something.
             </p>
             <p class="text-[var(--paper-dim)] leading-relaxed max-w-xl">
-              That is why the programme runs across five tracks rather than one. A combat
-              robot, a Verilog testbench, a telescope built from pipe and mirror and a
-              hackathon for a social problem are the same argument made in different
+              That is why the programme runs across <%= tracks.length %> tracks rather than one. A combat
+              robot, a Verilog testbench, a telescope built from pipe and mirror and an
+              overnight hackathon are the same argument made in different
               materials: reality isn't fixed, it's engineered.
             </p>
           </div>
@@ -117,7 +117,7 @@
            advertise events it does not have. -->
       <section class="mt-16" aria-labelledby="tracks">
         <div class="section-head">
-          <h2 id="tracks" class="font-display font-semibold text-xl">Five ways in</h2>
+          <h2 id="tracks" class="font-display font-semibold text-xl"><%= ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'][tracks.length] || tracks.length %> ways in</h2>
           <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= tracks.length %> tracks</p>
         </div>
 

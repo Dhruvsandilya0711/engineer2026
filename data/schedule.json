@@ -1,12 +1,13 @@
 {
-  "_note": "Schedule structure for ENGINEER '26. The three days are real (23—25 October 2026, as given in the fest brief). Every `slots` array is intentionally EMPTY: no event in this repo has a confirmed time or venue, and inventing them would put wrong information in front of attendees. Fill slots in as the organising team confirms them — the /schedule page renders whatever is here, so no code change is needed.",
+  "_note": "Day-wise schedule for ENGINEER '26, from the organising team's ETF 2026 Event Schedule (the three day sheets; Civil Saga is on the Master Schedule but not on the Day 1 sheet, so it is listed with its time to be confirmed). Times and venues are as the sheet gives them; anything it marks TBD is null here and renders as 'coming soon'. The /schedule page and each event page render whatever is here, so updating a time needs no code change.",
   "_slotShape": {
-    "time": "string, e.g. '10:00' (24h) — required",
-    "endTime": "string or null",
-    "event": "event slug from data/events.json, or null for non-event items (breaks, ceremonies)",
+    "time": "string 'HH:MM' (24h), or null when the time is still to be confirmed",
+    "endTime": "string 'HH:MM' or null",
+    "endNote": "optional string, e.g. 'next day' for a slot that ends after midnight",
+    "allDay": "optional boolean — runs the whole day; time and endTime are then null",
+    "event": "event slug from data/events.json, or null for non-event items (ceremonies, breaks)",
     "title": "string — required; for event slots use the event's real name",
-    "venue": "string or null",
-    "track": "string or null — e.g. 'Main Arena', used to group parallel sessions"
+    "venue": "string, or null when the venue is still to be confirmed"
   },
   "_weekdayNote": "Weekday is DERIVED from `date` at render time — never stored here, so it can't contradict the date if dates change.",
   "days": [
@@ -14,19 +15,357 @@
       "id": "day-0",
       "label": "Day 0",
       "date": "2026-10-23",
-      "slots": []
+      "slots": [
+        {
+          "time": "17:00",
+          "endTime": "18:30",
+          "event": null,
+          "title": "Inauguration",
+          "venue": "SJA"
+        },
+        {
+          "time": "18:30",
+          "endTime": "19:00",
+          "event": "bot-show",
+          "title": "Bot Show",
+          "venue": "SJA"
+        },
+        {
+          "time": "19:00",
+          "endTime": "19:30",
+          "event": "tron-dance",
+          "title": "Tron Dance",
+          "venue": "SJA"
+        },
+        {
+          "time": "20:00",
+          "endTime": "21:00",
+          "event": "stand-up-comedy",
+          "title": "Stand Up Comedy",
+          "venue": "SJA"
+        }
+      ]
     },
     {
       "id": "day-1",
       "label": "Day 1",
       "date": "2026-10-24",
-      "slots": []
+      "slots": [
+        {
+          "time": "10:00",
+          "endTime": "17:00",
+          "event": "tech-talks",
+          "title": "Tech Talks",
+          "venue": "SJA"
+        },
+        {
+          "time": "10:00",
+          "endTime": "17:00",
+          "event": "workshops",
+          "title": "Workshops",
+          "venue": "LHC D"
+        },
+        {
+          "time": "10:00",
+          "endTime": "17:00",
+          "event": "gaming",
+          "title": "Gaming Events",
+          "venue": "LHC D"
+        },
+        {
+          "time": "10:00",
+          "endTime": "16:00",
+          "event": "techscape",
+          "title": "TechScape",
+          "venue": "LHC A"
+        },
+        {
+          "time": "10:00",
+          "endTime": "10:00",
+          "event": "chronoforge-hackathon",
+          "title": "Chronoforge Hackathon",
+          "venue": "LHC D",
+          "endNote": "next day"
+        },
+        {
+          "time": "10:00",
+          "endTime": null,
+          "event": "auto-expo",
+          "title": "Auto Expo",
+          "venue": "Main Building"
+        },
+        {
+          "time": "10:00",
+          "endTime": "18:00",
+          "event": "robowars",
+          "title": "Robowars",
+          "venue": "SAC"
+        },
+        {
+          "time": "08:00",
+          "endTime": "18:00",
+          "event": "wright-flight",
+          "title": "Wright Flight",
+          "venue": "Behind NSC"
+        },
+        {
+          "time": "08:00",
+          "endTime": "18:00",
+          "event": "drone-race",
+          "title": "Drone Racing",
+          "venue": "Behind NSC"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "ie-x-tronix",
+          "title": "IE × Tronix",
+          "venue": null
+        },
+        {
+          "time": "09:00",
+          "endTime": "17:00",
+          "event": "sim2real",
+          "title": "SIM2REAL",
+          "venue": "LHC D"
+        },
+        {
+          "time": "09:00",
+          "endTime": "17:00",
+          "event": "nitkpd",
+          "title": "NITKPD",
+          "venue": "LHC C"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "civil-saga",
+          "title": "Civil Saga",
+          "venue": null
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "ie-capital",
+          "title": "IE Capital Event",
+          "venue": null
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "baja-quiz",
+          "title": "Baja Quiz",
+          "venue": null
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "avishkar",
+          "title": "Avishkar",
+          "venue": "LHC C, SM",
+          "allDay": true
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "rechersion",
+          "title": "recHERsion",
+          "venue": "Online"
+        },
+        {
+          "time": "09:00",
+          "endTime": "17:00",
+          "event": "project-expo",
+          "title": "Project Expo",
+          "venue": "Pavilion"
+        },
+        {
+          "time": "19:00",
+          "endTime": "21:30",
+          "event": "starry-nights",
+          "title": "Starry Nights",
+          "venue": "Science Block"
+        },
+        {
+          "time": "17:00",
+          "endTime": "20:00",
+          "event": "telescope-making",
+          "title": "Telescope Making Workshop",
+          "venue": "LHC A"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "planetarium",
+          "title": "Planetarium",
+          "venue": "LHC A",
+          "allDay": true
+        },
+        {
+          "time": "11:00",
+          "endTime": "12:00",
+          "event": "astroquiz",
+          "title": "AstroQuiz",
+          "venue": "LHC A"
+        },
+        {
+          "time": "10:00",
+          "endTime": "14:00",
+          "event": "aac-project-expo",
+          "title": "AAC Project Expo",
+          "venue": "LHC A"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "robocon-expo",
+          "title": "Robocon Expo",
+          "venue": "Pavilion"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "metallurgy-expo",
+          "title": "Metallurgy Project Expo",
+          "venue": "Pavilion",
+          "allDay": true
+        },
+        {
+          "time": "17:00",
+          "endTime": "19:00",
+          "event": "mc-night",
+          "title": "MC Night",
+          "venue": "SJA"
+        },
+        {
+          "time": "19:00",
+          "endTime": "19:30",
+          "event": "flute-boxers",
+          "title": "Flute Boxers",
+          "venue": "SJA"
+        },
+        {
+          "time": "19:30",
+          "endTime": "20:30",
+          "event": "magic-show",
+          "title": "Magic Show",
+          "venue": "SJA"
+        },
+        {
+          "time": "20:30",
+          "endTime": "23:00",
+          "event": "movie-night",
+          "title": "Movie Night",
+          "venue": "SJA"
+        }
+      ]
     },
     {
       "id": "day-2",
       "label": "Day 2",
       "date": "2026-10-25",
-      "slots": []
+      "slots": [
+        {
+          "time": "10:00",
+          "endTime": "17:00",
+          "event": "workshops",
+          "title": "Workshops",
+          "venue": "LHC D"
+        },
+        {
+          "time": "09:00",
+          "endTime": "12:30",
+          "event": "weapons-expo",
+          "title": "Weapons Expo",
+          "venue": "LHC D"
+        },
+        {
+          "time": "10:00",
+          "endTime": "17:00",
+          "event": "gaming",
+          "title": "Gaming Events",
+          "venue": "LHC D"
+        },
+        {
+          "time": "16:00",
+          "endTime": "18:00",
+          "event": "beach-event",
+          "title": "Beach Events",
+          "venue": "NITK Beach"
+        },
+        {
+          "time": "15:00",
+          "endTime": "16:00",
+          "event": "stunt-show",
+          "title": "Stunt Show",
+          "venue": "LHC C Parking"
+        },
+        {
+          "time": "10:00",
+          "endTime": "18:00",
+          "event": "robowars",
+          "title": "Robowars",
+          "venue": "SAC"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "ie-robotics",
+          "title": "IE Robotics Competition",
+          "venue": null
+        },
+        {
+          "time": "10:00",
+          "endTime": "16:00",
+          "event": "techscape",
+          "title": "TechScape",
+          "venue": "LHC A"
+        },
+        {
+          "time": "09:00",
+          "endTime": "17:00",
+          "event": "sim2real",
+          "title": "SIM2REAL",
+          "venue": "LHC C"
+        },
+        {
+          "time": "09:00",
+          "endTime": "17:00",
+          "event": "nitkpd",
+          "title": "NITKPD",
+          "venue": "LHC C"
+        },
+        {
+          "time": "10:00",
+          "endTime": "17:00",
+          "event": "vr-space",
+          "title": "VR Space Experience",
+          "venue": "CSD"
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "planetarium",
+          "title": "Planetarium",
+          "venue": "LHC A",
+          "allDay": true
+        },
+        {
+          "time": null,
+          "endTime": null,
+          "event": "verilog-quest",
+          "title": "Verilog Quest",
+          "venue": "LHC D",
+          "allDay": true
+        },
+        {
+          "time": "19:00",
+          "endTime": "23:00",
+          "event": "pro-shows",
+          "title": "Pro Shows",
+          "venue": "Main Ground"
+        }
+      ]
     }
   ]
 }

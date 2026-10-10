@@ -31,7 +31,7 @@
         const schedTitle = `Three days.<br><span class="text-gradient-impossible">One sequence.</span>`;
         const schedMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
           + `<span class="text-paper">${days.length}</span> days &middot; `
-          + `<span class="text-paper">${totalSlots}</span> sessions scheduled<br>`
+          + `<span class="text-paper">${totalSlots}</span> sessions<br>`
           + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
       %>
       <%- include('partials/_page-hero', { accent: 'var(--bay-4)', num: '03', nav: 'Schedule', kicker: 'Cognitrixx / timetable', title: schedTitle, meta: schedMeta }) %>
@@ -46,6 +46,7 @@
         <% days.forEach(function(day){ %>
         <button type="button" class="cat-chip" data-day="<%= day.id %>" aria-pressed="false">
           <%= day.label %> · <%= new Date(day.date).getDate() %> Oct
+          <span class="cat-chip__n"><%= day.slots.length %></span>
         </button>
         <% }); %>
       </div>
@@ -66,17 +67,27 @@
         <% if (day.slots.length) { %>
         <ol class="schedule-track">
           <% day.slots.forEach(function(slot){ %>
-          <li class="schedule-slot">
-            <span class="schedule-slot__time"><%= slot.time %><% if (slot.endTime) { %><span class="block text-[var(--paper-faint)]"><%= slot.endTime %></span><% } %></span>
+          <li class="schedule-slot<%= slot.when ? '' : ' is-tba' %>">
+            <%# One line per slot: "10:00–17:00", "From 10:00", "All day", or
+                coming soon while the sheet still has it as TBD. The end time
+                drops to its own line so the column stays narrow. %>
+            <span class="schedule-slot__time">
+              <% if (slot.allDay) { %>All day
+              <% } else if (!slot.time) { %><span class="schedule-slot__tba">Time<br>coming soon</span>
+              <% } else { %><%= slot.time %><span class="schedule-slot__end"><%= slot.endTime ? '– ' + slot.endTime : 'onwards' %></span><% } %>
+            </span>
             <span class="schedule-slot__body">
               <% if (slot.linkedEvent) { %>
                 <a href="/events/<%= slot.linkedEvent.slug %>" class="schedule-slot__title hover:text-cyan transition-colors"><%= slot.title %></a>
-                <span class="schedule-slot__meta"><%= slot.linkedEvent.category %></span>
               <% } else { %>
                 <span class="schedule-slot__title"><%= slot.title %></span>
               <% } %>
-              <% if (slot.venue) { %><span class="schedule-slot__meta"><%= slot.venue %></span><% } %>
-              <% if (slot.track) { %><span class="schedule-slot__meta text-cyan"><%= slot.track %></span><% } %>
+              <span class="schedule-slot__meta">
+                <span class="<%= slot.venue ? 'text-[var(--paper-dim)]' : 'text-amber' %>"><%= slot.venue || 'Venue coming soon' %></span>
+                <% if (slot.linkedEvent) { %><span>&middot; <%= slot.linkedEvent.category %></span><% } %>
+                <% if (slot.linkedEvent && slot.linkedEvent.organisedBy) { %><span>&middot; <%= slot.linkedEvent.organisedBy %></span><% } %>
+                <% if (slot.endNote) { %><span>&middot; Ends <%= slot.endTime %> <%= slot.endNote %></span><% } %>
+              </span>
             </span>
           </li>
           <% }); %>
@@ -123,8 +134,8 @@
       <aside class="mt-16 border-l-2 border-amber/50 pl-5 py-2">
         <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-amber mb-2">Status</p>
         <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
-The full timetable is coming soon — events move into the schedule as the
-          organising team fixes them.
+          Times and venues marked coming soon are still being confirmed, and the schedule may
+          change before the fest. Check an event's own page for its latest details.
         </p>
       </aside>
         </div></div></div>

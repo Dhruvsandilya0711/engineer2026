@@ -1,9 +1,13 @@
 <!-- ==========================================================================
      DECK CARD 04 — AFTER DARK.
 
-     Names come from the sponsorship brochure (p11). The brochure presents
-     them as acts ENGINEER HAS HOSTED, not as a signed 2026 line-up, so this
-     card says exactly that. The heading is DERIVED: the moment an act in
+     This year's shows come from data/schedule.json — every slot whose event
+     is in the Shows & Nights track, with its day and time — so the card
+     moves with the schedule.
+
+     The names below them come from the sponsorship brochure (p11). The
+     brochure presents them as acts ENGINEER HAS HOSTED, not as a signed 2026
+     line-up, so this card says exactly that. The heading is DERIVED: the moment an act in
      data/proshows.json flips to `status: "confirmed"` it lifts into its own
      list and the card stops describing the roster as purely historical.
      Nothing here announces a booking that has not happened.
@@ -17,6 +21,23 @@
     <h2 class="font-display font-bold" data-reveal>
       Dazzling tech to<br><span class="text-gradient-impossible">electrifying nights.</span>
     </h2>
+
+    <%
+      const shows = scheduleDays.flatMap(d => d.slots
+        .filter(s => s.linkedEvent && s.linkedEvent.track === 'nights')
+        .map(s => ({ ...s, day: d.label })));
+    %>
+    <% if (shows.length) { %>
+    <p class="eyebrow text-cyan mt-8 mb-4" data-reveal>At ENGINEER &rsquo;26</p>
+    <ul class="act-wall" data-reveal>
+      <% shows.forEach(function (s) { %>
+      <li class="act act--live">
+        <a class="act__n" href="/events/<%= s.linkedEvent.slug %>"><%= s.title %></a>
+        <span class="act__k"><%= s.day %> &middot; <%= s.time || 'Time soon' %></span>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
 
     <% if (proshows.confirmed.length) { %>
     <p class="eyebrow text-cyan mt-8 mb-4" data-reveal>Confirmed for &rsquo;26</p>
@@ -38,8 +59,7 @@
 
     <p class="text-sm text-[var(--paper-dim)] max-w-xl mt-6" data-reveal>
       <% if (!proshows.confirmed.length) { %>
-        The &rsquo;26 line-up is coming soon. These are the acts ENGINEER has
-        hosted before.
+        The pro show line-up for &rsquo;26 is coming soon.
       <% } else { %>
         More acts publish here as they sign.
       <% } %>
