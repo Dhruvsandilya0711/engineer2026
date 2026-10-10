@@ -80,9 +80,29 @@ const REGISTRATION_STATES = {
 // data/events.json then apply as before.
 const REGISTRATION_OPEN = process.env.REGISTRATION_OPEN === 'true';
 const COMING_SOON = { label: 'Coming soon', tone: 'idle', actionable: false, soon: true };
-const regState = (e) => REGISTRATION_OPEN
-  ? (REGISTRATION_STATES[e.registration] || REGISTRATION_STATES.not_open)
-  : COMING_SOON;
+
+// Registration happens on each event's own form (Unstop, Google Forms, a
+// club site), not here. An event with a `registrationUrl` is open and every
+// Register button for it goes straight to that form; the host is named so
+// nobody is surprised to leave the site.
+function regHost(url) {
+  try {
+    const h = new URL(url).hostname.replace(/^www\./, '');
+    if (h.endsWith('unstop.com')) return 'Unstop';
+    if (h === 'docs.google.com' || h === 'forms.gle') return 'Google Forms';
+    if (h.endsWith('aeronitk.in')) return 'Aero NITK';
+    return h;
+  } catch { return null; }
+}
+const regState = (e) => {
+  if (e.registrationUrl) {
+    return { label: 'Registration open', tone: 'live', actionable: true,
+             external: true, url: e.registrationUrl, host: regHost(e.registrationUrl) };
+  }
+  return REGISTRATION_OPEN
+    ? (REGISTRATION_STATES[e.registration] || REGISTRATION_STATES.not_open)
+    : COMING_SOON;
+};
 
 /**
  * The site's public origin. PUBLIC_ORIGIN wins when set, because it is the
@@ -379,7 +399,7 @@ app.get('/events/:slug', (req, res, next) => {
 // `payment` is null on every path except the one that has just created a
 // Razorpay order. The view opens checkout when it is present, so there is one
 // template rather than a separate payment page to keep in step with this one.
-const renderRegister = (res, opts) => res.render('register', {
+const renderRegister = (res, opts) => res.render('register-form', {
   festDates: FEST_DATES,
   events,
   values: { userName: '', userRollNumber: '', userEvent: '', userMail: '' },
@@ -405,11 +425,15 @@ async function eventFees() {
   catch { return {}; }
 }
 
-app.get('/register', async (req, res) => {
-  if (!REGISTRATION_OPEN) return renderRegister(res, { status: 'soon' });
-  renderRegister(res, {
-    values: { userName: '', userRollNumber: '', userEvent: req.query.event || '', userMail: '' },
-    fees: await eventFees(),
+// The register page is a directory: every event, with the open ones linking
+// out to their organisers' forms. (The on-site form in register-form.ejs is
+// kept, and only used, behind REGISTRATION_OPEN=true at POST.)
+app.get('/register', (req, res) => {
+  const open = allEvents.filter(e => e.registrationUrl);
+  res.render('register', {
+    festDates: FEST_DATES,
+    open: open.map(e => ({ ...e, st: regState(e), sessions: sessionsFor(e.slug) })),
+    soon: allEvents.filter(e => !e.registrationUrl),
   });
 });
 
@@ -427,16 +451,14 @@ const registerLimit = requestLimit({
 app.post('/register', registerLimit, async (req, res) => {
   // Closed means closed: nothing is validated or written while the switch
   // is off, whatever a stale tab or a script posts.
-  if (!REGISTRATION_OPEN) return res.status(403).render('register', {
-    festDates: FEST_DATES, events, values: {}, errors: {}, status: 'soon', payment: null, fees: {},
-  });
+  if (!REGISTRATION_OPEN) return res.redirect(303, '/register');
   const { valid, errors, value } = validate(req.body || {});
   // Needed by every path that re-renders the form: coming back with an error
   // must not drop the prices out of the event picker.
   const fees = await eventFees();
 
   if (!valid) {
-    return res.status(400).render('register', {
+    return res.status(400).render('register-form', {
       festDates: FEST_DATES, events, values: req.body || {}, errors, status: 'invalid', payment: null, fees,
     });
   }
@@ -448,7 +470,7 @@ app.post('/register', registerLimit, async (req, res) => {
   try {
     fee = await feeFor(value.userEvent);
   } catch {
-    return res.status(503).render('register', {
+    return res.status(503).render('register-form', {
       festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null, fees,
     });
   }
@@ -457,7 +479,7 @@ app.post('/register', registerLimit, async (req, res) => {
     // A PAID row is what blocks a second attempt. An abandoned checkout leaves
     // an unpaid row behind and must not lock the person out of trying again.
     if (await hasPaidRegistration(value.userMail, value.userEvent)) {
-      return res.status(409).render('register', {
+      return res.status(409).render('register-form', {
         festDates: FEST_DATES, events, values: req.body,
         errors: { userMail: 'This email has already paid for that event.' },
         status: 'duplicate', payment: null, fees,
@@ -492,7 +514,7 @@ app.post('/register', registerLimit, async (req, res) => {
       });
     } catch (err) {
       console.error('order creation failed:', err.message);
-      return res.status(502).render('register', {
+      return res.status(502).render('register-form', {
         festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'pay-error', payment: null, fees,
       });
     }
@@ -502,14 +524,14 @@ app.post('/register', registerLimit, async (req, res) => {
   const result = await saveRegistration(value);
 
   if (result.duplicate) {
-    return res.status(409).render('register', {
+    return res.status(409).render('register-form', {
       festDates: FEST_DATES, events, values: req.body,
       errors: { userMail: 'This email is already registered for that event.' },
       status: 'duplicate', payment: null, fees,
     });
   }
   if (!result.ok) {
-    return res.status(500).render('register', {
+    return res.status(500).render('register-form', {
       festDates: FEST_DATES, events, values: req.body, errors: {}, status: 'error', payment: null, fees,
     });
   }
