@@ -67,6 +67,9 @@ export function initPageTransition() {
     if (leaving) return;
     leaving = true;
     try { sessionStorage.setItem(FLAG, '1'); } catch { /* non-fatal */ }
+    // The music fades out under the veil (public/js/audio.js) instead of
+    // being cut off when the document goes; the next page fades it back in.
+    document.dispatchEvent(new CustomEvent('e26:music:leave'));
     veil.classList.add('is-active', 'is-covering');
     await wait(COVER_MS);
     window.location.href = url;
