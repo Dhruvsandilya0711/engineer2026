@@ -53,7 +53,7 @@ const FEST_DATES = { start: '2026-10-23', end: '2026-10-25', display: '23—25 O
 
 const eventData = JSON.parse(readFileSync(path.join(__dirname, 'data/events.json'), 'utf-8'));
 
-// Terms, privacy and refunds. Read once at boot like every other data file —
+// Terms and privacy. Read once at boot like every other data file —
 // they change between festivals, not between requests.
 const legal = JSON.parse(readFileSync(path.join(__dirname, 'data/legal.json'), 'utf-8'));
 const allEvents = eventData.events;
@@ -385,14 +385,11 @@ app.get('/about', (req, res) => {
 });
 
 /**
- * The policy pages: /terms, /privacy, /refunds.
+ * The policy pages: /terms, /privacy.
  *
  * Registered explicitly rather than as one /:doc parameter route, because a
  * parameter at the site root would swallow every unmatched top-level path and
  * turn a typo into a 500 instead of the 404 it should be.
- *
- * Razorpay will not activate a live key without all three reachable from the
- * site, so these are a payment prerequisite as much as a legal one.
  */
 for (const slug of Object.keys(legal.docs)) {
   app.get('/' + slug, (req, res) => {

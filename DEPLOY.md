@@ -192,11 +192,11 @@ sudo cp /etc/nginx/sites-available/engineer /etc/nginx/sites-available/engineer.
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-Then check all ten routes. Use `http://` — port 443 is closed until CCC
+Then check all nine routes. Use `http://` — port 443 is closed until CCC
 issues a certificate:
 
 ```bash
-for p in / /about /events /schedule /team /sponsors /register /terms /privacy /refunds; do
+for p in / /about /events /schedule /team /sponsors /register /terms /privacy; do
   printf '%-11s %s
 ' "$p" "$(curl -s -o /dev/null -w '%{http_code}' http://engineer.nitk.ac.in$p)"
 done
@@ -337,8 +337,7 @@ Not blockers for putting the site up, but they are real:
 | **TLS on the domain** | **Missing — port 443 is closed.** CCC must issue it. Blocks Razorpay entirely, and should be in place before registration opens regardless. |
 | **Public reachability** | `engineer.nitk.ac.in` resolves to a private `10.x` address. Confirm with CCC whether it answers from outside campus. |
 | **Razorpay KYC** | Not started. Live keys need it and it takes days, not hours. Until then every event is free. |
-| **Refund policy decisions** | `/refunds` ships with my defaults — non-refundable, no transfers. Three decisions are flagged in `data/legal.json` under `todo`. |
-| **Legal review** | The three policy pages are written from what the code actually does, but no one qualified has read them. Get a staff advisor to, before real money moves. |
+| **Legal review** | The two policy pages are written from what the code actually does, but no one qualified has read them. Get a staff advisor to, before real money moves. |
 | **`DBURL`** | File store until CCC provides it. |
 | **SMTP** | No tickets are emailed until `EMAIL_ADDRESS` / `EMAIL_APP_PASSKEY` are set. Ask CCC for an institutional relay rather than a personal Gmail — mail claiming to be from the fest should come from the fest. |
 | **Prize-rule clauses** | Four in `_signal-range.ejs` are still my defaults (close time, contact address, claim with college ID). |
