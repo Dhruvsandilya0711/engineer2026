@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv29l6xd">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=mv29l6xd" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv29l6xd">
-  <link href="/engineer2026/src/output.css?v=mv29l6xd" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv29zgy6">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=mv29zgy6" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv29zgy6">
+  <link href="/engineer2026/src/output.css?v=mv29zgy6" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <!-- Sitewide atmosphere. One fixed, low-density neural field runs behind the
@@ -38,7 +38,7 @@
      ========================================================================== -->
 
 
-<script nonce="+CjwUD+sROZ6VXbXpqDfIg==">
+<script nonce="AtO06NS5PNa7ZG1Jj5IGLA==">
   (function () {
     var html = document.documentElement, skip = false, arriving = false;
     html.classList.add('js');
@@ -288,7 +288,7 @@
      ========================================================================== -->
 
 
-<script nonce="+CjwUD+sROZ6VXbXpqDfIg==">
+<script nonce="AtO06NS5PNa7ZG1Jj5IGLA==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
@@ -958,8 +958,8 @@
      same five destinations as the nav bar directly above it, so opening a
      card only ever restated a link the visitor could already see. It now
      carries the material that has nowhere else to live on this page: the
-     fest's scale, its programme tracks, the three days at a glance, the
-     shows, and the partner network. Navigation stays where navigation belongs — the bays.
+     fest's scale, its programme tracks, its CSR work, the shows, and the
+     partner network. Navigation stays where navigation belongs — the bays.
      ========================================================================== -->
 
 <section class="fandeck" id="deck" data-js="fandeck" aria-label="Explore ENGINEER '26">
@@ -1227,416 +1227,81 @@
       </div>
     </article>
     
-    <article class="fancard" id="days" data-card="days"
-             style="--i: 2; --accent: var(--bay-4);">
+    <article class="fancard" id="engi-care" data-card="engi-care"
+             style="--i: 2; --accent: var(--rgb-amber);">
       <!-- Transparent hit target: opens the card in the fan state; hidden once
            open so the real content (links, close, scroll) takes the clicks. -->
       <button class="fancard__hit" type="button" data-js="fancard-open"
-              aria-expanded="false" aria-label="Open Three Days"></button>
+              aria-expanded="false" aria-label="Open ENGI Care"></button>
 
-      <div class="fancard__plate" data-spotlight style="--spot: var(--bay-4);">
+      <div class="fancard__plate" data-spotlight style="--spot: var(--rgb-amber);">
         
         <span class="fancard__index" aria-hidden="true">03</span>
         <div class="deck-card__head">
           <span class="deck-card__num">03</span>
-          <span class="deck-card__name">Three Days</span>
+          <span class="deck-card__name">ENGI Care</span>
           <span class="deck-card__slab" aria-hidden="true"></span>
           <span class="deck-card__line" aria-hidden="true"></span>
-          <a class="deck-card__go" href="/engineer2026/schedule">Schedule &rarr;</a>
-          <button class="fancard__close" type="button" data-js="fancard-close" aria-label="Close Three Days">&#10005;</button>
+          
+          <button class="fancard__close" type="button" data-js="fancard-close" aria-label="Close ENGI Care">&#10005;</button>
         </div>
 
         <!-- Fan face: a short teaser + the OPEN hint (both hidden once open). -->
-        <p class="fancard__teaser">47 sessions over three days, hour by hour.</p>
+        <p class="fancard__teaser">The CSR programme — engineering that gives back.</p>
         <span class="fancard__hint" aria-hidden="true">Open &#8599;</span>
 
         <!-- Full content: hidden in the fan, revealed when the card opens. -->
         <div class="fancard__body deck-card__body" data-lenis-prevent>
           <!-- ==========================================================================
-     DECK CARD 03 — THREE DAYS.
+     DECK CARD 03 — ENGI CARE.
 
-     The whole schedule at a glance, one column per day, straight from
-     data/schedule.json (the organising team's day sheets). Same resolved
-     days as /schedule, so the card and the page can never disagree; a time
-     the sheet still has as TBD reads "coming soon" in both places.
+     The fest's CSR programme. Copy and the three initiatives are the
+     sponsorship brochure's own (§03 Track 04), kept in data/fest.json →
+     engiCare. They are CSR work rather than entries in the event schedule,
+     so they are listed here without event pages.
 
      Card-sized: the deck body supplies the padding and the angular frame.
      ========================================================================== -->
-<section id="days" class="relative">
-  <div class="max-w-5xl">
-    <p class="eyebrow mb-5" style="color: rgb(var(--bay-4))" data-reveal>The schedule</p>
+
+<section id="engi-care" class="relative">
+  <div class="max-w-3xl">
+    <p class="eyebrow text-amber mb-5" data-reveal>CSR initiative</p>
 
     <h2 class="font-display font-bold" data-reveal>
-      Three days.<br><span class="text-gradient-impossible">One sequence.</span>
+      Engineering<br><span class="text-gradient-impossible">that gives back.</span>
     </h2>
 
-    <ul class="days-grid mt-8">
+    <p class="text-sm sm:text-base text-[var(--paper-dim)] mt-5 max-w-xl leading-relaxed" data-reveal>
+      ENGI Care is our CSR initiative — a testament to our dedication to making a positive difference in the lives of those around us.
+    </p>
+
+    <ul class="care-list mt-8">
       
-      <li class="day-col" data-reveal>
-        <div class="day-col__head">
-          <h3 class="day-col__label">Day 0</h3>
-          <span class="day-col__date">Fri 23 Oct</span>
+      <li class="care" data-reveal>
+        <span class="care__n">01</span>
+        <div class="care__b">
+          <h3 class="care__name">Music For All</h3>
+          <p class="care__d">A musical performance by specially-abled kids, staged as part of ENGI Care.</p>
         </div>
-        <p class="day-col__n mt-1">4 sessions</p>
-        <ol class="day-col__list">
-          
-          <li class="day-slot">
-            <span class="day-slot__t">17:00</span>
-            
-            <span class="day-slot__n">Inauguration</span>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">18:30</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/bot-show">Bot Show</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">19:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/tron-dance">Tron Dance</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">20:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/stand-up-comedy">Stand Up Comedy</a>
-            
-          </li>
-          
-        </ol>
       </li>
       
-      <li class="day-col" data-reveal>
-        <div class="day-col__head">
-          <h3 class="day-col__label">Day 1</h3>
-          <span class="day-col__date">Sat 24 Oct</span>
+      <li class="care" data-reveal>
+        <span class="care__n">02</span>
+        <div class="care__b">
+          <h3 class="care__name">Techadapt</h3>
+          <p class="care__d">Games designed for and played with specially-abled participants.</p>
         </div>
-        <p class="day-col__n mt-1">29 sessions</p>
-        <ol class="day-col__list">
-          
-          <li class="day-slot">
-            <span class="day-slot__t">All day</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/avishkar">Avishkar</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">All day</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/planetarium">Planetarium</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">All day</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/metallurgy-expo">Metallurgy Project Expo</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">08:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/wright-flight">Wright Flight</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">08:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/drone-race">Drone Racing</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">09:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/sim2real">SIM2REAL</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">09:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/nitkpd">NITKPD</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">09:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/project-expo">Project Expo</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/tech-talks">Tech Talks</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/workshops">Workshops</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/gaming">Gaming Events</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/techscape">TechScape</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/chronoforge-hackathon">Chronoforge Hackathon</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/auto-expo">Auto Expo</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/robowars">Robowars</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/aac-project-expo">AAC Project Expo</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">11:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/astroquiz">AstroQuiz</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">17:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/telescope-making">Telescope Making Workshop</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">17:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/mc-night">MC Night</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">19:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/starry-nights">Starry Nights</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">19:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/flute-boxers">Flute Boxers</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">19:30</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/magic-show">Magic Show</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">20:30</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/movie-night">Movie Night</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/ie-x-tronix">IE × Tronix</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/civil-saga">Civil Saga</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/ie-capital">IE Capital Event</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/baja-quiz">Baja Quiz</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/rechersion">recHERsion</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/robocon-expo">Robocon Expo</a>
-            
-          </li>
-          
-        </ol>
       </li>
       
-      <li class="day-col" data-reveal>
-        <div class="day-col__head">
-          <h3 class="day-col__label">Day 2</h3>
-          <span class="day-col__date">Sun 25 Oct</span>
+      <li class="care" data-reveal>
+        <span class="care__n">03</span>
+        <div class="care__b">
+          <h3 class="care__name">Innovate4Good</h3>
+          <p class="care__d">A national case study contest on building technology that does social good.</p>
         </div>
-        <p class="day-col__n mt-1">14 sessions</p>
-        <ol class="day-col__list">
-          
-          <li class="day-slot">
-            <span class="day-slot__t">All day</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/planetarium">Planetarium</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">All day</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/verilog-quest">Verilog Quest</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">09:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/weapons-expo">Weapons Expo</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">09:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/sim2real">SIM2REAL</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">09:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/nitkpd">NITKPD</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/workshops">Workshops</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/gaming">Gaming Events</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/robowars">Robowars</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/techscape">TechScape</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">10:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/vr-space">VR Space Experience</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">15:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/stunt-show">Stunt Show</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">16:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/beach-event">Beach Events</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t">19:00</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/pro-shows">Pro Shows</a>
-            
-          </li>
-          
-          <li class="day-slot">
-            <span class="day-slot__t is-tba">Soon</span>
-            
-            <a class="day-slot__n" href="/engineer2026/events/ie-robotics">IE Robotics Competition</a>
-            
-          </li>
-          
-        </ol>
       </li>
       
     </ul>
-
-    <a href="/engineer2026/schedule" class="btn btn-secondary mt-8" data-reveal>Full schedule &rarr;</a>
   </div>
 </section>
 
@@ -3866,7 +3531,7 @@
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=7ed21fa"></script>
-  <script type="module" src="/engineer2026/js/main.js?v=7ed21fa"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=c04c8d4"></script>
+  <script type="module" src="/engineer2026/js/main.js?v=c04c8d4"></script>
 </body>
 </html>
