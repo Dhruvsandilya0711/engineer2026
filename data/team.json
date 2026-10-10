@@ -6,7 +6,8 @@
     "group": "string — required; groups are DERIVED from this field, so only groups that actually have members will ever appear",
     "image": "string path or null — falls back to a typographic monogram tile when null",
     "email": "string or null",
-    "linkedin": "string URL or null"
+    "linkedin": "string URL or null",
+    "tagline": "string or null — a one-line punchline shown on the card"
   },
   "_exampleMember": {
     "name": "",
@@ -23,7 +24,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Runs the show. Literally."
     },
     {
       "name": "Ramu H M",
@@ -31,7 +33,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Minutes taken. Excuses not."
     },
     {
       "name": "Likith P Gujjar",
@@ -39,7 +42,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Second in line, first on the job."
     },
     {
       "name": "Premdeep Mali",
@@ -47,7 +51,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Postgrad poise, undergrad energy."
     },
     {
       "name": "Chaitanya Deshmukh",
@@ -55,7 +60,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Sells the hype. Delivers it too."
     },
     {
       "name": "Vedant Sabnis",
@@ -63,7 +69,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Heard about ENGINEER? Blame him."
     },
     {
       "name": "Prajwal Meshram",
@@ -71,7 +78,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Herds chaos into a schedule."
     },
     {
       "name": "Dhananjay Mode",
@@ -79,7 +87,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Plan A, B and C. All ready."
     },
     {
       "name": "Sambhav Powar",
@@ -87,7 +96,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Every rupee has a receipt."
     },
     {
       "name": "Soham Palkrit",
@@ -95,7 +105,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "It works on his machine. And yours."
     },
     {
       "name": "Dhruv Sandilya",
@@ -103,7 +114,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Big heart, bigger to-do list."
     },
     {
       "name": "Harsh S K",
@@ -111,7 +123,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Lights, stage, zero excuses."
     },
     {
       "name": "Satwik Gurav",
@@ -119,7 +132,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Builds the stage you’ll remember."
     },
     {
       "name": "Karthik Thippeswamy",
@@ -127,7 +141,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Caught you on camera. Looking good."
     },
     {
       "name": "Abhishek M",
@@ -135,7 +150,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Every frame, on brand."
     },
     {
       "name": "Atharva Muthal",
@@ -143,7 +159,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Makes pixels behave."
     },
     {
       "name": "Aditi Sinhal",
@@ -151,7 +168,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Your inbox has already met her."
     },
     {
       "name": "Soham Jain",
@@ -159,7 +177,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Only the best make the cut."
     },
     {
       "name": "Aayush Dubey",
@@ -167,7 +186,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Gets legends on the mic."
     },
     {
       "name": "Aniket Kakad",
@@ -175,7 +195,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "If it ran smoothly, that was him."
     },
     {
       "name": "Anuj Patil",
@@ -183,7 +204,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Keeps the stars happy."
     },
     {
       "name": "Karthik Gurikar",
@@ -191,7 +213,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Your stay, sorted."
     },
     {
       "name": "Mohan Kumar M E",
@@ -199,7 +222,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Welcome mat, rolled out."
     },
     {
       "name": "Nandeesh Trivedi",
@@ -207,7 +231,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Knows every shop in Surathkal."
     },
     {
       "name": "Shivakumar Hiremath",
@@ -215,7 +240,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Stalls up, stomachs full."
     },
     {
       "name": "Abhishek H N",
@@ -223,7 +249,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Turns a lawn into a market."
     },
     {
       "name": null,
@@ -231,7 +258,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Identity classified."
     },
     {
       "name": "Ganesh Madhav Rajesh",
@@ -239,7 +267,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "GG before you even queue."
     },
     {
       "name": "Adhil Ali",
@@ -247,7 +276,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Lag is not an excuse."
     },
     {
       "name": "Shatayu Raut",
@@ -255,7 +285,8 @@
       "group": "Team",
       "image": null,
       "email": null,
-      "linkedin": null
+      "linkedin": null,
+      "tagline": "Moves mountains. Mostly chairs."
     }
   ]
 }
