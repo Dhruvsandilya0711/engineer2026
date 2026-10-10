@@ -2,11 +2,11 @@
 // Same scroll and 3D systems as the homepage, but only the light moments:
 // no pinned narrative, no events rail, no hero WebGL scene.
 
-import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=fd1c178';
-import { initScroll, registerReveals, registerParallax, scrollState } from '/engineer2026/js/scroll.js?v=fd1c178';
-import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=fd1c178';
-import { initDots } from '/engineer2026/js/dots.js?v=fd1c178';
-import { initPageTransition } from '/engineer2026/js/page-transition.js?v=fd1c178';
+import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=af62599';
+import { initScroll, registerReveals, registerParallax, scrollState } from '/engineer2026/js/scroll.js?v=af62599';
+import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=af62599';
+import { initDots } from '/engineer2026/js/dots.js?v=af62599';
+import { initPageTransition } from '/engineer2026/js/page-transition.js?v=af62599';
 
 (async function boot() {
   initPageTransition();

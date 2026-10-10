@@ -13,7 +13,7 @@
 // Pauses when off-screen or the tab is hidden.
 // ==========================================================================
 
-import { scrollState, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=fd1c178';
+import { scrollState, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=af62599';
 
 const RAD = Math.PI / 180;
 
