@@ -31,7 +31,7 @@ const events = JSON.parse(await readFile('data/events.json', 'utf8')).events;
 const legalDocs = Object.keys(JSON.parse(await readFile('data/legal.json', 'utf8')).docs);
 
 const routes = [
-  '/', '/events', '/schedule', '/team', '/sponsors', '/about', '/register',
+  '/', '/competitions', '/schedule', '/team', '/sponsors', '/about', '/register',
   ...legalDocs.map((d) => '/' + d),
   ...events.map((e) => '/events/' + e.slug),
 ];
@@ -40,7 +40,7 @@ const routes = [
 // rebased, so a "/" inside a sentence or a regex is never touched.
 const SEGMENTS = [
   'images', 'js', 'vendor', 'src', 'fonts', 'audio',
-  'events', 'schedule', 'team', 'sponsors', 'about', 'register',
+  'events', 'competitions', 'schedule', 'team', 'sponsors', 'about', 'register',
   ...legalDocs, 'api', 'ticket', 'favicon\\.ico',
 ];
 const segmentPath = new RegExp(
@@ -84,6 +84,14 @@ for (const r of routes) {
 }
 // Pages serves 404.html for any path it does not have.
 await page('/__missing__', '404.html');
+
+// /events became /competitions. Pages cannot send a redirect, so the old
+// address gets a tiny page that forwards there.
+await writeFile(path.join(OUT, 'events', 'index.html'),
+  `<!doctype html><meta charset="utf-8"><title>Competitions — ENGINEER '26</title>`
+  + `<meta http-equiv="refresh" content="0; url=${BASE}/competitions/">`
+  + `<link rel="canonical" href="${PUBLIC_URL}/competitions/">`
+  + `<a href="${BASE}/competitions/">Competitions</a>\n`);
 
 // Static assets. input.css is the Tailwind source, not something a browser loads.
 await cp('public', OUT, {

@@ -120,6 +120,15 @@ const events = {
   categories,
 };
 
+// The Competitions page (and registration) covers only what people ENTER:
+// competitions, hackathons, gaming and quizzes. Everything else on the
+// programme (shows, expos, talks, workshops, experiences) stays on the
+// schedule and keeps its own event page; it just is not a competition.
+const COMPETITION_CATEGORIES = ['Competition', 'Hackathon', 'Gaming', 'Quiz'];
+const competitions = allEvents.filter(e => COMPETITION_CATEGORIES.includes(e.category));
+const competitionCategories = COMPETITION_CATEGORIES.filter(c => competitions.some(e => e.category === c));
+const isCompetition = (e) => COMPETITION_CATEGORIES.includes(e.category);
+
 // Gallery: stills from past ENGINEER aftermovies, supplied by the organising
 // team. See data/gallery.json for provenance and credits.
 const gallery = JSON.parse(readFileSync(path.join(__dirname, 'data/gallery.json'), 'utf-8')).images;
@@ -264,6 +273,7 @@ app.get('/', (req, res) => {
   res.render('index', {
     festDates: FEST_DATES,
     events,
+    competitions,
     scheduleDays: resolvedDays(),
     gallery,
     regState,
@@ -279,28 +289,35 @@ app.get('/', (req, res) => {
 // category filters work with JavaScript disabled; public/js/events-filter.js
 // then layers instant client-side filtering on top as a progressive
 // enhancement (a few dozen events — no need to round-trip per keystroke).
-app.get('/events', (req, res) => {
+app.get('/competitions', (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const category = (req.query.category || '').toString().trim();
 
   const needle = q.toLowerCase();
-  const results = allEvents.filter(e => {
+  const results = competitions.filter(e => {
     const matchesQuery = !needle
       || e.name.toLowerCase().includes(needle)
-      || e.category.toLowerCase().includes(needle);
+      || e.category.toLowerCase().includes(needle)
+      || (e.organisedBy || '').toLowerCase().includes(needle);
     const matchesCategory = !category || category === 'All' || e.category === category;
     return matchesQuery && matchesCategory;
   });
 
-  res.render('events', {
+  res.render('competitions', {
     festDates: FEST_DATES,
-    events,
+    competitions,
+    categories: competitionCategories,
     results,
     query: q,
     activeCategory: category || 'All',
     regState,
-    tracks,
   });
+});
+
+// The page used to be /events; old links and bookmarks land on the new one.
+app.get('/events', (req, res) => {
+  const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+  res.redirect(301, '/competitions' + qs);
 });
 
 app.get('/schedule', (req, res) => {
@@ -382,6 +399,9 @@ app.get('/events/:slug', (req, res, next) => {
     // no description of its own can still say what kind of thing it is.
     track: tracks.find(t => t.id === event.track) || null,
     sessions: sessionsFor(event.slug),
+    // Competitions point back at the Competitions page; everything else
+    // (shows, expos, talks) at the schedule, where people find it.
+    isCompetition: isCompetition(event),
     index: allEvents.indexOf(event) + 1,
     canonical: `${origin}/events/${event.slug}`,
     // og:image has to be an ABSOLUTE url -- a crawler will not resolve a
@@ -436,15 +456,16 @@ app.get('/register', (req, res) => {
   const last = (v) => [].concat(v ?? '').pop().toString().trim();
   const q = last(req.query.q);
   const status = ['open', 'soon'].includes(last(req.query.status)) ? last(req.query.status) : 'all';
-  const category = categories.includes(last(req.query.category)) ? last(req.query.category) : 'All';
+  const category = competitionCategories.includes(last(req.query.category)) ? last(req.query.category) : 'All';
 
   const needle = q.toLowerCase();
   const matches = (e) =>
     (!needle || [e.name, e.category, e.organisedBy || ''].join(' ').toLowerCase().includes(needle))
     && (category === 'All' || e.category === category);
 
-  const openAll = allEvents.filter(e => e.registrationUrl);
-  const soonAll = allEvents.filter(e => !e.registrationUrl);
+  // Registration is for competitions only; shows, expos and talks need none.
+  const openAll = competitions.filter(e => e.registrationUrl);
+  const soonAll = competitions.filter(e => !e.registrationUrl);
   const open = status === 'soon' ? [] : openAll.filter(matches);
   const soon = status === 'open' ? [] : soonAll.filter(matches);
 
@@ -453,7 +474,7 @@ app.get('/register', (req, res) => {
     open: open.map(e => ({ ...e, st: regState(e), sessions: sessionsFor(e.slug) })),
     soon,
     totals: { open: openAll.length, soon: soonAll.length },
-    categories: categories.map(c => ({ name: c, count: allEvents.filter(e => e.category === c).length })),
+    categories: competitionCategories.map(c => ({ name: c, count: competitions.filter(e => e.category === c).length })),
     query: q,
     status,
     activeCategory: category,

@@ -14,20 +14,23 @@
      ========================================================================== -->
 <%
   const trackAccent = { technical: 'var(--bay-1)', talks: 'var(--bay-6)', campus: 'var(--bay-4)', nights: 'var(--bay-5)' };
-  const half = Math.ceil(events.all.length / 2);
-  const tapes = [events.all.slice(0, half), events.all.slice(half)];
+  // The band shows the competitions: what people enter, and what the "All"
+  // link opens. Shows and expos live on the schedule.
+  const list = competitions;
+  const half = Math.ceil(list.length / 2);
+  const tapes = [list.slice(0, half), list.slice(half)];
 %>
 <section class="evband" aria-labelledby="evband-title" style="--accent: var(--bay-3)">
   <div class="rail evband__head">
     <div class="deck-card__head evband__bar">
       <span class="deck-card__num">03</span>
-      <span class="deck-card__name">Programme</span>
+      <span class="deck-card__name">Competitions</span>
       <span class="deck-card__slab" aria-hidden="true"></span>
       <span class="deck-card__line" aria-hidden="true"></span>
-      <a class="deck-card__go" href="/events">All <%= events.all.length %> &rarr;</a>
+      <a class="deck-card__go" href="/competitions">All <%= list.length %> &rarr;</a>
     </div>
     <h2 id="evband-title" class="chapter-title chapter-title--md" data-split>
-      <%= events.all.length %> events.<br><span class="text-gradient-impossible">Three days.</span>
+      <%= list.length %> competitions.<br><span class="text-gradient-impossible">Three days.</span>
     </h2>
   </div>
 
@@ -38,7 +41,7 @@
         <div class="mq__track" style="--mq-dur: <%= t ? 95 : 85 %>s">
           <% for (let copy = 0; copy < 2; copy++) { %>
           <ul class="mq__group"<%- copy ? ' aria-hidden="true"' : '' %>>
-            <% tape.forEach(function (e) { const n = events.all.indexOf(e) + 1; %>
+            <% tape.forEach(function (e) { const n = list.indexOf(e) + 1; %>
             <li class="evchip-cell" style="--bay-accent: <%= trackAccent[e.track] || 'var(--bay-1)' %>">
               <a class="evchip" href="/events/<%= e.slug %>"
                  data-preview="<%= e.image || '' %>"<%- copy ? ' tabindex="-1"' : '' %>>

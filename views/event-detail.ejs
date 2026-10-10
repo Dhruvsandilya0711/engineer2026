@@ -32,7 +32,7 @@
     <div class="field-vignette absolute inset-0"></div>
   </div>
 
-  <%- include('partials/_nav', { activeNav: 'events' }) %>
+  <%- include('partials/_nav', { activeNav: isCompetition ? 'competitions' : 'schedule' }) %>
 
   <main class="relative z-10 pt-28 pb-20">
 
@@ -41,8 +41,8 @@
          to ENGINEER itself, not to individual events. -->
     <header class="mb-14">
       <div class="rail">
-        <a href="/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
-          ← Event index
+        <a href="<%= isCompetition ? '/competitions' : '/schedule' %>" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
+          ← <%= isCompetition ? 'Competitions' : 'Schedule' %>
         </a>
 
         <!-- framed hero, in the homepage deck-card idiom -->
@@ -54,7 +54,7 @@
               <span class="deck-card__name"><%= event.category %></span>
               <span class="deck-card__slab" aria-hidden="true"></span>
               <span class="deck-card__line" aria-hidden="true"></span>
-              <a class="deck-card__go" href="/events">Index &rarr;</a>
+              <a class="deck-card__go" href="<%= isCompetition ? '/competitions' : '/schedule' %>"><%= isCompetition ? 'Competitions' : 'Schedule' %> &rarr;</a>
             </div>
             <div class="hud-frame__body">
               <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">

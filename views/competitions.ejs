@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Events — ENGINEER '26 · Cognitrixx</title>
-  <meta name="description" content="The ENGINEER '26 event index. <%= events.all.length %> events across <%= events.categories.length %> categories at NITK Surathkal, <%= festDates.display %>.">
+  <title>Competitions — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="The ENGINEER '26 competitions: <%= competitions.length %> competitions, hackathons, quizzes and gaming events at NITK Surathkal, <%= festDates.display %>.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,32 +22,32 @@
     <div class="field-vignette absolute inset-0"></div>
   </div>
 
-  <%- include('partials/_nav', { activeNav: 'events' }) %>
+  <%- include('partials/_nav', { activeNav: 'competitions' }) %>
 
   <main class="relative z-10 pt-28 pb-20">
     <div class="rail">
 
       <!-- framed page head, in the homepage deck-card idiom -->
       <%
-        const eventsTitle = `Every event.<br><span class="text-gradient-impossible">One system.</span>`;
+        const eventsTitle = `Every competition.<br><span class="text-gradient-impossible">One arena.</span>`;
         const eventsMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
-          + `<span class="text-paper">${events.all.length}</span> events &middot; `
-          + `<span class="text-paper">${events.categories.length}</span> categories<br>`
+          + `<span class="text-paper">${competitions.length}</span> competitions &middot; `
+          + `<span class="text-paper">${categories.length}</span> types<br>`
           + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
       %>
-      <%- include('partials/_page-hero', { accent: 'var(--bay-3)', num: '02', nav: 'Events', kicker: 'Cognitrixx / event index', title: eventsTitle, meta: eventsMeta }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-3)', num: '02', nav: 'Competitions', kicker: 'Cognitrixx / compete', title: eventsTitle, meta: eventsMeta }) %>
 
       <div class="hud-frame mt-6" style="--accent: var(--bay-3)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
       <!-- search + filters. A real <form> so this works with JS disabled;
            events-filter.js upgrades it to instant filtering. -->
-      <form method="get" action="/events" class="mb-12" data-js="event-filter-form">
+      <form method="get" action="/competitions" class="mb-12" data-js="event-filter-form">
         <div class="relative mb-6">
-          <label for="event-search" class="sr-only">Search events</label>
+          <label for="event-search" class="sr-only">Search competitions</label>
           <input
             id="event-search" type="search" name="q" value="<%= query %>"
-            placeholder="Search events or categories…"
+            placeholder="Search competitions or clubs…"
             autocomplete="off"
             data-js="event-search"
             class="w-full bg-transparent border border-[var(--hairline-strong)] rounded-md px-4 py-3.5 pl-11 font-mono text-sm text-paper placeholder:text-[var(--paper-faint)] focus:border-cyan focus:outline-none transition-colors">
@@ -58,7 +58,7 @@
           <button type="submit" name="category" value="All" data-js="cat-chip" data-cat="All"
             class="cat-chip <%= activeCategory === 'All' ? 'is-active' : '' %>"
             aria-pressed="<%= activeCategory === 'All' %>">All</button>
-          <% events.categories.forEach(function(cat){ %>
+          <% categories.forEach(function(cat){ %>
           <button type="submit" name="category" value="<%= cat %>" data-js="cat-chip" data-cat="<%= cat %>"
             class="cat-chip <%= activeCategory === cat ? 'is-active' : '' %>"
             aria-pressed="<%= activeCategory === cat %>"><%= cat %></button>
@@ -110,9 +110,9 @@
         <p class="font-mono text-xs tracking-[0.2em] uppercase text-amber mb-4">No match</p>
         <h2 class="font-display font-semibold text-2xl mb-3">Nothing in the index for that</h2>
         <p class="text-[var(--paper-dim)] text-sm max-w-sm mx-auto mb-8">
-          <% if (query) { %>No event matches “<%= query %>”<%= activeCategory !== 'All' ? ' in ' + activeCategory : '' %>.<% } else { %>No events in <%= activeCategory %> yet.<% } %>
+          <% if (query) { %>No competition matches “<%= query %>”<%= activeCategory !== 'All' ? ' in ' + activeCategory : '' %>.<% } else { %>No competitions in <%= activeCategory %> yet.<% } %>
         </p>
-        <a href="/events" class="btn btn-secondary">Reset filters</a>
+        <a href="/competitions" class="btn btn-secondary">Reset filters</a>
       </div>
       <% } %>
 

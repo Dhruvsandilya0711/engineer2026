@@ -34,7 +34,7 @@
           <li><a href="/events/<%= e.slug %>"><%= e.name %></a></li>
           <% }); %>
           <% if (t.events.length > 6) { %>
-          <li class="track__more"><a href="/events">+<%= t.events.length - 6 %> more</a></li>
+          <li class="track__more"><a href="/schedule">+<%= t.events.length - 6 %> more</a></li>
           <% } %>
         </ul>
         <% } %>
@@ -42,6 +42,6 @@
       <% }); %>
     </ul>
 
-    <a href="/events" class="btn btn-secondary mt-8" data-reveal>All <%= events.all.length %> events &rarr;</a>
+    <a href="/competitions" class="btn btn-secondary mt-8" data-reveal>See the competitions &rarr;</a>
   </div>
 </section>
