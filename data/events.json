@@ -119,7 +119,7 @@
       "image": null,
       "featured": false,
       "registration": "open",
-      "registrationUrl": null,
+      "registrationUrl": "https://sim2real.nitk.ac.in/",
       "description": "A robotics event about closing the gap between simulation and the real world. Hands-on challenges across autonomous systems, drones and swarm robotics ask participants to turn a working simulation into something that survives real deployment.",
       "registrationDeadline": null,
       "prizes": null,
