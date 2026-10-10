@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sponsors — ENGINEER '26 · Cognitrixx</title>
-  <meta name="description" content="Partner with ENGINEER '26 at NITK Surathkal. Partnership tiers are open for the 2026 edition.">
+  <meta name="description" content="The sponsors, industry partners and alumni companies behind ENGINEER, NITK Surathkal's technical festival.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,108 +30,37 @@
       <%
         const sponsorTitle = `Powering<br><span class="text-gradient-impossible">the system.</span>`;
         const sponsorMeta = `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
-          + `<span class="text-paper">${tiers.length}</span> tiers &middot; `
-          + `<span class="text-paper">${openSlots}</span> open<br>`
-          + `<span class="text-[var(--paper-faint)]">${festDates.display} &middot; NITK Surathkal</span></p>`;
+          + `<span class="text-paper">${fest.pastSponsors.length}</span> sponsors &middot; `
+          + `<span class="text-paper">${fest.industryPartners.length}</span> industry partners<br>`
+          + `<span class="text-[var(--paper-faint)]">Since ${fest.founded} &middot; NITK Surathkal</span></p>`;
       %>
-      <%- include('partials/_page-hero', { accent: 'var(--bay-6)', num: '06', nav: 'Sponsors', kicker: 'Cognitrixx / partners', title: sponsorTitle, meta: sponsorMeta }) %>
+      <%- include('partials/_page-hero', { accent: 'var(--bay-6)', num: '06', nav: 'Sponsors', kicker: 'Cognitrixx / sponsors', title: sponsorTitle, meta: sponsorMeta }) %>
 
       <p class="text-[var(--paper-dim)] max-w-xl mt-6">
-        ENGINEER is NITK Surathkal's annual technical festival, run by students since
-        <%= fest.founded %>. Partnership tiers for the '26 edition are open — slots fill in
-        here as they are confirmed. Below: who the fest reaches, and who has backed it before.
+        The brands, labs and companies that have stood behind ENGINEER since <%= fest.founded %>.
       </p>
 
       <div class="hud-frame mt-6" style="--accent: var(--bay-6)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
-        <!-- ============ TIERS ============
-             Structure only. Every slot is genuinely open: no placeholder logos
-             and no invented partner names, same rule the deck card follows. -->
-        <section aria-labelledby="tiers">
+        <!-- ============ SPONSORS ============
+             Brands that have backed ENGINEER in previous editions — the
+             headline wall of this page, so shown at full strength. -->
+        <section aria-labelledby="sponsors">
           <div class="section-head">
-            <h2 id="tiers" class="font-display font-semibold text-xl">Partnership tiers</h2>
-            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= openSlots %> open</p>
+            <h2 id="sponsors" class="font-display font-semibold text-xl">Our sponsors</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">Previous editions</p>
           </div>
-
-          <ul class="grid sm:grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)] list-none p-0 m-0">
-            <% tiers.forEach(function (t, i) { %>
-            <li class="surface-card p-6 sm:p-7 text-center" data-reveal>
-              <p class="font-mono text-[0.6rem] tracking-[0.2em] uppercase mb-3" style="color: rgb(<%= t.accent %>)"><%= String(i + 1).padStart(2, '0') %> / <%= t.name %></p>
-              <p class="font-display font-semibold text-lg mb-2"><%= t.name %></p>
-              <p class="font-mono text-[0.62rem] tracking-[0.12em] uppercase text-[var(--paper-faint)]">Coming soon</p>
-            </li>
-            <% }); %>
-          </ul>
+          <%- include('partials/_logo-wall', { items: fest.pastSponsors, size: 'lg' }) %>
         </section>
 
-        <!-- ============ WHY / WHO REACHES IT ============
-             The reach figures a sponsor is actually buying, from the
-             brochure (data/fest.json). This section used to show only the
-             event count, the day count and the host — true, but no case. -->
-        <section class="mt-16" aria-labelledby="reach">
-          <div class="section-head">
-            <h2 id="reach" class="font-display font-semibold text-xl">What you're backing</h2>
-            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">Since <%= fest.founded %></p>
-          </div>
-
-          <ul class="stat-band stat-band--tight" data-reveal>
-            <% fest.stats.forEach(function (s) { %>
-            <li class="stat">
-              <p class="stat__v"><%= s.value %></p>
-              <p class="stat__l"><%= s.label %></p>
-              <p class="stat__n"><%= s.note %></p>
-            </li>
-            <% }); %>
-          </ul>
-
-          <div class="grid sm:grid-cols-3 gap-px bg-[var(--hairline)] border border-[var(--hairline)] mt-8">
-            <div class="surface-card p-6" data-reveal>
-              <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Programme</p>
-              <p class="font-display font-bold text-3xl mb-1"><%= eventCount %></p>
-              <p class="text-sm text-[var(--paper-dim)]">events across the festival</p>
-            </div>
-            <div class="surface-card p-6" data-reveal>
-              <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Dates</p>
-              <p class="font-display font-bold text-3xl mb-1">3</p>
-              <p class="text-sm text-[var(--paper-dim)]"><%= festDates.display %></p>
-            </div>
-            <div class="surface-card p-6" data-reveal>
-              <p class="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-cyan mb-3">Host</p>
-              <p class="font-display font-bold text-3xl mb-1">NITK</p>
-              <p class="text-sm text-[var(--paper-dim)]">Surathkal, Karnataka</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============ LEGACY SPONSORS ============
-             Brands that have backed ENGINEER in previous editions. Labelled
-             as past explicitly — none of these is a confirmed '26 partner,
-             and the page must not let anyone read it that way. -->
-        <section class="mt-16" aria-labelledby="legacy-sponsors">
-          <div class="section-head">
-            <h2 id="legacy-sponsors" class="font-display font-semibold text-xl">Legacy sponsors</h2>
-            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase"><%= fest.pastSponsors.length %> brands</p>
-          </div>
-          <p class="text-sm text-[var(--paper-dim)] max-w-xl mb-8">
-            Brands that have backed ENGINEER in previous editions. None is a confirmed
-            partner for '26 — that list starts empty above.
-          </p>
-          <%- include('partials/_logo-wall', { items: fest.pastSponsors, muted: true }) %>
-        </section>
-
-        <!-- ============ INSTITUTIONAL PARTNERS ============
+        <!-- ============ INDUSTRY & RESEARCH PARTNERS ============
              Standing collaborations of the host institute rather than fest
-             sponsorships — which is the stronger signal for a technical
-             partner, so they are kept distinct from the wall above. -->
+             sponsorships, so they are kept distinct from the wall above. -->
         <section class="mt-16" aria-labelledby="partners">
           <div class="section-head">
             <h2 id="partners" class="font-display font-semibold text-xl">Industry &amp; research partners</h2>
           </div>
-          <p class="text-sm text-[var(--paper-dim)] max-w-xl mb-8">
-            NITK's collaborations with industry, research labs and foreign academic institutes —
-            the reason the fest reaches past the campus.
-          </p>
           <%- include('partials/_logo-wall', { items: fest.industryPartners }) %>
 
           <ul class="centre-list mt-10" data-reveal>
@@ -153,34 +82,12 @@
             <h2 id="alumni" class="font-display font-semibold text-xl">Founded by alumni</h2>
             <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">250+ startups</p>
           </div>
-          <p class="text-sm text-[var(--paper-dim)] max-w-xl mb-8">
-            A sample of the companies NITK alumni have founded. This network is the backbone
-            of the fest — and the room a sponsor is walking into.
-          </p>
           <%- include('partials/_logo-wall', { items: fest.alumniCompanies, muted: true }) %>
         </section>
 
-        <!-- ============ CONTACT ============ -->
-        <section class="mt-16 border border-dashed border-[var(--hairline-strong)] py-14 px-6 text-center" data-reveal>
-          <p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-magenta mb-4">Partner with the fest</p>
-          <h2 class="font-display font-semibold text-2xl mb-4">Take a tier</h2>
-          <p class="text-[var(--paper-dim)] text-sm max-w-md mx-auto mb-8">
-            Tier details and the sponsorship deck are shared on request. Reach the ENGINEER '26
-            organising team and we'll take it from there.
-          </p>
-          <div class="flex flex-wrap gap-3 justify-center">
-            <a href="/#footer" class="btn btn-primary" data-js="magnetic">Get in touch</a>
-            <a href="/events" class="btn btn-secondary">See the programme</a>
-          </div>
-        </section>
-
-        <aside class="mt-16 border-l-2 border-magenta/50 pl-5 py-2">
-          <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-magenta mb-2">Status</p>
-          <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
-Every tier above is still open for ENGINEER '26. Confirmed partners appear here
-            as they sign — the brands further down backed previous editions.
-          </p>
-        </aside>
+        <div class="mt-16 flex justify-center" data-reveal>
+          <a href="/#footer" class="btn btn-primary" data-js="magnetic">Partner with us</a>
+        </div>
 
         </div></div></div>
     </div>

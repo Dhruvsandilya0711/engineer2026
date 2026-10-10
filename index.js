@@ -180,7 +180,9 @@ function unscheduledEvents() {
 // Groups are DERIVED from the roster, so an empty roster yields no groups and
 // the page can never advertise a section that has nobody in it.
 function teamGroups() {
-  const members = (teamData.members || []).filter(m => m && m.name && m.role);
+  // A role whose holder is not announced yet (name null) still has a card;
+  // the page says coming soon rather than dropping the position.
+  const members = (teamData.members || []).filter(m => m && m.role);
   const order = [...new Set(members.map(m => m.group || 'Team'))];
   return order.map(group => ({ group, members: members.filter(m => (m.group || 'Team') === group) }));
 }
@@ -301,17 +303,6 @@ app.get('/team', (req, res) => {
   });
 });
 
-// Sponsors. Tier STRUCTURE only — there is no sponsor data in this codebase and
-// none is invented here, so every slot renders as open (same rule as the deck
-// card in partials/_sponsors.ejs). Wire a real list in once partners confirm.
-// Coral / amber / neutral reads as a descending tier the way fuchsia / amber
-// / slate did, but out of this palette rather than the framework's defaults.
-const SPONSOR_TIERS = [
-  { name: 'Title',  accent: 'var(--bay-6)' },
-  { name: 'Gold',   accent: 'var(--rgb-amber)' },
-  { name: 'Silver', accent: 'var(--rgb-slate)' },
-];
-
 app.get('/about', (req, res) => {
   res.render('about', {
     festDates: FEST_DATES,
@@ -348,14 +339,9 @@ for (const slug of Object.keys(legal.docs)) {
   });
 }
 
+// Sponsors: a showcase of who has backed the fest, from data/fest.json.
 app.get('/sponsors', (req, res) => {
-  res.render('sponsors', {
-    festDates: FEST_DATES,
-    tiers: SPONSOR_TIERS,
-    openSlots: SPONSOR_TIERS.length,
-    eventCount: allEvents.length,
-    fest,
-  });
+  res.render('sponsors', { festDates: FEST_DATES, fest });
 });
 
 app.get('/events/:slug', (req, res, next) => {

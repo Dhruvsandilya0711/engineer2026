@@ -7,20 +7,29 @@
      data/fest.json). The wall tints them with opacity rather than colour, so
      one asset serves every context and the row reads as one material.
 
+     It is lit like an instrument panel: the grid lines catch a light that
+     follows the cursor (data-spotlight), a slow sheen crosses the wall, and
+     each tile frames its mark in HUD brackets and names it on hover. The
+     tiles cascade in when the wall scrolls into view.
+
      Params
        items    [{ name, logo }]
        label    optional eyebrow above the wall
        muted    true to sit the wall back (used for historical rows)
+       size     'lg' for bigger tiles (the headline wall on /sponsors)
      ========================================================================== -->
 <% const wallMuted = typeof muted !== 'undefined' && muted; %>
 <% if (typeof label !== 'undefined' && label) { %>
 <p class="eyebrow <%= wallMuted ? 'text-[var(--paper-faint)]' : 'text-cyan' %> mb-5" data-reveal><%= label %></p>
 <% } %>
-<ul class="logo-wall<%= wallMuted ? ' logo-wall--muted' : '' %>" data-reveal>
-  <% items.forEach(function (it) { %>
-  <li class="logo-wall__cell">
+<% const wallLg = typeof size !== 'undefined' && size === 'lg'; %>
+<ul class="logo-wall<%= wallMuted ? ' logo-wall--muted' : '' %><%= wallLg ? ' logo-wall--lg' : '' %>" data-reveal data-spotlight>
+  <% items.forEach(function (it, i) { %>
+  <li class="logo-wall__cell" style="--i: <%= i %>">
+    <span class="logo-wall__idx" aria-hidden="true"><%= String(i + 1).padStart(2, '0') %></span>
     <img src="<%= it.logo %>" alt="<%= it.name %>" title="<%= it.name %>"
          loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true"><%= it.name %></span>
   </li>
   <% }); %>
 </ul>
