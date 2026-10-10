@@ -46,6 +46,15 @@
       "tagline": "Heard about ENGINEER? Blame him."
     },
     {
+      "name": "Nikhil Ragnekar",
+      "role": "Growth Expert",
+      "group": "Team",
+      "image": null,
+      "email": null,
+      "linkedin": null,
+      "tagline": "Numbers only go up."
+    },
+    {
       "name": "Prajwal Meshram",
       "role": "Chief Coordinator",
       "group": "Team",
@@ -297,5 +306,179 @@
       "linkedin": null,
       "tagline": "Postgrad poise, undergrad energy."
     }
-  ]
+  ],
+  "tree": {
+    "_note": "The /team page draws THIS tree, laid out as the organising team sketched it: a spine from the Convenor down, three wings, and the secretaries along the base. Each group is one post; people who share a post sit side by side under one label. Rows line up across the wings (an empty list is an empty slot). Names must match `members` exactly; anyone in `members` who is not placed here is not shown, so moving or re-adding someone is an edit to this block only.",
+    "spine": [
+      {
+        "post": "Convenor",
+        "people": [
+          "Akash Raut"
+        ]
+      },
+      {
+        "post": "Chief Coordinators",
+        "people": [
+          "Prajwal Meshram",
+          "Dhananjay Mode"
+        ]
+      },
+      {
+        "post": "Marketing Heads",
+        "people": [
+          "Chaitanya Deshmukh",
+          "Vedant Sabnis"
+        ]
+      },
+      {
+        "post": "Growth Expert",
+        "people": [
+          "Nikhil Ragnekar"
+        ]
+      }
+    ],
+    "wings": {
+      "left": [
+        [
+          {
+            "post": "Finance Head",
+            "people": [
+              "Sambhav Powar"
+            ]
+          },
+          {
+            "post": "Technical Head",
+            "people": [
+              "Soham Palkrit"
+            ]
+          }
+        ],
+        [
+          {
+            "post": "Production Heads",
+            "people": [
+              "Harsh S K",
+              "Satwik Gurav"
+            ]
+          }
+        ],
+        [
+          {
+            "post": "Creative Head",
+            "people": [
+              "Atharva Muthal"
+            ]
+          },
+          {
+            "post": "Curation Head",
+            "people": [
+              "Soham Jain"
+            ]
+          }
+        ],
+        [
+          {
+            "post": "ENGI-Stalls In-charges",
+            "people": [
+              "Shivakumar Hiremath",
+              "Abhishek H N"
+            ]
+          }
+        ],
+        []
+      ],
+      "centre": [
+        [],
+        [
+          {
+            "post": "Logistics Head",
+            "people": [
+              "Shatayu Raut"
+            ]
+          }
+        ],
+        [],
+        [],
+        [
+          {
+            "post": "ENGI-Gaming Heads",
+            "people": [
+              "Ganesh Madhav Rajesh",
+              "Adhil Ali"
+            ]
+          }
+        ]
+      ],
+      "right": [
+        [
+          {
+            "post": "ENGI-Care Head",
+            "people": [
+              "Dhruv Sandilya"
+            ]
+          },
+          {
+            "post": "Chief of Staff",
+            "people": [
+              "Samanyu"
+            ]
+          }
+        ],
+        [
+          {
+            "post": "Media Heads",
+            "people": [
+              "Karthik Thippeswamy",
+              "Abhishek M"
+            ]
+          }
+        ],
+        [
+          {
+            "post": "Operations Head",
+            "people": [
+              "Aniket Kakad"
+            ]
+          },
+          {
+            "post": "ENGI-Force Head",
+            "people": [
+              "Thanish P M"
+            ]
+          }
+        ],
+        [
+          {
+            "post": "Hospitality Heads",
+            "people": [
+              "Anuj Patil",
+              "Karthik Gurikar",
+              "Mohan Kumar M E"
+            ]
+          }
+        ],
+        []
+      ]
+    },
+    "base": [
+      {
+        "post": "General Secretary",
+        "people": [
+          "Ramu H M"
+        ]
+      },
+      {
+        "post": "Joint Secretary",
+        "people": [
+          "Likith P Gujjar"
+        ]
+      },
+      {
+        "post": "PG Secretary",
+        "people": [
+          "Premdeep Mali"
+        ]
+      }
+    ]
+  }
 }
