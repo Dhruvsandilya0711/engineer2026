@@ -46,7 +46,8 @@
         <!-- ============ THE TREE ============
              data/team.json → tree, drawn as the organising team sketched it:
              a spine from the Convenor, three wings whose rows line up across
-             the page, and the secretaries along the base. No panel behind it
+             the page, and a base row on the same three columns with the
+             secretaries in it. No panel behind it
              and no connector lines: the cards float on the page's own field,
              and on a desktop the tree is wider than the text rail so the
              cards can be big. On a phone it folds into one column, two cards
@@ -58,11 +59,13 @@
         %>
         <section class="tree" aria-label="ENGINEER '26 team">
           <ol class="tree__spine">
-            <% tree.spine.forEach(function (g) { %>
+            <% tree.spine.forEach(function (tier) { %>
             <li class="tree__tier">
+              <% tier.forEach(function (g) { %>
               <ul class="tree__group" aria-label="<%= g.post %>">
                 <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
               </ul>
+              <% }); %>
             </li>
             <% }); %>
           </ol>
@@ -80,10 +83,14 @@
           </div>
 
           <div class="tree__base">
-            <% tree.base.forEach(function (g) { %>
-            <ul class="tree__group" aria-label="<%= g.post %>">
-              <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
-            </ul>
+            <% tree.base.forEach(function (cell) { %>
+            <div class="tree__cell tree__cell--<%= cell.id %><%= cell.groups.length ? '' : ' is-empty' %>">
+              <% cell.groups.forEach(function (g) { %>
+              <ul class="tree__group" aria-label="<%= g.post %>">
+                <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
+              </ul>
+              <% }); %>
+            </div>
             <% }); %>
           </div>
         </section>
