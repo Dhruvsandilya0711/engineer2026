@@ -7583,6 +7583,16 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   padding: 0 var(--wpad);
 }
 
+/* A row with nothing in the centre column draws its two sides in, so the
+   tree widens step by step instead of opening a hole in the middle. The
+   gap left between the two pairs matches the gap between a pair and the
+   centre card in a full row. */
+@media (min-width: 1024px) {
+  .tree__cell.is-inward { --tin: calc(100cqw / 6 - var(--tw) / 4 - var(--tgap) / 4); }
+  .tree__cell--left.is-inward { left: var(--tin); }
+  .tree__cell--right.is-inward { left: calc(-1 * var(--tin)); }
+}
+
 /* ---- base: one row on the wings' three columns ------------------------ */
 .tree__base {
   position: relative;
