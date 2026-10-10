@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv27ci9s">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=mv27ci9s" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv27ci9s">
-  <link href="/engineer2026/src/output.css?v=mv27ci9s" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv287520">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=mv287520" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv287520">
+  <link href="/engineer2026/src/output.css?v=mv287520" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <!-- Sitewide atmosphere. One fixed, low-density neural field runs behind the
@@ -38,7 +38,7 @@
      ========================================================================== -->
 
 
-<script nonce="D79jjjeJO2W5PUj3YxshjA==">
+<script nonce="L9N4dsZvD1VYvZw1WImJbQ==">
   (function () {
     var html = document.documentElement, skip = false, arriving = false;
     html.classList.add('js');
@@ -288,7 +288,7 @@
      ========================================================================== -->
 
 
-<script nonce="D79jjjeJO2W5PUj3YxshjA==">
+<script nonce="L9N4dsZvD1VYvZw1WImJbQ==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
@@ -749,7 +749,7 @@
           <li class="mq__item">Since 2005</li>
           <li class="mq__sep"></li>
           
-          <li class="mq__item">28 events</li>
+          <li class="mq__item">39 events</li>
           <li class="mq__sep"></li>
           
           <li class="mq__item mq__item--lit">Three days</li>
@@ -773,7 +773,7 @@
           <li class="mq__item">Since 2005</li>
           <li class="mq__sep"></li>
           
-          <li class="mq__item">28 events</li>
+          <li class="mq__item">39 events</li>
           <li class="mq__sep"></li>
           
           <li class="mq__item mq__item--lit">Three days</li>
@@ -801,7 +801,7 @@
           <li class="mq__item">Since 2005</li>
           <li class="mq__sep"></li>
           
-          <li class="mq__item">28 events</li>
+          <li class="mq__item">39 events</li>
           <li class="mq__sep"></li>
           
           <li class="mq__item mq__item--lit">Three days</li>
@@ -825,7 +825,7 @@
           <li class="mq__item">Since 2005</li>
           <li class="mq__sep"></li>
           
-          <li class="mq__item">28 events</li>
+          <li class="mq__item">39 events</li>
           <li class="mq__sep"></li>
           
           <li class="mq__item mq__item--lit">Three days</li>
@@ -958,8 +958,8 @@
      same five destinations as the nav bar directly above it, so opening a
      card only ever restated a link the visitor could already see. It now
      carries the material that has nowhere else to live on this page: the
-     fest's scale, its programme tracks, its CSR work, the pro shows, and the
-     partner network. Navigation stays where navigation belongs — the bays.
+     fest's scale, its programme tracks, the three days at a glance, the
+     shows, and the partner network. Navigation stays where navigation belongs — the bays.
      ========================================================================== -->
 
 <section class="fandeck" id="deck" data-js="fandeck" aria-label="Explore ENGINEER '26">
@@ -1079,12 +1079,12 @@
           <span class="deck-card__name">Programme</span>
           <span class="deck-card__slab" aria-hidden="true"></span>
           <span class="deck-card__line" aria-hidden="true"></span>
-          <a class="deck-card__go" href="/engineer2026/events">All 28 &rarr;</a>
+          <a class="deck-card__go" href="/engineer2026/events">All 39 &rarr;</a>
           <button class="fancard__close" type="button" data-js="fancard-close" aria-label="Close Programme">&#10005;</button>
         </div>
 
         <!-- Fan face: a short teaser + the OPEN hint (both hidden once open). -->
-        <p class="fancard__teaser">Five tracks, 28 events, three days.</p>
+        <p class="fancard__teaser">4 tracks, 39 events, three days.</p>
         <span class="fancard__hint" aria-hidden="true">Open &#8599;</span>
 
         <!-- Full content: hidden in the fan, revealed when the card opens. -->
@@ -1092,21 +1092,22 @@
           <!-- ==========================================================================
      DECK CARD 02 — PROGRAMME.
 
-     The five tracks the fest actually runs, straight from the sponsorship
-     brochure (§03 "Key events & highlights"). STARTUP PITCH existed nowhere
-     on this site before. Blurbs are the brochure's own copy.
+     The tracks the '26 line-up falls into (data/events.json → _tracks).
+     Technical, talks and campus blurbs are the sponsorship brochure's own
+     copy (§03 "Key events & highlights").
 
      Rosters are DERIVED from data/events.json via each event's `track`, so a
      track can never advertise a line-up it doesn't have.
 
      Card-sized: the deck body supplies the padding and the angular frame.
      ========================================================================== -->
+
 <section id="programme" class="relative">
   <div class="max-w-4xl">
     <p class="eyebrow text-violet mb-5" data-reveal>The programme</p>
 
     <h2 class="font-display font-bold" data-reveal>
-      Five ways in.<br><span class="text-gradient-impossible">One current.</span>
+      Four ways in.<br><span class="text-gradient-impossible">One current.</span>
     </h2>
 
     <ul class="track-grid mt-8">
@@ -1119,41 +1120,22 @@
         <p class="track__blurb">Bright minds from across the country compete, collaborate and innovate — coding challenges, robotics, workshops and technology-driven competitions.</p>
 
         
-        
         <ul class="track__events">
           
           <li><a href="/engineer2026/events/robowars">Robowars</a></li>
           
-          <li><a href="/engineer2026/events/engineer-hackathon">The Engineer Hackathon</a></li>
+          <li><a href="/engineer2026/events/chronoforge-hackathon">Chronoforge Hackathon</a></li>
           
-          <li><a href="/engineer2026/events/robocon-expo">Robocon Bot Expo</a></li>
+          <li><a href="/engineer2026/events/wright-flight">Wright Flight</a></li>
           
-          <li><a href="/engineer2026/events/workshops">Workshops</a></li>
+          <li><a href="/engineer2026/events/drone-race">Drone Racing</a></li>
           
-          <li><a href="/engineer2026/events/line-tracker-bot-race">Line Tracker Bot Race</a></li>
+          <li><a href="/engineer2026/events/ie-x-tronix">IE × Tronix</a></li>
           
-          <li><a href="/engineer2026/events/robo-soccer">Robo Soccer</a></li>
+          <li><a href="/engineer2026/events/sim2real">SIM2REAL</a></li>
           
           
-          <li class="track__more"><a href="/engineer2026/events">+11 more</a></li>
-          
-        </ul>
-        
-      </li>
-      
-      <li class="track" style="--accent: var(--track-startup, 59,111,212)" data-reveal>
-        <div class="track__head">
-          <span class="track__num">02</span>
-          <h3 class="track__name">Startup Pitch</h3>
-        </div>
-        <p class="track__blurb">The heartbeat of entrepreneurial creativity, where bright minds converge to showcase disruptive ideas and shape the future of industries.</p>
-
-        
-        
-        <ul class="track__events">
-          
-          <li><a href="/engineer2026/events/startup-pitch">Startup Pitch</a></li>
-          
+          <li class="track__more"><a href="/engineer2026/events">+13 more</a></li>
           
         </ul>
         
@@ -1161,58 +1143,74 @@
       
       <li class="track" style="--accent: var(--track-talks, 176,86,127)" data-reveal>
         <div class="track__head">
-          <span class="track__num">03</span>
-          <h3 class="track__name">Engi Talks</h3>
+          <span class="track__num">02</span>
+          <h3 class="track__name">Tech Talks</h3>
         </div>
         <p class="track__blurb">Experts from art, administration, politics and defence deliver compelling talks on current issues, in active discussion with the audience.</p>
 
         
-        
         <ul class="track__events">
           
-          <li><a href="/engineer2026/events/engi-talks">Engi Talks</a></li>
+          <li><a href="/engineer2026/events/tech-talks">Tech Talks</a></li>
           
           
         </ul>
         
       </li>
       
-      <li class="track" style="--accent: var(--track-care, 240,163,67)" data-reveal>
-        <div class="track__head">
-          <span class="track__num">04</span>
-          <h3 class="track__name">ENGI Care</h3>
-        </div>
-        <p class="track__blurb">Our CSR initiative — a testament to making a positive difference in the lives of those around us.</p>
-
-        
-        
-        <p class="track__events"><a href="#engi-care">See all 3 &darr;</a></p>
-        
-      </li>
-      
       <li class="track" style="--accent: var(--track-campus, 111,154,224)" data-reveal>
         <div class="track__head">
-          <span class="track__num">05</span>
+          <span class="track__num">03</span>
           <h3 class="track__name">Campus &amp; Expo</h3>
         </div>
         <p class="track__blurb">The parts of ENGINEER that spill out of the lecture halls and onto the campus itself.</p>
 
         
-        
         <ul class="track__events">
-          
-          <li><a href="/engineer2026/events/beach-event">Beach Event</a></li>
-          
-          <li><a href="/engineer2026/events/tech-mela">Tech Mela</a></li>
           
           <li><a href="/engineer2026/events/auto-expo">Auto Expo</a></li>
           
-          <li><a href="/engineer2026/events/stunt-show">Stunt Show</a></li>
+          <li><a href="/engineer2026/events/techscape">TechScape</a></li>
           
-          <li><a href="/engineer2026/events/vr-space">VR: Step Into Space</a></li>
+          <li><a href="/engineer2026/events/project-expo">Project Expo</a></li>
           
-          <li><a href="/engineer2026/events/planetarium">Planetarium</a></li>
+          <li><a href="/engineer2026/events/aac-project-expo">AAC Project Expo</a></li>
           
+          <li><a href="/engineer2026/events/robocon-expo">Robocon Expo</a></li>
+          
+          <li><a href="/engineer2026/events/metallurgy-expo">Metallurgy Project Expo</a></li>
+          
+          
+          <li class="track__more"><a href="/engineer2026/events">+4 more</a></li>
+          
+        </ul>
+        
+      </li>
+      
+      <li class="track" style="--accent: var(--track-nights, 140,120,180)" data-reveal>
+        <div class="track__head">
+          <span class="track__num">04</span>
+          <h3 class="track__name">Shows &amp; Nights</h3>
+        </div>
+        <p class="track__blurb">Dazzling tech to electrifying nights — the shows that close out each day of the fest.</p>
+
+        
+        <ul class="track__events">
+          
+          <li><a href="/engineer2026/events/bot-show">Bot Show</a></li>
+          
+          <li><a href="/engineer2026/events/tron-dance">Tron Dance</a></li>
+          
+          <li><a href="/engineer2026/events/stand-up-comedy">Stand Up Comedy</a></li>
+          
+          <li><a href="/engineer2026/events/mc-night">MC Night</a></li>
+          
+          <li><a href="/engineer2026/events/flute-boxers">Flute Boxers</a></li>
+          
+          <li><a href="/engineer2026/events/magic-show">Magic Show</a></li>
+          
+          
+          <li class="track__more"><a href="/engineer2026/events">+3 more</a></li>
           
         </ul>
         
@@ -1220,7 +1218,7 @@
       
     </ul>
 
-    <a href="/engineer2026/events" class="btn btn-secondary mt-8" data-reveal>All 28 events &rarr;</a>
+    <a href="/engineer2026/events" class="btn btn-secondary mt-8" data-reveal>All 39 events &rarr;</a>
   </div>
 </section>
 
@@ -1229,85 +1227,416 @@
       </div>
     </article>
     
-    <article class="fancard" id="engi-care" data-card="engi-care"
-             style="--i: 2; --accent: var(--rgb-amber);">
+    <article class="fancard" id="days" data-card="days"
+             style="--i: 2; --accent: var(--bay-4);">
       <!-- Transparent hit target: opens the card in the fan state; hidden once
            open so the real content (links, close, scroll) takes the clicks. -->
       <button class="fancard__hit" type="button" data-js="fancard-open"
-              aria-expanded="false" aria-label="Open ENGI Care"></button>
+              aria-expanded="false" aria-label="Open Three Days"></button>
 
-      <div class="fancard__plate" data-spotlight style="--spot: var(--rgb-amber);">
+      <div class="fancard__plate" data-spotlight style="--spot: var(--bay-4);">
         
         <span class="fancard__index" aria-hidden="true">03</span>
         <div class="deck-card__head">
           <span class="deck-card__num">03</span>
-          <span class="deck-card__name">ENGI Care</span>
+          <span class="deck-card__name">Three Days</span>
           <span class="deck-card__slab" aria-hidden="true"></span>
           <span class="deck-card__line" aria-hidden="true"></span>
-          
-          <button class="fancard__close" type="button" data-js="fancard-close" aria-label="Close ENGI Care">&#10005;</button>
+          <a class="deck-card__go" href="/engineer2026/schedule">Schedule &rarr;</a>
+          <button class="fancard__close" type="button" data-js="fancard-close" aria-label="Close Three Days">&#10005;</button>
         </div>
 
         <!-- Fan face: a short teaser + the OPEN hint (both hidden once open). -->
-        <p class="fancard__teaser">The CSR programme — engineering that gives back.</p>
+        <p class="fancard__teaser">47 sessions over three days, hour by hour.</p>
         <span class="fancard__hint" aria-hidden="true">Open &#8599;</span>
 
         <!-- Full content: hidden in the fan, revealed when the card opens. -->
         <div class="fancard__body deck-card__body" data-lenis-prevent>
           <!-- ==========================================================================
-     DECK CARD 03 — ENGI CARE.
+     DECK CARD 03 — THREE DAYS.
 
-     The fest's CSR programme: the most distinctive thing in the sponsorship
-     brochure and, until now, absent from this site entirely. Copy and the
-     three events are the brochure's own (§03 Track 04).
-
-     The roster is DERIVED from data/events.json (track === 'care') rather
-     than restated here, so adding a fourth ENGI Care event needs no view
-     change and the card can never list one that isn't in the programme.
+     The whole schedule at a glance, one column per day, straight from
+     data/schedule.json (the organising team's day sheets). Same resolved
+     days as /schedule, so the card and the page can never disagree; a time
+     the sheet still has as TBD reads "coming soon" in both places.
 
      Card-sized: the deck body supplies the padding and the angular frame.
      ========================================================================== -->
-
-<section id="engi-care" class="relative">
-  <div class="max-w-3xl">
-    <p class="eyebrow text-amber mb-5" data-reveal>CSR initiative</p>
+<section id="days" class="relative">
+  <div class="max-w-5xl">
+    <p class="eyebrow mb-5" style="color: rgb(var(--bay-4))" data-reveal>The schedule</p>
 
     <h2 class="font-display font-bold" data-reveal>
-      Engineering<br><span class="text-gradient-impossible">that gives back.</span>
+      Three days.<br><span class="text-gradient-impossible">One sequence.</span>
     </h2>
 
-    <p class="text-sm sm:text-base text-[var(--paper-dim)] mt-5 max-w-xl leading-relaxed" data-reveal>
-      ENGI Care is our CSR initiative — a testament to our dedication to making a positive
-      difference in the lives of those around us.
-    </p>
-
-    <ul class="care-list mt-8">
+    <ul class="days-grid mt-8">
       
-      <li class="care" data-reveal>
-        <span class="care__n">01</span>
-        <div class="care__b">
-          <h3 class="care__name"><a href="/engineer2026/events/music-for-all">Music For All</a></h3>
-          <p class="care__d">A musical performance by specially-abled kids, staged as part of ENGI Care.</p>
+      <li class="day-col" data-reveal>
+        <div class="day-col__head">
+          <h3 class="day-col__label">Day 0</h3>
+          <span class="day-col__date">Fri 23 Oct</span>
         </div>
+        <p class="day-col__n mt-1">4 sessions</p>
+        <ol class="day-col__list">
+          
+          <li class="day-slot">
+            <span class="day-slot__t">17:00</span>
+            
+            <span class="day-slot__n">Inauguration</span>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">18:30</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/bot-show">Bot Show</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">19:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/tron-dance">Tron Dance</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">20:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/stand-up-comedy">Stand Up Comedy</a>
+            
+          </li>
+          
+        </ol>
       </li>
       
-      <li class="care" data-reveal>
-        <span class="care__n">02</span>
-        <div class="care__b">
-          <h3 class="care__name"><a href="/engineer2026/events/techadapt">Techadapt</a></h3>
-          <p class="care__d">Games designed for and played with specially-abled participants.</p>
+      <li class="day-col" data-reveal>
+        <div class="day-col__head">
+          <h3 class="day-col__label">Day 1</h3>
+          <span class="day-col__date">Sat 24 Oct</span>
         </div>
+        <p class="day-col__n mt-1">29 sessions</p>
+        <ol class="day-col__list">
+          
+          <li class="day-slot">
+            <span class="day-slot__t">All day</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/avishkar">Avishkar</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">All day</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/planetarium">Planetarium</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">All day</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/metallurgy-expo">Metallurgy Project Expo</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">08:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/wright-flight">Wright Flight</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">08:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/drone-race">Drone Racing</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">09:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/sim2real">SIM2REAL</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">09:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/nitkpd">NITKPD</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">09:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/project-expo">Project Expo</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/tech-talks">Tech Talks</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/workshops">Workshops</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/gaming">Gaming Events</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/techscape">TechScape</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/chronoforge-hackathon">Chronoforge Hackathon</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/auto-expo">Auto Expo</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/robowars">Robowars</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/aac-project-expo">AAC Project Expo</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">11:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/astroquiz">AstroQuiz</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">17:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/telescope-making">Telescope Making Workshop</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">17:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/mc-night">MC Night</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">19:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/starry-nights">Starry Nights</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">19:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/flute-boxers">Flute Boxers</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">19:30</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/magic-show">Magic Show</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">20:30</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/movie-night">Movie Night</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/ie-x-tronix">IE × Tronix</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/civil-saga">Civil Saga</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/ie-capital">IE Capital Event</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/baja-quiz">Baja Quiz</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/rechersion">recHERsion</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/robocon-expo">Robocon Expo</a>
+            
+          </li>
+          
+        </ol>
       </li>
       
-      <li class="care" data-reveal>
-        <span class="care__n">03</span>
-        <div class="care__b">
-          <h3 class="care__name"><a href="/engineer2026/events/innovate4good">Innovate4Good</a></h3>
-          <p class="care__d">A national case study contest on building technology that does social good.</p>
+      <li class="day-col" data-reveal>
+        <div class="day-col__head">
+          <h3 class="day-col__label">Day 2</h3>
+          <span class="day-col__date">Sun 25 Oct</span>
         </div>
+        <p class="day-col__n mt-1">14 sessions</p>
+        <ol class="day-col__list">
+          
+          <li class="day-slot">
+            <span class="day-slot__t">All day</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/planetarium">Planetarium</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">All day</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/verilog-quest">Verilog Quest</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">09:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/weapons-expo">Weapons Expo</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">09:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/sim2real">SIM2REAL</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">09:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/nitkpd">NITKPD</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/workshops">Workshops</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/gaming">Gaming Events</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/robowars">Robowars</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/techscape">TechScape</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">10:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/vr-space">VR Space Experience</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">15:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/stunt-show">Stunt Show</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">16:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/beach-event">Beach Events</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t">19:00</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/pro-shows">Pro Shows</a>
+            
+          </li>
+          
+          <li class="day-slot">
+            <span class="day-slot__t is-tba">Soon</span>
+            
+            <a class="day-slot__n" href="/engineer2026/events/ie-robotics">IE Robotics Competition</a>
+            
+          </li>
+          
+        </ol>
       </li>
       
     </ul>
+
+    <a href="/engineer2026/schedule" class="btn btn-secondary mt-8" data-reveal>Full schedule &rarr;</a>
   </div>
 </section>
 
@@ -1336,7 +1665,7 @@
         </div>
 
         <!-- Fan face: a short teaser + the OPEN hint (both hidden once open). -->
-        <p class="fancard__teaser">Pro shows, comedy and the acts ENGINEER has hosted.</p>
+        <p class="fancard__teaser">Stand-up, a magic show, movie night and the pro shows.</p>
         <span class="fancard__hint" aria-hidden="true">Open &#8599;</span>
 
         <!-- Full content: hidden in the fan, revealed when the card opens. -->
@@ -1344,9 +1673,13 @@
           <!-- ==========================================================================
      DECK CARD 04 — AFTER DARK.
 
-     Names come from the sponsorship brochure (p11). The brochure presents
-     them as acts ENGINEER HAS HOSTED, not as a signed 2026 line-up, so this
-     card says exactly that. The heading is DERIVED: the moment an act in
+     This year's shows come from data/schedule.json — every slot whose event
+     is in the Shows & Nights track, with its day and time — so the card
+     moves with the schedule.
+
+     The names below them come from the sponsorship brochure (p11). The
+     brochure presents them as acts ENGINEER HAS HOSTED, not as a signed 2026
+     line-up, so this card says exactly that. The heading is DERIVED: the moment an act in
      data/proshows.json flips to `status: "confirmed"` it lifts into its own
      list and the card stops describing the roster as purely historical.
      Nothing here announces a booking that has not happened.
@@ -1360,6 +1693,59 @@
     <h2 class="font-display font-bold" data-reveal>
       Dazzling tech to<br><span class="text-gradient-impossible">electrifying nights.</span>
     </h2>
+
+    
+    
+    <p class="eyebrow text-cyan mt-8 mb-4" data-reveal>At ENGINEER &rsquo;26</p>
+    <ul class="act-wall" data-reveal>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/bot-show">Bot Show</a>
+        <span class="act__k">Day 0 &middot; 18:30</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/tron-dance">Tron Dance</a>
+        <span class="act__k">Day 0 &middot; 19:00</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/stand-up-comedy">Stand Up Comedy</a>
+        <span class="act__k">Day 0 &middot; 20:00</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/mc-night">MC Night</a>
+        <span class="act__k">Day 1 &middot; 17:00</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/flute-boxers">Flute Boxers</a>
+        <span class="act__k">Day 1 &middot; 19:00</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/magic-show">Magic Show</a>
+        <span class="act__k">Day 1 &middot; 19:30</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/movie-night">Movie Night</a>
+        <span class="act__k">Day 1 &middot; 20:30</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/stunt-show">Stunt Show</a>
+        <span class="act__k">Day 2 &middot; 15:00</span>
+      </li>
+      
+      <li class="act act--live">
+        <a class="act__n" href="/engineer2026/events/pro-shows">Pro Shows</a>
+        <span class="act__k">Day 2 &middot; 19:00</span>
+      </li>
+      
+    </ul>
+    
 
     
 
@@ -1388,8 +1774,7 @@
 
     <p class="text-sm text-[var(--paper-dim)] max-w-xl mt-6" data-reveal>
       
-        The &rsquo;26 line-up is coming soon. These are the acts ENGINEER has
-        hosted before.
+        The pro show line-up for &rsquo;26 is coming soon.
       
     </p>
   </div>
@@ -1856,10 +2241,10 @@
       <span class="deck-card__name">Programme</span>
       <span class="deck-card__slab" aria-hidden="true"></span>
       <span class="deck-card__line" aria-hidden="true"></span>
-      <a class="deck-card__go" href="/engineer2026/events">All 28 &rarr;</a>
+      <a class="deck-card__go" href="/engineer2026/events">All 39 &rarr;</a>
     </div>
     <h2 id="evband-title" class="chapter-title chapter-title--md" data-split>
-      28 events.<br><span class="text-gradient-impossible">Three days.</span>
+      39 events.<br><span class="text-gradient-impossible">Three days.</span>
     </h2>
   </div>
 
@@ -1876,67 +2261,17 @@
                  data-preview="/engineer2026/images/robowars.png">
                 <span class="evchip__idx">01</span>
                 <span class="evchip__name">Robowars</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/engineer-hackathon"
+              <a class="evchip" href="/engineer2026/events/chronoforge-hackathon"
                  data-preview="/engineer2026/images/hackathon.png">
                 <span class="evchip__idx">02</span>
-                <span class="evchip__name">The Engineer Hackathon</span>
-                <span class="evchip__cat">Technical</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/robocon-expo"
-                 data-preview="/engineer2026/images/robocon_expo.png">
-                <span class="evchip__idx">03</span>
-                <span class="evchip__name">Robocon Bot Expo</span>
-                <span class="evchip__cat">Robotics</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-6)">
-              <a class="evchip" href="/engineer2026/events/engi-talks"
-                 data-preview="/engineer2026/images/engi_talks.png">
-                <span class="evchip__idx">04</span>
-                <span class="evchip__name">Engi Talks</span>
-                <span class="evchip__cat">Talks</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/workshops"
-                 data-preview="/engineer2026/images/workshops.png">
-                <span class="evchip__idx">05</span>
-                <span class="evchip__name">Workshops</span>
-                <span class="evchip__cat">Learning</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/line-tracker-bot-race"
-                 data-preview="/engineer2026/images/line_tracker_bot_race.png">
-                <span class="evchip__idx">06</span>
-                <span class="evchip__name">Line Tracker Bot Race</span>
-                <span class="evchip__cat">Robotics</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/robo-soccer"
-                 data-preview="/engineer2026/images/robo_soccer.png">
-                <span class="evchip__idx">07</span>
-                <span class="evchip__name">Robo Soccer</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__name">Chronoforge Hackathon</span>
+                <span class="evchip__cat">Hackathon</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -1944,9 +2279,9 @@
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
               <a class="evchip" href="/engineer2026/events/wright-flight"
                  data-preview="/engineer2026/images/wright_flight.png">
-                <span class="evchip__idx">08</span>
+                <span class="evchip__idx">03</span>
                 <span class="evchip__name">Wright Flight</span>
-                <span class="evchip__cat">Aeromodelling</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -1954,59 +2289,169 @@
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
               <a class="evchip" href="/engineer2026/events/drone-race"
                  data-preview="/engineer2026/images/drone_race.png">
+                <span class="evchip__idx">04</span>
+                <span class="evchip__name">Drone Racing</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/ie-x-tronix"
+                 data-preview="">
+                <span class="evchip__idx">05</span>
+                <span class="evchip__name">IE × Tronix</span>
+                <span class="evchip__cat">Hackathon</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/sim2real"
+                 data-preview="">
+                <span class="evchip__idx">06</span>
+                <span class="evchip__name">SIM2REAL</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/nitkpd"
+                 data-preview="">
+                <span class="evchip__idx">07</span>
+                <span class="evchip__name">NITKPD</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/civil-saga"
+                 data-preview="">
+                <span class="evchip__idx">08</span>
+                <span class="evchip__name">Civil Saga</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/ie-capital"
+                 data-preview="">
                 <span class="evchip__idx">09</span>
-                <span class="evchip__name">FPV Drone Racing</span>
-                <span class="evchip__cat">Aeromodelling</span>
+                <span class="evchip__name">IE Capital Event</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/robo-racing"
-                 data-preview="/engineer2026/images/robo_racing.png">
+              <a class="evchip" href="/engineer2026/events/avishkar"
+                 data-preview="">
                 <span class="evchip__idx">10</span>
-                <span class="evchip__name">Robo Racing</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__name">Avishkar</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/open-house-labs"
-                 data-preview="/engineer2026/images/open_house_labs.png">
+              <a class="evchip" href="/engineer2026/events/rechersion"
+                 data-preview="">
                 <span class="evchip__idx">11</span>
-                <span class="evchip__name">Open House Labs</span>
-                <span class="evchip__cat">Exhibits</span>
+                <span class="evchip__name">recHERsion</span>
+                <span class="evchip__cat">Hackathon</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/tech-space-quizzers"
-                 data-preview="/engineer2026/images/tech_space_quizzers.png">
+              <a class="evchip" href="/engineer2026/events/verilog-quest"
+                 data-preview="">
                 <span class="evchip__idx">12</span>
-                <span class="evchip__name">Tech Space Quizzers</span>
+                <span class="evchip__name">Verilog Quest</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/ie-robotics"
+                 data-preview="">
+                <span class="evchip__idx">13</span>
+                <span class="evchip__name">IE Robotics Competition</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/baja-quiz"
+                 data-preview="">
+                <span class="evchip__idx">14</span>
+                <span class="evchip__name">Baja Quiz</span>
                 <span class="evchip__cat">Quiz</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/beach-event"
-                 data-preview="/engineer2026/images/beach_event.png">
-                <span class="evchip__idx">13</span>
-                <span class="evchip__name">Beach Event</span>
-                <span class="evchip__cat">Outdoor</span>
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/astroquiz"
+                 data-preview="">
+                <span class="evchip__idx">15</span>
+                <span class="evchip__name">AstroQuiz</span>
+                <span class="evchip__cat">Quiz</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/tech-mela"
-                 data-preview="/engineer2026/images/tech_mela.jpg">
-                <span class="evchip__idx">14</span>
-                <span class="evchip__name">Tech Mela</span>
-                <span class="evchip__cat">Exhibits</span>
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/workshops"
+                 data-preview="/engineer2026/images/workshops.png">
+                <span class="evchip__idx">16</span>
+                <span class="evchip__name">Workshops</span>
+                <span class="evchip__cat">Workshop</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/starry-nights"
+                 data-preview="">
+                <span class="evchip__idx">17</span>
+                <span class="evchip__name">Starry Nights</span>
+                <span class="evchip__cat">Workshop</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/telescope-making"
+                 data-preview="">
+                <span class="evchip__idx">18</span>
+                <span class="evchip__name">Telescope Making Workshop</span>
+                <span class="evchip__cat">Workshop</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/gaming"
+                 data-preview="">
+                <span class="evchip__idx">19</span>
+                <span class="evchip__name">Gaming Events</span>
+                <span class="evchip__cat">Gaming</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-6)">
+              <a class="evchip" href="/engineer2026/events/tech-talks"
+                 data-preview="/engineer2026/images/engi_talks.png">
+                <span class="evchip__idx">20</span>
+                <span class="evchip__name">Tech Talks</span>
+                <span class="evchip__cat">Talk</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2020,67 +2465,17 @@
                  data-preview="/engineer2026/images/robowars.png" tabindex="-1">
                 <span class="evchip__idx">01</span>
                 <span class="evchip__name">Robowars</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/engineer-hackathon"
+              <a class="evchip" href="/engineer2026/events/chronoforge-hackathon"
                  data-preview="/engineer2026/images/hackathon.png" tabindex="-1">
                 <span class="evchip__idx">02</span>
-                <span class="evchip__name">The Engineer Hackathon</span>
-                <span class="evchip__cat">Technical</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/robocon-expo"
-                 data-preview="/engineer2026/images/robocon_expo.png" tabindex="-1">
-                <span class="evchip__idx">03</span>
-                <span class="evchip__name">Robocon Bot Expo</span>
-                <span class="evchip__cat">Robotics</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-6)">
-              <a class="evchip" href="/engineer2026/events/engi-talks"
-                 data-preview="/engineer2026/images/engi_talks.png" tabindex="-1">
-                <span class="evchip__idx">04</span>
-                <span class="evchip__name">Engi Talks</span>
-                <span class="evchip__cat">Talks</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/workshops"
-                 data-preview="/engineer2026/images/workshops.png" tabindex="-1">
-                <span class="evchip__idx">05</span>
-                <span class="evchip__name">Workshops</span>
-                <span class="evchip__cat">Learning</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/line-tracker-bot-race"
-                 data-preview="/engineer2026/images/line_tracker_bot_race.png" tabindex="-1">
-                <span class="evchip__idx">06</span>
-                <span class="evchip__name">Line Tracker Bot Race</span>
-                <span class="evchip__cat">Robotics</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/robo-soccer"
-                 data-preview="/engineer2026/images/robo_soccer.png" tabindex="-1">
-                <span class="evchip__idx">07</span>
-                <span class="evchip__name">Robo Soccer</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__name">Chronoforge Hackathon</span>
+                <span class="evchip__cat">Hackathon</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2088,9 +2483,9 @@
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
               <a class="evchip" href="/engineer2026/events/wright-flight"
                  data-preview="/engineer2026/images/wright_flight.png" tabindex="-1">
-                <span class="evchip__idx">08</span>
+                <span class="evchip__idx">03</span>
                 <span class="evchip__name">Wright Flight</span>
-                <span class="evchip__cat">Aeromodelling</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2098,59 +2493,169 @@
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
               <a class="evchip" href="/engineer2026/events/drone-race"
                  data-preview="/engineer2026/images/drone_race.png" tabindex="-1">
+                <span class="evchip__idx">04</span>
+                <span class="evchip__name">Drone Racing</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/ie-x-tronix"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">05</span>
+                <span class="evchip__name">IE × Tronix</span>
+                <span class="evchip__cat">Hackathon</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/sim2real"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">06</span>
+                <span class="evchip__name">SIM2REAL</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/nitkpd"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">07</span>
+                <span class="evchip__name">NITKPD</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/civil-saga"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">08</span>
+                <span class="evchip__name">Civil Saga</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/ie-capital"
+                 data-preview="" tabindex="-1">
                 <span class="evchip__idx">09</span>
-                <span class="evchip__name">FPV Drone Racing</span>
-                <span class="evchip__cat">Aeromodelling</span>
+                <span class="evchip__name">IE Capital Event</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/robo-racing"
-                 data-preview="/engineer2026/images/robo_racing.png" tabindex="-1">
+              <a class="evchip" href="/engineer2026/events/avishkar"
+                 data-preview="" tabindex="-1">
                 <span class="evchip__idx">10</span>
-                <span class="evchip__name">Robo Racing</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__name">Avishkar</span>
+                <span class="evchip__cat">Competition</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/open-house-labs"
-                 data-preview="/engineer2026/images/open_house_labs.png" tabindex="-1">
+              <a class="evchip" href="/engineer2026/events/rechersion"
+                 data-preview="" tabindex="-1">
                 <span class="evchip__idx">11</span>
-                <span class="evchip__name">Open House Labs</span>
-                <span class="evchip__cat">Exhibits</span>
+                <span class="evchip__name">recHERsion</span>
+                <span class="evchip__cat">Hackathon</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
             <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/tech-space-quizzers"
-                 data-preview="/engineer2026/images/tech_space_quizzers.png" tabindex="-1">
+              <a class="evchip" href="/engineer2026/events/verilog-quest"
+                 data-preview="" tabindex="-1">
                 <span class="evchip__idx">12</span>
-                <span class="evchip__name">Tech Space Quizzers</span>
+                <span class="evchip__name">Verilog Quest</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/ie-robotics"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">13</span>
+                <span class="evchip__name">IE Robotics Competition</span>
+                <span class="evchip__cat">Competition</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/baja-quiz"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">14</span>
+                <span class="evchip__name">Baja Quiz</span>
                 <span class="evchip__cat">Quiz</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/beach-event"
-                 data-preview="/engineer2026/images/beach_event.png" tabindex="-1">
-                <span class="evchip__idx">13</span>
-                <span class="evchip__name">Beach Event</span>
-                <span class="evchip__cat">Outdoor</span>
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/astroquiz"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">15</span>
+                <span class="evchip__name">AstroQuiz</span>
+                <span class="evchip__cat">Quiz</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/tech-mela"
-                 data-preview="/engineer2026/images/tech_mela.jpg" tabindex="-1">
-                <span class="evchip__idx">14</span>
-                <span class="evchip__name">Tech Mela</span>
-                <span class="evchip__cat">Exhibits</span>
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/workshops"
+                 data-preview="/engineer2026/images/workshops.png" tabindex="-1">
+                <span class="evchip__idx">16</span>
+                <span class="evchip__name">Workshops</span>
+                <span class="evchip__cat">Workshop</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/starry-nights"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">17</span>
+                <span class="evchip__name">Starry Nights</span>
+                <span class="evchip__cat">Workshop</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/telescope-making"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">18</span>
+                <span class="evchip__name">Telescope Making Workshop</span>
+                <span class="evchip__cat">Workshop</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
+              <a class="evchip" href="/engineer2026/events/gaming"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">19</span>
+                <span class="evchip__name">Gaming Events</span>
+                <span class="evchip__cat">Gaming</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-6)">
+              <a class="evchip" href="/engineer2026/events/tech-talks"
+                 data-preview="/engineer2026/images/engi_talks.png" tabindex="-1">
+                <span class="evchip__idx">20</span>
+                <span class="evchip__name">Tech Talks</span>
+                <span class="evchip__cat">Talk</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2167,82 +2672,72 @@
           
           <ul class="mq__group">
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-3)">
-              <a class="evchip" href="/engineer2026/events/startup-pitch"
-                 data-preview="">
-                <span class="evchip__idx">15</span>
-                <span class="evchip__name">Startup Pitch</span>
-                <span class="evchip__cat">Startup</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--rgb-amber)">
-              <a class="evchip" href="/engineer2026/events/music-for-all"
-                 data-preview="">
-                <span class="evchip__idx">16</span>
-                <span class="evchip__name">Music For All</span>
-                <span class="evchip__cat">ENGI Care</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--rgb-amber)">
-              <a class="evchip" href="/engineer2026/events/techadapt"
-                 data-preview="">
-                <span class="evchip__idx">17</span>
-                <span class="evchip__name">Techadapt</span>
-                <span class="evchip__cat">ENGI Care</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--rgb-amber)">
-              <a class="evchip" href="/engineer2026/events/innovate4good"
-                 data-preview="">
-                <span class="evchip__idx">18</span>
-                <span class="evchip__name">Innovate4Good</span>
-                <span class="evchip__cat">ENGI Care</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
             <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
               <a class="evchip" href="/engineer2026/events/auto-expo"
                  data-preview="/engineer2026/images/auto_expo.jpg">
-                <span class="evchip__idx">19</span>
-                <span class="evchip__name">Auto Expo</span>
-                <span class="evchip__cat">Exhibits</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/stunt-show"
-                 data-preview="/engineer2026/images/stunt_show.jpg">
-                <span class="evchip__idx">20</span>
-                <span class="evchip__name">Stunt Show</span>
-                <span class="evchip__cat">Outdoor</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/vr-space"
-                 data-preview="">
                 <span class="evchip__idx">21</span>
-                <span class="evchip__name">VR: Step Into Space</span>
-                <span class="evchip__cat">Exhibits</span>
+                <span class="evchip__name">Auto Expo</span>
+                <span class="evchip__cat">Expo</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/telescope-making"
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/techscape"
                  data-preview="">
                 <span class="evchip__idx">22</span>
-                <span class="evchip__name">Telescope Making Workshop</span>
-                <span class="evchip__cat">Learning</span>
+                <span class="evchip__name">TechScape</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/project-expo"
+                 data-preview="">
+                <span class="evchip__idx">23</span>
+                <span class="evchip__name">Project Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/aac-project-expo"
+                 data-preview="">
+                <span class="evchip__idx">24</span>
+                <span class="evchip__name">AAC Project Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/robocon-expo"
+                 data-preview="/engineer2026/images/robocon_expo.png">
+                <span class="evchip__idx">25</span>
+                <span class="evchip__name">Robocon Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/metallurgy-expo"
+                 data-preview="">
+                <span class="evchip__idx">26</span>
+                <span class="evchip__name">Metallurgy Project Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/weapons-expo"
+                 data-preview="">
+                <span class="evchip__idx">27</span>
+                <span class="evchip__name">Weapons Expo</span>
+                <span class="evchip__cat">Expo</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2250,59 +2745,119 @@
             <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
               <a class="evchip" href="/engineer2026/events/planetarium"
                  data-preview="">
-                <span class="evchip__idx">23</span>
-                <span class="evchip__name">Planetarium</span>
-                <span class="evchip__cat">Exhibits</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/projects-expo"
-                 data-preview="">
-                <span class="evchip__idx">24</span>
-                <span class="evchip__name">Projects Expo</span>
-                <span class="evchip__cat">Exhibits</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/astroquiz"
-                 data-preview="">
-                <span class="evchip__idx">25</span>
-                <span class="evchip__name">AstroQuiz</span>
-                <span class="evchip__cat">Quiz</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/verilog-quest"
-                 data-preview="">
-                <span class="evchip__idx">26</span>
-                <span class="evchip__name">Verilog Quest</span>
-                <span class="evchip__cat">Technical</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/rechersion"
-                 data-preview="">
-                <span class="evchip__idx">27</span>
-                <span class="evchip__name">recHERSion</span>
-                <span class="evchip__cat">Technical</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/sim2real"
-                 data-preview="">
                 <span class="evchip__idx">28</span>
-                <span class="evchip__name">SIM2REAL</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__name">Planetarium</span>
+                <span class="evchip__cat">Experience</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/vr-space"
+                 data-preview="">
+                <span class="evchip__idx">29</span>
+                <span class="evchip__name">VR Space Experience</span>
+                <span class="evchip__cat">Experience</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/beach-event"
+                 data-preview="/engineer2026/images/beach_event.png">
+                <span class="evchip__idx">30</span>
+                <span class="evchip__name">Beach Events</span>
+                <span class="evchip__cat">Experience</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/bot-show"
+                 data-preview="">
+                <span class="evchip__idx">31</span>
+                <span class="evchip__name">Bot Show</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/tron-dance"
+                 data-preview="">
+                <span class="evchip__idx">32</span>
+                <span class="evchip__name">Tron Dance</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/stand-up-comedy"
+                 data-preview="">
+                <span class="evchip__idx">33</span>
+                <span class="evchip__name">Stand Up Comedy</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/mc-night"
+                 data-preview="">
+                <span class="evchip__idx">34</span>
+                <span class="evchip__name">MC Night</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/flute-boxers"
+                 data-preview="">
+                <span class="evchip__idx">35</span>
+                <span class="evchip__name">Flute Boxers</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/magic-show"
+                 data-preview="">
+                <span class="evchip__idx">36</span>
+                <span class="evchip__name">Magic Show</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/movie-night"
+                 data-preview="">
+                <span class="evchip__idx">37</span>
+                <span class="evchip__name">Movie Night</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/stunt-show"
+                 data-preview="/engineer2026/images/stunt_show.jpg">
+                <span class="evchip__idx">38</span>
+                <span class="evchip__name">Stunt Show</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/pro-shows"
+                 data-preview="/engineer2026/images/proshows.png">
+                <span class="evchip__idx">39</span>
+                <span class="evchip__name">Pro Shows</span>
+                <span class="evchip__cat">Show</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2311,82 +2866,72 @@
           
           <ul class="mq__group" aria-hidden="true">
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-3)">
-              <a class="evchip" href="/engineer2026/events/startup-pitch"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">15</span>
-                <span class="evchip__name">Startup Pitch</span>
-                <span class="evchip__cat">Startup</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--rgb-amber)">
-              <a class="evchip" href="/engineer2026/events/music-for-all"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">16</span>
-                <span class="evchip__name">Music For All</span>
-                <span class="evchip__cat">ENGI Care</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--rgb-amber)">
-              <a class="evchip" href="/engineer2026/events/techadapt"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">17</span>
-                <span class="evchip__name">Techadapt</span>
-                <span class="evchip__cat">ENGI Care</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--rgb-amber)">
-              <a class="evchip" href="/engineer2026/events/innovate4good"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">18</span>
-                <span class="evchip__name">Innovate4Good</span>
-                <span class="evchip__cat">ENGI Care</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
             <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
               <a class="evchip" href="/engineer2026/events/auto-expo"
                  data-preview="/engineer2026/images/auto_expo.jpg" tabindex="-1">
-                <span class="evchip__idx">19</span>
-                <span class="evchip__name">Auto Expo</span>
-                <span class="evchip__cat">Exhibits</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/stunt-show"
-                 data-preview="/engineer2026/images/stunt_show.jpg" tabindex="-1">
-                <span class="evchip__idx">20</span>
-                <span class="evchip__name">Stunt Show</span>
-                <span class="evchip__cat">Outdoor</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
-              <a class="evchip" href="/engineer2026/events/vr-space"
-                 data-preview="" tabindex="-1">
                 <span class="evchip__idx">21</span>
-                <span class="evchip__name">VR: Step Into Space</span>
-                <span class="evchip__cat">Exhibits</span>
+                <span class="evchip__name">Auto Expo</span>
+                <span class="evchip__cat">Expo</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
             
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/telescope-making"
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/techscape"
                  data-preview="" tabindex="-1">
                 <span class="evchip__idx">22</span>
-                <span class="evchip__name">Telescope Making Workshop</span>
-                <span class="evchip__cat">Learning</span>
+                <span class="evchip__name">TechScape</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/project-expo"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">23</span>
+                <span class="evchip__name">Project Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/aac-project-expo"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">24</span>
+                <span class="evchip__name">AAC Project Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/robocon-expo"
+                 data-preview="/engineer2026/images/robocon_expo.png" tabindex="-1">
+                <span class="evchip__idx">25</span>
+                <span class="evchip__name">Robocon Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/metallurgy-expo"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">26</span>
+                <span class="evchip__name">Metallurgy Project Expo</span>
+                <span class="evchip__cat">Expo</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/weapons-expo"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">27</span>
+                <span class="evchip__name">Weapons Expo</span>
+                <span class="evchip__cat">Expo</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -2394,59 +2939,119 @@
             <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
               <a class="evchip" href="/engineer2026/events/planetarium"
                  data-preview="" tabindex="-1">
-                <span class="evchip__idx">23</span>
-                <span class="evchip__name">Planetarium</span>
-                <span class="evchip__cat">Exhibits</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/projects-expo"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">24</span>
-                <span class="evchip__name">Projects Expo</span>
-                <span class="evchip__cat">Exhibits</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/astroquiz"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">25</span>
-                <span class="evchip__name">AstroQuiz</span>
-                <span class="evchip__cat">Quiz</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/verilog-quest"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">26</span>
-                <span class="evchip__name">Verilog Quest</span>
-                <span class="evchip__cat">Technical</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/rechersion"
-                 data-preview="" tabindex="-1">
-                <span class="evchip__idx">27</span>
-                <span class="evchip__name">recHERSion</span>
-                <span class="evchip__cat">Technical</span>
-                <span class="evchip__slab" aria-hidden="true"></span>
-              </a>
-            </li>
-            
-            <li class="evchip-cell" style="--bay-accent: var(--bay-1)">
-              <a class="evchip" href="/engineer2026/events/sim2real"
-                 data-preview="" tabindex="-1">
                 <span class="evchip__idx">28</span>
-                <span class="evchip__name">SIM2REAL</span>
-                <span class="evchip__cat">Robotics</span>
+                <span class="evchip__name">Planetarium</span>
+                <span class="evchip__cat">Experience</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/vr-space"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">29</span>
+                <span class="evchip__name">VR Space Experience</span>
+                <span class="evchip__cat">Experience</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-4)">
+              <a class="evchip" href="/engineer2026/events/beach-event"
+                 data-preview="/engineer2026/images/beach_event.png" tabindex="-1">
+                <span class="evchip__idx">30</span>
+                <span class="evchip__name">Beach Events</span>
+                <span class="evchip__cat">Experience</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/bot-show"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">31</span>
+                <span class="evchip__name">Bot Show</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/tron-dance"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">32</span>
+                <span class="evchip__name">Tron Dance</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/stand-up-comedy"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">33</span>
+                <span class="evchip__name">Stand Up Comedy</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/mc-night"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">34</span>
+                <span class="evchip__name">MC Night</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/flute-boxers"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">35</span>
+                <span class="evchip__name">Flute Boxers</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/magic-show"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">36</span>
+                <span class="evchip__name">Magic Show</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/movie-night"
+                 data-preview="" tabindex="-1">
+                <span class="evchip__idx">37</span>
+                <span class="evchip__name">Movie Night</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/stunt-show"
+                 data-preview="/engineer2026/images/stunt_show.jpg" tabindex="-1">
+                <span class="evchip__idx">38</span>
+                <span class="evchip__name">Stunt Show</span>
+                <span class="evchip__cat">Show</span>
+                <span class="evchip__slab" aria-hidden="true"></span>
+              </a>
+            </li>
+            
+            <li class="evchip-cell" style="--bay-accent: var(--bay-5)">
+              <a class="evchip" href="/engineer2026/events/pro-shows"
+                 data-preview="/engineer2026/images/proshows.png" tabindex="-1">
+                <span class="evchip__idx">39</span>
+                <span class="evchip__name">Pro Shows</span>
+                <span class="evchip__cat">Show</span>
                 <span class="evchip__slab" aria-hidden="true"></span>
               </a>
             </li>
@@ -3122,7 +3727,7 @@
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=e538d87"></script>
-  <script type="module" src="/engineer2026/js/main.js?v=e538d87"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=3b0553d"></script>
+  <script type="module" src="/engineer2026/js/main.js?v=3b0553d"></script>
 </body>
 </html>

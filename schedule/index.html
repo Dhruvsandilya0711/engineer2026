@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv27ci9s">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=mv27ci9s" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv27ci9s">
-  <link href="/engineer2026/src/output.css?v=mv27ci9s" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv287520">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=mv287520" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv287520">
+  <link href="/engineer2026/src/output.css?v=mv287520" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -190,7 +190,7 @@
      ========================================================================== -->
 
 
-<script nonce="QuyTcA+wrdAZAsX/gy121Q==">
+<script nonce="gujpBPonwkSnmMpUebZkVw==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
@@ -438,7 +438,7 @@
       <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <h1 class="page-hero__title" data-split>Three days.<br><span class="text-gradient-impossible">One sequence.</span></h1>
         
-        <div class="shrink-0 lg:text-right"><p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase"><span class="text-paper">3</span> days &middot; <span class="text-paper">0</span> sessions scheduled<br><span class="text-[var(--paper-faint)]">23—25 OCTOBER 2026 &middot; NITK Surathkal</span></p></div>
+        <div class="shrink-0 lg:text-right"><p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase"><span class="text-paper">3</span> days &middot; <span class="text-paper">47</span> sessions<br><span class="text-[var(--paper-faint)]">23—25 OCTOBER 2026 &middot; NITK Surathkal</span></p></div>
         
       </div>
     </div>
@@ -456,14 +456,17 @@
         
         <button type="button" class="cat-chip" data-day="day-0" aria-pressed="false">
           Day 0 · 23 Oct
+          <span class="cat-chip__n">4</span>
         </button>
         
         <button type="button" class="cat-chip" data-day="day-1" aria-pressed="false">
           Day 1 · 24 Oct
+          <span class="cat-chip__n">29</span>
         </button>
         
         <button type="button" class="cat-chip" data-day="day-2" aria-pressed="false">
           Day 2 · 25 Oct
+          <span class="cat-chip__n">14</span>
         </button>
         
       </div>
@@ -482,13 +485,81 @@
         </div>
 
         
-        <!-- Honest empty day: nothing is scheduled, so nothing is shown. -->
-        <div class="border border-dashed border-[var(--hairline)] py-12 px-6 text-center">
-          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-amber mb-3">Coming soon</p>
-          <p class="text-sm text-[var(--paper-dim)] max-w-md mx-auto">
-            Sessions, times and venues for Day 0 are coming soon.
-          </p>
-        </div>
+        <ol class="schedule-track">
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              17:00<span class="schedule-slot__end">– 18:30</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <span class="schedule-slot__title">Inauguration</span>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              18:30<span class="schedule-slot__end">– 19:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/bot-show" class="schedule-slot__title hover:text-cyan transition-colors">Bot Show</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              19:00<span class="schedule-slot__end">– 19:30</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/tron-dance" class="schedule-slot__title hover:text-cyan transition-colors">Tron Dance</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                <span>&middot; Genesis</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              20:00<span class="schedule-slot__end">– 21:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/stand-up-comedy" class="schedule-slot__title hover:text-cyan transition-colors">Stand Up Comedy</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+        </ol>
         
       </section>
       
@@ -504,13 +575,540 @@
         </div>
 
         
-        <!-- Honest empty day: nothing is scheduled, so nothing is shown. -->
-        <div class="border border-dashed border-[var(--hairline)] py-12 px-6 text-center">
-          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-amber mb-3">Coming soon</p>
-          <p class="text-sm text-[var(--paper-dim)] max-w-md mx-auto">
-            Sessions, times and venues for Day 1 are coming soon.
-          </p>
-        </div>
+        <ol class="schedule-track">
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              All day
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/avishkar" class="schedule-slot__title hover:text-cyan transition-colors">Avishkar</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC C, SM</span>
+                <span>&middot; Competition</span>
+                <span>&middot; MBA</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              All day
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/planetarium" class="schedule-slot__title hover:text-cyan transition-colors">Planetarium</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Experience</span>
+                <span>&middot; AAC</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              All day
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/metallurgy-expo" class="schedule-slot__title hover:text-cyan transition-colors">Metallurgy Project Expo</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Pavilion</span>
+                <span>&middot; Expo</span>
+                <span>&middot; Metallurgy Department</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              08:00<span class="schedule-slot__end">– 18:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/wright-flight" class="schedule-slot__title hover:text-cyan transition-colors">Wright Flight</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Behind NSC</span>
+                <span>&middot; Competition</span>
+                <span>&middot; Aero NITK</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              08:00<span class="schedule-slot__end">– 18:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/drone-race" class="schedule-slot__title hover:text-cyan transition-colors">Drone Racing</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Behind NSC</span>
+                <span>&middot; Competition</span>
+                <span>&middot; Aero NITK</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              09:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/sim2real" class="schedule-slot__title hover:text-cyan transition-colors">SIM2REAL</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Competition</span>
+                <span>&middot; RoboTech</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              09:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/nitkpd" class="schedule-slot__title hover:text-cyan transition-colors">NITKPD</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC C</span>
+                <span>&middot; Competition</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              09:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/project-expo" class="schedule-slot__title hover:text-cyan transition-colors">Project Expo</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Pavilion</span>
+                <span>&middot; Expo</span>
+                <span>&middot; Technites</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/tech-talks" class="schedule-slot__title hover:text-cyan transition-colors">Tech Talks</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Talk</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/workshops" class="schedule-slot__title hover:text-cyan transition-colors">Workshops</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Workshop</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/gaming" class="schedule-slot__title hover:text-cyan transition-colors">Gaming Events</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Gaming</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 16:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/techscape" class="schedule-slot__title hover:text-cyan transition-colors">TechScape</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Expo</span>
+                <span>&middot; IET</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 10:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/chronoforge-hackathon" class="schedule-slot__title hover:text-cyan transition-colors">Chronoforge Hackathon</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Hackathon</span>
+                <span>&middot; IET</span>
+                <span>&middot; Ends 10:00 next day</span>
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">onwards</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/auto-expo" class="schedule-slot__title hover:text-cyan transition-colors">Auto Expo</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Main Building</span>
+                <span>&middot; Expo</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 18:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/robowars" class="schedule-slot__title hover:text-cyan transition-colors">Robowars</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SAC</span>
+                <span>&middot; Competition</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 14:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/aac-project-expo" class="schedule-slot__title hover:text-cyan transition-colors">AAC Project Expo</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Expo</span>
+                <span>&middot; AAC</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              11:00<span class="schedule-slot__end">– 12:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/astroquiz" class="schedule-slot__title hover:text-cyan transition-colors">AstroQuiz</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Quiz</span>
+                <span>&middot; AAC</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              17:00<span class="schedule-slot__end">– 20:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/telescope-making" class="schedule-slot__title hover:text-cyan transition-colors">Telescope Making Workshop</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Workshop</span>
+                <span>&middot; AAC</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              17:00<span class="schedule-slot__end">– 19:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/mc-night" class="schedule-slot__title hover:text-cyan transition-colors">MC Night</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              19:00<span class="schedule-slot__end">– 21:30</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/starry-nights" class="schedule-slot__title hover:text-cyan transition-colors">Starry Nights</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Science Block</span>
+                <span>&middot; Workshop</span>
+                <span>&middot; AAC</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              19:00<span class="schedule-slot__end">– 19:30</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/flute-boxers" class="schedule-slot__title hover:text-cyan transition-colors">Flute Boxers</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              19:30<span class="schedule-slot__end">– 20:30</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/magic-show" class="schedule-slot__title hover:text-cyan transition-colors">Magic Show</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              20:30<span class="schedule-slot__end">– 23:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/movie-night" class="schedule-slot__title hover:text-cyan transition-colors">Movie Night</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SJA</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/ie-x-tronix" class="schedule-slot__title hover:text-cyan transition-colors">IE × Tronix</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-amber">Venue coming soon</span>
+                <span>&middot; Hackathon</span>
+                <span>&middot; IE / Tronix</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/civil-saga" class="schedule-slot__title hover:text-cyan transition-colors">Civil Saga</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-amber">Venue coming soon</span>
+                <span>&middot; Competition</span>
+                <span>&middot; ISTE</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/ie-capital" class="schedule-slot__title hover:text-cyan transition-colors">IE Capital Event</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-amber">Venue coming soon</span>
+                <span>&middot; Competition</span>
+                <span>&middot; IE</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/baja-quiz" class="schedule-slot__title hover:text-cyan transition-colors">Baja Quiz</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-amber">Venue coming soon</span>
+                <span>&middot; Quiz</span>
+                <span>&middot; Baja NITK</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/rechersion" class="schedule-slot__title hover:text-cyan transition-colors">recHERsion</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Online</span>
+                <span>&middot; Hackathon</span>
+                <span>&middot; ACM</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/robocon-expo" class="schedule-slot__title hover:text-cyan transition-colors">Robocon Expo</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Pavilion</span>
+                <span>&middot; Expo</span>
+                <span>&middot; Robocon</span>
+                
+              </span>
+            </span>
+          </li>
+          
+        </ol>
         
       </section>
       
@@ -526,13 +1124,264 @@
         </div>
 
         
-        <!-- Honest empty day: nothing is scheduled, so nothing is shown. -->
-        <div class="border border-dashed border-[var(--hairline)] py-12 px-6 text-center">
-          <p class="font-mono text-[0.68rem] tracking-[0.18em] uppercase text-amber mb-3">Coming soon</p>
-          <p class="text-sm text-[var(--paper-dim)] max-w-md mx-auto">
-            Sessions, times and venues for Day 2 are coming soon.
-          </p>
-        </div>
+        <ol class="schedule-track">
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              All day
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/planetarium" class="schedule-slot__title hover:text-cyan transition-colors">Planetarium</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Experience</span>
+                <span>&middot; AAC</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              All day
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/verilog-quest" class="schedule-slot__title hover:text-cyan transition-colors">Verilog Quest</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Competition</span>
+                <span>&middot; ACM</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              09:00<span class="schedule-slot__end">– 12:30</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/weapons-expo" class="schedule-slot__title hover:text-cyan transition-colors">Weapons Expo</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Expo</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              09:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/sim2real" class="schedule-slot__title hover:text-cyan transition-colors">SIM2REAL</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC C</span>
+                <span>&middot; Competition</span>
+                <span>&middot; RoboTech</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              09:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/nitkpd" class="schedule-slot__title hover:text-cyan transition-colors">NITKPD</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC C</span>
+                <span>&middot; Competition</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/workshops" class="schedule-slot__title hover:text-cyan transition-colors">Workshops</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Workshop</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/gaming" class="schedule-slot__title hover:text-cyan transition-colors">Gaming Events</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC D</span>
+                <span>&middot; Gaming</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 18:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/robowars" class="schedule-slot__title hover:text-cyan transition-colors">Robowars</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">SAC</span>
+                <span>&middot; Competition</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 16:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/techscape" class="schedule-slot__title hover:text-cyan transition-colors">TechScape</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC A</span>
+                <span>&middot; Expo</span>
+                <span>&middot; IET</span>
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              10:00<span class="schedule-slot__end">– 17:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/vr-space" class="schedule-slot__title hover:text-cyan transition-colors">VR Space Experience</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">CSD</span>
+                <span>&middot; Experience</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              15:00<span class="schedule-slot__end">– 16:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/stunt-show" class="schedule-slot__title hover:text-cyan transition-colors">Stunt Show</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">LHC C Parking</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              16:00<span class="schedule-slot__end">– 18:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/beach-event" class="schedule-slot__title hover:text-cyan transition-colors">Beach Events</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">NITK Beach</span>
+                <span>&middot; Experience</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot">
+            
+            <span class="schedule-slot__time">
+              19:00<span class="schedule-slot__end">– 23:00</span>
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/pro-shows" class="schedule-slot__title hover:text-cyan transition-colors">Pro Shows</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-[var(--paper-dim)]">Main Ground</span>
+                <span>&middot; Show</span>
+                
+                
+              </span>
+            </span>
+          </li>
+          
+          <li class="schedule-slot is-tba">
+            
+            <span class="schedule-slot__time">
+              <span class="schedule-slot__tba">Time<br>coming soon</span>
+              
+            </span>
+            <span class="schedule-slot__body">
+              
+                <a href="/engineer2026/events/ie-robotics" class="schedule-slot__title hover:text-cyan transition-colors">IE Robotics Competition</a>
+              
+              <span class="schedule-slot__meta">
+                <span class="text-amber">Venue coming soon</span>
+                <span>&middot; Competition</span>
+                <span>&middot; IE</span>
+                
+              </span>
+            </span>
+          </li>
+          
+        </ol>
         
       </section>
       
@@ -541,250 +1390,12 @@
            Real events that exist but have no slot yet. Listing them is more
            useful than hiding them, and avoids implying the line-up is thin. -->
       
-      <section class="mt-16" aria-labelledby="unscheduled-heading">
-        <div class="section-head">
-          <h2 id="unscheduled-heading" class="font-display font-semibold text-xl">Timings coming soon</h2>
-          <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">28 events</p>
-        </div>
-        <p class="text-sm text-[var(--paper-dim)] mb-6 max-w-2xl">
-          These events are confirmed for ENGINEER '26 but haven't been assigned a day and time yet.
-          They'll move into the timetable above as scheduling is finalised.
-        </p>
-        <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
-          
-          <li>
-            <a href="/engineer2026/events/robowars"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Robowars
-              <span class="text-[var(--paper-faint)]">/ Robotics</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/engineer-hackathon"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              The Engineer Hackathon
-              <span class="text-[var(--paper-faint)]">/ Technical</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/robocon-expo"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Robocon Bot Expo
-              <span class="text-[var(--paper-faint)]">/ Robotics</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/engi-talks"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Engi Talks
-              <span class="text-[var(--paper-faint)]">/ Talks</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/workshops"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Workshops
-              <span class="text-[var(--paper-faint)]">/ Learning</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/line-tracker-bot-race"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Line Tracker Bot Race
-              <span class="text-[var(--paper-faint)]">/ Robotics</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/robo-soccer"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Robo Soccer
-              <span class="text-[var(--paper-faint)]">/ Robotics</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/wright-flight"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Wright Flight
-              <span class="text-[var(--paper-faint)]">/ Aeromodelling</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/drone-race"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              FPV Drone Racing
-              <span class="text-[var(--paper-faint)]">/ Aeromodelling</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/robo-racing"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Robo Racing
-              <span class="text-[var(--paper-faint)]">/ Robotics</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/open-house-labs"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Open House Labs
-              <span class="text-[var(--paper-faint)]">/ Exhibits</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/tech-space-quizzers"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Tech Space Quizzers
-              <span class="text-[var(--paper-faint)]">/ Quiz</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/beach-event"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Beach Event
-              <span class="text-[var(--paper-faint)]">/ Outdoor</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/tech-mela"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Tech Mela
-              <span class="text-[var(--paper-faint)]">/ Exhibits</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/startup-pitch"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Startup Pitch
-              <span class="text-[var(--paper-faint)]">/ Startup</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/music-for-all"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Music For All
-              <span class="text-[var(--paper-faint)]">/ ENGI Care</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/techadapt"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Techadapt
-              <span class="text-[var(--paper-faint)]">/ ENGI Care</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/innovate4good"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Innovate4Good
-              <span class="text-[var(--paper-faint)]">/ ENGI Care</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/auto-expo"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Auto Expo
-              <span class="text-[var(--paper-faint)]">/ Exhibits</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/stunt-show"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Stunt Show
-              <span class="text-[var(--paper-faint)]">/ Outdoor</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/vr-space"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              VR: Step Into Space
-              <span class="text-[var(--paper-faint)]">/ Exhibits</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/telescope-making"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Telescope Making Workshop
-              <span class="text-[var(--paper-faint)]">/ Learning</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/planetarium"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Planetarium
-              <span class="text-[var(--paper-faint)]">/ Exhibits</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/projects-expo"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Projects Expo
-              <span class="text-[var(--paper-faint)]">/ Exhibits</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/astroquiz"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              AstroQuiz
-              <span class="text-[var(--paper-faint)]">/ Quiz</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/verilog-quest"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              Verilog Quest
-              <span class="text-[var(--paper-faint)]">/ Technical</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/rechersion"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              recHERSion
-              <span class="text-[var(--paper-faint)]">/ Technical</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/engineer2026/events/sim2real"
-               class="inline-flex items-center gap-2 border border-[var(--hairline)] hover:border-cyan hover:text-cyan transition-colors px-3 py-2 font-mono text-xs">
-              SIM2REAL
-              <span class="text-[var(--paper-faint)]">/ Robotics</span>
-            </a>
-          </li>
-          
-        </ul>
-      </section>
-      
 
       <aside class="mt-16 border-l-2 border-amber/50 pl-5 py-2">
         <p class="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-amber mb-2">Status</p>
         <p class="text-sm text-[var(--paper-dim)] max-w-2xl">
-The full timetable is coming soon — events move into the schedule as the
-          organising team fixes them.
+          Times and venues marked coming soon are still being confirmed, and the schedule may
+          change before the fest. Check an event's own page for its latest details.
         </p>
       </aside>
         </div></div></div>
@@ -868,8 +1479,8 @@ The full timetable is coming soon — events move into the schedule as the
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=e538d87"></script>
-  <script type="module" src="/engineer2026/js/page.js?v=e538d87"></script>
-  <script type="module" src="/engineer2026/js/schedule.js?v=e538d87"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=3b0553d"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=3b0553d"></script>
+  <script type="module" src="/engineer2026/js/schedule.js?v=3b0553d"></script>
 </body>
 </html>
