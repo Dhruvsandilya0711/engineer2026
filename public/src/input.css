@@ -6910,3 +6910,148 @@ select.form-input {
   .logo-wall::before { animation: none; opacity: 0; }
   .logo-wall__cell:hover::after { animation: none; }
 }
+
+/* ==========================================================================
+   R18. TEAM — glass crew cards
+   Frosted plates over the ambient field: a translucent gradient fill, a
+   blurred backdrop, a bright top edge and the site's cut corner. The photo
+   slot is a HUD frame holding the person's initials until a real photo is
+   added in data/team.json; the card lifts, its edge lights and a scan line
+   crosses the frame on hover.
+   ========================================================================== */
+.crew-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(46%, 148px), 1fr));
+  gap: clamp(10px, 1.6vw, 18px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.crew-grid--lead { grid-template-columns: repeat(auto-fill, minmax(min(46%, 168px), 1fr)); }
+
+.crew-cell { display: flex; }
+.crew {
+  --cut: 16px;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(var(--spot), 0.16), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.05));
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  transition: transform 0.5s var(--ease-reveal), box-shadow 0.4s ease, background 0.4s ease;
+}
+/* The spectrum hairline along the top edge, brightening on hover. */
+.crew::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: var(--cut);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--spot), 0.9), rgba(var(--rgb-cyan), 0.7), transparent);
+  opacity: 0.45;
+  transition: opacity 0.4s ease;
+}
+.crew:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 0 1px rgba(var(--spot), 0.45),
+    0 18px 40px -18px rgba(var(--spot), 0.55);
+}
+.crew:hover::before { opacity: 1; }
+
+.crew__photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(80% 60% at 50% 35%, rgba(var(--spot), 0.22), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 22px),
+    rgba(var(--rgb-ground), 0.65);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+.crew__photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s var(--ease-reveal); }
+.crew:hover .crew__photo img { transform: scale(1.05); }
+.crew__mono {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #fff 10%, rgb(var(--spot)) 60%, rgb(var(--rgb-cyan)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.8;
+  transition: transform 0.6s var(--ease-reveal), opacity 0.4s ease;
+}
+.crew:hover .crew__mono { transform: scale(1.08); opacity: 1; }
+.crew__ph {
+  position: absolute;
+  bottom: 9px; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.crew__idx {
+  position: absolute;
+  top: 8px; left: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  color: rgba(var(--spot), 0.9);
+}
+.crew__scan {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 35%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(var(--rgb-cyan), 0.12) 85%, rgba(var(--rgb-cyan), 0.55));
+  opacity: 0;
+  transform: translateY(-100%);
+}
+.crew:hover .crew__scan { animation: lw-scan 0.9s var(--ease-standard) both; }
+
+.crew__body { padding: 12px 4px 4px; }
+.crew__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  color: var(--paper);
+}
+.crew__role {
+  margin-top: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--spot));
+}
+.crew__links { margin-top: 8px; display: flex; gap: 12px; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.crew__links a { color: var(--paper-dim); text-decoration: none; }
+.crew__links a:hover { color: var(--color-cyan); }
+.crew--tba .crew__name { color: var(--color-amber); }
+.crew--tba .crew__mono { opacity: 0.35; }
+.crew-grid--lead .crew__name { font-size: 1rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 12) * 30ms); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .crew, .crew__photo img, .crew__mono { transition: none; }
+  .crew:hover { transform: none; }
+  .crew:hover .crew__scan { animation: none; }
+}

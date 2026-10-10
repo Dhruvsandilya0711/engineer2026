@@ -180,7 +180,9 @@ function unscheduledEvents() {
 // Groups are DERIVED from the roster, so an empty roster yields no groups and
 // the page can never advertise a section that has nobody in it.
 function teamGroups() {
-  const members = (teamData.members || []).filter(m => m && m.name && m.role);
+  // A role whose holder is not announced yet (name null) still has a card;
+  // the page says coming soon rather than dropping the position.
+  const members = (teamData.members || []).filter(m => m && m.role);
   const order = [...new Set(members.map(m => m.group || 'Team'))];
   return order.map(group => ({ group, members: members.filter(m => (m.group || 'Team') === group) }));
 }
