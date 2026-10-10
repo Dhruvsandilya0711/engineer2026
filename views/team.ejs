@@ -28,14 +28,15 @@
     <div class="rail">
 
       <%
-        const teamTitle = `The network<br><span class="text-gradient-impossible">behind it.</span>`;
+        const teamTitle = `The network<br><span class="text-gradient-gold">behind it.</span>`;
         const teamMeta = totalMembers
           ? `<p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase">`
             + `<span class="text-paper">${totalMembers}</span> members<br>`
             + `<span class="text-[var(--paper-faint)]">ENGINEER '26 &middot; NITK Surathkal</span></p>`
           : '';
       %>
-      <%- include('partials/_page-hero', { accent: 'var(--bay-5)', num: '04', nav: 'Team', kicker: 'Cognitrixx / the people', title: teamTitle, meta: teamMeta }) %>
+      <%# The header card wears the same gold as the team cards below it. %>
+      <%- include('partials/_page-hero', { accent: '242, 192, 104', cls: 'page-hero--gold', num: '04', nav: 'Team', kicker: 'Cognitrixx / the people', title: teamTitle, meta: teamMeta }) %>
 
       <% if (tree && totalMembers) { %>
         <!-- ============ THE TREE ============
@@ -209,5 +210,6 @@
   <script type="module" src="/js/motion.js?v=<%= assetV %>"></script>
   <script type="module" src="/js/page.js?v=<%= assetV %>"></script>
   <script type="module" src="/js/team.js?v=<%= assetV %>"></script>
+  <script type="module" src="/js/team-lines.js?v=<%= assetV %>"></script>
 </body>
 </html>
