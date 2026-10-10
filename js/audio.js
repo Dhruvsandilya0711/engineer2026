@@ -28,7 +28,7 @@
    Wired from public/js/site.js -> initAudio().
    ========================================================================== */
 
-import { gainTick } from '/engineer2026/js/click-sfx.js?v=e0be6c4';
+import { gainTick } from '/engineer2026/js/click-sfx.js?v=1be610a';
 
 const SRC = '/engineer2026/audio/tentative.mp3';
 const START_AT = 25;              // seconds — skip the intro
