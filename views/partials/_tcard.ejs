@@ -29,6 +29,9 @@
   const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const line = String(m.tagline || m.role || '').split(/(\S+-\S+)/)
     .map((part, i) => (i % 2 ? `<span class="tcard__nb">${esc(part)}</span>` : esc(part))).join('');
+  // The role on the card: set line breaks (`roleLines`) when data/team.json
+  // gives them, otherwise the role wraps on its own.
+  const post = Array.isArray(m.roleLines) && m.roleLines.length ? m.roleLines.map(esc).join('<br>') : esc(m.role);
 %>
 <li class="tcard-cell" data-reveal="depth" style="--ci: <%= counter.n %>">
   <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: <%= accent %>">
@@ -51,7 +54,7 @@
               </div>
               <p class="tcard__name"><%= m.name %></p>
               <span class="tcard__rule" aria-hidden="true"></span>
-              <p class="tcard__post"><%= m.role %></p>
+              <p class="tcard__post"><%- post %></p>
               <span class="tcard__shine" aria-hidden="true"></span>
               <span class="tcard__glare" aria-hidden="true"></span>
             </div>
@@ -65,7 +68,7 @@
               <p class="tcard__line"><%- line %></p>
               <span class="tcard__rule" aria-hidden="true"></span>
               <p class="tcard__sig"><%= m.name %></p>
-              <p class="tcard__post"><%= m.role %></p>
+              <p class="tcard__post"><%- post %></p>
               <% if (m.email || m.linkedin) { %>
               <p class="tcard__links">
                 <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
