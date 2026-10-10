@@ -63,8 +63,8 @@
                   <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
                 </div>
 
-                <%# Not every event has a photograph — the ENGI Care and Startup
-                    Pitch entries came from the brochure without one. An empty
+                <%# Not every event has a photograph — most of the '26 line-up
+                    is new and has no picture of its own yet. An empty
                     src would make the browser re-request this page as an image,
                     so the plate stands in until real art exists. %>
                 <figure class="detail-figure relative overflow-hidden" data-img-reveal>
@@ -95,19 +95,34 @@
          TBA rather than inventing a date, time or venue. -->
     <section class="mb-16" aria-label="Event details">
       <div class="rail">
+        <%
+          // Sessions come from data/schedule.json (one per day the event
+          // runs). A time or venue that is the same every day is said once;
+          // one that differs is given per day, so nothing is merged wrongly.
+          const sameAll = (k) => sessions.every(s => s[k] === sessions[0][k]);
+          const perDay = (k) => sessions.length > 1 && !sameAll(k);
+        %>
         <dl class="detail-meta">
           <div>
             <dt>Date</dt>
-            <dd class="<%= event.date ? '' : 'is-tba' %>"><%= event.date || 'Coming soon' %></dd>
+            <% if (sessions.length) { %>
+            <dd><%- sessions.map(s => `${s.day} &middot; ${s.date}`).join('<br>') %></dd>
+            <% } else { %>
+            <dd class="is-tba">Coming soon</dd>
+            <% } %>
           </div>
+          <% ['when', 'venue'].forEach(function (k) { %>
           <div>
-            <dt>Time</dt>
-            <dd class="<%= event.time ? '' : 'is-tba' %>"><%= event.time || 'Coming soon' %></dd>
+            <dt><%= k === 'when' ? 'Time' : 'Venue' %></dt>
+            <% if (perDay(k)) { %>
+            <dd>
+              <% sessions.forEach(function (s, i) { %><%- i ? '<br>' : '' %><span class="detail-meta__day"><%= s.day %></span> <span class="<%= s[k] ? '' : 'is-tba' %>"><%= s[k] || 'Coming soon' %></span><% }); %>
+            </dd>
+            <% } else { const v = sessions.length ? sessions[0][k] : null; %>
+            <dd class="<%= v ? '' : 'is-tba' %>"><%= v || 'Coming soon' %></dd>
+            <% } %>
           </div>
-          <div>
-            <dt>Venue</dt>
-            <dd class="<%= event.venue ? '' : 'is-tba' %>"><%= event.venue || 'Coming soon' %></dd>
-          </div>
+          <% }); %>
           <div>
             <dt>Category</dt>
             <dd><%= event.category %></dd>
@@ -231,8 +246,13 @@
             <p class="font-mono text-[0.7rem] tracking-[0.16em] uppercase text-amber mb-3">Coming soon</p>
             <h2 class="font-display font-semibold text-xl mb-3">Full details coming soon</h2>
             <p class="text-sm text-[var(--paper-dim)] max-w-lg">
+              <% if (event.description) { %>
               The rules, timeline, prizes, eligibility and team requirements for <%= event.name %> are coming
               soon. What you see above is what the event is; the specifics publish here once confirmed.
+              <% } else { %>
+              A description of <%= event.name %>, with its rules, timeline, prizes, eligibility and team
+              requirements, is coming soon. The day, time and venue above are confirmed where they are shown.
+              <% } %>
             </p>
           </section>
           <% } %>

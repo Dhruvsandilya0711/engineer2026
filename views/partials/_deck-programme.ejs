@@ -1,21 +1,22 @@
 <!-- ==========================================================================
      DECK CARD 02 — PROGRAMME.
 
-     The five tracks the fest actually runs, straight from the sponsorship
-     brochure (§03 "Key events & highlights"). STARTUP PITCH existed nowhere
-     on this site before. Blurbs are the brochure's own copy.
+     The tracks the '26 line-up falls into (data/events.json → _tracks).
+     Technical, talks and campus blurbs are the sponsorship brochure's own
+     copy (§03 "Key events & highlights").
 
      Rosters are DERIVED from data/events.json via each event's `track`, so a
      track can never advertise a line-up it doesn't have.
 
      Card-sized: the deck body supplies the padding and the angular frame.
      ========================================================================== -->
+<% const words = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven']; %>
 <section id="programme" class="relative">
   <div class="max-w-4xl">
     <p class="eyebrow text-violet mb-5" data-reveal>The programme</p>
 
     <h2 class="font-display font-bold" data-reveal>
-      Five ways in.<br><span class="text-gradient-impossible">One current.</span>
+      <%= words[tracks.length] || tracks.length %> ways in.<br><span class="text-gradient-impossible">One current.</span>
     </h2>
 
     <ul class="track-grid mt-8">
@@ -27,14 +28,7 @@
         </div>
         <p class="track__blurb"><%= t.blurb %></p>
 
-        <%# ENGI Care gets its own card immediately below this one, listing
-            these same three events WITH their descriptions. Repeating the
-            bare names here put the same three links on the page twice, a
-            screen apart. The track still appears in the overview -- it just
-            points at the fuller version instead of pre-empting it. %>
-        <% if (t.id === "care") { %>
-        <p class="track__events"><a href="#engi-care">See all <%= t.events.length %> &darr;</a></p>
-        <% } else if (t.events.length) { %>
+        <% if (t.events.length) { %>
         <ul class="track__events">
           <% t.events.slice(0, 6).forEach(function (e) { %>
           <li><a href="/events/<%= e.slug %>"><%= e.name %></a></li>

@@ -56,10 +56,13 @@ LAN URL: `http://10.50.47.158:3000` (campus network NITK-NET, classified Public)
 `/` · `/events` · `/events/:slug` · `/schedule` · `/team` · `/register` (GET+POST) · 404 handler
 
 ### Data layer — single source of truth, all derived
-- `data/events.json` — 14 **real** events (names/images from the original repo). Categories
-  are *derived* from the data, so the UI can never offer a category that doesn't exist.
-- `data/schedule.json` — 3 real days (23/24/25 Oct). **All `slots` empty.** Weekday is
-  derived from the date at render time, never stored.
+- `data/events.json` — the 39 events on the organising team's ETF 2026 Event Schedule,
+  grouped into four `_tracks` (technical, talks, campus, nights). Categories are *derived*
+  from the data, so the UI can never offer a category that doesn't exist.
+- `data/schedule.json` — 3 days (23/24/25 Oct) with every slot from the schedule's day
+  sheets. A TBD time or venue is `null` and renders as "coming soon". Event pages read
+  their day/time/venue from here (`sessionsFor` in index.js), so nothing is stored twice.
+  Weekday is derived from the date at render time, never stored.
 - `data/team.json` — **`members: []`**. Groups derive from members, so no empty section
   can appear.
 - `data/registrations.json` — local dev store, **gitignored (contains PII)**.
@@ -205,7 +208,7 @@ wordmark), and the rebuilt preloader.
 4. **Decide the registration backend** — provide `DBURL` to activate mongoose and test
    the Mongo path, or confirm the file store is acceptable for now.
 5. **Add `/events/:slug/register`** or remove the reference, so no state can 404.
-6. **Fill real data** as it is confirmed: schedule slots, team roster, speakers,
+6. **Fill real data** as it is confirmed: TBD schedule times/venues, team roster, speakers,
    sponsors, event details. All three JSON files document their expected shape inline.
 7. **Optional / deferred:** the standalone 4s looping glitch composition
    (`Darken Glitch.dc.html`) — only needed if a video/background asset is wanted; the

@@ -127,16 +127,46 @@ const tracks = Object.entries(eventData._tracks || {}).map(([id, t]) => ({
   id, ...t, events: allEvents.filter(e => e.track === id),
 }));
 
+// How a slot's time reads: "10:00–17:00", "From 10:00", "All day", or null
+// while the sheet still has it as TBD (the views say "coming soon").
+function slotTime(slot) {
+  if (slot.allDay) return 'All day';
+  if (!slot.time) return null;
+  if (!slot.endTime) return `From ${slot.time}`;
+  return `${slot.time}–${slot.endTime}${slot.endNote ? ` (${slot.endNote})` : ''}`;
+}
+
+// All-day items head the day, then the timed ones in order, then the ones
+// whose time is still to be confirmed. The sort is stable, so slots at the
+// same time keep the order the sheet lists them in.
+const slotRank = (s) => (s.allDay ? 0 : s.time ? 1 : 2);
+
 // Slots reference events by slug; resolve them once so views never have to.
 function resolvedDays() {
-  return schedule.days.map(day => ({
-    ...day,
-    // Derived, never stored — a hand-written weekday could contradict the date.
-    weekday: new Date(`${day.date}T00:00:00`).toLocaleDateString('en-GB', { weekday: 'long' }),
-    slots: [...day.slots]
-      .sort((a, b) => String(a.time).localeCompare(String(b.time)))
-      .map(slot => ({ ...slot, linkedEvent: slot.event ? allEvents.find(e => e.slug === slot.event) || null : null })),
-  }));
+  return schedule.days.map(day => {
+    const date = new Date(`${day.date}T00:00:00`);
+    return {
+      ...day,
+      // Derived, never stored — a hand-written weekday could contradict the date.
+      weekday: date.toLocaleDateString('en-GB', { weekday: 'long' }),
+      short: date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }),
+      slots: [...day.slots]
+        .sort((a, b) => slotRank(a) - slotRank(b) || String(a.time).localeCompare(String(b.time)))
+        .map(slot => ({
+          ...slot,
+          when: slotTime(slot),
+          linkedEvent: slot.event ? allEvents.find(e => e.slug === slot.event) || null : null,
+        })),
+    };
+  });
+}
+
+// Every slot an event has, in day order, for its own page: an event that
+// runs on two days gets both, from the one schedule rather than a copy.
+function sessionsFor(slug) {
+  return resolvedDays().flatMap(day => day.slots
+    .filter(s => s.event === slug)
+    .map(s => ({ day: day.label, date: day.short, when: s.when, venue: s.venue })));
 }
 
 // Events that exist but haven't been given a slot yet — shown honestly rather
@@ -225,7 +255,7 @@ app.get('/', (req, res) => {
 // Event discovery. Filtering runs server-side off query params so search and
 // category filters work with JavaScript disabled; public/js/events-filter.js
 // then layers instant client-side filtering on top as a progressive
-// enhancement (14 events — no need to round-trip for every keystroke).
+// enhancement (a few dozen events — no need to round-trip per keystroke).
 app.get('/events', (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const category = (req.query.category || '').toString().trim();
@@ -344,6 +374,7 @@ app.get('/events/:slug', (req, res, next) => {
     // The brochure describes TRACKS, not individual events, so an event with
     // no description of its own can still say what kind of thing it is.
     track: tracks.find(t => t.id === event.track) || null,
+    sessions: sessionsFor(event.slug),
     index: allEvents.indexOf(event) + 1,
     canonical: `${origin}/events/${event.slug}`,
     // og:image has to be an ABSOLUTE url -- a crawler will not resolve a
