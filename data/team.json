@@ -1,5 +1,5 @@
 {
-  "_note": "Team roster for ENGINEER '26, from the organising team's core team list (Engi26_Core). Roll numbers in that list are deliberately NOT copied here: this file is published on /team. A member with name null is a role whose holder is not announced yet; the page shows it as coming soon. Everyone is in one group, Team, in the list's order. Add `image` paths as photos arrive and the placeholder tile is replaced; no code change needed.",
+  "_note": "Team roster for ENGINEER '26, from the organising team's core team list (Engineer_2026_Core). Roll numbers in that list are deliberately NOT copied here: this file is published on /team. The faculty entry (the Dean, Student Welfare) is left off the page, and the General, Joint and PG Secretaries are listed last, both as asked by the organising team. A member with name null is a role whose holder is not announced yet; the page shows it as coming soon. Add `image` paths as photos arrive and the placeholder tile is replaced; no code change needed.",
   "_memberShape": {
     "name": "string, or null while the role's holder is still to be announced",
     "role": "string — required, e.g. 'Convenor', 'Technical Head'",
@@ -26,33 +26,6 @@
       "email": null,
       "linkedin": null,
       "tagline": "Runs the show. Literally."
-    },
-    {
-      "name": "Ramu H M",
-      "role": "Secretary",
-      "group": "Team",
-      "image": null,
-      "email": null,
-      "linkedin": null,
-      "tagline": "Minutes taken. Excuses not."
-    },
-    {
-      "name": "Likith P Gujjar",
-      "role": "Joint Secretary",
-      "group": "Team",
-      "image": null,
-      "email": null,
-      "linkedin": null,
-      "tagline": "Second in line, first on the job."
-    },
-    {
-      "name": "Premdeep Mali",
-      "role": "PG Secretary",
-      "group": "Team",
-      "image": null,
-      "email": null,
-      "linkedin": null,
-      "tagline": "Postgrad poise, undergrad energy."
     },
     {
       "name": "Chaitanya Deshmukh",
@@ -116,6 +89,15 @@
       "email": null,
       "linkedin": null,
       "tagline": "Big heart, bigger to-do list."
+    },
+    {
+      "name": "Samanyu",
+      "role": "Chief of Staff",
+      "group": "Team",
+      "image": null,
+      "email": null,
+      "linkedin": null,
+      "tagline": "Knows where everyone is. Always."
     },
     {
       "name": "Harsh S K",
@@ -253,13 +235,13 @@
       "tagline": "Turns a lawn into a market."
     },
     {
-      "name": null,
+      "name": "Thanish P M",
       "role": "ENGI-Force Head",
       "group": "Team",
       "image": null,
       "email": null,
       "linkedin": null,
-      "tagline": "Identity classified."
+      "tagline": "Keeps the peace, keeps it moving."
     },
     {
       "name": "Ganesh Madhav Rajesh",
@@ -287,6 +269,33 @@
       "email": null,
       "linkedin": null,
       "tagline": "Moves mountains. Mostly chairs."
+    },
+    {
+      "name": "Ramu H M",
+      "role": "General Secretary",
+      "group": "Team",
+      "image": null,
+      "email": null,
+      "linkedin": null,
+      "tagline": "Minutes taken. Excuses not."
+    },
+    {
+      "name": "Likith P Gujjar",
+      "role": "Joint Secretary",
+      "group": "Team",
+      "image": null,
+      "email": null,
+      "linkedin": null,
+      "tagline": "Second in line, first on the job."
+    },
+    {
+      "name": "Premdeep Mali",
+      "role": "PG Secretary",
+      "group": "Team",
+      "image": null,
+      "email": null,
+      "linkedin": null,
+      "tagline": "Postgrad poise, undergrad energy."
     }
   ]
 }
