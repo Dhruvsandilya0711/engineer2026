@@ -288,5 +288,23 @@
       "name": "TribeVibe",
       "logo": "/images/logos/past/tribevibe.png"
     }
-  ]
+  ],
+  "engiCare": {
+    "_source": "ENGI Care, the fest's CSR initiative, as described in the ENGINEER '26 sponsorship brochure (§03 Track 04). These are CSR initiatives, not entries in the event schedule, so they have no event pages.",
+    "blurb": "ENGI Care is our CSR initiative — a testament to our dedication to making a positive difference in the lives of those around us.",
+    "initiatives": [
+      {
+        "name": "Music For All",
+        "description": "A musical performance by specially-abled kids, staged as part of ENGI Care."
+      },
+      {
+        "name": "Techadapt",
+        "description": "Games designed for and played with specially-abled participants."
+      },
+      {
+        "name": "Innovate4Good",
+        "description": "A national case study contest on building technology that does social good."
+      }
+    ]
+  }
 }

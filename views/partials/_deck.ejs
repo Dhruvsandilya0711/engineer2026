@@ -11,8 +11,8 @@
      same five destinations as the nav bar directly above it, so opening a
      card only ever restated a link the visitor could already see. It now
      carries the material that has nowhere else to live on this page: the
-     fest's scale, its programme tracks, the three days at a glance, the
-     shows, and the partner network. Navigation stays where navigation belongs — the bays.
+     fest's scale, its programme tracks, its CSR work, the shows, and the
+     partner network. Navigation stays where navigation belongs — the bays.
      ========================================================================== -->
 <%
   const cards = [
@@ -21,9 +21,8 @@
     { id: 'programme', i: 1, num: '02', name: 'Programme', accent: 'var(--bay-3)',
       teaser: tracks.length + ' tracks, ' + events.all.length + ' events, three days.',
       go: { href: '/events', label: 'All ' + events.all.length + ' &rarr;' } },
-    { id: 'days',      i: 2, num: '03', name: 'Three Days', accent: 'var(--bay-4)',
-      teaser: scheduleDays.reduce((n, d) => n + d.slots.length, 0) + ' sessions over three days, hour by hour.',
-      go: { href: '/schedule', label: 'Schedule &rarr;' } },
+    { id: 'engi-care', i: 2, num: '03', name: 'ENGI Care', accent: 'var(--rgb-amber)',
+      teaser: 'The CSR programme — engineering that gives back.' },
     { id: 'nights',    i: 3, num: '04', name: 'After Dark', accent: 'var(--bay-5)',
       teaser: 'Stand-up, a magic show, movie night and the pro shows.' },
     { id: 'network',   i: 4, num: '05', name: 'Network',   accent: 'var(--bay-6)',
@@ -74,7 +73,7 @@
         <div class="fancard__body deck-card__body" data-lenis-prevent>
           <% if (c.id === 'scale') { %><%- include('_deck-scale', { fest }) %>
           <% } else if (c.id === 'programme') { %><%- include('_deck-programme', { tracks, events }) %>
-          <% } else if (c.id === 'days') { %><%- include('_deck-days', { scheduleDays }) %>
+          <% } else if (c.id === 'engi-care') { %><%- include('_deck-care', { fest }) %>
           <% } else if (c.id === 'nights') { %><%- include('_deck-nights', { proshows, scheduleDays }) %>
           <% } else if (c.id === 'network') { %><%- include('_deck-network', { fest }) %><% } %>
         </div>

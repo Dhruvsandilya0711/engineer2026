@@ -2711,55 +2711,25 @@ html.cx-native .cx-ring { opacity: 0; }
 .track__events a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent) / 0.5); }
 .track__more a { color: rgb(var(--accent) / 0.8); }
 
-/* ---- THREE DAYS: the schedule at a glance ---------------------- */
-.days-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  background: var(--hairline);
-  border: 1px solid var(--hairline);
-}
-.day-col {
-  background: var(--color-void);
-  padding: clamp(1rem, 2.4vw, 1.35rem);
-  border-top: 2px solid rgb(var(--bay-4) / 0.6);
-  min-width: 0;
-}
-.day-col__head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
-.day-col__label { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; color: var(--paper); }
-.day-col__date,
-.day-col__n {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--paper-faint);
-}
-.day-col__n { color: rgb(var(--bay-4)); }
-.day-col__list {
-  margin: 0.8rem 0 0;
-  padding: 0.7rem 0 0;
-  list-style: none;
-  border-top: 1px solid var(--hairline);
+/* ---- ENGI CARE -------------------------------------------------- */
+.care-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.care {
   display: flex;
-  flex-direction: column;
-  gap: 0.42rem;
+  gap: clamp(0.8rem, 2.4vw, 1.4rem);
+  padding: 1.05rem 0;
+  border-top: 1px solid var(--hairline);
 }
-.day-slot { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); gap: 0.6rem; align-items: baseline; }
-.day-slot__t {
+.care:last-child { border-bottom: 1px solid var(--hairline); }
+.care__n {
+  flex: none;
   font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-  color: var(--paper-faint);
-  white-space: nowrap;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  color: var(--color-amber);
+  padding-top: 0.2rem;
 }
-.day-slot__t.is-tba { color: rgb(var(--rgb-amber) / 0.8); }
-.day-slot__n { font-size: 0.8rem; line-height: 1.35; color: var(--paper-dim); text-decoration: none; }
-a.day-slot__n:hover { color: rgb(var(--bay-4)); }
+.care__name { font-family: var(--font-display); font-weight: 600; font-size: 0.98rem; color: var(--paper); }
+.care__d { margin-top: 0.28rem; font-size: 0.8rem; line-height: 1.55; color: var(--paper-dim); }
 
 /* Schedule page: day tab counts, coming-soon times, per-day detail rows. */
 .cat-chip__n {
