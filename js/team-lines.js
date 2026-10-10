@@ -5,9 +5,10 @@
 // the gaps), rebuilt whenever the tree changes size. On a desktop the lines
 // follow the tree: the Convenor forks to the Chief Coordinators, they fork
 // to the row below, each card of that row feeds the column under it, every
-// column flows down row by row into the base row. On a phone the tree is a
-// single column, so one gold thread runs down its middle, through the gaps
-// between cards.
+// column flows down row by row into the base row, and the columns draw
+// together into the closing row, where the lines end. On a phone the tree
+// is a single column, so one gold thread runs down its middle, through the
+// gaps between cards.
 //
 // Lines grow downward as the page scrolls to them and stay drawn; then a
 // bead of light runs along each one now and then. Hovering a card lights
@@ -82,10 +83,12 @@ function init(tree) {
     // Columns: the nearest card of the last spine tier feeds each column,
     // then the column flows down cell by cell, base row included.
     const feed = tiers.length ? cardsIn(tiers[tiers.length - 1]) : [];
+    const ends = [];
     ['left', 'centre', 'right'].forEach((id) => {
       const cells = [...tree.querySelectorAll(`.tree__wings .tree__cell--${id}, .tree__base .tree__cell--${id}`)]
         .filter((c) => cardsIn(c).length);
       if (!cells.length) return;
+      ends.push(cells[cells.length - 1]);
       const head = span(cardsIn(cells[0]));
       if (feed.length) {
         const mid = head.x + head.w / 2;
@@ -99,6 +102,18 @@ function init(tree) {
         add(bottom(span(from)), top(span(to)), from, to);
       }
     });
+    // The closing row: each card takes the column that ends nearest above
+    // it, so the columns draw together and the lines end there.
+    const foot = tree.querySelector('.tree__foot');
+    if (foot && ends.length) {
+      cardsIn(foot).forEach((c) => {
+        const b = box(c);
+        const mid = b.x + b.w / 2;
+        const src = ends.map((cell) => ({ cell, s: span(cardsIn(cell)) }))
+          .sort((p, q) => Math.abs(p.s.x + p.s.w / 2 - mid) - Math.abs(q.s.x + q.s.w / 2 - mid))[0];
+        add(bottom(src.s), top(b), cardsIn(src.cell), [c]);
+      });
+    }
     return out;
   }
 

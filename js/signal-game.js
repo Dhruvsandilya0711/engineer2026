@@ -27,7 +27,7 @@ import {
   // scales against WIND_MAX, and the aim preview traces the real ballistic
   // arc rather than an approximation of it.
   WIND_MAX, SPEED_MIN, SPEED_MAX, GRAV,
-} from '/engineer2026/js/range-sim.js?v=3d2c1de';
+} from '/engineer2026/js/range-sim.js?v=746a39e';
 
 const IS_TOUCH = window.matchMedia('(hover: none)').matches;
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
