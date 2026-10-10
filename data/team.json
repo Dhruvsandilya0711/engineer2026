@@ -376,7 +376,15 @@
             ]
           }
         ],
-        [],
+        [
+          {
+            "post": "ENGI-Stalls In-charges",
+            "people": [
+              "Shivakumar Hiremath",
+              "Abhishek H N"
+            ]
+          }
+        ],
         []
       ],
       "centre": [
@@ -390,15 +398,7 @@
           }
         ],
         [],
-        [
-          {
-            "post": "ENGI-Stalls In-charges",
-            "people": [
-              "Shivakumar Hiremath",
-              "Abhishek H N"
-            ]
-          }
-        ],
+        [],
         [
           {
             "post": "ENGI-Gaming Heads",

@@ -1,0 +1,50 @@
+<%#
+  One team card in the org tree. Front: the photo ring (initials until a
+  photo is added in data/team.json), name and post. Back: the punchline.
+  It flips on hover; touch has no hover, so public/js/team.js flips it on
+  a tap. Both faces are in the DOM, so a screen reader hears the line too.
+
+  Params: m (member), accent (an RGB triple var), counter ({ n }).
+%>
+<%
+  counter.n++;
+  const w = String(m.name || '').trim().split(/\s+/).filter(Boolean);
+  const ini = w.length ? (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase() : '?';
+%>
+<li class="tcard-cell" data-reveal style="--ci: <%= counter.n %>">
+  <article class="tcard" data-js="team-card" tabindex="0" aria-expanded="false" style="--spot: <%= accent %>">
+    <div class="tcard__flip">
+      <div class="tcard__face tcard__front">
+        <div class="tcard__in">
+          <span class="tcard__idx" aria-hidden="true"><%= String(counter.n).padStart(2, '0') %></span>
+          <span class="tcard__tag" aria-hidden="true">ENGI/26</span>
+          <div class="tcard__photo">
+            <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+            <% if (m.image) { %>
+            <img src="<%= m.image %>" alt="<%= m.name %>" loading="lazy">
+            <% } else { %>
+            <span class="tcard__mono" aria-hidden="true"><%= ini %></span>
+            <% } %>
+          </div>
+          <p class="tcard__name"><%= m.name %></p>
+          <p class="tcard__post"><%= m.role %></p>
+          <span class="tcard__hint" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="tcard__face tcard__back">
+        <div class="tcard__in">
+          <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+          <p class="tcard__line"><%= m.tagline || m.role %></p>
+          <p class="tcard__sig">— <%= m.name %></p>
+          <p class="tcard__post"><%= m.role %></p>
+          <% if (m.email || m.linkedin) { %>
+          <p class="tcard__links">
+            <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
+            <% if (m.linkedin) { %><a href="<%= m.linkedin %>" rel="noopener noreferrer" target="_blank" aria-label="<%= m.name %> on LinkedIn">LinkedIn</a><% } %>
+          </p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>

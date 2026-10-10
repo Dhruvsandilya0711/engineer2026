@@ -45,7 +45,51 @@
       <div class="hud-frame mt-6" style="--accent: var(--bay-5)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
-      <% if (totalMembers) { %>
+      <% if (tree && totalMembers) { %>
+        <!-- ============ THE TREE ============
+             data/team.json → tree, drawn as the organising team sketched it:
+             a spine from the Convenor, three wings whose rows line up across
+             the page, and the secretaries along the base. On a phone it
+             folds into one column, two cards to a row. -->
+        <%
+          const counter = { n: 0 };
+          const spineAccents = ['var(--rgb-amber)', 'var(--bay-2)', 'var(--bay-3)', 'var(--bay-4)'];
+          const wingAccent = { left: 'var(--bay-1)', centre: 'var(--bay-5)', right: 'var(--bay-6)' };
+        %>
+        <section class="tree" aria-label="ENGINEER '26 team">
+          <ol class="tree__spine">
+            <% tree.spine.forEach(function (g, i) { %>
+            <li class="tree__tier">
+              <ul class="tree__group" aria-label="<%= g.post %>">
+                <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: spineAccents[i] || 'var(--bay-3)', counter }) %><% }); %>
+              </ul>
+            </li>
+            <% }); %>
+          </ol>
+
+          <div class="tree__wings">
+            <% for (let r = 0; r < tree.rows; r++) { tree.wings.forEach(function (wing, wi) { const row = wing.rows[r] || []; %>
+            <div class="tree__cell tree__cell--<%= wing.id %><%= r === 0 ? ' is-first' : '' %><%= r === tree.rows - 1 ? ' is-last' : '' %><%= row.length ? '' : ' is-empty' %>"
+                 style="--o: <%= wi * 10 + r %>">
+              <% row.forEach(function (g) { %>
+              <ul class="tree__group" aria-label="<%= g.post %>">
+                <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: wingAccent[wing.id], counter }) %><% }); %>
+              </ul>
+              <% }); %>
+            </div>
+            <% }); } %>
+          </div>
+
+          <div class="tree__base">
+            <% tree.base.forEach(function (g) { %>
+            <ul class="tree__group" aria-label="<%= g.post %>">
+              <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: 'var(--bay-2)', counter }) %><% }); %>
+            </ul>
+            <% }); %>
+          </div>
+        </section>
+
+      <% } else if (totalMembers) { %>
         <!-- ============ ROSTER ============
              Renders whatever data/team.json holds. Groups are derived from the
              members themselves, so no empty section can ever appear. -->
@@ -73,7 +117,7 @@
             <li class="crew-cell" data-reveal style="--ci: <%= n %>">
             <%# The punchline stays folded away until the card is hovered;
                 touch has no hover, so public/js/team.js opens it on a tap. %>
-            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-tilt="7" <% if (m.tagline) { %>tabindex="0" aria-expanded="false" <% } %>style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
+            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-js="team-card" data-tilt="7" <% if (m.tagline) { %>tabindex="0" aria-expanded="false" <% } %>style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
               <div class="crew__in">
                 <div class="crew__photo">
                   <% if (m.image) { %>
