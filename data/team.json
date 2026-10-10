@@ -308,7 +308,7 @@
     }
   ],
   "tree": {
-    "_note": "The /team page draws THIS tree, laid out as the organising team sketched it: a spine from the Convenor down, three wings, and the secretaries along the base. Each group is one post; people who share a post sit side by side under one label. Rows line up across the wings (an empty list is an empty slot). Names must match `members` exactly; anyone in `members` who is not placed here is not shown, so moving or re-adding someone is an edit to this block only.",
+    "_note": "The /team page draws THIS tree, laid out as the organising team sketched it: a spine from the Convenor down, three wings, and a base row along the bottom. A spine tier is one post, or a list of posts that sit side by side in one row. The wings and the base share the same three columns (left, centre, right): in the wings each column is a list of rows that line up across the page (an empty list is an empty slot); the base is one row. Each group is one post; people who share a post sit side by side. Names must match `members` exactly; anyone in `members` who is not placed here is not shown, so moving or re-adding someone is an edit to this block only.",
     "spine": [
       {
         "post": "Convenor",
@@ -323,19 +323,26 @@
           "Dhananjay Mode"
         ]
       },
-      {
-        "post": "Marketing Heads",
-        "people": [
-          "Chaitanya Deshmukh",
-          "Vedant Sabnis"
-        ]
-      },
-      {
-        "post": "Growth Expert",
-        "people": [
-          "Nikhil Ragnekar"
-        ]
-      }
+      [
+        {
+          "post": "Marketing Head",
+          "people": [
+            "Chaitanya Deshmukh"
+          ]
+        },
+        {
+          "post": "Growth Expert",
+          "people": [
+            "Nikhil Ragnekar"
+          ]
+        },
+        {
+          "post": "Marketing Head",
+          "people": [
+            "Vedant Sabnis"
+          ]
+        }
+      ]
     ],
     "wings": {
       "left": [
@@ -384,8 +391,7 @@
               "Abhishek H N"
             ]
           }
-        ],
-        []
+        ]
       ],
       "centre": [
         [],
@@ -398,13 +404,11 @@
             ]
           }
         ],
-        [],
         [
           {
-            "post": "ENGI-Gaming Heads",
+            "post": "Hospitality Head",
             "people": [
-              "Ganesh Madhav Rajesh",
-              "Adhil Ali"
+              "Mohan Kumar M E"
             ]
           }
         ]
@@ -452,33 +456,44 @@
             "post": "Hospitality Heads",
             "people": [
               "Anuj Patil",
-              "Karthik Gurikar",
-              "Mohan Kumar M E"
+              "Karthik Gurikar"
             ]
           }
-        ],
-        []
+        ]
       ]
     },
-    "base": [
-      {
-        "post": "General Secretary",
-        "people": [
-          "Ramu H M"
-        ]
-      },
-      {
-        "post": "Joint Secretary",
-        "people": [
-          "Likith P Gujjar"
-        ]
-      },
-      {
-        "post": "PG Secretary",
-        "people": [
-          "Premdeep Mali"
-        ]
-      }
-    ]
+    "base": {
+      "left": [
+        {
+          "post": "ENGI-Gaming Heads",
+          "people": [
+            "Ganesh Madhav Rajesh",
+            "Adhil Ali"
+          ]
+        }
+      ],
+      "centre": [
+        {
+          "post": "General Secretary",
+          "people": [
+            "Ramu H M"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "post": "Joint Secretary",
+          "people": [
+            "Likith P Gujjar"
+          ]
+        },
+        {
+          "post": "PG Secretary",
+          "people": [
+            "Premdeep Mali"
+          ]
+        }
+      ]
+    }
   }
 }

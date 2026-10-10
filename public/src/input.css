@@ -7563,7 +7563,7 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   padding: 0;
   list-style: none;
 }
-.tree__tier { display: flex; justify-content: center; }
+.tree__tier { display: flex; justify-content: center; gap: var(--tgap); }
 
 /* ---- wings: three columns, rows aligned across them ----------------- */
 .tree__wings {
@@ -7583,13 +7583,11 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   padding: 0 var(--wpad);
 }
 
-/* ---- base: the secretaries ------------------------------------------ */
+/* ---- base: one row on the wings' three columns ------------------------ */
 .tree__base {
   position: relative;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: calc(var(--tgap) * 1.5);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: calc(var(--trow) * 1.6);
 }
 
@@ -7736,32 +7734,6 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
     linear-gradient(180deg, #0c1019 0%, #07090f 52%, #05060a 100%);
 }
 
-.tcard__brand,
-.tcard__hint {
-  position: absolute;
-  top: calc(var(--tw) * 0.062);
-  z-index: 2;
-  font-family: var(--font-mono);
-  font-size: clamp(0.5rem, calc(var(--tw) * 0.042), 0.6rem);
-  letter-spacing: 0.18em;
-  line-height: 1;
-}
-.tcard__brand {
-  left: calc(var(--cut) + 7px);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: rgba(var(--spot), 0.9);
-}
-.tcard__brand::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgb(var(--spot));
-  box-shadow: 0 0 8px rgba(var(--spot), 0.9);
-}
-
 /* The photo ring: a metallic rim, a dark lens and a slow orbit. */
 .tcard__photo {
   position: relative;
@@ -7861,7 +7833,14 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
 
 /* What to do with it: a turn arrow for a mouse, "Tap" on a phone. */
 .tcard__hint {
+  position: absolute;
+  top: calc(var(--tw) * 0.062);
   right: calc(var(--tw) * 0.065);
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, calc(var(--tw) * 0.042), 0.6rem);
+  letter-spacing: 0.18em;
+  line-height: 1;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
 }
@@ -7991,7 +7970,14 @@ html:has(.tcard:hover) .cx-glow {
   .tree__wings { display: flex; flex-direction: column; align-items: center; row-gap: 0; margin-top: var(--trow); }
   .tree__cell { order: var(--o); width: 100%; padding: 0 0 var(--trow); }
   .tree__cell.is-empty { display: none; }
-  .tree__base { gap: var(--tgap); margin-top: 0; }
+  .tree__base { display: flex; flex-direction: column; align-items: center; margin-top: 0; }
+  .tree__base .tree__cell:last-child { padding-bottom: 0; }
+  .tree__tier { flex-wrap: wrap; row-gap: var(--trow); }
+}
+/* Three posts in one spine row don't fit across a narrow tree: the middle
+   one drops below, centred, so the two either side of it stay a pair. */
+@container (max-width: 719.98px) {
+  .tree__tier > .tree__group:nth-child(2):nth-last-child(2) { order: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

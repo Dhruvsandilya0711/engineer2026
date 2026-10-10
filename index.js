@@ -339,17 +339,22 @@ function teamTree() {
   if (!t) return null;
   const byName = new Map((teamData.members || []).map(m => [m.name, m]));
   const group = (g) => ({ post: g.post, people: (g.people || []).map(n => byName.get(n)).filter(Boolean) });
-  const wings = ['left', 'centre', 'right'].map(id => ({ id, rows: ((t.wings || {})[id] || []).map(row => row.map(group)) }));
-  const tree = { spine: (t.spine || []).map(group), wings, base: (t.base || []).map(group) };
+  const cols = ['left', 'centre', 'right'];
+  // A spine tier is one post, or a row of posts side by side.
+  const spine = (t.spine || []).map(tier => [].concat(tier).map(group));
+  const wings = cols.map(id => ({ id, rows: ((t.wings || {})[id] || []).map(row => row.map(group)) }));
+  // The base is one row on the same three columns as the wings.
+  const base = cols.map(id => ({ id, groups: ((t.base || {})[id] || []).map(group) }));
+  const tree = { spine, wings, base };
   tree.rows = Math.max(0, ...wings.map(w => w.rows.length));
-  tree.total = [...tree.spine, ...wings.flatMap(w => w.rows.flat()), ...tree.base]
+  tree.total = [...spine.flat(), ...wings.flatMap(w => w.rows.flat()), ...base.flatMap(c => c.groups)]
     .reduce((n, g) => n + g.people.length, 0);
   return tree;
 }
 {
   const names = new Set((teamData.members || []).map(m => m.name));
   const t = teamData.tree || {};
-  const placed = [...(t.spine || []), ...Object.values(t.wings || {}).flat(2), ...(t.base || [])]
+  const placed = [...(t.spine || []).flat(), ...Object.values(t.wings || {}).flat(2), ...Object.values(t.base || {}).flat()]
     .flatMap(g => (g && g.people) || []);
   const unknown = placed.filter(n => !names.has(n));
   if (unknown.length) console.warn('  ! team tree names with no member:', unknown.join(', '));
