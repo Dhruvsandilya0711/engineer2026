@@ -22,12 +22,12 @@
    ========================================================================== */
 
 import {
-  ARENA, TICK_MS, MAX_MISSES, RING_R, EMITTER, NODE_TTL_TICKS, createSim,
+  ARENA, TICK_MS, MAX_MISSES, RING_R, EMITTER, NODE_TTL_TICKS, createSim, chargeFor,
   // Drawing needs the same numbers the simulation runs on: the wind gauge
   // scales against WIND_MAX, and the aim preview traces the real ballistic
   // arc rather than an approximation of it.
   WIND_MAX, SPEED_MIN, SPEED_MAX, GRAV,
-} from '/engineer2026/js/range-sim.js?v=3b0553d';
+} from '/engineer2026/js/range-sim.js?v=dedebf6';
 
 const IS_TOUCH = window.matchMedia('(hover: none)').matches;
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -36,7 +36,9 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 // now, because the SERVER runs that same module to verify a submitted run.
 // What stays here is presentation: how the charge builds, how the node warns
 // before it moves, and everything that is drawn.
-const CHARGE_MS = 900;                 // 0 → max in this many ms of hold
+// Charge is counted in simulation ticks (range-sim.js → chargeFor), not
+// wall-clock ms: the server derives each shot's power from the same ticks,
+// so a client cannot send a power it did not hold the trigger for.
 const AUTO_FIRE_AT_FULL = true;        // release the shot at max charge
 const NODE_TTL_MS = NODE_TTL_TICKS * TICK_MS;
 const NODE_WARN_MS = 1200;             // last N ms it pulses red
@@ -109,6 +111,7 @@ export function mountSignalGame() {
     charging: false,
     charge: 0,
     chargeStart: 0,
+    pressTick: 0,                      // sim tick the trigger went down
     score: 0,
     streak: 0,
     bestStreak: 0,                     // longest streak THIS run — the streak
@@ -132,7 +135,7 @@ export function mountSignalGame() {
   // the server has no way to verify.
   let sim = null;
   let session = null;
-  let trace = [];                       // [{ tick, angle, charge }] — the run
+  let trace = [];                       // [{ tick, press, angle, charge }] — the run
   let accum = 0;                        // leftover ms between fixed ticks
   let lastNow = 0;
 
@@ -197,7 +200,13 @@ export function mountSignalGame() {
     session = null;
     let seed;
     try {
-      const res = await fetch('/engineer2026/api/range/session', { method: 'POST' });
+      // An automated browser is refused a seed (lib/antibot.js), so it can
+      // play but has nothing the board will accept.
+      const res = await fetch('/engineer2026/api/range/session', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ env: { webdriver: navigator.webdriver === true } }),
+      });
       const data = await res.json();
       if (data?.ok) { session = data.session; seed = session.seed; }
     } catch (_) { /* offline: fall through to a local seed */ }
@@ -562,34 +571,41 @@ export function mountSignalGame() {
     if (state.charging) release();
     restoreMusic();
   });
+  // Only events the browser itself produced (isTrusted) can aim or fire. A
+  // script on the page can dispatch pointer and key events of its own; those
+  // move nothing here.
   canvas.addEventListener('pointermove', (e) => {
+    if (!e.isTrusted) return;
     const p = localPt(e); state.pointer.x = p.x; state.pointer.y = p.y;
   });
   const start = (e) => {
-    if (state.projectile) return;
+    if (!e.isTrusted || state.projectile) return;
     if (!armed || !sim || state.time < state.lockUntil) return;
     const p = localPt(e); state.pointer.x = p.x; state.pointer.y = p.y;
     state.pointer.inside = true;
     state.charging = true;
     state.charge = 0;
     state.chargeStart = performance.now();
+    state.pressTick = sim.state.tick;
     try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
     sfx('chargeStart');
     e.preventDefault();
   };
-  const end = () => { if (state.charging) release(); };
+  const end = (e) => { if (e.isTrusted && state.charging) release(); };
   canvas.addEventListener('pointerdown', start);
   canvas.addEventListener('pointerup', end);
   canvas.addEventListener('pointercancel', end);
   // Keyboard: space to charge/release. Focus lands on the canvas via tabindex.
   canvas.tabIndex = 0;
   canvas.addEventListener('keydown', (e) => {
+    if (!e.isTrusted) return;
     if (e.code === 'Space' && armed && sim && !state.charging && !state.projectile && state.time >= state.lockUntil) {
       state.charging = true; state.charge = 0; state.chargeStart = performance.now();
+      state.pressTick = sim.state.tick;
       e.preventDefault();
     }
   });
-  canvas.addEventListener('keyup', (e) => { if (e.code === 'Space') end(); });
+  canvas.addEventListener('keyup', (e) => { if (e.code === 'Space') end(e); });
 
   resetBtn?.addEventListener('click', () => {
     restartRun('RANGE REBOOTED', CYAN, 'spawn');
@@ -606,7 +622,9 @@ export function mountSignalGame() {
 
   function release() {
     if (!state.charging) return;
-    const charge = state.charge;
+    // Power from the ticks held, computed at the same tick the shot fires
+    // on — exactly what the server will derive from { press, tick }.
+    const charge = sim ? chargeFor(sim.state.tick - state.pressTick) : 0;
     state.charging = false; state.charge = 0;
     chargeEl.style.width = '0%';
     sfx('chargeEnd');
@@ -622,7 +640,7 @@ export function mountSignalGame() {
     // recorded run and the run that was played can never diverge.
     const tick = sim.state.tick;
     if (!sim.fire(angle, power)) return;
-    trace.push({ tick, angle, charge: power });
+    trace.push({ tick, press: state.pressTick, angle, charge: power });
     mirror();
 
     // Recoil puff at the muzzle + fire SFX.
@@ -721,8 +739,8 @@ export function mountSignalGame() {
     state.emitter.angle += (a - state.emitter.angle) * (REDUCED_MOTION ? 1 : 0.22);
 
     // Charging.
-    if (state.charging) {
-      state.charge = Math.min(1, (now - state.chargeStart) / CHARGE_MS);
+    if (state.charging && sim) {
+      state.charge = chargeFor(sim.state.tick - state.pressTick);
       chargeEl.style.width = (state.charge * 100).toFixed(1) + '%';
       sfx('chargeUpdate');
       if (AUTO_FIRE_AT_FULL && state.charge >= 1) release();
