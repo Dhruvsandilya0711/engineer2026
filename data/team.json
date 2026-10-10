@@ -375,7 +375,9 @@
               "Soham Jain"
             ]
           }
-        ]
+        ],
+        [],
+        []
       ],
       "centre": [
         [],
@@ -384,6 +386,16 @@
             "post": "Logistics Head",
             "people": [
               "Shatayu Raut"
+            ]
+          }
+        ],
+        [],
+        [
+          {
+            "post": "ENGI-Stalls In-charges",
+            "people": [
+              "Shivakumar Hiremath",
+              "Abhishek H N"
             ]
           }
         ],
@@ -444,7 +456,8 @@
               "Mohan Kumar M E"
             ]
           }
-        ]
+        ],
+        []
       ]
     },
     "base": [
