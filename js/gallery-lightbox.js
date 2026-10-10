@@ -11,7 +11,7 @@
 // those clicks before they reach a link.
 // ==========================================================================
 
-import { stopScroll, startScroll } from '/engineer2026/js/scroll.js?v=caa3d91';
+import { stopScroll, startScroll } from '/engineer2026/js/scroll.js?v=mv2uh0i3';
 
 export function initGalleryLightbox() {
   const section = document.querySelector('[data-js="gallery"]');
