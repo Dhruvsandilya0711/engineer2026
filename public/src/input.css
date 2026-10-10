@@ -1927,6 +1927,24 @@ html.cx-native .cx-ring { opacity: 0; }
   100%    { transform: translateX(58%); }
 }
 .baybar__cell { display: flex; }
+/* Segments size to their labels — "Competitions" needs more room than
+   "Team" — and whatever width is left over still splits evenly. The drawer
+   is a single column and keeps its own template. */
+.baybar:not(.baybar--drawer) { grid-template-columns: repeat(6, auto); }
+/* Between the bar's 1024px gate and a roomy desktop, six content-sized
+   segments are a squeeze, so the padding and tracking tighten a little.
+   The hero's bar is larger and shares its row with the session readout,
+   so it stays tight for longer. */
+@media (max-width: 1279.98px) {
+  .baybar--bar .bay { padding-inline: 9px; }
+  .baybar--bar .bay__row { gap: 6px; padding-right: 9px; }
+  .baybar--bar .bay__label { letter-spacing: 0.06em; }
+}
+@media (max-width: 1599.98px) {
+  .baybar--hero .bay { padding-inline: 10px; }
+  .baybar--hero .bay__row { gap: 6px; padding-right: 10px; }
+  .baybar--hero .bay__label { font-size: 12.5px; letter-spacing: 0.06em; }
+}
 
 .bay {
   position: relative;
