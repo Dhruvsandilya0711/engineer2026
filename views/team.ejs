@@ -42,6 +42,55 @@
         at NITK Surathkal who run ENGINEER every year.
       </p>
 
+      <% if (tree && totalMembers) { %>
+        <!-- ============ THE TREE ============
+             data/team.json → tree, drawn as the organising team sketched it:
+             a spine from the Convenor, three wings whose rows line up across
+             the page, and the secretaries along the base. No panel behind it
+             and no connector lines: the cards float on the page's own field,
+             and on a desktop the tree is wider than the text rail so the
+             cards can be big. On a phone it folds into one column, two cards
+             to a row. -->
+        <%
+          const counter = { n: 0 };
+          // One gold for everyone: black glass and gold, top to bottom.
+          const gold = '242, 192, 104';
+        %>
+        <section class="tree" aria-label="ENGINEER '26 team">
+          <ol class="tree__spine">
+            <% tree.spine.forEach(function (g) { %>
+            <li class="tree__tier">
+              <ul class="tree__group" aria-label="<%= g.post %>">
+                <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
+              </ul>
+            </li>
+            <% }); %>
+          </ol>
+
+          <div class="tree__wings">
+            <% for (let r = 0; r < tree.rows; r++) { tree.wings.forEach(function (wing, wi) { const row = wing.rows[r] || []; %>
+            <div class="tree__cell tree__cell--<%= wing.id %><%= row.length ? '' : ' is-empty' %>" style="--o: <%= wi * 10 + r %>">
+              <% row.forEach(function (g) { %>
+              <ul class="tree__group" aria-label="<%= g.post %>">
+                <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
+              </ul>
+              <% }); %>
+            </div>
+            <% }); } %>
+          </div>
+
+          <div class="tree__base">
+            <% tree.base.forEach(function (g) { %>
+            <ul class="tree__group" aria-label="<%= g.post %>">
+              <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
+            </ul>
+            <% }); %>
+          </div>
+        </section>
+
+        <p class="tree-note">Photos coming soon &middot; Corrections go to the ENGINEER '26 organising team</p>
+
+      <% } else { %>
       <div class="hud-frame mt-6" style="--accent: var(--bay-5)">
         <div class="hud-frame__inner"><div class="hud-frame__body">
 
@@ -73,7 +122,7 @@
             <li class="crew-cell" data-reveal style="--ci: <%= n %>">
             <%# The punchline stays folded away until the card is hovered;
                 touch has no hover, so public/js/team.js opens it on a tap. %>
-            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-tilt="7" <% if (m.tagline) { %>tabindex="0" aria-expanded="false" <% } %>style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
+            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-js="team-card" data-tilt="7" <% if (m.tagline) { %>tabindex="0" aria-expanded="false" <% } %>style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
               <div class="crew__in">
                 <div class="crew__photo">
                   <% if (m.image) { %>
@@ -147,6 +196,7 @@
         </p>
       </aside>
         </div></div></div>
+      <% } %>
     </div>
   </main>
 
