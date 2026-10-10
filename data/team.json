@@ -8,7 +8,8 @@
     "email": "string or null",
     "linkedin": "string URL or null",
     "tagline": "string or null — a one-line punchline shown on the card",
-    "initials": "string, optional — the monogram on the card while there is no photo; defaults to the first letters of the first and last word of the name"
+    "initials": "string, optional — the monogram on the card while there is no photo; defaults to the first letters of the first and last word of the name",
+    "roleLines": "array of strings, optional — how the role is broken into lines on the card (e.g. [\"Chief Advisor\", \"&\", \"Head, ENGI-Care\"]); defaults to `role` wrapping on its own"
   },
   "_exampleMember": {
     "name": "",
@@ -94,6 +95,11 @@
     {
       "name": "Dhruv Sandilya",
       "role": "Chief Advisor & Head, ENGI-Care",
+      "roleLines": [
+        "Chief Advisor",
+        "&",
+        "Head, ENGI-Care"
+      ],
       "group": "Team",
       "image": null,
       "email": null,
@@ -130,7 +136,7 @@
     {
       "name": "Karthik Thippeswamy",
       "initials": "K",
-      "role": "Head of Media",
+      "role": "Head of Media & Digital Strategy",
       "group": "Team",
       "image": null,
       "email": null,
