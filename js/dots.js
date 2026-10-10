@@ -17,7 +17,7 @@
 // in either scroll direction.
 // ==========================================================================
 
-import { REDUCED_MOTION, IS_TOUCH } from '/engineer2026/js/scroll.js?v=2802580';
+import { REDUCED_MOTION, IS_TOUCH } from '/engineer2026/js/scroll.js?v=b6a01be';
 
 // Content blocks worth dissolving. Deliberately not "every node in the DOM" —
 // masking every wrapper would multiply cost with no visual gain, since only
