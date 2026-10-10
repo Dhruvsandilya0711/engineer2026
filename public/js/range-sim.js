@@ -75,6 +75,13 @@ export function rng(seed) {
   };
 }
 
+/** Shot power from how long the trigger was held, in whole ticks. The
+ *  browser and the server both use this, so power is never a free number a
+ *  client can send: it is whatever that many ticks of holding produce. */
+export function chargeFor(holdTicks) {
+  return Math.min(1, Math.max(0, holdTicks) * TICK_MS / CHARGE_MS);
+}
+
 export function clampAim(a) {
   if (a < AIM_MIN) return AIM_MIN;
   if (a > AIM_MAX) return AIM_MAX;
@@ -242,38 +249,92 @@ export function createSim(seed) {
 
 /** Re-run a trace and return what it ACTUALLY scores.
  *
- *  `shots` is [{ tick, angle, charge }] in ascending tick order. The result
- *  is authoritative: the client's own numbers are never consulted. Returns
- *  `{ ok: false, reason }` for a trace that could not have been produced by
- *  playing — out-of-order ticks, a shot fired while one was in flight, a
- *  shot after the run ended.
+ *  `shots` is [{ tick, press, angle, charge }] in ascending tick order:
+ *  `press` is the tick the trigger went down and `tick` the tick it was
+ *  released. The result is authoritative: the client's own numbers are
+ *  never consulted. Returns `{ ok: false, reason }` for a trace that could
+ *  not have been produced by playing — out-of-order ticks, a shot charged
+ *  while one was in flight, a shot after the run ended.
+ *
+ *  Options:
+ *    requirePress  every shot must carry `press`, and its power is DERIVED
+ *                  from the hold (chargeFor) rather than read from `charge`.
+ *    audit         also return `audit`: per shot, how long it was held, how
+ *                  long the target had been in place when it was released,
+ *                  and what it scored. lib/antibot.js reads this.
  */
-export function replay(seed, shots) {
+export function replay(seed, shots, { requirePress = false, audit = false } = {}) {
   if (!Array.isArray(shots)) return { ok: false, reason: 'Trace missing.' };
   if (shots.length > MAX_SHOTS) return { ok: false, reason: 'Too many shots.' };
 
   const sim = createSim(seed);
+  const log = [];
   let last = -1;
+  let resolvedAt = 0;          // tick the previous shot landed (0: none yet)
+  let open = null;             // log entry of the shot in the air
+
+  // Step once, and note what the step did to the shot in the air.
+  const advance = () => {
+    sim.step();
+    const ev = sim.state.lastEvent;
+    if (ev && (ev.type === 'hit' || ev.type === 'miss')) {
+      resolvedAt = sim.state.tick;
+      if (open) { open.pts = ev.type === 'hit' ? ev.pts : 0; open = null; }
+    }
+  };
+  const stepTo = (t) => { while (sim.state.tick < t && !sim.state.over) advance(); };
 
   for (const s of shots) {
     const tick = Math.floor(Number(s?.tick));
     const angle = Number(s?.angle);
-    const charge = Number(s?.charge);
-    if (!Number.isFinite(tick) || !Number.isFinite(angle) || !Number.isFinite(charge)) {
+    const hasPress = s?.press !== undefined && s?.press !== null;
+    const press = hasPress ? Math.floor(Number(s.press)) : null;
+    if (!Number.isFinite(tick) || !Number.isFinite(angle)) {
       return { ok: false, reason: 'Malformed shot.' };
+    }
+    if (requirePress && !hasPress) {
+      return { ok: false, reason: 'This run came from an older version of the game. Reload the page and play again.' };
     }
     if (tick <= last) return { ok: false, reason: 'Shots out of order.' };
     if (tick > MAX_TICKS) return { ok: false, reason: 'Run too long.' };
 
-    while (sim.state.tick < tick && !sim.state.over) sim.step();
+    let charge = Number(s?.charge);
+    if (hasPress) {
+      if (!Number.isFinite(press) || press >= tick || press <= last) {
+        return { ok: false, reason: 'Malformed shot.' };
+      }
+      // The trigger can only go down once the last shot has landed, which
+      // is exactly what the game enforces.
+      stepTo(press);
+      if (sim.state.over) return { ok: false, reason: 'Shot fired after the run ended.' };
+      if (sim.state.projectile) return { ok: false, reason: 'Shot charged while another was in flight.' };
+      charge = chargeFor(tick - press);
+    } else if (!Number.isFinite(charge)) {
+      return { ok: false, reason: 'Malformed shot.' };
+    }
+
+    stepTo(tick);
     if (sim.state.over) return { ok: false, reason: 'Shot fired after the run ended.' };
+    const bornTick = sim.state.node.bornTick;
     if (!sim.fire(angle, charge)) return { ok: false, reason: 'Shot rejected by the simulation.' };
+    if (audit) {
+      open = {
+        tick,
+        hold: hasPress ? tick - press : null,
+        // How long the target had been where it is (and the range clear)
+        // when the shot left. A person needs a beat to see, aim and charge.
+        react: tick - Math.max(bornTick, resolvedAt),
+        full: charge >= 1,
+        pts: null,
+      };
+      log.push(open);
+    }
     last = tick;
   }
 
   // Let whatever is still in the air land, so the final shot counts.
   let guard = 0;
-  while (!sim.state.over && sim.state.projectile && guard++ < 4000) sim.step();
+  while (!sim.state.over && sim.state.projectile && guard++ < 4000) advance();
 
-  return { ok: true, ...sim.result() };
+  return audit ? { ok: true, ...sim.result(), audit: log } : { ok: true, ...sim.result() };
 }
