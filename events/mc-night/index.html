@@ -19,10 +19,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv2b5n7y">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=mv2b5n7y" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv2b5n7y">
-  <link href="/engineer2026/src/output.css?v=mv2b5n7y" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=mv2iv4co">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=mv2iv4co" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=mv2iv4co">
+  <link href="/engineer2026/src/output.css?v=mv2iv4co" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -35,7 +35,7 @@
   <!-- ==========================================================================
      Primary navigation — fixed top bar, transparent over the hero, resolves
      to a solid charcoal bar after ~80px of scroll (public/js/main.js).
-     Links out to the real routes: /events /schedule /team /sponsors /register
+     Links out to the real routes: /competitions /schedule /team /sponsors /register
      all exist and are served from index.js. "About" is the one in-page anchor.
      ========================================================================== -->
 <header id="site-nav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300" data-js="nav">
@@ -97,14 +97,14 @@
   
   
   <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
-    <a href="/engineer2026/events"
-       class="bay is-active"
+    <a href="/engineer2026/competitions"
+       class="bay"
        
-       aria-current="page">
+       >
       <span class="bay__slab" aria-hidden="true"></span>
       <span class="bay__row">
         <span class="bay__idx">03</span>
-        <span class="bay__label">Events</span>
+        <span class="bay__label">Competitions</span>
       </span>
     </a>
   </li>
@@ -112,9 +112,9 @@
   
   <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
     <a href="/engineer2026/schedule"
-       class="bay"
+       class="bay is-active"
        
-       >
+       aria-current="page">
       <span class="bay__slab" aria-hidden="true"></span>
       <span class="bay__row">
         <span class="bay__idx">04</span>
@@ -200,7 +200,7 @@
      ========================================================================== -->
 
 
-<script nonce="L1WLBdGDrXXgoUan+a1How==">
+<script nonce="b8yoj7RW7GZ9mX+kJIX/SA==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
@@ -347,14 +347,14 @@
   
   
   <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
-    <a href="/engineer2026/events"
-       class="bay is-active"
+    <a href="/engineer2026/competitions"
+       class="bay"
        data-js="drawer-link"
-       aria-current="page">
+       >
       <span class="bay__slab" aria-hidden="true"></span>
       <span class="bay__row">
         <span class="bay__idx">03</span>
-        <span class="bay__label">Events</span>
+        <span class="bay__label">Competitions</span>
       </span>
     </a>
   </li>
@@ -362,9 +362,9 @@
   
   <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
     <a href="/engineer2026/schedule"
-       class="bay"
+       class="bay is-active"
        data-js="drawer-link"
-       >
+       aria-current="page">
       <span class="bay__slab" aria-hidden="true"></span>
       <span class="bay__row">
         <span class="bay__idx">04</span>
@@ -416,8 +416,8 @@
          to ENGINEER itself, not to individual events. -->
     <header class="mb-14">
       <div class="rail">
-        <a href="/engineer2026/events" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
-          ← Event index
+        <a href="/engineer2026/schedule" class="font-mono text-[0.7rem] tracking-[0.14em] uppercase text-[var(--paper-dim)] hover:text-cyan transition-colors inline-flex items-center gap-2 mb-6">
+          ← Schedule
         </a>
 
         <!-- framed hero, in the homepage deck-card idiom -->
@@ -429,7 +429,7 @@
               <span class="deck-card__name">Show</span>
               <span class="deck-card__slab" aria-hidden="true"></span>
               <span class="deck-card__line" aria-hidden="true"></span>
-              <a class="deck-card__go" href="/engineer2026/events">Index &rarr;</a>
+              <a class="deck-card__go" href="/engineer2026/schedule">Schedule &rarr;</a>
             </div>
             <div class="hud-frame__body">
               <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
@@ -647,7 +647,7 @@
     <div>
       <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Navigate</p>
       <nav class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)]">
-        <a href="/engineer2026/events" class="tap-target footer-link">Events</a>
+        <a href="/engineer2026/competitions" class="tap-target footer-link">Competitions</a>
         <a href="/engineer2026/schedule" class="tap-target footer-link">Schedule</a>
         <a href="/engineer2026/team" class="tap-target footer-link">Team</a>
         
@@ -690,7 +690,7 @@
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=b3dc38f"></script>
-  <script type="module" src="/engineer2026/js/page.js?v=b3dc38f"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=5ff49db"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=5ff49db"></script>
 </body>
 </html>

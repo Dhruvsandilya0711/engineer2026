@@ -1,5 +1,5 @@
 // ==========================================================================
-// Progressive enhancement for /events.
+// Progressive enhancement for /competitions.
 //
 // The server already filters via query params, so search and category
 // filtering work fully with JavaScript disabled. This just makes it instant:
@@ -52,7 +52,7 @@ if (form) {
     if (q) params.set('q', search.value.trim());
     if (activeCat && activeCat !== 'All') params.set('category', activeCat);
     const qs = params.toString();
-    history.replaceState(null, '', qs ? `/engineer2026/events?${qs}` : '/engineer2026/events');
+    history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
   }
 
   search?.addEventListener('input', apply);
