@@ -345,16 +345,18 @@ function teamTree() {
   const wings = cols.map(id => ({ id, rows: ((t.wings || {})[id] || []).map(row => row.map(group)) }));
   // The base is one row on the same three columns as the wings.
   const base = cols.map(id => ({ id, groups: ((t.base || {})[id] || []).map(group) }));
-  const tree = { spine, wings, base };
+  // The foot is the closing row under everything, laid out like a tier.
+  const foot = (t.foot || []).map(group);
+  const tree = { spine, wings, base, foot };
   tree.rows = Math.max(0, ...wings.map(w => w.rows.length));
-  tree.total = [...spine.flat(), ...wings.flatMap(w => w.rows.flat()), ...base.flatMap(c => c.groups)]
+  tree.total = [...spine.flat(), ...wings.flatMap(w => w.rows.flat()), ...base.flatMap(c => c.groups), ...foot]
     .reduce((n, g) => n + g.people.length, 0);
   return tree;
 }
 {
   const names = new Set((teamData.members || []).map(m => m.name));
   const t = teamData.tree || {};
-  const placed = [...(t.spine || []).flat(), ...Object.values(t.wings || {}).flat(2), ...Object.values(t.base || {}).flat()]
+  const placed = [...(t.spine || []).flat(), ...Object.values(t.wings || {}).flat(2), ...Object.values(t.base || {}).flat(), ...(t.foot || [])]
     .flatMap(g => (g && g.people) || []);
   const unknown = placed.filter(n => !names.has(n));
   if (unknown.length) console.warn('  ! team tree names with no member:', unknown.join(', '));

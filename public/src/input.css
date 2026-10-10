@@ -7489,8 +7489,8 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
 /* ==========================================================================
    R20. TEAM TREE — the org chart as premium ID cards
    A spine from the Convenor, three wings whose rows line up across the
-   page, and a base row on the same three columns. It floats on the page's
-   own field with no panel behind it; thin gold lines (team-lines.js) flow
+   page, a base row on the same three columns and a closing row under it
+   all. It floats on the page's own field with no panel behind it; thin gold lines (team-lines.js) flow
    between the cards. Each person is a
    black-glass card with a metallic edge that turns over to their
    punchline: on hover with a mouse, on a tap (team.js) on a phone, on
@@ -7682,6 +7682,15 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
 }
 @media (prefers-reduced-motion: reduce) {
   .text-gradient-gold { animation: none; }
+}
+
+/* ---- foot: the closing row, laid out like a spine tier ------------------ */
+.tree__foot {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: var(--tgap);
+  margin-top: calc(var(--trow) * 1.6);
 }
 
 .tree-note {
@@ -8067,6 +8076,8 @@ html:has(.tcard:hover) .cx-glow {
   .tree__base { display: flex; flex-direction: column; align-items: center; margin-top: 0; }
   .tree__base .tree__cell:last-child { padding-bottom: 0; }
   .tree__tier { flex-wrap: wrap; row-gap: var(--trow); }
+  /* The closing row wraps in reading order: two, then one centred. */
+  .tree__foot { flex-wrap: wrap; row-gap: var(--trow); margin-top: var(--trow); }
 }
 /* Three posts in one spine row don't fit across a narrow tree: the middle
    one drops below, centred, so the two either side of it stay a pair. */
