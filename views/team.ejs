@@ -37,11 +37,6 @@
       %>
       <%- include('partials/_page-hero', { accent: 'var(--bay-5)', num: '04', nav: 'Team', kicker: 'Cognitrixx / the people', title: teamTitle, meta: teamMeta }) %>
 
-      <p class="text-[var(--paper-dim)] max-w-xl mt-6">
-        Cognitrixx is a network of intelligent minds — and the ones that built it are students
-        at NITK Surathkal who run ENGINEER every year.
-      </p>
-
       <% if (tree && totalMembers) { %>
         <!-- ============ THE TREE ============
              data/team.json → tree, drawn as the organising team sketched it:
@@ -71,8 +66,10 @@
           </ol>
 
           <div class="tree__wings">
-            <% for (let r = 0; r < tree.rows; r++) { tree.wings.forEach(function (wing, wi) { const row = wing.rows[r] || []; %>
-            <div class="tree__cell tree__cell--<%= wing.id %><%= row.length ? '' : ' is-empty' %>" style="--o: <%= wi * 10 + r %>">
+            <%# A row with nothing in the centre draws its two sides in. %>
+            <% const centre = tree.wings.find(function (w) { return w.id === 'centre'; }); %>
+            <% for (let r = 0; r < tree.rows; r++) { const inward = !((centre && centre.rows[r]) || []).length; tree.wings.forEach(function (wing, wi) { const row = wing.rows[r] || []; %>
+            <div class="tree__cell tree__cell--<%= wing.id %><%= row.length ? '' : ' is-empty' %><%= inward && wing.id !== 'centre' ? ' is-inward' : '' %>" style="--o: <%= wi * 10 + r %>">
               <% row.forEach(function (g) { %>
               <ul class="tree__group" aria-label="<%= g.post %>">
                 <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>
