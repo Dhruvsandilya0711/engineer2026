@@ -14,6 +14,7 @@
 //   [data-marquee]    kinetic bands whose speed follows scroll velocity
 //   [data-highlight]  a paragraph that lights word by word as it scrolls
 //   [data-spotlight]  a light that follows the pointer across a surface
+//   [data-tilt]       a card that leans toward the cursor in 3D
 //   [data-preview]    links that float their event photo beside the cursor
 //   scroll progress   the hairline under the header
 //   hero              pointer parallax + scroll-away on the homepage hero
@@ -22,7 +23,7 @@
 // reduced-motion state: nothing here can leave content hidden.
 // ==========================================================================
 
-import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=c7ba6b4';
+import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=e0be6c4';
 
 const root = document.documentElement;
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -247,6 +248,37 @@ function initSpotlights() {
   });
 }
 
+// -------------------------------------------------------- tilt
+/**
+ * [data-tilt] cards lean toward the cursor in 3D. Sets --rx / --ry (degrees)
+ * and --px / --py (0–100%, for a highlight that tracks the pointer) on the
+ * element; the stylesheet decides what to do with them. Fine pointers only.
+ */
+function initTilts() {
+  if (!FINE || REDUCED_MOTION) return;
+  document.querySelectorAll('[data-tilt]').forEach((el) => {
+    const max = Number(el.dataset.tilt) || 8;
+    let raf = 0;
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        el.style.setProperty('--ry', `${((x - 0.5) * 2 * max).toFixed(2)}deg`);
+        el.style.setProperty('--rx', `${((0.5 - y) * 2 * max).toFixed(2)}deg`);
+        el.style.setProperty('--px', `${(x * 100).toFixed(1)}%`);
+        el.style.setProperty('--py', `${(y * 100).toFixed(1)}%`);
+      });
+    }, { passive: true });
+    el.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(raf);
+      el.style.setProperty('--rx', '0deg');
+      el.style.setProperty('--ry', '0deg');
+    });
+  });
+}
+
 // -------------------------------------------------------- hover preview
 /**
  * One floating plate, shared by every [data-preview] link: the event's photo
@@ -432,6 +464,7 @@ initScrambles();
 initMarquees();
 initProgress();
 initSpotlights();
+initTilts();
 initPreviews();
 
 (async () => {
