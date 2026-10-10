@@ -71,7 +71,9 @@
           <ul class="crew-grid">
             <% g.members.forEach(function(m){ n++; %>
             <li class="crew-cell" data-reveal style="--ci: <%= n %>">
-            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-tilt="7" style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
+            <%# The punchline stays folded away until the card is hovered;
+                touch has no hover, so public/js/team.js opens it on a tap. %>
+            <article class="crew<%= m.name ? '' : ' crew--tba' %>" data-tilt="7" <% if (m.tagline) { %>tabindex="0" aria-expanded="false" <% } %>style="--spot: var(--bay-<%= ((n - 1) % 6) + 1 %>)">
               <div class="crew__in">
                 <div class="crew__photo">
                   <% if (m.image) { %>
@@ -87,10 +89,11 @@
                 </div>
                 <span class="crew__holo" aria-hidden="true"></span>
                 <span class="crew__idx" aria-hidden="true"><%= String(n).padStart(2, '0') %></span>
+                <% if (m.tagline) { %><span class="crew__hint" aria-hidden="true"></span><% } %>
                 <div class="crew__plate">
                   <p class="crew__name"><%= m.name || 'Coming soon' %></p>
                   <p class="crew__role"><%= m.role %></p>
-                  <% if (m.tagline) { %><p class="crew__line"><%= m.tagline %></p><% } %>
+                  <% if (m.tagline) { %><div class="crew__more"><div><p class="crew__line"><%= m.tagline %></p></div></div><% } %>
                   <% if (m.email || m.linkedin) { %>
                   <p class="crew__links">
                     <% if (m.email) { %><a href="mailto:<%= m.email %>" aria-label="Email <%= m.name %>">Email</a><% } %>
@@ -151,5 +154,6 @@
 
   <script type="module" src="/js/motion.js?v=<%= assetV %>"></script>
   <script type="module" src="/js/page.js?v=<%= assetV %>"></script>
+  <script type="module" src="/js/team.js?v=<%= assetV %>"></script>
 </body>
 </html>
