@@ -36,7 +36,7 @@
 // ==========================================================================
 
 import * as THREE from '/engineer2026/vendor/three/three.module.js';
-import { hasWebGL, tokenColor } from '/engineer2026/js/cognitrixx-3d.js?v=a6c965a';
+import { hasWebGL, tokenColor } from '/engineer2026/js/cognitrixx-3d.js?v=c7ba6b4';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
