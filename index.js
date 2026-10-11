@@ -128,6 +128,11 @@ const COMPETITION_CATEGORIES = ['Competition', 'Hackathon', 'Gaming', 'Quiz'];
 const competitions = allEvents.filter(e => COMPETITION_CATEGORIES.includes(e.category));
 const competitionCategories = COMPETITION_CATEGORIES.filter(c => competitions.some(e => e.category === c));
 const isCompetition = (e) => COMPETITION_CATEGORIES.includes(e.category);
+// What the Competitions page lists: every competition except one marked
+// `"competitionsPage": false`, which stays on the schedule, the register
+// directory and its own page.
+const listedCompetitions = competitions.filter(e => e.competitionsPage !== false);
+const listedCategories = COMPETITION_CATEGORIES.filter(c => listedCompetitions.some(e => e.category === c));
 
 // Gallery: stills from past ENGINEER aftermovies, supplied by the organising
 // team. See data/gallery.json for provenance and credits.
@@ -294,7 +299,7 @@ app.get('/competitions', (req, res) => {
   const category = (req.query.category || '').toString().trim();
 
   const needle = q.toLowerCase();
-  const results = competitions.filter(e => {
+  const results = listedCompetitions.filter(e => {
     const matchesQuery = !needle
       || e.name.toLowerCase().includes(needle)
       || e.category.toLowerCase().includes(needle)
@@ -305,8 +310,8 @@ app.get('/competitions', (req, res) => {
 
   res.render('competitions', {
     festDates: FEST_DATES,
-    competitions,
-    categories: competitionCategories,
+    competitions: listedCompetitions,
+    categories: listedCategories,
     results,
     query: q,
     activeCategory: category || 'All',
