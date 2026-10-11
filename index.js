@@ -94,7 +94,19 @@ function regHost(url) {
     return h;
   } catch { return null; }
 }
+// Several contests under one event (Gaming: one form per game) come as
+// `registrationLinks`, a list of { label, url }; each gets its own button.
+const regLinks = (e) => (Array.isArray(e.registrationLinks) ? e.registrationLinks : [])
+  .filter(l => l && l.url)
+  .map(l => ({ label: l.label, url: l.url, host: regHost(l.url) }));
+const hasRegistration = (e) => !!e.registrationUrl || regLinks(e).length > 0;
+
 const regState = (e) => {
+  const links = regLinks(e);
+  if (links.length) {
+    return { label: 'Registration open', tone: 'live', actionable: true,
+             external: true, links, url: null, host: links[0].host };
+  }
   if (e.registrationUrl) {
     return { label: 'Registration open', tone: 'live', actionable: true,
              external: true, url: e.registrationUrl, host: regHost(e.registrationUrl) };
@@ -499,8 +511,8 @@ app.get('/register', (req, res) => {
     && (category === 'All' || e.category === category);
 
   // Registration is for competitions only; shows, expos and talks need none.
-  const openAll = competitions.filter(e => e.registrationUrl);
-  const soonAll = competitions.filter(e => !e.registrationUrl);
+  const openAll = competitions.filter(hasRegistration);
+  const soonAll = competitions.filter(e => !hasRegistration(e));
   const open = status === 'soon' ? [] : openAll.filter(matches);
   const soon = status === 'open' ? [] : soonAll.filter(matches);
 
