@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=3bf9f54">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=3bf9f54" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=3bf9f54">
-  <link href="/engineer2026/src/output.css?v=3bf9f54" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=384d9b2">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=384d9b2" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=384d9b2">
+  <link href="/engineer2026/src/output.css?v=384d9b2" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -190,7 +190,7 @@
      ========================================================================== -->
 
 
-<script nonce="IJb8ga/QRR59i3COgku1SQ==">
+<script nonce="HdvMM45hQWUvH4QUrUgTYQ==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
@@ -495,304 +495,374 @@
         <span data-js="count-num">14</span> shown
       </p>
 
-      <!-- ============ THE INDEX ============
-           Deliberately not a card grid: a numbered technical index, with the
-           visual preview surfacing on hover (desktop) or inline (mobile).
-           Name, category and status are always in the DOM — hover only ever
-           adds the picture, never information. -->
-      <ol class="event-index" data-js="event-list">
+      <!-- ============ THE GRID ============
+           One image card per competition: its picture, name, organiser,
+           type and registration state, the whole card a link to its page.
+           Name, type and state are text on the card, never only in the
+           picture. events-filter.js filters the cards in place. -->
+      <ol class="comp-grid" data-js="event-list">
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="robowars" data-cat="Competition">
-          <a href="/engineer2026/events/robowars" class="event-row__link" data-preview="/engineer2026/images/robowars.png">
-            <span class="event-row__idx">01</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <img src="/engineer2026/images/robowars.png" alt="" loading="lazy" aria-hidden="true">
-              
+          <a href="/engineer2026/events/robowars" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/robowars.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">01</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                
+                <span class="comp-card__name">Robowars</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Robowars</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="chronoforge hackathon" data-cat="Hackathon">
-          <a href="/engineer2026/events/chronoforge-hackathon" class="event-row__link" data-preview="/engineer2026/images/hackathon.png">
-            <span class="event-row__idx">02</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <img src="/engineer2026/images/hackathon.png" alt="" loading="lazy" aria-hidden="true">
-              
+          <a href="/engineer2026/events/chronoforge-hackathon" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/chronoforge-hackathon.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">02</span>
+                <span class="comp-card__cat">Hackathon</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by IET</span>
+                <span class="comp-card__name">Chronoforge Hackathon</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Chronoforge Hackathon</span>
-
-            <span class="event-row__cat">Hackathon</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="wright flight" data-cat="Competition">
-          <a href="/engineer2026/events/wright-flight" class="event-row__link" data-preview="/engineer2026/images/wright_flight.png">
-            <span class="event-row__idx">03</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <img src="/engineer2026/images/wright_flight.png" alt="" loading="lazy" aria-hidden="true">
-              
+          <a href="/engineer2026/events/wright-flight" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/wright-flight.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">03</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by Aero NITK</span>
+                <span class="comp-card__name">Wright Flight</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Wright Flight</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="drone racing" data-cat="Competition">
-          <a href="/engineer2026/events/drone-race" class="event-row__link" data-preview="/engineer2026/images/drone_race.png">
-            <span class="event-row__idx">04</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <img src="/engineer2026/images/drone_race.png" alt="" loading="lazy" aria-hidden="true">
-              
+          <a href="/engineer2026/events/drone-race" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/drone-race.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">04</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by Aero NITK</span>
+                <span class="comp-card__name">Drone Racing</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Drone Racing</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="ie × tronix" data-cat="Hackathon">
-          <a href="/engineer2026/events/ie-x-tronix" class="event-row__link" data-preview="">
-            <span class="event-row__idx">05</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/ie-x-tronix" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/ie-x-tronix.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">05</span>
+                <span class="comp-card__cat">Hackathon</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by IE / Tronix</span>
+                <span class="comp-card__name">IE × Tronix</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--idle">Coming soon</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">IE × Tronix</span>
-
-            <span class="event-row__cat">Hackathon</span>
-
-            <span class="status-pill status-pill--idle">Coming soon</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="sim2real" data-cat="Competition">
-          <a href="/engineer2026/events/sim2real" class="event-row__link" data-preview="">
-            <span class="event-row__idx">06</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/sim2real" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/sim2real.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">06</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by RoboTech</span>
+                <span class="comp-card__name">SIM2REAL</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">SIM2REAL</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="ie capital event" data-cat="Competition">
-          <a href="/engineer2026/events/ie-capital" class="event-row__link" data-preview="">
-            <span class="event-row__idx">07</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/ie-capital" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/ie-capital.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">07</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by IE</span>
+                <span class="comp-card__name">IE Capital Event</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">IE Capital Event</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="avishkar" data-cat="Competition">
-          <a href="/engineer2026/events/avishkar" class="event-row__link" data-preview="">
-            <span class="event-row__idx">08</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/avishkar" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/avishkar.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">08</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by MBA</span>
+                <span class="comp-card__name">Avishkar</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Avishkar</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="rechersion" data-cat="Hackathon">
-          <a href="/engineer2026/events/rechersion" class="event-row__link" data-preview="">
-            <span class="event-row__idx">09</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/rechersion" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/rechersion.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">09</span>
+                <span class="comp-card__cat">Hackathon</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by ACM</span>
+                <span class="comp-card__name">recHERsion</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--idle">Coming soon</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">recHERsion</span>
-
-            <span class="event-row__cat">Hackathon</span>
-
-            <span class="status-pill status-pill--idle">Coming soon</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="verilog quest" data-cat="Competition">
-          <a href="/engineer2026/events/verilog-quest" class="event-row__link" data-preview="">
-            <span class="event-row__idx">10</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/verilog-quest" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/verilog-quest.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">10</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by ACM</span>
+                <span class="comp-card__name">Verilog Quest</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Verilog Quest</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="ie robotics competition" data-cat="Competition">
-          <a href="/engineer2026/events/ie-robotics" class="event-row__link" data-preview="">
-            <span class="event-row__idx">11</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/ie-robotics" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/ie-robotics.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">11</span>
+                <span class="comp-card__cat">Competition</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by IE</span>
+                <span class="comp-card__name">IE Robotics Competition</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--live">Registration open</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">IE Robotics Competition</span>
-
-            <span class="event-row__cat">Competition</span>
-
-            <span class="status-pill status-pill--live">Registration open</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="baja quiz" data-cat="Quiz">
-          <a href="/engineer2026/events/baja-quiz" class="event-row__link" data-preview="">
-            <span class="event-row__idx">12</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/baja-quiz" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/baja-quiz.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">12</span>
+                <span class="comp-card__cat">Quiz</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by Baja NITK</span>
+                <span class="comp-card__name">Baja Quiz</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--idle">Coming soon</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Baja Quiz</span>
-
-            <span class="event-row__cat">Quiz</span>
-
-            <span class="status-pill status-pill--idle">Coming soon</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="astroquiz" data-cat="Quiz">
-          <a href="/engineer2026/events/astroquiz" class="event-row__link" data-preview="">
-            <span class="event-row__idx">13</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/astroquiz" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/astroquiz.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">13</span>
+                <span class="comp-card__cat">Quiz</span>
+              </span>
+              <span class="comp-card__body">
+                <span class="comp-card__org">by AAC</span>
+                <span class="comp-card__name">AstroQuiz</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--idle">Coming soon</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">AstroQuiz</span>
-
-            <span class="event-row__cat">Quiz</span>
-
-            <span class="status-pill status-pill--idle">Coming soon</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="gaming events" data-cat="Gaming">
-          <a href="/engineer2026/events/gaming" class="event-row__link" data-preview="">
-            <span class="event-row__idx">14</span>
-
-            <span class="event-row__thumb md:hidden">
-              
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              
+          <a href="/engineer2026/events/gaming" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                
+                <img src="/engineer2026/images/competitions/gaming.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx">14</span>
+                <span class="comp-card__cat">Gaming</span>
+              </span>
+              <span class="comp-card__body">
+                
+                <span class="comp-card__name">Gaming Events</span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--idle">Coming soon</span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name">Gaming Events</span>
-
-            <span class="event-row__cat">Gaming</span>
-
-            <span class="status-pill status-pill--idle">Coming soon</span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         
@@ -896,8 +966,8 @@
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=3bf9f54"></script>
-  <script type="module" src="/engineer2026/js/page.js?v=3bf9f54"></script>
-  <script type="module" src="/engineer2026/js/events-filter.js?v=3bf9f54"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=384d9b2"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=384d9b2"></script>
+  <script type="module" src="/engineer2026/js/events-filter.js?v=384d9b2"></script>
 </body>
 </html>
