@@ -69,8 +69,8 @@
           <div class="tree__wings">
             <%# A row with nothing in the centre draws its two sides in. %>
             <% const centre = tree.wings.find(function (w) { return w.id === 'centre'; }); %>
-            <% for (let r = 0; r < tree.rows; r++) { const inward = !((centre && centre.rows[r]) || []).length; tree.wings.forEach(function (wing, wi) { const row = wing.rows[r] || []; %>
-            <div class="tree__cell tree__cell--<%= wing.id %><%= row.length ? '' : ' is-empty' %><%= inward && wing.id !== 'centre' ? ' is-inward' : '' %>" style="--o: <%= wi * 10 + r %>">
+            <% for (let r = 0; r < tree.rows; r++) { const inward = !((centre && centre.rows[r]) || []).length; tree.wings.forEach(function (wing) { const row = wing.rows[r] || []; %>
+            <div class="tree__cell tree__cell--<%= wing.id %><%= row.length ? '' : ' is-empty' %><%= inward && wing.id !== 'centre' ? ' is-inward' : '' %>">
               <% row.forEach(function (g) { %>
               <ul class="tree__group" aria-label="<%= g.post %>">
                 <% g.people.forEach(function (m) { %><%- include('partials/_tcard', { m, accent: gold, counter }) %><% }); %>

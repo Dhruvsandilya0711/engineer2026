@@ -1302,23 +1302,6 @@ html [data-reveal].is-visible {
   background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
   mix-blend-mode: overlay; opacity: 0.5;
 }
-.gflow__frame {
-  position: absolute; top: 8px; left: 9px;
-  font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(var(--rgb-cyan),0.9);
-  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
-}
-.gflow__cap {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 22px 12px 9px;
-  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--color-paper);
-  background: linear-gradient(to top, rgba(3,3,6,0.92), transparent);
-  opacity: 0; transition: opacity var(--dur-base) var(--ease-standard);
-}
-.gflow__link:hover .gflow__cap,
-.gflow__link:focus-visible .gflow__cap { opacity: 1; }
-@media (hover: none) { .gflow__cap { opacity: 0.9; } }
 
 /* --- copy that has to differ by input device ---------------------------
    "Hover a card" is an instruction a phone cannot follow. Done in CSS, not
@@ -8071,7 +8054,10 @@ html:has(.tcard:hover) .cx-glow {
   .tree > * { --tw: min(232px, calc((100cqw - var(--tgap)) / 2 - 1px)); }
   .tree__group { max-width: 100%; }
   .tree__wings { display: flex; flex-direction: column; align-items: center; row-gap: 0; margin-top: var(--trow); }
-  .tree__cell { order: var(--o); width: 100%; padding: 0 0 var(--trow); }
+  /* Row by row, as on a desktop: whoever sits higher there sits higher
+     here. (The markup is already in that order: each row's left, centre
+     and right cells, then the next row.) */
+  .tree__cell { width: 100%; padding: 0 0 var(--trow); }
   .tree__cell.is-empty { display: none; }
   .tree__base { display: flex; flex-direction: column; align-items: center; margin-top: 0; }
   .tree__base .tree__cell:last-child { padding-bottom: 0; }
