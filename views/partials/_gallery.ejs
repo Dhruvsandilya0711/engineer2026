@@ -34,8 +34,6 @@
            data-cat="<%= g.category %>" data-credit="<%= g.credit %>">
           <img src="<%= g.thumb %>" alt="<%= g.alt %>" width="640" height="<%= Math.round(640 * g.height / g.width) %>" loading="lazy" decoding="async" draggable="false">
           <span class="gflow__grain" aria-hidden="true"></span>
-          <span class="gflow__frame" aria-hidden="true"><%= String(i + 1).padStart(2, '0') %> · <%= g.category %></span>
-          <span class="gflow__cap" aria-hidden="true"><%= g.alt %></span>
         </a>
       </figure>
       <% }); %>
