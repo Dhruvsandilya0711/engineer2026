@@ -1,5 +1,5 @@
 {
-  "_note": "Day-wise schedule for ENGINEER '26, from the organising team's ETF 2026 Event Schedule (the three day sheets; Civil Saga is on the Master Schedule but not on the Day 1 sheet, so it is listed with its time to be confirmed). Times and venues are as the sheet gives them; anything it marks TBD is null here and renders as 'coming soon'. The /schedule page and each event page render whatever is here, so updating a time needs no code change.",
+  "_note": "Day-wise schedule for ENGINEER '26, from the organising team's ETF 2026 Event Schedule (the three day sheets). Times and venues are as the sheet gives them; anything it marks TBD is null here and renders as 'coming soon'. The /schedule page and each event page render whatever is here, so updating a time needs no code change.",
   "_slotShape": {
     "time": "string 'HH:MM' (24h), or null when the time is still to be confirmed",
     "endTime": "string 'HH:MM' or null",
@@ -135,13 +135,6 @@
           "event": "nitkpd",
           "title": "NITKPD",
           "venue": "LHC C"
-        },
-        {
-          "time": null,
-          "endTime": null,
-          "event": "civil-saga",
-          "title": "Civil Saga",
-          "venue": null
         },
         {
           "time": null,
