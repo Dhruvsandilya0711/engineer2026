@@ -29,15 +29,35 @@ export function initNav() {
   // phone) still needs navigation within reach.
   const deferred = header.hasAttribute('data-deferred');
   const heroEl = document.querySelector('#top');
+  const html = document.documentElement;
 
+  // The hero's height is measured when it changes size, not on every scroll
+  // event: reading offsetHeight mid-scroll forces a synchronous layout
+  // whenever a reveal has just dirtied the page, and that lands in the frame.
+  let heroEdge = 400;
+  if (heroEl) {
+    const measure = () => { heroEdge = heroEl.offsetHeight - 120; };
+    measure();
+    new ResizeObserver(measure).observe(heroEl);
+  }
+
+  // Classes are only written when they change, so a scroll event that
+  // crosses nothing touches nothing.
+  let past = null, solid = null;
   const onScroll = () => {
-    if (deferred) {
-      const past = window.scrollY > (heroEl ? heroEl.offsetHeight - 120 : 400);
-      header.classList.toggle('is-revealed', past);
+    const y = window.scrollY;
+    const p = y > heroEdge;
+    if (p !== past) {
+      past = p;
+      if (deferred) header.classList.toggle('is-revealed', p);
+      // Lets the stylesheet pause the hero's looping effects once the hero
+      // is off screen (html.past-hero).
+      if (heroEl) html.classList.toggle('past-hero', p);
     }
     // One class; the glass plate and its spectrum hairline live in CSS
     // (#site-nav.is-solid) rather than four utilities toggled from here.
-    header.classList.toggle('is-solid', window.scrollY > 80);
+    const s = y > 80;
+    if (s !== solid) { solid = s; header.classList.toggle('is-solid', s); }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -130,8 +150,12 @@ export function initScrollRail() {
   const word = rail.querySelector('[data-js="scroll-rail-word"]');
   let atEnd = false;
 
+  // The scrollable length is cached and refreshed when the document changes
+  // size, rather than read from scrollHeight on every scroll event.
+  let max = 0;
+  const measure = () => { max = document.documentElement.scrollHeight - window.innerHeight; };
+
   const update = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
     // "Nearly done" rather than "done": the flip has to happen while the
     // rail is still useful, not on the last pixel of travel.
     const next = max > 0 && window.scrollY > max - window.innerHeight * 0.75;
@@ -148,7 +172,9 @@ export function initScrollRail() {
     else scrollTo(Math.round(window.scrollY + window.innerHeight * 0.9), { offset: 0 });
   });
 
+  const remeasure = () => { measure(); update(); };
   window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update);
-  update();
+  window.addEventListener('resize', remeasure);
+  new ResizeObserver(remeasure).observe(document.body);
+  remeasure();
 }

@@ -13,7 +13,7 @@
 
 import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import {
-  initScroll, registerReveals, registerSeams, registerParallax,
+  initScroll, registerReveals, registerSeams, registerParallax, registerImageDrift,
   scrollState, REDUCED_MOTION,
   scrollTo, stopScroll, startScroll,
 } from '/js/scroll.js';
@@ -263,6 +263,7 @@ function initFanDeck() {
 
   registerReveals(ctx);
   registerParallax(ctx);
+  registerImageDrift(ctx);
   registerSeams(ctx);
   registerNarrative(ctx, subject);
   registerEventsRail();

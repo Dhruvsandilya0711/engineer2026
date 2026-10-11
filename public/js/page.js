@@ -3,7 +3,7 @@
 // no pinned narrative, no events rail, no hero WebGL scene.
 
 import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/js/site.js';
-import { initScroll, registerReveals, registerParallax, scrollState } from '/js/scroll.js';
+import { initScroll, registerReveals, registerParallax, registerImageDrift, scrollState } from '/js/scroll.js';
 import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import { initDots } from '/js/dots.js';
 import { initPageTransition } from '/js/page-transition.js';
@@ -23,6 +23,7 @@ import { initPageTransition } from '/js/page-transition.js';
 
   registerReveals(ctx);
   registerParallax(ctx);
+  registerImageDrift(ctx);
   initDots(ctx);
 
   ctx?.ScrollTrigger.refresh();
