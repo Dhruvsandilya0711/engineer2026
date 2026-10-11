@@ -69,6 +69,15 @@ export function initPreloader() {
     html.classList.add('hero-go');
   };
 
+  // Arrived through a page transition (a link or back/forward): the veil is
+  // already covering the page and the transition gate starts the hero as it
+  // lifts, so the boot sequence steps aside without touching either.
+  if (window.__engiPtArrival) {
+    el.classList.add('is-instant');
+    finish();
+    return Promise.resolve();
+  }
+
   if (seen || REDUCED_MOTION) {
     heroGo();
     el.classList.add('is-instant');

@@ -19,10 +19,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=3f4b266">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=3f4b266" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=3f4b266">
-  <link href="/engineer2026/src/output.css?v=3f4b266" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=80f296e">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=80f296e" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=80f296e">
+  <link href="/engineer2026/src/output.css?v=80f296e" rel="stylesheet">
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -202,7 +202,7 @@
      ========================================================================== -->
 
 
-<script nonce="WRlpixQ9Uq5invMiZpzv8g==">
+<script nonce="IZoWRDbIuooe+TTk0xg4sw==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
@@ -210,32 +210,53 @@
     root.classList.add('js');
     var KEY = 'engi26.pt', arriving = false;
     try {
-      arriving = sessionStorage.getItem(KEY) === '1';
-      if (arriving) sessionStorage.removeItem(KEY);
+      var at = Number(sessionStorage.getItem(KEY));
+      sessionStorage.removeItem(KEY);
+      arriving = at > 0 && Date.now() - at < 12000;
     } catch (e) {}
-    if (!arriving) { window.__ptRevealed = Promise.resolve(); return; }
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav && nav.type === 'back_forward') arriving = true;
+    } catch (e) {}
+    if (!arriving) {
+      window.__ptRevealStart = window.__ptRevealed = Promise.resolve();
+      return;
+    }
 
     root.classList.add('pt-arriving');
-    // Tells page-transition.js the arrival is already handled here.
+    // Tells page-transition.js and preloader.js the arrival is handled here.
     window.__engiPtArrival = true;
-    var revealed;
+    // Mid-session, the homepage's boot sequence never plays: it is the
+    // site's entrance, not a page change.
+    try { sessionStorage.setItem('engi26.loaded', '1'); } catch (e) {}
+    var started, revealed;
+    window.__ptRevealStart = new Promise(function (r) { started = r; });
     window.__ptRevealed = new Promise(function (r) { revealed = r; });
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     // The blades' flight plus the veil's fade (input.css), with a frame spare.
     var REVEAL_MS = reduced ? 180 : 620;
     var played = false;
+    function begin() {
+      root.classList.remove('pt-arriving');
+      // The homepage hero's entrance (see _entry.ejs) starts with the reveal.
+      if (!root.classList.contains('hero-go')) {
+        window.__heroGoAt = performance.now();
+        root.classList.add('hero-go');
+      }
+      started();
+    }
     function play() {
       if (played) return;
       played = true;
       var veil = doc.getElementById('page-transition');
-      if (!veil) { root.classList.remove('pt-arriving'); revealed(); return; }
+      if (!veil) { begin(); revealed(); return; }
       // Hand the held, assembled mark from the gate class to the veil itself
       // and start the flight in the same frame, from that same pose.
       veil.classList.add('is-active');
       requestAnimationFrame(function () {
-        root.classList.remove('pt-arriving');
         veil.classList.add('is-revealing');
+        begin();
         setTimeout(function () {
           veil.classList.remove('is-active', 'is-revealing');
           revealed();
@@ -252,7 +273,7 @@
   })();
 </script>
 
-<script type="speculationrules" nonce="WRlpixQ9Uq5invMiZpzv8g==">
+<script type="speculationrules" nonce="IZoWRDbIuooe+TTk0xg4sw==">
 {"prefetch": [{
   "source": "document",
   "where": { "and": [
@@ -727,7 +748,7 @@
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=3f4b266"></script>
-  <script type="module" src="/engineer2026/js/page.js?v=3f4b266"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=80f296e"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=80f296e"></script>
 </body>
 </html>

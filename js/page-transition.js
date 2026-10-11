@@ -8,7 +8,9 @@
 //             set a sessionStorage flag and hand over to the browser
 //   arriving  the inline gate in _transition.ejs has already put the veil up
 //             at first paint (so the new page never flashes in), the blades
-//             fly back out past the camera as the veil fades
+//             fly back out past the camera as the veil fades. Back/forward
+//             arrive the same way, from the gate or, out of the bfcache,
+//             from pageshow below
 //
 // What keeps it smooth:
 //   - the animation is transform and opacity only (input.css), so the
@@ -26,7 +28,7 @@
 // runs when there is no transition flag, so the two never overlap.
 // ==========================================================================
 
-import { stopScroll, startScroll } from '/engineer2026/js/scroll.js?v=3f4b266';
+import { stopScroll, startScroll } from '/engineer2026/js/scroll.js?v=80f296e';
 
 const FLAG = 'engi26.pt';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -34,6 +36,11 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 // The veil's fade plus the last blade's unwind (input.css), so the new
 // document is requested behind a fully covered screen.
 const COVER_MS = REDUCED_MOTION ? 160 : 470;
+// The blades' flight plus the veil's fade, as in the gate (_transition.ejs).
+const REVEAL_MS = REDUCED_MOTION ? 180 : 620;
+// If the browser is still on this page this long after being sent away (a
+// navigation that was stopped, or turned into a download), it is given back.
+const STRANDED_MS = 10000;
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -44,6 +51,16 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
  */
 export function pageRevealed() {
   return window.__ptRevealed || Promise.resolve();
+}
+
+/**
+ * Resolves the moment an arriving page's veil starts to lift (at once on a
+ * page that was not reached through a transition). Entrance animations wait
+ * for it, so on every page they play as the page appears, never early,
+ * behind the logo.
+ */
+export function revealStarted() {
+  return window.__ptRevealStart || Promise.resolve();
 }
 
 // A same-origin link to another page of this site, or null.
@@ -86,28 +103,22 @@ export function initPageTransition() {
   let leaving = false;
 
   // ---- arriving half -----------------------------------------------------
-  // Normally the inline gate in _transition.ejs has already played the reveal
-  // by now. This branch is the fallback for when that script did not run.
-  if (!window.__engiPtArrival) {
-    let arriving = false;
-    try {
-      arriving = sessionStorage.getItem(FLAG) === '1';
-      if (arriving) sessionStorage.removeItem(FLAG);
-    } catch { /* private mode: just skip the reveal */ }
-
-    if (arriving) {
-      veil.classList.add('is-active');
+  // The inline gate in _transition.ejs plays the reveal on a fresh load. A
+  // page restored from the back/forward cache never runs that gate, so it
+  // gets the same reveal here (see pageshow below), cut straight to the held
+  // logo so it opens like every other arrival.
+  function revealRestored() {
+    if (REDUCED_MOTION) return;
+    veil.style.transition = 'none';
+    root.classList.add('pt-arriving');
+    veil.getBoundingClientRect();           // take the held pose without easing into it
+    veil.style.transition = '';
+    veil.classList.add('is-active');
+    requestAnimationFrame(() => {
+      veil.classList.add('is-revealing');
       root.classList.remove('pt-arriving');
-      requestAnimationFrame(async () => {
-        veil.classList.add('is-revealing');
-        await wait(REDUCED_MOTION ? 180 : 620);
-        veil.classList.remove('is-active', 'is-revealing');
-      });
-    } else {
-      // No transition inbound — make sure the gate class can never strand the
-      // veil over the page (e.g. a restored bfcache entry).
-      root.classList.remove('pt-arriving');
-    }
+      setTimeout(() => veil.classList.remove('is-active', 'is-revealing'), REVEAL_MS);
+    });
   }
 
   // ---- fetching ahead ------------------------------------------------------
@@ -132,7 +143,10 @@ export function initPageTransition() {
   async function leaveTo(url) {
     if (leaving) return;
     leaving = true;
-    try { sessionStorage.setItem(FLAG, '1'); } catch { /* non-fatal */ }
+    // A timestamp, not a plain flag: the arriving page honours it for a few
+    // seconds only, so a navigation that never completes cannot make some
+    // later page open with a reveal out of nowhere.
+    try { sessionStorage.setItem(FLAG, String(Date.now())); } catch { /* non-fatal */ }
     if (!SPECULATES) prefetch(url);
     // Everything that animates underneath stops: the veil is about to hide
     // it, and the blades get the whole frame budget.
@@ -144,6 +158,22 @@ export function initPageTransition() {
     veil.classList.add('is-active', 'is-covering');
     await wait(COVER_MS);
     window.location.href = url.href;
+    // Still here long after? The navigation was stopped or became a
+    // download: give the page back rather than leave it under the logo.
+    setTimeout(() => {
+      if (document.visibilityState !== 'visible') return;
+      try { sessionStorage.removeItem(FLAG); } catch { /* non-fatal */ }
+      restore();
+    }, STRANDED_MS);
+  }
+
+  // Undo the leaving half: veil down, scrolling and the scenes running.
+  function restore() {
+    leaving = false;
+    veil.classList.remove('is-active', 'is-covering', 'is-revealing');
+    root.classList.remove('pt-arriving');
+    startScroll();
+    document.dispatchEvent(new CustomEvent('e26:resume'));
   }
 
   document.addEventListener('click', (e) => {
@@ -156,14 +186,12 @@ export function initPageTransition() {
     leaveTo(url);
   });
 
-  // Coming back via bfcache would otherwise restore the page with the veil
-  // still painted over it and everything underneath paused.
+  // Coming back via bfcache: the page would otherwise be restored with the
+  // veil still painted over it and everything underneath paused. It is
+  // brought back to life and opened with the reveal, like any arrival.
   window.addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
-    leaving = false;
-    veil.classList.remove('is-active', 'is-covering', 'is-revealing');
-    root.classList.remove('pt-arriving');
-    startScroll();
-    document.dispatchEvent(new CustomEvent('e26:resume'));
+    restore();
+    revealRestored();
   });
 }

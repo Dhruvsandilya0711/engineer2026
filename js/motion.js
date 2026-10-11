@@ -23,7 +23,7 @@
 // reduced-motion state: nothing here can leave content hidden.
 // ==========================================================================
 
-import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=3f4b266';
+import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=80f296e';
 
 const root = document.documentElement;
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -74,9 +74,16 @@ const arrivalIO = 'IntersectionObserver' in window
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 })
   : null;
 
+// An arriving page is under the transition veil until its reveal starts
+// (views/partials/_transition.ejs). Entrances wait for that moment, so a
+// headline rises as the page appears on every page, never early behind the
+// logo on one page and late on the next. At once on any other load.
+const revealStart = window.__ptRevealStart || Promise.resolve();
+
 function onArrive(el, fn) {
-  if (!arrivalIO) { fn(el); return; }
-  arrivals.set(el, fn);
+  const play = (t) => revealStart.then(() => fn(t));
+  if (!arrivalIO) { play(el); return; }
+  arrivals.set(el, play);
   arrivalIO.observe(el);
 }
 
