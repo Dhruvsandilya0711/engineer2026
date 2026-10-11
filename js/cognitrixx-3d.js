@@ -426,8 +426,16 @@ export function createNeuralField(host, opts = {}) {
     raf = requestAnimationFrame(loop);
   }
 
+  // Held while a page transition covers the screen (e26:leave, from
+  // page-transition.js): the veil hides this scene, so it stops drawing and
+  // leaves the GPU to the blades. A page restored from the back/forward
+  // cache sends e26:resume.
+  let held = false;
+  document.addEventListener('e26:leave', () => { held = true; stop(); });
+  document.addEventListener('e26:resume', () => { held = false; if (visible && !document.hidden) start(); });
+
   function start() {
-    if (running) return;
+    if (running || held) return;
     running = true;
     if (REDUCED_MOTION) { step(0); running = false; }
     else raf = requestAnimationFrame(loop);

@@ -36,7 +36,7 @@
 // ==========================================================================
 
 import * as THREE from '/engineer2026/vendor/three/three.module.js';
-import { hasWebGL, tokenColor } from '/engineer2026/js/cognitrixx-3d.js?v=e48b109';
+import { hasWebGL, tokenColor } from '/engineer2026/js/cognitrixx-3d.js?v=3f4b266';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -654,8 +654,16 @@ export function createNeuralHead(host, opts = {}) {
     frame(now);
     raf = requestAnimationFrame(loop);
   }
+  // Held while a page transition covers the screen (e26:leave, from
+  // page-transition.js): the veil hides this scene, so it stops drawing and
+  // leaves the GPU to the blades. A page restored from the back/forward
+  // cache sends e26:resume.
+  let held = false;
+  document.addEventListener('e26:leave', () => { held = true; stop(); });
+  document.addEventListener('e26:resume', () => { held = false; if (visible && !document.hidden) start(); });
+
   function start() {
-    if (running) return;
+    if (running || held) return;
     running = true;
     if (!started) started = performance.now();
     if (REDUCED_MOTION) { frame(performance.now()); running = false; }

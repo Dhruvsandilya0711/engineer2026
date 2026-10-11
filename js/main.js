@@ -11,21 +11,21 @@
 // _hero.ejs and re-importing that module here.
 // ==========================================================================
 
-import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=e48b109';
+import { mountFields, hasWebGL } from '/engineer2026/js/cognitrixx-3d.js?v=3f4b266';
 import {
   initScroll, registerReveals, registerSeams, registerParallax, registerImageDrift,
   scrollState, REDUCED_MOTION,
   scrollTo, stopScroll, startScroll,
-} from '/engineer2026/js/scroll.js?v=e48b109';
-import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=e48b109';
-import { initDots } from '/engineer2026/js/dots.js?v=e48b109';
-import { initGalleryFlow } from '/engineer2026/js/gallery-flow.js?v=e48b109';
-import { initGalleryLightbox } from '/engineer2026/js/gallery-lightbox.js?v=e48b109';
-import { initPreloader } from '/engineer2026/js/preloader.js?v=e48b109';
-import { initPageTransition } from '/engineer2026/js/page-transition.js?v=e48b109';
-import { mountNeuralMark } from '/engineer2026/js/neural-mark.js?v=e48b109';
-import { mountSignalGame } from '/engineer2026/js/signal-game.js?v=e48b109';
-import { mountLeaderboard } from '/engineer2026/js/leaderboard.js?v=e48b109';
+} from '/engineer2026/js/scroll.js?v=3f4b266';
+import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone, initScrollRail, initAudio } from '/engineer2026/js/site.js?v=3f4b266';
+import { initDots } from '/engineer2026/js/dots.js?v=3f4b266';
+import { initGalleryFlow } from '/engineer2026/js/gallery-flow.js?v=3f4b266';
+import { initGalleryLightbox } from '/engineer2026/js/gallery-lightbox.js?v=3f4b266';
+import { initPreloader } from '/engineer2026/js/preloader.js?v=3f4b266';
+import { initPageTransition, pageRevealed } from '/engineer2026/js/page-transition.js?v=3f4b266';
+import { mountNeuralMark } from '/engineer2026/js/neural-mark.js?v=3f4b266';
+import { mountSignalGame } from '/engineer2026/js/signal-game.js?v=3f4b266';
+import { mountLeaderboard } from '/engineer2026/js/leaderboard.js?v=3f4b266';
 
 // -- Cognitrixx narrative: pinned, scrubbed, six beats ----------------------
 function registerNarrative(ctx, subject) {
@@ -251,6 +251,21 @@ function initFanDeck() {
   initAudio(entryDone);
   const ctx = await initScroll();
 
+  registerReveals(ctx);
+  registerParallax(ctx);
+  registerImageDrift(ctx);
+  registerSeams(ctx);
+  registerEventsRail();
+  initFanDeck();
+  initGalleryLightbox();
+  initDots(ctx);
+
+  // The 3D and the other per-frame scenes start once an arriving page's
+  // transition veil has lifted (at once otherwise): compiling shaders and
+  // creating GL contexts while the blades fly is what made the reveal
+  // stutter. The fields fade in when they mount (input.css).
+  await pageRevealed();
+
   // Mount every declared 3D moment. Skipped wholesale without WebGL — the page
   // is still complete, just without the fields.
   if (hasWebGL()) mountFields({ scroll: scrollState });
@@ -260,17 +275,8 @@ function initFanDeck() {
   const subject = mountNeuralMark();
   mountSignalGame();
   mountLeaderboard();
-
-  registerReveals(ctx);
-  registerParallax(ctx);
-  registerImageDrift(ctx);
-  registerSeams(ctx);
   registerNarrative(ctx, subject);
-  registerEventsRail();
-  initFanDeck();
   initGalleryFlow();
-  initGalleryLightbox();
-  initDots(ctx);
 
   await entryDone;
   ctx?.ScrollTrigger.refresh();
