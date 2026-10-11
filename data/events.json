@@ -1,5 +1,5 @@
 {
-  "_note": "Single source of truth for events. The line-up is the organising team's ETF 2026 Event Schedule (Master Schedule + the three day sheets): every event on it is here and nothing that is not. `name`, `category` and `organisedBy` are as that sheet gives them (organisedBy only where it names a club). Dates, times and venues are NOT stored here: they live in data/schedule.json, where each slot points at an event by slug, so an event that runs on two days has two slots and no second copy of the facts. `description` is kept from the earlier site copy where the event carried over, a single factual line where the name says what the event is, and null otherwise; null renders as 'coming soon'. Prizes, rules, eligibility, team size and coordinators stay null until confirmed. `registration` only applies once REGISTRATION_OPEN=true. Registration is NOT taken on this site: `registrationUrl` is the organisers' own form (Unstop, Google Forms, a club site). An event with a URL reads 'Registration open' and its Register button goes straight there; an event with null reads 'Coming soon'. `competitionsPage: false` keeps an event off the Competitions page only; it stays on the schedule, the register directory and its own page.",
+  "_note": "Single source of truth for events. The line-up is the organising team's ETF 2026 Event Schedule (Master Schedule + the three day sheets): every event on it is here and nothing that is not. `name`, `category` and `organisedBy` are as that sheet gives them (organisedBy only where it names a club). Dates, times and venues are NOT stored here: they live in data/schedule.json, where each slot points at an event by slug, so an event that runs on two days has two slots and no second copy of the facts. `description` is kept from the earlier site copy where the event carried over, a single factual line where the name says what the event is, and null otherwise; null renders as 'coming soon'. Prizes, rules, eligibility, team size and coordinators stay null until confirmed. `registration` only applies once REGISTRATION_OPEN=true. Registration is NOT taken on this site: `registrationUrl` is the organisers' own form (Unstop, Google Forms, a club site). An event with a URL reads 'Registration open' and its Register button goes straight there; an event with null reads 'Coming soon'. An event that runs several contests, each on its own form (Gaming: one per game), gives `registrationLinks` instead, a list of { label, url }: it reads 'Registration open' and gets one Register button per entry. `competitionsPage: false` keeps an event off the Competitions page only; it stays on the schedule, the register directory and its own page.",
   "_registrationStates": [
     "not_open",
     "opening_soon",
@@ -99,7 +99,7 @@
       "image": "/images/competitions/ie-x-tronix.webp",
       "featured": false,
       "registration": "open",
-      "registrationUrl": null,
+      "registrationUrl": "https://forms.gle/2tmuWQ1EHM3Mcb1H9",
       "description": "A hardware hackathon run jointly by IE and Tronix.",
       "registrationDeadline": null,
       "prizes": null,
@@ -361,6 +361,13 @@
       "featured": false,
       "registration": "open",
       "registrationUrl": null,
+      "registrationLinks": [
+        { "label": "Valorant", "url": "https://docs.google.com/forms/d/e/1FAIpQLSdB9zg4vup-JgyzSQWaudvbbQipvhl5E8oeDT1m-c8no8QkIQ/viewform?usp=sharing&ouid=103209333129068817846" },
+        { "label": "EA FC", "url": "https://docs.google.com/forms/d/e/1FAIpQLSf6Pzo6pfJH-BK1wf-P44I-HHEzDXr0p-Jw3uejMsGfkMmxUQ/viewform?usp=sharing&ouid=103209333129068817846" },
+        { "label": "Clash Royale", "url": "https://docs.google.com/forms/d/e/1FAIpQLScrKIwDAa0INVE3Xw2J1Sxccc6I6EUoqzw4sGAU7-A0Tup7WQ/viewform?usp=dialog" },
+        { "label": "BGMI", "url": "https://docs.google.com/forms/d/e/1FAIpQLSdBT5sSOxCd2CjnF_rEb5RVFBEYRMFExQRsjnbRlhBJjRtl0w/viewform?usp=sharing&ouid=103209333129068817846" },
+        { "label": "Real Cricket", "url": "https://docs.google.com/forms/d/e/1FAIpQLSe0SX0XswbMChpctRNko90XqbYdpmal68Pf0rQTsxiUDe9PqA/viewform?usp=publish-editor" }
+      ],
       "description": "Competitive gaming on both main days of the fest.",
       "registrationDeadline": null,
       "prizes": null,

@@ -34,15 +34,23 @@
     document before the veil paints, so the arriving page is covered from the
     very first frame instead of flashing in and then being hidden.
 
-    It also PLAYS the reveal, and plays it as soon as the document has been
-    parsed (readyState "interactive"). It used to wait for DOMContentLoaded,
-    which also waits for every module script to download and run, three.js
-    included: the viewer sat on the held logo for all of that. Nothing here
-    needs those libraries.
+    An arrival is a click through the site (page-transition.js leaves a
+    timestamp, honoured for a few seconds only, so a navigation that never
+    happened cannot make some later page reveal out of nowhere) or the
+    browser's back/forward buttons. Every page you land on opens the same way.
 
-    window.__ptRevealed resolves once the veil is gone. The page's 3D scenes
-    wait for it (main.js, page.js), so compiling shaders never competes with
-    the reveal for the GPU; they fade in after it. %>
+    It also PLAYS the reveal, as soon as the document has been parsed
+    (readyState "interactive"); DOMContentLoaded would also wait for every
+    module script, three.js included.
+
+    Two promises let the page time itself to the veil:
+      window.__ptRevealStart  the blades start to fly: entrance animations
+                              (headlines, reveals, the homepage hero) wait for
+                              it, so they play as the page appears on every
+                              page, never early behind the logo
+      window.__ptRevealed     the veil is gone: the 3D scenes wait for it, so
+                              compiling shaders never competes with the reveal
+    Both are resolved at once on a load that is not an arrival. %>
 <script nonce="<%= nonce %>">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
@@ -51,32 +59,53 @@
     root.classList.add('js');
     var KEY = 'engi26.pt', arriving = false;
     try {
-      arriving = sessionStorage.getItem(KEY) === '1';
-      if (arriving) sessionStorage.removeItem(KEY);
+      var at = Number(sessionStorage.getItem(KEY));
+      sessionStorage.removeItem(KEY);
+      arriving = at > 0 && Date.now() - at < 12000;
     } catch (e) {}
-    if (!arriving) { window.__ptRevealed = Promise.resolve(); return; }
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav && nav.type === 'back_forward') arriving = true;
+    } catch (e) {}
+    if (!arriving) {
+      window.__ptRevealStart = window.__ptRevealed = Promise.resolve();
+      return;
+    }
 
     root.classList.add('pt-arriving');
-    // Tells page-transition.js the arrival is already handled here.
+    // Tells page-transition.js and preloader.js the arrival is handled here.
     window.__engiPtArrival = true;
-    var revealed;
+    // Mid-session, the homepage's boot sequence never plays: it is the
+    // site's entrance, not a page change.
+    try { sessionStorage.setItem('engi26.loaded', '1'); } catch (e) {}
+    var started, revealed;
+    window.__ptRevealStart = new Promise(function (r) { started = r; });
     window.__ptRevealed = new Promise(function (r) { revealed = r; });
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     // The blades' flight plus the veil's fade (input.css), with a frame spare.
     var REVEAL_MS = reduced ? 180 : 620;
     var played = false;
+    function begin() {
+      root.classList.remove('pt-arriving');
+      // The homepage hero's entrance (see _entry.ejs) starts with the reveal.
+      if (!root.classList.contains('hero-go')) {
+        window.__heroGoAt = performance.now();
+        root.classList.add('hero-go');
+      }
+      started();
+    }
     function play() {
       if (played) return;
       played = true;
       var veil = doc.getElementById('page-transition');
-      if (!veil) { root.classList.remove('pt-arriving'); revealed(); return; }
+      if (!veil) { begin(); revealed(); return; }
       // Hand the held, assembled mark from the gate class to the veil itself
       // and start the flight in the same frame, from that same pose.
       veil.classList.add('is-active');
       requestAnimationFrame(function () {
-        root.classList.remove('pt-arriving');
         veil.classList.add('is-revealing');
+        begin();
         setTimeout(function () {
           veil.classList.remove('is-active', 'is-revealing');
           revealed();

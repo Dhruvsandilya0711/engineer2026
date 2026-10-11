@@ -6389,6 +6389,10 @@ html.pl-locked .scroll-progress { opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
   html.js .page-hero { animation: page-hero-in 1.1s var(--ease-reveal) both; }
   html.js .page-hero__scan { animation: page-hero-scan 1.6s var(--ease-in-out-expo) 0.35s both; }
+  /* Held while an arriving page is under the transition veil, so the header
+     opens as the veil lifts on every page however long the page took. */
+  .pt-arriving .page-hero,
+  .pt-arriving .page-hero__scan { animation-play-state: paused; }
 }
 /* Six points at both ends, so the bevel itself wipes open left to right
    (polygons only interpolate point for point). */
@@ -7403,6 +7407,45 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   transition: background-position 0.6s var(--ease-standard), letter-spacing 0.4s ease;
 }
 .reg-card__go:hover { background-position: 100% 0; letter-spacing: 0.16em; }
+/* An event with one form per contest (Gaming): a button per game in the
+   card's foot, in the same gradient as the single Register bar. */
+.reg-card__games {
+  margin: auto -18px 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(var(--rgb-cyan), 0.35);
+}
+.reg-card__game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--color-void);
+  background: linear-gradient(100deg, rgb(var(--rgb-cyan)), rgb(var(--bay-3)) 60%, rgb(var(--bay-6)));
+  background-size: 160% 100%;
+  background-position: 0% 0;
+  transition: background-position 0.6s var(--ease-standard);
+}
+/* An odd one out spans the row, so the grid never ends on a hole. */
+.reg-card__game:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.reg-card__game:hover,
+.reg-card__game:focus-visible { background-position: 100% 0; }
+
+/* The same on the event page: one button per contest, stacked, the game's
+   name on the left and the action on the right. */
+.reg-links { display: grid; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.reg-links .btn { white-space: nowrap; }
+.reg-links__go { font-size: 0.68em; opacity: 0.75; letter-spacing: 0.1em; }
 .reg-card__host {
   font-family: var(--font-mono);
   font-weight: 700;

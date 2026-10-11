@@ -264,7 +264,24 @@
             <p class="font-mono text-[0.65rem] tracking-[0.16em] uppercase text-[var(--paper-faint)] mb-4">Registration</p>
             <p class="font-display font-medium text-lg mb-2"><%= st.label %></p>
 
-            <% if (st.external) { %>
+            <% if (st.links) { %>
+              <%# One form per contest (Gaming: one per game), one button each. %>
+              <p class="text-sm text-[var(--paper-dim)] mb-6">
+                Registration for <%= event.name %> is open and handled by the organisers on
+                <%= st.host %>. Each contest has its own form; the buttons open them in a new tab.
+              </p>
+              <ul class="reg-links">
+                <% st.links.forEach(function (l) { %>
+                <li>
+                  <a href="<%= l.url %>" target="_blank" rel="noopener noreferrer"
+                     class="btn btn-primary w-full justify-between" data-js="magnetic"
+                     aria-label="Register for <%= l.label %> on <%= l.host %> (opens in a new tab)">
+                    <span><%= l.label %></span><span class="reg-links__go">Register &#8599;</span>
+                  </a>
+                </li>
+                <% }); %>
+              </ul>
+            <% } else if (st.external) { %>
               <p class="text-sm text-[var(--paper-dim)] mb-6">
                 Registration for <%= event.name %> is open and handled by the organisers on
                 <%= st.host %>. The button opens their form in a new tab.

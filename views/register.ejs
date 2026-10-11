@@ -28,7 +28,8 @@
       own registration (Unstop, Google Forms, a club site); this page gets
       people to the right one. Open events come first as glass cards that
       link straight out; the rest follow, marked coming soon, and move up
-      on their own once data/events.json gives them a registrationUrl. %>
+      on their own once data/events.json gives them a registrationUrl (or, for
+      an event with one form per contest, registrationLinks). %>
   <main class="relative z-10 pt-28 pb-20">
     <div class="rail">
 
@@ -132,10 +133,19 @@
                   <span><%= s.day %> &middot; <%= s.when || 'Time soon' %><%= s.venue ? ' · ' + s.venue : '' %></span>
                   <% }); %>
                 </p>
+                <% if (e.st.links) { %>
+                <%# One form per contest (Gaming: one per game). %>
+                <div class="reg-card__games">
+                  <% e.st.links.forEach(function (l) { %>
+                  <a class="reg-card__game" href="<%= l.url %>" target="_blank" rel="noopener noreferrer"><%= l.label %> &#8599;</a>
+                  <% }); %>
+                </div>
+                <% } else { %>
                 <a class="reg-card__go" href="<%= e.st.url %>" target="_blank" rel="noopener noreferrer" data-js="magnetic">
                   <span>Register</span>
                   <span class="reg-card__host">on <%= e.st.host %> &#8599;</span>
                 </a>
+                <% } %>
               </div>
             </li>
             <% }); %>
