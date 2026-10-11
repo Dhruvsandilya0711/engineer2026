@@ -72,33 +72,38 @@
         <span data-js="count-num"><%= results.length %></span> shown
       </p>
 
-      <!-- ============ THE INDEX ============
-           Deliberately not a card grid: a numbered technical index, with the
-           visual preview surfacing on hover (desktop) or inline (mobile).
-           Name, category and status are always in the DOM — hover only ever
-           adds the picture, never information. -->
-      <ol class="event-index" data-js="event-list">
+      <!-- ============ THE GRID ============
+           One image card per competition: its picture, name, organiser,
+           type and registration state, the whole card a link to its page.
+           Name, type and state are text on the card, never only in the
+           picture. events-filter.js filters the cards in place. -->
+      <ol class="comp-grid" data-js="event-list">
         <% results.forEach(function(evt, i){ const st = regState(evt); %>
-        <li class="event-row" data-js="event-item"
+        <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="<%= evt.name.toLowerCase() %>" data-cat="<%= evt.category %>">
-          <a href="/events/<%= evt.slug %>" class="event-row__link" data-preview="<%= evt.image || '' %>">
-            <span class="event-row__idx"><%= String(i + 1).padStart(2, '0') %></span>
-
-            <span class="event-row__thumb md:hidden">
-              <% if (evt.image) { %>
-              <img src="<%= evt.image %>" alt="" loading="lazy" aria-hidden="true">
-              <% } else { %>
-              <span class="media-plate media-plate--sm" aria-hidden="true"></span>
-              <% } %>
+          <a href="/events/<%= evt.slug %>" class="comp-card">
+            <span class="comp-card__in">
+              <span class="comp-card__media" aria-hidden="true">
+                <% if (evt.image) { %>
+                <img src="<%= evt.image %>" alt="" loading="lazy" decoding="async" width="1536" height="1024">
+                <% } else { %>
+                <span class="media-plate"></span>
+                <% } %>
+              </span>
+              <span class="comp-card__shade" aria-hidden="true"></span>
+              <span class="comp-card__top">
+                <span class="comp-card__idx" data-js="event-idx"><%= String(i + 1).padStart(2, '0') %></span>
+                <span class="comp-card__cat"><%= evt.category %></span>
+              </span>
+              <span class="comp-card__body">
+                <% if (evt.organisedBy) { %><span class="comp-card__org">by <%= evt.organisedBy %></span><% } %>
+                <span class="comp-card__name"><%= evt.name %></span>
+                <span class="comp-card__foot">
+                  <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
+                  <span class="comp-card__go" aria-hidden="true">&rarr;</span>
+                </span>
+              </span>
             </span>
-
-            <span class="event-row__name"><%= evt.name %></span>
-
-            <span class="event-row__cat"><%= evt.category %></span>
-
-            <span class="status-pill status-pill--<%= st.tone %>"><%= st.label %></span>
-
-            <span class="event-row__go" aria-hidden="true">→</span>
           </a>
         </li>
         <% }); %>
