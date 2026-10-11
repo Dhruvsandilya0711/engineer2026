@@ -81,7 +81,7 @@
         <% results.forEach(function(evt, i){ const st = regState(evt); %>
         <li class="comp-cell" data-js="event-item" data-reveal="depth"
             data-name="<%= evt.name.toLowerCase() %>" data-cat="<%= evt.category %>">
-          <a href="/events/<%= evt.slug %>" class="comp-card" data-vt-slug="<%= evt.slug %>">
+          <a href="/events/<%= evt.slug %>" class="comp-card">
             <span class="comp-card__in">
               <span class="comp-card__media" aria-hidden="true" data-drift>
                 <% if (evt.image) { %>
