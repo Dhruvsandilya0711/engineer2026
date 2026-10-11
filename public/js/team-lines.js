@@ -32,6 +32,11 @@ function init(tree) {
 
   let links = [];          // { d, a, b, len, cards: Set<li>, base, glow, bead, shown }
   const grown = new WeakSet();   // destination cards whose line has fully grown
+  // Where the tree starts on the page, measured at each build, and the
+  // scroll position, taken from the scroll event. Asking the tree for its
+  // box inside the frame forced an early layout every frame of a scroll.
+  let treeTop = 0;
+  let y = window.scrollY;
 
   // ---- geometry: layout boxes relative to the tree --------------------------
   // offsetLeft/Top ignore transforms, so the reveal and hover motion of a
@@ -150,6 +155,8 @@ function init(tree) {
     };
     const port = (pt) => mk('circle', 'tl-port', gPort, { cx: pt.x.toFixed(1), cy: pt.y.toFixed(1), r: '2.2' });
 
+    y = window.scrollY;
+    treeTop = tree.getBoundingClientRect().top + y;
     links = plan();
     links.forEach((l, i) => {
       l.glow = mk('path', 'tl-glow', gGlow, { d: l.d });
@@ -182,10 +189,12 @@ function init(tree) {
 
   // ---- growth with the scroll ------------------------------------------------
   // A line grows as the viewport's lower part passes from its start to its
-  // end, and never shrinks back.
+  // end, and never shrinks back. Its bead only runs while the line is on
+  // screen: each running bead repaints its stretch of the SVG every frame,
+  // and the tree is several screens tall.
   function paint(now) {
     const vh = innerHeight;
-    const t = tree.getBoundingClientRect().top;
+    const t = treeTop - y;
     links.forEach((l) => {
       if (l.shown < 1) {
         const y0 = t + l.a.y;
@@ -198,7 +207,8 @@ function init(tree) {
       const off = (l.len * (1 - l.shown)).toFixed(1);
       l.base.style.strokeDashoffset = off;
       l.glow.style.strokeDashoffset = off;
-      if (l.beads) l.beads.forEach((p) => p.classList.toggle('is-live', l.shown >= 1));
+      const onScreen = t + l.b.y > -vh * 0.1 && t + l.a.y < vh * 1.1;
+      if (l.beads) l.beads.forEach((p) => p.classList.toggle('is-live', l.shown >= 1 && onScreen));
       if (l.pa) l.pa.classList.toggle('is-on', l.shown > 0);
       if (l.pb) l.pb.classList.toggle('is-on', l.shown >= 1);
     });
@@ -207,8 +217,9 @@ function init(tree) {
 
   let raf = 0;
   const onScroll = () => {
+    y = window.scrollY;
     if (raf) return;
-    raf = requestAnimationFrame(() => { raf = 0; if (links.some((l) => l.shown < 1)) paint(); });
+    raf = requestAnimationFrame(() => { raf = 0; paint(); });
   };
   if (!reduced) addEventListener('scroll', onScroll, { passive: true });
 

@@ -45,11 +45,18 @@ export function initScroll() {
 
     // Lenis: smooth on pointer devices, native on touch. Touch devices already
     // have momentum scrolling and hijacking it makes them feel broken.
+    //
+    // Inertia rather than a fixed-length tween: each frame the page closes a
+    // share of the distance to where the wheel has sent it (lerp, corrected
+    // for frame time inside Lenis). It answers the first wheel tick at once
+    // and coasts to a stop, the way a heavy, well-oiled page should feel; a
+    // 1.05s expo tween restarted on every tick instead read as floaty on a
+    // long flick and sluggish on a short one.
     try {
       const { default: Lenis } = await import('/vendor/lenis/lenis.mjs');
       lenis = new Lenis({
-        duration: 1.05,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        lerp: 0.085,
+        wheelMultiplier: 1,
         smoothWheel: true,
         syncTouch: false,     // never hijack touch momentum
         touchMultiplier: 1.6,
@@ -67,6 +74,19 @@ export function initScroll() {
     } catch {
       lenis = null; // native scrolling; ScrollTrigger still works
     }
+
+    // Anything that changes the page's height (a filter hiding cards, images
+    // or fonts arriving late) moves every trigger below it, and ScrollTrigger
+    // only re-measures on a window resize. Re-measure once the change settles.
+    let bodyH = document.body.scrollHeight;
+    let refreshT = 0;
+    new ResizeObserver(() => {
+      const h = document.body.scrollHeight;
+      if (Math.abs(h - bodyH) < 2) return;
+      bodyH = h;
+      clearTimeout(refreshT);
+      refreshT = setTimeout(() => ScrollTrigger.refresh(), 200);
+    }).observe(document.body);
 
     // Native fallback (Lenis unavailable): keep the spine telemetry alive so
     // the journey still tracks scroll, without a second smooth-scroll system.
@@ -207,6 +227,26 @@ export function registerParallax(ctx) {
       { yPercent: -strength / 2 },
       {
         yPercent: strength / 2, ease: 'none',
+        scrollTrigger: { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
+      });
+  });
+}
+
+/**
+ * Pictures drift inside their frames: [data-drift] marks a picture's box
+ * that is a little taller than its frame (input.css) and slides through it
+ * more slowly than the page scrolls, so the frame reads as a window. One
+ * scrubbed transform per picture, so it stays on the compositor.
+ */
+export function registerImageDrift(ctx) {
+  if (!ctx) return;
+  const { gsap } = ctx;
+
+  document.querySelectorAll('[data-drift]').forEach((el) => {
+    gsap.fromTo(el,
+      { yPercent: -5 },
+      {
+        yPercent: 5, ease: 'none',
         scrollTrigger: { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
       });
   });

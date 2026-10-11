@@ -319,7 +319,10 @@ export function createMarkField(host, img, opts = {}) {
   function resize() {
     const r = host.getBoundingClientRect();
     width = Math.max(1, r.width); height = Math.max(1, r.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2));
+    // 1.5 at most: a particle mark gains nothing visible from a retina
+    // screen's full 2x, and the extra 78% of pixels came out of the scroll's
+    // frame budget while this panel was on screen.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     // Fit on BOTH axes and take whichever distance is larger, so a tall narrow

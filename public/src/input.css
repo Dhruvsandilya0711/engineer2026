@@ -61,8 +61,11 @@
   --color-charcoal: #080c14;
   /* Card surfaces sit over the neural field, so they are translucent rather
      than flat panels — the field reads faintly through them and the cards stop
-     looking like holes punched in the page. */
-  --card-surface: rgba(8, 12, 20, 0.68);
+     looking like holes punched in the page.
+     No surface that scrolls with the page uses backdrop-filter: the field
+     behind it moves every frame, so a blur under every card meant re-blurring
+     every card every frame. Only the fixed chrome (nav, audio pill) keeps it. */
+  --card-surface: rgba(8, 12, 20, 0.8);
   --color-charcoal-2: #0d131d;
   --color-amber: #f0a343;         /* sodium vapour — the one warm note */
   --color-amber-dim: #b9762c;     /* was referenced by --gradient-cognitrixx
@@ -992,7 +995,6 @@ html [data-reveal].is-visible {
 .team-card__portrait {
   aspect-ratio: 3 / 4;
   background: var(--card-surface);
-  backdrop-filter: blur(7px);
   border: 1px solid var(--hairline);
   overflow: hidden;
   display: flex;
@@ -1121,7 +1123,6 @@ html [data-reveal].is-visible {
   color: inherit;
   border: 1px solid var(--hairline);
   background: var(--card-surface);
-  backdrop-filter: blur(7px);
   overflow: hidden;
   transition: border-color var(--dur-base) var(--ease-standard),
               transform var(--dur-base) var(--ease-emphasized);
@@ -1175,6 +1176,9 @@ html [data-reveal].is-visible {
    Lenis velocity in public/js/gallery-flow.js, depth by CSS 3D. Distinct in
    personality from the deliberate Events rail: this one never stops flowing.
    ================================================================== */
+/* Not inherited: gallery-flow.js writes it on the stage as the pointer
+   tilts the ring, and only the stage's own perspective-origin reads it. */
+@property --pox { syntax: "<number>"; inherits: false; initial-value: 0; }
 .gflow {
   --flow-in: 0;
   position: relative;
@@ -1226,12 +1230,11 @@ html [data-reveal].is-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(6, 8, 14, 0.68);
+  background: rgba(6, 8, 14, 0.82);
   border: 1px solid var(--hairline-strong);
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   color: var(--color-strong);
   cursor: pointer;
-  backdrop-filter: blur(6px);
   transition: color 160ms var(--ease-standard), border-color 160ms var(--ease-standard),
     background 160ms var(--ease-standard);
 }
@@ -1279,7 +1282,6 @@ html [data-reveal].is-visible {
    translucency as the other cards so the field carries behind them too. */
 .surface-card {
   background: var(--card-surface);
-  backdrop-filter: blur(7px);
 }
 
 .gflow__link {
@@ -1300,7 +1302,10 @@ html [data-reveal].is-visible {
 .gflow__grain {
   position: absolute; inset: 0; pointer-events: none;
   background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
-  mix-blend-mode: overlay; opacity: 0.5;
+  /* Plain blending at a lower opacity: the lines are near the threshold of
+     sight either way, and an overlay blend on 24 tiles of a ring that turns
+     every frame meant 24 isolated blend groups re-composited per frame. */
+  opacity: 0.35;
 }
 
 /* --- copy that has to differ by input device ---------------------------
@@ -1335,7 +1340,7 @@ html [data-reveal].is-visible {
   overflow: hidden;
 }
 .glb[open] { display: flex; align-items: center; justify-content: center; }
-.glb::backdrop { background: rgba(3, 4, 9, 0.9); backdrop-filter: blur(6px); }
+.glb::backdrop { background: rgba(3, 4, 9, 0.94); }
 html.cx-active .glb, html.cx-active .glb * { cursor: auto; }
 html.cx-active .glb button { cursor: pointer; }
 
@@ -1629,7 +1634,16 @@ html.cx-native .cx-ring { opacity: 0; }
    radius shrinks past that point the surface breaks into discrete dots and
    then disappears. Tile size grows slightly with progress so the dots also
    read as spreading apart, not just shrinking in place.
+
+   All three variables are registered as NOT inherited. dots.js writes
+   --dots on an element every frame while it dissolves; an ordinary custom
+   property inherits, so each write restyled every node inside the element
+   (a team card is dozens), and that was most of the team page's per-frame
+   style work. The mask is the element's own, so nothing below needs it.
    ================================================================== */
+@property --dots     { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --dot-r    { syntax: "<length>"; inherits: false; initial-value: 3.4px; }
+@property --dot-tile { syntax: "<length>"; inherits: false; initial-value: 6px; }
 .dots-target.is-dotting {
   /* radius: 3.4px (fully covering a 6px tile) down to 0 */
   --dot-r: calc((1 - var(--dots, 0)) * 3.4px);
@@ -1943,9 +1957,6 @@ html.cx-native .cx-ring { opacity: 0; }
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.015) 42%, transparent 72%),
     linear-gradient(180deg, rgba(12, 16, 30, 0.74) 0%, rgba(6, 8, 16, 0.8) 100%);
-  /* Standard property only — the build adds the -webkit- alias itself, and
-     hand-writing both makes the minifier drop the unprefixed one. */
-  backdrop-filter: blur(14px) saturate(1.35);
   transition: background 220ms var(--ease-standard);
 }
 /* Accent bloom rising off the floor of the cell. A segment cannot lift out of
@@ -2366,166 +2377,6 @@ html.cx-native .cx-ring { opacity: 0; }
 }
 
 
-/* ==================================================================
-   PAGE TRANSITION — the mark shattered into pinwheeling blades.
-
-   Leaving a page: the veil drops and the blades UNWIND out of a tight
-   spiral into the assembled logo. Arriving: they wind back up, scale
-   out and blow apart as the veil lifts on the new page.
-
-   This is only for navigation BETWEEN pages. The first-visit preloader
-   (#preloader / _entry.ejs) is untouched and still owns the boot
-   sequence — the two never run at the same time.
-   ================================================================== */
-.pt {
-  position: fixed;
-  inset: 0;
-  /* Above the nav (40) and an open deck card (130). */
-  z-index: 200;
-  display: grid;
-  place-items: center;
-  background: var(--color-void);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 320ms var(--ease-standard), visibility 0s linear 320ms;
-}
-/* Server-side gate: set by the inline script in _transition.ejs when this load
-   is the far side of a transition, so the veil is already up at first paint
-   and the new page never flashes in behind it. */
-.pt-arriving .pt,
-.pt.is-active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition-delay: 0s;
-}
-
-.pt__mark {
-  position: relative;
-  width: min(44vmin, 300px);
-  aspect-ratio: 1;
-  /* Perspective turns the blades' rotateX/Y and translateZ into real depth —
-     they swing toward and away from the viewer instead of sliding flat. */
-  perspective: 900px;
-  perspective-origin: 50% 46%;
-  transform-style: preserve-3d;
-}
-/* Every blade is the whole logo, clipped to its own wedge (clip-path comes
-   from the partial). `screen` drops the artwork's black field so only the
-   white line art shows against the veil. */
-.pt__blade {
-  position: absolute;
-  inset: 0;
-  background-image: url("/images/engineer26-mark.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform-origin: 50% 50%;
-  opacity: 0;
-  will-change: transform, opacity;
-  /* Each blade is wound a little further than the last, so they unfurl as a
-     spiral rather than all snapping open together. */
-  --spin: calc(160deg + (var(--i) * 16deg));
-  /* Blades left of centre swing in from one side, blades right of centre from
-     the other, so the fan opens in space rather than on a flat plane. */
-  --tilt-y: calc((var(--i) - 5.5) * 7deg);
-  --tilt-x: calc(38deg - (var(--i) * 1.5deg));
-  /* A cast shadow for separation, plus the accent bloom picking out each
-     blade's edge — the depth cue the flat version was missing. */
-  filter:
-    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.75))
-    drop-shadow(0 0 14px rgba(var(--rgb-cyan-lift), 0.3));
-}
-.pt__bloom {
-  position: absolute;
-  width: min(54vmin, 368px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  /* Icy cyan core into a magenta halo — no indigo/violet in the middle, which
-     is what made the bloom read as purple. */
-  background:
-    radial-gradient(
-      circle,
-      rgba(226, 253, 255, 0.46) 0%,
-      rgba(var(--rgb-cyan-lift), 0.28) 18%,
-      rgba(var(--rgb-cyan), 0.15) 34%,
-      transparent 58%),
-    radial-gradient(
-      circle,
-      rgba(var(--rgb-magenta), 0.21) 32%,
-      rgba(var(--rgb-magenta), 0.07) 52%,
-      transparent 74%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Arriving, before the module has booted: hold the mark ASSEMBLED from the
-   first painted frame. The outgoing page ends on the assembled logo, so
-   without this the new document paints a bare veil (blades default to
-   opacity 0) until the JS runs — the logo blinks out and back, which reads as
-   a pause in the middle of the transition. Held, the two halves join into one
-   continuous shot. */
-.pt-arriving .pt__blade { opacity: 1; transform: none; }
-.pt-arriving .pt__bloom { opacity: 0.5; }
-
-@keyframes pt-unwind {
-  0% {
-    transform: translateZ(-260px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) rotate(var(--spin)) scale(0.18);
-    opacity: 0;
-  }
-  45% { opacity: 1; }
-  70% {
-    /* Overshoots slightly past flat, so the blades settle into the plane
-       instead of arriving on it — that read is what sells the depth. */
-    transform: translateZ(34px) rotateX(-7deg) rotateY(calc(var(--tilt-y) * -0.16)) rotate(-5deg) scale(1.04);
-  }
-  100% {
-    transform: translateZ(0) rotateX(0deg) rotateY(0deg) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-}
-@keyframes pt-wind {
-  0% {
-    transform: translateZ(0) rotateX(0deg) rotateY(0deg) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  100% {
-    /* Flies past the camera on the way out rather than just fading. */
-    transform: translateZ(300px) rotateX(calc(var(--tilt-x) * -0.8)) rotateY(calc(var(--tilt-y) * -1)) rotate(calc(var(--spin) * -0.55)) scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes pt-bloom-in {
-  0%   { opacity: 0; transform: scale(0.4); }
-  60%  { opacity: 0.85; }
-  100% { opacity: 0.5; transform: scale(1); }
-}
-@keyframes pt-bloom-out {
-  0%   { opacity: 0.5; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.5); }
-}
-
-.pt.is-covering .pt__blade {
-  animation: pt-unwind 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--i) * 10ms);
-}
-.pt.is-covering .pt__bloom { animation: pt-bloom-in 480ms var(--ease-standard) both; }
-
-.pt.is-revealing .pt__blade {
-  animation: pt-wind 300ms cubic-bezier(0.55, 0, 0.85, 0.2) both;
-  animation-delay: calc(var(--i) * 8ms);
-}
-.pt.is-revealing .pt__bloom { animation: pt-bloom-out 380ms var(--ease-standard) both; }
-
-/* Reduced motion: keep the veil as a plain cut, no spinning parts. */
-@media (prefers-reduced-motion: reduce) {
-  .pt { transition: opacity 120ms linear; }
-  .pt__blade,
-  .pt__bloom { animation: none !important; }
-  .pt.is-covering .pt__blade { opacity: 1; transform: none; }
-}
-
 /* The header pane, once the page has scrolled. Glass rather than the flat
    charcoal slab it used to be: a translucent plate the field and the page move
    behind, lifted by a saturated blur, closed by a spectrum hairline instead of
@@ -2894,9 +2745,8 @@ a.act__n:hover { color: var(--color-cyan); }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--paper-dim);
-  background: color-mix(in oklab, var(--color-void) 72%, transparent);
+  background: color-mix(in oklab, var(--color-void) 84%, transparent);
   border: 1px solid var(--hairline-strong);
-  backdrop-filter: blur(6px);
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
@@ -2918,8 +2768,7 @@ a.act__n:hover { color: var(--color-cyan); }
   display: grid;
   place-items: center;
   padding: 1rem;
-  background: color-mix(in oklab, var(--color-void) 78%, transparent);
-  backdrop-filter: blur(4px);
+  background: color-mix(in oklab, var(--color-void) 86%, transparent);
 }
 .sg-start[hidden] { display: none; }
 .sg-start__box {
@@ -3497,17 +3346,15 @@ footer:hover .footer-crest { opacity: 0.8; }
 }
 @media (min-width: 768px) {
   .fancard__plate {
-    /* Frosted, not transparent. At 0.66 the card behind stayed legible
-       THROUGH this one, which is what made the fan confusing to read. Glass
-       is not "see-through" — it is blur plus an edge highlight, and it is
-       the blur that says glass. So the fill goes up until nothing behind is
-       readable, and the blur goes up to carry the material instead.
-       22px against ~14px type destroys legibility outright while still
-       letting the nebula's colour wash through as colour. */
+    /* Smoked, not transparent. At 0.66 the card behind stayed legible
+       THROUGH this one, which is what made the fan confusing to read. The
+       fill is near-opaque and the accent bloom plus the rim light carry the
+       material. No backdrop blur: over the live neural field it re-blurred
+       the whole card every frame, which is what made scrolling past the
+       deck stutter. */
     background:
       radial-gradient(120% 80% at 12% 0%, rgba(var(--accent), 0.17) 0%, transparent 58%),
-      linear-gradient(180deg, rgba(8, 10, 18, 0.88) 0%, rgba(4, 5, 10, 0.85) 55%, rgba(7, 8, 15, 0.88) 100%);
-    backdrop-filter: blur(22px) saturate(1.2);
+      linear-gradient(180deg, rgba(8, 10, 18, 0.93) 0%, rgba(4, 5, 10, 0.91) 55%, rgba(7, 8, 15, 0.93) 100%);
     /* The rim light. A 1px inset highlight along the top edge is the single
        cue that reads as a glass sheet catching light, and it costs nothing. */
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
@@ -3602,24 +3449,17 @@ footer:hover .footer-crest { opacity: 0.8; }
   overscroll-behavior: contain;
 }
 .fancard.is-open .fancard__plate {
-  /* Frosted glass. The base sat at 0.52 so the field could glow through — but
-       what came through was the PAGE: the heading above and the section below
-       read straight across the card's own text. The mobile rule further down
-       was already at 0.92 and was right; this now matches it. Every glass cue
-       sits ABOVE the base in the layer stack and is untouched — the specular
-       sheen, both accent blooms, the rim and the inner glow — so it is still a
-       lit sheet, just one you can read text on.
-       WAS: the (now lighter) scrim and the
-     colourful neural field blur THROUGH the panel, and a saturated backdrop
-     blur turns that into a lit, glassy sheet rather than a flat dark one. The
-     first gradient is a specular sheen along the top edge; the inset shadows
-     add a bright glass rim and an inner accent glow. */
+  /* A lit glass sheet you can read text on. The base is near-opaque: at 0.52
+     what came through was the PAGE, the heading above and the section below
+     reading straight across the card's own text. Every glass cue sits ABOVE
+     the base in the layer stack: the specular sheen along the top edge, both
+     accent blooms, the bright rim and the inner accent glow. No backdrop
+     blur: over the moving field it re-blurred this whole panel every frame. */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 8%, transparent 22%),
     radial-gradient(150% 105% at 10% -10%, rgba(var(--accent), 0.42) 0%, transparent 60%),
     radial-gradient(135% 100% at 95% 113%, rgba(var(--accent), 0.30) 0%, transparent 58%),
-    linear-gradient(180deg, rgba(24, 30, 52, 0.91) 0%, rgba(15, 19, 34, 0.88) 55%, rgba(21, 26, 46, 0.91) 100%);
-  backdrop-filter: blur(30px) saturate(1.7) brightness(1.18);
+    linear-gradient(180deg, rgba(24, 30, 52, 0.95) 0%, rgba(15, 19, 34, 0.93) 55%, rgba(21, 26, 46, 0.95) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 0 46px rgba(var(--accent), 0.14);
@@ -3640,11 +3480,11 @@ footer:hover .footer-crest { opacity: 0.8; }
   padding: 0;
   opacity: 0;
   pointer-events: none;
-  /* Lighter than a blackout: the colourful field stays partly visible (blurred)
-     behind the open card, so the glass has something alive to refract. Darker
-     at the edges keeps focus on the panel. */
-  background: radial-gradient(125% 125% at 50% 42%, rgba(4, 6, 16, 0.34) 0%, rgba(2, 3, 10, 0.66) 100%);
-  backdrop-filter: blur(4px) saturate(1.1);
+  /* Lighter than a blackout: the colourful field stays partly visible behind
+     the open card. Darker at the edges keeps focus on the panel. Not blurred:
+     a full-screen backdrop blur over the moving field cost a frame's budget
+     on its own while a card was open. */
+  background: radial-gradient(125% 125% at 50% 42%, rgba(4, 6, 16, 0.5) 0%, rgba(2, 3, 10, 0.78) 100%);
   transition: opacity 0.4s ease;
   cursor: pointer;
 }
@@ -3679,8 +3519,7 @@ footer:hover .footer-crest { opacity: 0.8; }
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
       radial-gradient(150% 105% at 10% -10%, rgba(var(--accent), 0.4) 0%, transparent 60%),
-      linear-gradient(180deg, rgba(16, 20, 36, 0.92) 0%, rgba(11, 14, 26, 0.9) 100%);
-    backdrop-filter: blur(14px) saturate(1.35) brightness(1.1);
+      linear-gradient(180deg, rgba(16, 20, 36, 0.95) 0%, rgba(11, 14, 26, 0.93) 100%);
   }
 }
 
@@ -3842,26 +3681,31 @@ footer:hover .footer-crest { opacity: 0.8; }
 }
 .scroll-rail__bead {
   position: absolute;
+  top: 0;
   left: -1px;
   width: 3px;
   height: 30%;
   background: currentColor;
+  /* Travels by transform, not `top`: an infinite `top` animation repainted
+     the rail (and kept the main thread producing frames) on every page. The
+     bead is 30% of the track, so -107% / 340% of its own height are the old
+     -32% / 102% of the track. */
   animation: rail-bead 2.2s var(--ease-standard) infinite;
 }
 @keyframes rail-bead {
-  0%   { top: -32%; opacity: 0; }
+  0%   { transform: translateY(-107%); opacity: 0; }
   22%  { opacity: 1; }
   78%  { opacity: 1; }
-  100% { top: 102%; opacity: 0; }
+  100% { transform: translateY(340%); opacity: 0; }
 }
 /* Near the end of the page the rail reverses and means "back to top". */
 .scroll-rail.is-end { color: var(--color-cyan); }
 .scroll-rail.is-end .scroll-rail__bead { animation-name: rail-bead-up; }
 @keyframes rail-bead-up {
-  0%   { top: 102%; opacity: 0; }
+  0%   { transform: translateY(340%); opacity: 0; }
   22%  { opacity: 1; }
   78%  { opacity: 1; }
-  100% { top: -32%; opacity: 0; }
+  100% { transform: translateY(-107%); opacity: 0; }
 }
 
 /* It is a scroll affordance, so it has nothing to say while the overlay
@@ -3916,9 +3760,10 @@ html.pl-locked .scroll-rail { opacity: 0; pointer-events: none; }
    the body carries the kicker, gradient title and meta line. */
 .page-hero__body { padding: clamp(20px, 4vw, 40px) clamp(18px, 4vw, 44px) clamp(24px, 4vw, 40px); }
 .page-hero__title { font-family: var(--font-display), system-ui, sans-serif; font-weight: 800; font-size: clamp(2.1rem, 6vw, 3.9rem); line-height: 0.96; }
-@media (min-width: 1024px) {
-  .hud-frame { filter: drop-shadow(0 22px 40px rgba(0, 0, 0, 0.5)); }
-}
+/* No drop-shadow on the frame: its own clip-path is applied after the
+   filter, so the shadow was cut away before it could show, while the filter
+   still re-rendered the whole frame (thousands of pixels tall on Schedule)
+   whenever anything inside it moved. */
 
 
 /* ==================================================================
@@ -4128,13 +3973,11 @@ html.pl-skip #preloader { display: none; }
 .btn-register--glass {
   color: var(--color-paper);
   /* Tinted glass, not clear: the cyan -> violet -> magenta wash sits over a
-     dark base that keeps the label legible, and stays translucent enough that
-     the logo artwork behind still reads through the button. */
+     dark base that keeps the label legible. */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 38%, transparent 72%),
     linear-gradient(100deg, rgba(var(--rgb-cyan), 0.34) 0%, rgba(var(--rgb-indigo), 0.3) 52%, rgba(var(--rgb-magenta), 0.34) 100%),
-    linear-gradient(180deg, rgba(16, 20, 36, 0.42) 0%, rgba(9, 12, 22, 0.36) 100%);
-  backdrop-filter: blur(16px) saturate(1.6);
+    linear-gradient(180deg, rgba(16, 20, 36, 0.8) 0%, rgba(9, 12, 22, 0.74) 100%);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -4250,12 +4093,6 @@ html.pl-skip #preloader { display: none; }
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-@keyframes audio-glow {
-  0%, 100% { box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-cyan) 22%, transparent),
-                          0 8px 28px -14px rgba(var(--rgb-cyan-lift), 0.75); }
-  50%      { box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-cyan) 40%, transparent),
-                          0 12px 34px -12px rgba(var(--rgb-cyan-lift), 1); }
-}
 
 .audio-toggle:hover,
 .audio-toggle:focus-visible {
@@ -4276,7 +4113,6 @@ html.pl-skip #preloader { display: none; }
 
 .audio-toggle.is-on {
   color: var(--color-cyan);
-  animation: audio-glow 3s var(--ease-standard) infinite;
 }
 .audio-toggle.is-on::before {
   opacity: 0.95;
@@ -4317,11 +4153,11 @@ html.pl-skip #preloader { display: none; }
   background: rgba(6, 8, 14, 0.72);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-cyan) 40%, transparent),
               0 8px 24px -12px rgba(var(--rgb-cyan-lift), 0.7);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.35s var(--ease-standard), transform 0.45s var(--ease-out);
+  transition: opacity 0.35s var(--ease-standard), transform 0.45s var(--ease-out),
+              visibility 0s linear 0.35s;
 }
 .audio-hint::before {
   content: "";
@@ -4330,20 +4166,30 @@ html.pl-skip #preloader { display: none; }
   border-radius: 50%;
   background: var(--color-cyan);
   box-shadow: 0 0 0 0 rgba(var(--rgb-cyan-lift), 0.6);
-  animation: audio-hint-ping 1.8s ease-out infinite;
 }
 @keyframes audio-hint-ping {
   0%   { box-shadow: 0 0 0 0 rgba(var(--rgb-cyan-lift), 0.6); }
   100% { box-shadow: 0 0 0 8px rgba(var(--rgb-cyan-lift), 0); }
 }
-.audio-dock.is-waiting .audio-hint { opacity: 1; transform: translate(0, 50%); }
+/* The blur and the ping only exist while the hint is showing. Hidden, it
+   is visibility:hidden and still: both used to run behind opacity 0 on
+   every page, and between them repainted the pill every frame. */
+.audio-dock.is-waiting .audio-hint {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 50%);
+  transition: opacity 0.35s var(--ease-standard), transform 0.45s var(--ease-out), visibility 0s;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.audio-dock.is-waiting .audio-hint::before { animation: audio-hint-ping 1.8s ease-out infinite; }
 /* The column opening on hover would sit on top of it. */
 .audio-dock.is-open .audio-hint,
 .audio-dock:hover .audio-hint { opacity: 0; }
 @media (max-width: 640px) { .audio-hint { bottom: 25px; } }
 @media (prefers-reduced-motion: reduce) {
   .audio-hint { transition: none; }
-  .audio-hint::before { animation: none; }
+  .audio-dock.is-waiting .audio-hint::before { animation: none; }
 }
 
 /* Preloader owns the screen — the audio pill would poke through the wipe. */
@@ -4492,10 +4338,9 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
   align-items: flex-end;
   gap: 2px;
   padding: 6px 12px 7px;
-  background: rgba(6, 8, 14, 0.72);
+  background: rgba(6, 8, 14, 0.84);
   border: 1px solid var(--hairline-strong);
   border-radius: 4px;
-  backdrop-filter: blur(6px);
   min-width: 64px;
 }
 .signal-range__stat-l {
@@ -5106,7 +4951,6 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
     linear-gradient(180deg,
       rgba(var(--rgb-ground-2), 0.92) 0%,
       rgba(var(--rgb-ground), 0.88) 100%);
-  backdrop-filter: blur(8px);
   box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.9),
               inset 0 1px 0 rgba(255, 255, 255, 0.06);
   z-index: 0;
@@ -5158,13 +5002,11 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
 }
 .gain.is-zero .gain__seg { background: rgba(var(--rgb-slate), 0.10); }
 
+/* Opacity only, so the breath runs on the compositor rather than
+   repainting the segment's colour and glow every frame. */
 @keyframes gain-breathe {
-  0%, 100% { background: rgba(var(--rgb-cyan), 0.85);
-             box-shadow: inset 0 0 0 1px rgba(var(--rgb-cyan-lift), 0.9),
-                         0 0 8px -1px rgba(var(--rgb-cyan), 0.55); }
-  50%      { background: rgba(var(--rgb-cyan-lift), 1);
-             box-shadow: inset 0 0 0 1px rgba(var(--rgb-cyan-lift), 1),
-                         0 0 16px 0 rgba(var(--rgb-cyan), 0.85); }
+  0%, 100% { opacity: 0.72; }
+  50%      { opacity: 1; }
 }
 
 /* Dragging tightens the whole column — the instrument responding to a hand
@@ -5321,6 +5163,9 @@ body:has(#preloader) .audio-dock { opacity: 0; pointer-events: none; }
   transform-origin: 0 50%;
   transform: scaleX(var(--p, 0));
   box-shadow: 0 0 12px rgba(var(--rgb-cyan), 0.6);
+  /* Its own layer: the scale changes on every scroll frame, and unpromoted
+     that repainted the page's root layer each time. */
+  will-change: transform;
 }
 html.pl-locked .scroll-progress { opacity: 0; }
 
@@ -5366,10 +5211,12 @@ html.pl-locked .scroll-progress { opacity: 0; }
   opacity: 0;
   background: radial-gradient(
     420px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(var(--spot, var(--rgb-cyan-lift)), 0.08),
+    rgba(var(--spot, var(--rgb-cyan-lift)), 0.09),
     transparent 62%);
   transition: opacity 0.4s var(--ease-standard);
-  mix-blend-mode: screen;
+  /* Plain blending: a light this faint over a dark plate looks the same as
+     `screen`, and a blend mode on a panel-sized layer made the browser
+     isolate and re-blend the whole panel behind it. */
 }
 [data-spotlight].is-lit::after { opacity: 1; }
 
@@ -5409,9 +5256,11 @@ html.pl-locked .scroll-progress { opacity: 0; }
 /* ---- word-by-word highlight -------------------------------------------- */
 .is-highlighting .hw { transition: none; }
 
-/* ---- living gradient ----------------------------------------------------
-   The gradient lines drift slowly through their own fill, so the brand
-   gradient reads as light moving through glass rather than a flat print. */
+/* ---- brand gradient -----------------------------------------------------
+   Held still. It used to drift through its own fill on an infinite
+   background-position animation, and that repainted every headline carrying
+   it (and this one, the gold title and the Signal Range word) on every frame,
+   on screen or not: the page could never go idle while it was there. */
 .text-gradient-impossible {
   background-image: linear-gradient(90deg,
     var(--color-cyan) 0%,
@@ -5420,14 +5269,7 @@ html.pl-locked .scroll-progress { opacity: 0; }
     var(--color-indigo) 70%,
     var(--color-cyan) 100%);
   background-size: 200% 100%;
-  animation: grad-drift 9s ease-in-out infinite alternate;
-}
-@keyframes grad-drift {
-  from { background-position: 0% 50%; }
-  to   { background-position: 100% 50%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .text-gradient-impossible { animation: none; }
+  background-position: 30% 50%;
 }
 
 /* ---- film grain ----------------------------------------------------------
@@ -5715,12 +5557,14 @@ html.pl-locked .scroll-progress { opacity: 0; }
   inset: 0;
   z-index: -1;
   background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
-  background-size: 250% 100%;
+  transform: translateX(-110%);
   animation: cta-sheen 4.5s var(--ease-in-out-expo) infinite;
 }
+/* Moved by transform rather than background-position, so the sweep runs on
+   the compositor instead of repainting the button each frame. */
 @keyframes cta-sheen {
-  0%, 55% { background-position: 130% 0; }
-  100%    { background-position: -30% 0; }
+  0%, 55% { transform: translateX(-110%); }
+  100%    { transform: translateX(110%); }
 }
 .cta-explore--lead:hover,
 .cta-explore--lead:focus-visible {
@@ -5737,10 +5581,9 @@ html.pl-locked .scroll-progress { opacity: 0; }
   gap: 6px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 45%, transparent),
-    rgba(var(--rgb-ground-2), 0.3);
+    rgba(var(--rgb-ground-2), 0.66);
   box-shadow: inset 0 0 0 1px rgba(var(--rgb-slate), 0.12);
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  backdrop-filter: blur(10px);
   overflow: hidden;
 }
 /* A lit tick along each cell's floor, in the cell's place on the spectrum. */
@@ -5773,8 +5616,7 @@ html.pl-locked .scroll-progress { opacity: 0; }
   z-index: 10;
   padding-block: clamp(10px, 1.6vh, 14px);
   border-top: 1px solid rgba(var(--rgb-slate), 0.12);
-  background: linear-gradient(180deg, rgba(var(--rgb-ground), 0.2), rgba(var(--rgb-ground), 0.75));
-  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, rgba(var(--rgb-ground), 0.45), rgba(var(--rgb-ground), 0.85));
 }
 .hero-ticker .mq__item {
   padding-inline: clamp(16px, 2.6vw, 30px);
@@ -5799,8 +5641,7 @@ html.pl-locked .scroll-progress { opacity: 0; }
   clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
   border: 0;
   box-shadow: inset 0 0 0 1px rgba(var(--rgb-cyan), 0.35);
-  background: rgba(var(--rgb-ground-2), 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(var(--rgb-ground-2), 0.82);
 }
 .hud-menu__bars { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
 .hud-menu__bars span {
@@ -6194,7 +6035,7 @@ html.pl-locked .scroll-progress { opacity: 0; }
   -webkit-background-clip: text;
           background-clip: text;
   color: transparent;
-  animation: grad-drift 8s ease-in-out infinite alternate;
+  background-position: 30% 50%;
 }
 .signal-range__lede { color: var(--color-muted); font-size: clamp(0.9rem, 1.05vw, 1.02rem); }
 .gflow { padding-top: clamp(3.5rem, 9vh, 6.5rem); }
@@ -6325,8 +6166,7 @@ html.pl-locked .scroll-progress { opacity: 0; }
   background:
     radial-gradient(110% 80% at 8% 0%, rgba(var(--accent), 0.16) 0%, transparent 55%),
     radial-gradient(80% 60% at 100% 100%, rgba(var(--accent), 0.08) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(10, 13, 22, 0.92) 0%, rgba(5, 7, 13, 0.9) 60%, rgba(8, 10, 18, 0.92) 100%);
-  backdrop-filter: blur(14px);
+    linear-gradient(180deg, rgba(10, 13, 22, 0.94) 0%, rgba(5, 7, 13, 0.92) 60%, rgba(8, 10, 18, 0.94) 100%);
 }
 .page-hero__scan {
   position: absolute;
@@ -6457,6 +6297,8 @@ html.pl-locked .scroll-progress { opacity: 0; }
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
 }
 .detail-figure img { transition: transform 1.2s var(--ease-reveal), clip-path 1.2s var(--ease-reveal); }
+/* Landed by a page-transition flight: already in place, no wipe. */
+.detail-figure.is-instant img { transition: transform 1.2s var(--ease-reveal); }
 .detail-figure:hover img { transform: scale(1.04); }
 @media (prefers-reduced-motion: no-preference) {
   html.js [data-img-reveal]:not(.is-in) img,
@@ -6725,13 +6567,15 @@ select.form-input {
   .audio-toggle:hover svg { transform: none; }
 }
 /* On = the intent; glowing = sound is actually coming out. Until the browser
-   lets it play (first tap), the pill shows on, without the pulse. */
-.audio-toggle.is-on { animation: none; }
-.audio-toggle.is-on.is-live { animation: audio-glow 3s var(--ease-standard) infinite; }
-.audio-toggle.is-on:not(.is-live) { color: rgba(var(--rgb-cyan), 0.7); }
-@media (prefers-reduced-motion: reduce) {
-  .audio-toggle.is-on.is-live { animation: none; }
+   lets it play (first tap), the pill shows on, without the glow. The glow is
+   held steady: it used to pulse its box-shadow, which repainted the pill on
+   every frame for as long as the music played, on every page. The spinning
+   scan ring (::before, a transform) already says it is live. */
+.audio-toggle.is-on.is-live {
+  box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--color-cyan) 32%, transparent),
+              0 10px 30px -13px rgba(var(--rgb-cyan-lift), 0.9);
 }
+.audio-toggle.is-on:not(.is-live) { color: rgba(var(--rgb-cyan), 0.7); }
 
 /* ==========================================================================
    R16. FINALE LOGO — light, not a slab
@@ -7099,9 +6943,9 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
   z-index: 3;
   padding: 11px 12px 12px;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  backdrop-filter: blur(14px) saturate(160%);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)),
+    linear-gradient(160deg, rgba(14, 18, 30, 0.8), rgba(8, 10, 18, 0.7));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   transform: translateZ(40px);
   transition: box-shadow 0.4s ease, background 0.4s ease;
@@ -7201,10 +7045,8 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
   gap: 4px;
   padding: 3px 7px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)), rgba(8, 10, 18, 0.72);
   box-shadow: inset 0 0 0 1px rgba(var(--spot), 0.5);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
   font-family: var(--font-mono);
   font-size: 0.5rem;
   letter-spacing: 0.14em;
@@ -7218,8 +7060,8 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
   .crew__hint { animation: crew-hint 2.6s ease-in-out infinite; }
 }
 @keyframes crew-hint {
-  0%, 100% { box-shadow: inset 0 0 0 1px rgba(var(--spot), 0.5), 0 0 0 0 rgba(var(--spot), 0.45); }
-  50%      { box-shadow: inset 0 0 0 1px rgba(var(--spot), 0.8), 0 0 0 6px rgba(var(--spot), 0); }
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
 }
 .crew.is-open .crew__hint,
 .crew:focus-visible .crew__hint { opacity: 0; transform: scale(0.8); }
@@ -7255,18 +7097,27 @@ html .crew-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 
    Events not open yet sit below as quiet chips.
    ========================================================================== */
 .reg-live {
+  position: relative;
   display: inline-block;
   width: 8px; height: 8px;
   margin-left: 0.5rem;
   vertical-align: middle;
   border-radius: 50%;
   background: var(--color-success);
-  box-shadow: 0 0 0 0 rgba(var(--rgb-cyan), 0.6);
+}
+/* The ping is a ring that scales and fades (compositor work) rather than a
+   growing box-shadow, which repainted every live dot on every frame. */
+.reg-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(var(--rgb-cyan), 0.55);
   animation: reg-pulse 2s ease-out infinite;
 }
 @keyframes reg-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(var(--rgb-cyan), 0.55); }
-  100% { box-shadow: 0 0 0 12px rgba(var(--rgb-cyan), 0); }
+  0%   { transform: scale(1); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
 }
 .reg-grid {
   display: grid;
@@ -7286,9 +7137,8 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
   background:
     radial-gradient(120% 70% at 0% 0%, rgba(var(--spot), 0.18), transparent 60%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.05));
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  backdrop-filter: blur(16px) saturate(140%);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.05)),
+    linear-gradient(180deg, rgba(10, 13, 22, 0.86), rgba(6, 8, 14, 0.82));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
   transition: transform 0.5s var(--ease-reveal), box-shadow 0.4s ease;
 }
@@ -7371,7 +7221,7 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
 .reg-soon__chip:hover { border-color: var(--color-cyan); color: var(--color-cyan); background: rgba(var(--rgb-cyan), 0.06); }
 .reg-soon__cat { color: var(--paper-faint); }
 @media (prefers-reduced-motion: reduce) {
-  .reg-live { animation: none; }
+  .reg-live::after { animation: none; opacity: 0; }
   .reg-card { transition: none; }
   .reg-card:hover { transform: none; }
 }
@@ -7653,7 +7503,7 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
     radial-gradient(70% 80% at 100% 100%, rgba(var(--accent), 0.08) 0%, transparent 62%),
     linear-gradient(180deg, rgba(12, 14, 22, 0.94) 0%, rgba(7, 8, 13, 0.92) 60%, rgba(9, 10, 16, 0.94) 100%);
 }
-/* The title's gradient word, as a living blend of light and deep gold. */
+/* The title's gradient word, a blend of light and deep gold. */
 .text-gradient-gold {
   background-image: linear-gradient(90deg,
     #fff0cc 0%, #f2c068 26%, #d6993a 50%, #f2c068 74%, #fff0cc 100%);
@@ -7661,10 +7511,7 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: grad-drift 9s ease-in-out infinite alternate;
-}
-@media (prefers-reduced-motion: reduce) {
-  .text-gradient-gold { animation: none; }
+  background-position: 30% 50%;
 }
 
 /* ---- foot: the closing row, laid out like a spine tier ------------------ */
@@ -7954,6 +7801,10 @@ html .reg-cell[data-reveal].is-visible { transition-delay: calc(min(var(--ci), 1
   0%, 76% { transform: translateX(-110%); }
   100%    { transform: translateX(210%); }
 }
+/* Off screen, a card's loops stop (public/js/team.js marks the ones near
+   the viewport). Without script every card keeps them. */
+html.js .tcard-cell:not(.is-near) .tcard__orbit,
+html.js .tcard-cell:not(.is-near) .tcard__shine { animation: none; }
 /* The glare sits where the pointer is (motion.js sets --px / --py). The
    back face is mirrored, so its x runs the other way. */
 .tcard__glare {
@@ -8157,10 +8008,8 @@ html:has(.tcard:hover) .cx-glow {
 .comp-card__cat {
   padding: 4px 8px;
   color: var(--color-paper);
-  background: rgba(4, 5, 10, 0.55);
+  background: rgba(4, 5, 10, 0.72);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 .comp-card__body {
   position: absolute;
@@ -8213,3 +8062,149 @@ html:has(.tcard:hover) .cx-glow {
 @media (prefers-reduced-motion: reduce) {
   .comp-card, .comp-card__media img { transition: none; }
 }
+
+
+/* ==========================================================================
+   R22. SMOOTHNESS — page transitions, and what keeps scrolling light
+   ========================================================================== */
+
+/* ---- page transitions -----------------------------------------------------
+   Native cross-document view transitions: the browser holds the old page
+   until the new one can paint, then the new page rises over it as a sheet
+   with rounded shoulders while the old one sinks back and dims. History
+   back runs it the other way: the page you leave drops away and the one you
+   return to comes forward. No veil, no timer: the swap begins the moment
+   the next page is ready. Browsers without support just navigate.
+   (views/partials/_transition.ejs, public/js/page-transition.js) */
+@view-transition { navigation: auto; }
+
+:root {
+  --vt-dur: 0.82s;
+  --vt-ease: cubic-bezier(0.76, 0, 0.18, 1);
+}
+
+/* The fixed chrome is lifted out of the page, so it holds still while the
+   page changes underneath it, the way it would inside a single app. */
+#site-nav        { view-transition-name: site-nav; }
+.audio-dock      { view-transition-name: audio-dock; }
+.scroll-rail     { view-transition-name: scroll-rail; }
+.scroll-progress { view-transition-name: scroll-progress; }
+
+::view-transition-group(*) {
+  animation-duration: var(--vt-dur);
+  animation-timing-function: var(--vt-ease);
+}
+
+/* Normal blending: the default plus-lighter crossfade would add the old
+   page's light into the new sheet where they overlap. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  transform-origin: 50% 0;
+}
+::view-transition-old(root) { animation: vt-recede var(--vt-dur) var(--vt-ease) both; }
+::view-transition-new(root) { animation: vt-rise var(--vt-dur) var(--vt-ease) both; }
+
+@keyframes vt-recede {
+  to { transform: translateY(-3%) scale(0.94); opacity: 0.32; }
+}
+@keyframes vt-rise {
+  from {
+    transform: translateY(16%);
+    clip-path: inset(100% 0 0 0 round 36px 36px 0 0);
+  }
+  to {
+    transform: none;
+    clip-path: inset(0 0 0 0 round 0 0 0 0);
+  }
+}
+
+/* Back through history: the sheet you leave falls away on top. */
+html:active-view-transition-type(back)::view-transition-old(root) {
+  z-index: 1;
+  animation-name: vt-fall;
+}
+html:active-view-transition-type(back)::view-transition-new(root) {
+  animation-name: vt-return;
+}
+/* Both ends spelled out: `none` cannot interpolate into an inset(), so an
+   implicit start made the clip jump halfway instead of sliding. */
+@keyframes vt-fall {
+  from {
+    transform: none;
+    clip-path: inset(0 0 0 0 round 0 0 0 0);
+  }
+  to {
+    transform: translateY(16%);
+    clip-path: inset(100% 0 0 0 round 36px 36px 0 0);
+  }
+}
+@keyframes vt-return {
+  from { transform: translateY(-3%) scale(0.94); opacity: 0.32; }
+}
+
+/* A competition's picture flies between its card and the event header. The
+   two frames differ in shape, so both snapshots fill the moving box and
+   crop to it rather than stretching. */
+::view-transition-group(event-media) {
+  z-index: 2;
+  overflow: clip;
+}
+::view-transition-old(event-media),
+::view-transition-new(event-media) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The cursor and the hover preview are not part of the page that leaves. */
+html.vt-leaving .cx-cursor,
+html.vt-leaving .hover-preview { display: none; }
+
+/* Clicked, and the next page is on its way: a hairline runs across the top
+   at once, so a slow connection still answers the click. */
+html.is-navigating::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 70;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--color-cyan), var(--color-magenta), transparent);
+  transform-origin: 0 50%;
+  animation: nav-pending 1.1s var(--ease-standard) infinite;
+}
+@keyframes nav-pending {
+  0%   { transform: translateX(-100%) scaleX(0.4); }
+  100% { transform: translateX(100%) scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* A short crossfade and nothing that travels. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation-duration: 0.22s !important; }
+  ::view-transition-old(root) { animation-name: vt-fade-out; }
+  ::view-transition-new(root) { animation-name: vt-fade-in; }
+  html:active-view-transition-type(back)::view-transition-old(root) { animation-name: vt-fade-out; }
+  html:active-view-transition-type(back)::view-transition-new(root) { animation-name: vt-fade-in; }
+  html.is-navigating::after { animation: none; transform: none; opacity: 0.6; }
+}
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+
+/* ---- the hero rests once it is off screen --------------------------------
+   Its loops (the wordmark sheen and glitch, the horizon, the aurora, the
+   bay-bar sheen) keep running after the page has scrolled past otherwise,
+   and the sheen and glitch repaint the wordmark as they go. site.js sets
+   html.past-hero. */
+.past-hero #top *,
+.past-hero #top *::before,
+.past-hero #top *::after { animation-play-state: paused; }
+
+/* ---- pictures drift inside their frames ------------------------------------
+   The picture is a little taller than its frame and slides through it more
+   slowly than the page scrolls (public/js/scroll.js, registerImageDrift),
+   so the frame reads as a window onto something with depth. Transform only:
+   it runs on the compositor. */
+[data-drift] { inset: -7% 0; height: auto; }
