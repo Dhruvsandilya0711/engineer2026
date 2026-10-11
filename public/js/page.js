@@ -6,7 +6,7 @@ import { initNav, initMagneticButtons, initCountdown, initCursor, initClickTone,
 import { initScroll, registerReveals, registerParallax, registerImageDrift, scrollState } from '/js/scroll.js';
 import { mountFields, hasWebGL } from '/js/cognitrixx-3d.js';
 import { initDots } from '/js/dots.js';
-import { initPageTransition, pageRevealed } from '/js/page-transition.js';
+import { initPageTransition, pageRevealed, revealStarted } from '/js/page-transition.js';
 
 (async function boot() {
   initPageTransition();
@@ -20,6 +20,8 @@ import { initPageTransition, pageRevealed } from '/js/page-transition.js';
 
   const ctx = await initScroll();
 
+  // Content rises as an arriving page's veil starts to lift, not behind it.
+  await revealStarted();
   registerReveals(ctx);
   registerParallax(ctx);
   registerImageDrift(ctx);

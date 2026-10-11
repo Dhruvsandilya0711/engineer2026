@@ -22,7 +22,7 @@ import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initGalleryLightbox } from '/js/gallery-lightbox.js';
 import { initPreloader } from '/js/preloader.js';
-import { initPageTransition, pageRevealed } from '/js/page-transition.js';
+import { initPageTransition, pageRevealed, revealStarted } from '/js/page-transition.js';
 import { mountNeuralMark } from '/js/neural-mark.js';
 import { mountSignalGame } from '/js/signal-game.js';
 import { mountLeaderboard } from '/js/leaderboard.js';
@@ -251,6 +251,8 @@ function initFanDeck() {
   initAudio(entryDone);
   const ctx = await initScroll();
 
+  // Content rises as an arriving page's veil starts to lift, not behind it.
+  await revealStarted();
   registerReveals(ctx);
   registerParallax(ctx);
   registerImageDrift(ctx);

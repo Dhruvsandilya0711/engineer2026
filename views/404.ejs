@@ -13,6 +13,9 @@
   <link href="/src/output.css?v=<%= assetV %>" rel="stylesheet">
 </head>
 <body class="err-page bg-void text-paper min-h-screen flex items-center justify-center px-6 overflow-hidden">
+  <%# The page transition, like every other page: a broken link still opens
+      with the reveal, and "Return home" leaves with the cover. %>
+  <%- include('partials/_transition') %>
   <%# Same horizon the homepage stands on, and the status code set huge and
       hollow behind the message, flickering like a signal that dropped. %>
   <div class="err-bg" aria-hidden="true">
@@ -39,5 +42,9 @@
     </p>
     <a href="/" class="btn-register btn-register--xl">Return home</a>
   </main>
+  <script type="module" nonce="<%= nonce %>">
+    import { initPageTransition } from '/js/page-transition.js';
+    initPageTransition();
+  </script>
 </body>
 </html>

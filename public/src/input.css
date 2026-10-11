@@ -6389,6 +6389,10 @@ html.pl-locked .scroll-progress { opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
   html.js .page-hero { animation: page-hero-in 1.1s var(--ease-reveal) both; }
   html.js .page-hero__scan { animation: page-hero-scan 1.6s var(--ease-in-out-expo) 0.35s both; }
+  /* Held while an arriving page is under the transition veil, so the header
+     opens as the veil lifts on every page however long the page took. */
+  .pt-arriving .page-hero,
+  .pt-arriving .page-hero__scan { animation-play-state: paused; }
 }
 /* Six points at both ends, so the bevel itself wipes open left to right
    (polygons only interpolate point for point). */
