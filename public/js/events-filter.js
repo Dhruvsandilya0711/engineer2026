@@ -36,7 +36,7 @@ if (form) {
       if (visible) {
         shown++;
         // Renumber so the index always reads 01, 02, 03… for what's on screen.
-        const idx = item.querySelector('.event-row__idx');
+        const idx = item.querySelector('[data-js="event-idx"]');
         if (idx) idx.textContent = String(shown).padStart(2, '0');
       }
     });
@@ -85,6 +85,5 @@ if (form) {
   form.addEventListener('submit', (e) => { e.preventDefault(); apply(); });
 }
 
-// The desktop hover preview that used to live here is now the shared
-// [data-preview] plate in public/js/motion.js — the same one the homepage's
-// event band uses — so the rows carry data-preview instead of data-img.
+// The page is a grid of image cards now, so it has no hover preview: the
+// picture is already on the card.

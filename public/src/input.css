@@ -8076,3 +8076,140 @@ html:has(.tcard:hover) .cx-glow {
   .tcard__shine { display: none; }
   .tcard__body, .tcard__flip, .tcard__shadow { transition: none; }
 }
+
+/* ==========================================================================
+   R21. COMPETITIONS — image cards
+   One card per competition on /competitions: the picture fills it, a shade
+   keeps the text legible, and the angular frame matches the rest of the
+   site. Three across on a desktop, two on a tablet, one on a phone.
+   ========================================================================== */
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(14px, 1.8vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px)  { .comp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .comp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.comp-cell[hidden] { display: none; }
+
+.comp-card {
+  --cut: 16px;
+  --shape: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  position: relative;
+  display: block;
+  padding: 1px;
+  clip-path: var(--shape);
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(150deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(var(--rgb-cyan), 0.55) 18%,
+    rgba(255, 255, 255, 0.06) 48%,
+    rgba(var(--rgb-cyan), 0.4) 100%);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.comp-card__in {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  clip-path: var(--shape);
+  background: #06080e;
+}
+.comp-card__media,
+.comp-card__media img,
+.comp-card__media .media-plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.comp-card__media img {
+  object-fit: cover;
+  transform: scale(1.02);
+  filter: saturate(0.95) brightness(0.9);
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
+}
+.comp-card__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 5, 10, 0.55) 0%, transparent 24%, transparent 36%, rgba(4, 5, 10, 0.6) 62%, rgba(4, 5, 10, 0.95) 100%);
+}
+.comp-card__top {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: calc(var(--cut) + 8px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.comp-card__idx { color: rgb(var(--rgb-cyan)); text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8); }
+.comp-card__cat {
+  padding: 4px 8px;
+  color: var(--color-paper);
+  background: rgba(4, 5, 10, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.comp-card__body {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 14px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.comp-card__org {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+}
+.comp-card__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
+}
+.comp-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.comp-card__foot .status-pill { background: rgba(4, 5, 10, 0.6); }
+.comp-card__go {
+  font-family: var(--font-mono);
+  color: #fff;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+/* The card's clip-path would cut a shadow of its own away, so the lift's
+   shadow sits on the list item around it. */
+@media (hover: hover) {
+  .comp-cell:hover { filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55)); }
+  .comp-card:hover { transform: translateY(-4px); }
+  .comp-card:hover .comp-card__media img { transform: scale(1.08); filter: saturate(1.05) brightness(1); }
+  .comp-card:hover .comp-card__go { transform: translateX(4px); color: rgb(var(--rgb-cyan)); }
+}
+.comp-card:focus-visible { outline: none; }
+.comp-card:focus-visible .comp-card__in { box-shadow: inset 0 0 0 2px rgb(var(--rgb-cyan)); }
+@media (prefers-reduced-motion: reduce) {
+  .comp-card, .comp-card__media img { transition: none; }
+}
