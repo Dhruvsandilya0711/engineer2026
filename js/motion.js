@@ -23,7 +23,7 @@
 // reduced-motion state: nothing here can leave content hidden.
 // ==========================================================================
 
-import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=384d9b2';
+import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=e48b109';
 
 const root = document.documentElement;
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -152,69 +152,98 @@ function initScrambles() {
 
 // -------------------------------------------------------------- marquee
 /**
- * The band's travel is a plain CSS animation (so it runs with no JS at all);
- * this only modulates its playbackRate. Scrolling speeds the band up and
- * turns it with the scroll direction, then it eases back to cruising.
+ * The band's travel is a plain CSS animation, so it runs with no JS at all.
+ * Once GSAP is here it takes the band over: scrolling speeds it up and turns
+ * it with the scroll direction, then it eases back to cruising.
+ *
+ * It used to steer the CSS animation's playbackRate instead. Every write to
+ * that re-synchronises the animation with the compositor, and during a
+ * scroll it was written every frame, which made this the most expensive
+ * script on the homepage. A GSAP tween's timeScale is just a number.
  */
-function initMarquees() {
+function initMarquees(ctx) {
   const bands = [...document.querySelectorAll('[data-marquee]')];
-  if (!bands.length || REDUCED_MOTION) return;
+  if (!bands.length || REDUCED_MOTION || !ctx) return;
+  const { gsap } = ctx;
 
-  const state = bands.map((el) => ({
-    el,
-    anim: null,
-    rate: 1,
-    hover: false,
-    visible: false,
-  }));
+  const state = bands.map((el) => {
+    const track = el.querySelector('.mq__track');
+    if (!track) return null;
+    const cs = getComputedStyle(track);
+    const duration = parseFloat(cs.animationDuration) || 40;
+    // A band set to animation-direction: reverse runs against its
+    // neighbour; the tween keeps that.
+    const back = cs.animationDirection === 'reverse';
+    track.style.animation = 'none';
+    const tween = gsap.fromTo(track,
+      { xPercent: back ? -50 : 0 },
+      { xPercent: back ? 0 : -50, duration, ease: 'none', repeat: -1, paused: true });
+    // Far from the start, so turning it backwards never runs out of loops.
+    tween.totalTime(duration * 1000);
+    return { el, tween, rate: 1, hold: false, visible: false };
+  }).filter(Boolean);
+  if (!state.length) return;
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       const s = state.find((x) => x.el === e.target);
-      if (s) s.visible = e.isIntersecting;
+      if (!s) return;
+      s.visible = e.isIntersecting;
+      // Off screen, the band stops costing anything at all.
+      if (s.visible) s.tween.resume(); else s.tween.pause();
     });
     wake();
   });
   state.forEach((s) => {
     io.observe(s.el);
-    if (FINE && s.el.hasAttribute('data-marquee-hover')) {
-      s.el.addEventListener('pointerenter', () => { s.hover = true; wake(); });
-      s.el.addEventListener('pointerleave', () => { s.hover = false; wake(); });
+    // A pointer over the band or keyboard focus inside it brings the band
+    // to a stop, so a chip can be read and aimed at.
+    if (s.el.hasAttribute('data-marquee-hover')) {
+      const hold = (on) => () => { s.hold = on; wake(); };
+      if (FINE) {
+        s.el.addEventListener('pointerenter', hold(true));
+        s.el.addEventListener('pointerleave', hold(false));
+      }
+      s.el.addEventListener('focusin', hold(true));
+      s.el.addEventListener('focusout', hold(false));
     }
   });
 
-  let lastY = window.scrollY;
+  // The position is taken in the scroll event, where reading it is free;
+  // read inside the frame, after GSAP and Lenis have written their styles,
+  // it forced the browser to restyle the page early, twice a frame.
+  let y = window.scrollY;
+  let lastY = y;
   let vel = 0;
   let dir = 1;
   let raf = null;
 
+  // The loop only runs while a band is still easing toward its target
+  // speed; once every visible band has settled and the page is still, it
+  // stops until the next scroll or hover wakes it.
   function frame() {
-    const y = window.scrollY;
     const dy = y - lastY;
     lastY = y;
     vel += (dy - vel) * 0.18;
     if (Math.abs(dy) > 0.5) dir = dy > 0 ? 1 : -1;
 
-    let any = false;
+    let busy = false;
     state.forEach((s) => {
       if (!s.visible) return;
-      any = true;
-      if (!s.anim) {
-        s.anim = s.el.querySelector('.mq__track')?.getAnimations?.()[0] || null;
-        if (!s.anim) return;
-      }
       const boost = Math.min(Math.abs(vel) * 0.16, 6);
-      // Same sign for every band: a band set to animation-direction:
-      // reverse in CSS then naturally runs against its neighbour, in both
-      // scroll directions.
-      const target = s.hover ? 0.18 : dir * (1 + boost);
-      s.rate += (target - s.rate) * 0.08;
-      s.anim.playbackRate = Math.abs(s.rate) < 0.01 ? 0.01 : s.rate;
+      // Same sign for every band, so a reversed band still runs against its
+      // neighbour in both scroll directions.
+      const target = s.hold ? 0 : dir * (1 + boost);
+      const gap = target - s.rate;
+      if (Math.abs(gap) < 0.004 && Math.abs(vel) < 0.05) s.rate = target;
+      else { s.rate += gap * 0.08; busy = true; }
+      s.tween.timeScale(Math.abs(s.rate));
+      s.tween.reversed(s.rate < 0);
     });
-    raf = any ? requestAnimationFrame(frame) : null;
+    raf = busy ? requestAnimationFrame(frame) : null;
   }
-  function wake() { if (!raf) { lastY = window.scrollY; raf = requestAnimationFrame(frame); } }
-  window.addEventListener('scroll', wake, { passive: true });
+  function wake() { if (!raf) { lastY = y; raf = requestAnimationFrame(frame); } }
+  window.addEventListener('scroll', () => { y = window.scrollY; wake(); }, { passive: true });
   wake();
 }
 
@@ -222,16 +251,23 @@ function initMarquees() {
 function initProgress() {
   const bar = document.querySelector('[data-js="scroll-progress"]');
   if (!bar) return;
+  // The scrollable length is cached and refreshed when the page changes
+  // size, and the position is taken in the scroll event, where reading it is
+  // free. Read in the frame, either one forced an early layout whenever a
+  // reveal had just dirtied the page.
+  let max = 0;
+  let y = window.scrollY;
   let queued = false;
   const paint = () => {
     queued = false;
-    const max = root.scrollHeight - window.innerHeight;
-    bar.style.setProperty('--p', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : '0');
+    bar.style.setProperty('--p', max > 0 ? Math.min(1, y / max).toFixed(4) : '0');
   };
   const q = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
-  window.addEventListener('scroll', q, { passive: true });
-  window.addEventListener('resize', q);
-  paint();
+  const measure = () => { max = root.scrollHeight - window.innerHeight; q(); };
+  window.addEventListener('scroll', () => { y = window.scrollY; q(); }, { passive: true });
+  window.addEventListener('resize', measure);
+  new ResizeObserver(measure).observe(document.body);
+  measure();
 }
 
 // ------------------------------------------------------------ spotlight
@@ -461,7 +497,6 @@ function initHero(ctx) {
 // ---------------------------------------------------------------- boot
 initSplits();
 initScrambles();
-initMarquees();
 initProgress();
 initSpotlights();
 initTilts();
@@ -471,6 +506,7 @@ initPreviews();
   // Shares the single memoised scroll system with main.js / page.js — this
   // never creates a second Lenis. null under reduced motion.
   const ctx = await initScroll();
+  initMarquees(ctx);
   initHero(ctx);
   initHighlights(ctx);
   ctx?.ScrollTrigger.refresh();

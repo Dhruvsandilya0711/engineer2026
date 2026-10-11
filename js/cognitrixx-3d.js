@@ -256,10 +256,18 @@ export function createNeuralField(host, opts = {}) {
   let flowAccum = 0;     // journey: smoothed cloud position along the corridor
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
+  // The journey spine is a fixed, full-viewport canvas drawn every frame
+  // behind everything, out of soft additive glow sprites. Rendering it at a
+  // retina screen's full density bought nothing visible (the glow has no hard
+  // edges to sharpen) and cost up to 2.5x the pixels on the GPU every frame,
+  // which is what scrolling competed with. The small fixed moments keep the
+  // sharper ratio: they are a fraction of the screen.
+  const DPR_CAP = journey ? 1.25 : (window.innerWidth < 768 ? 1.5 : 2);
+
   function resize() {
     const r = host.getBoundingClientRect();
     width = Math.max(1, r.width); height = Math.max(1, r.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.5 : 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();

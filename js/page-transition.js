@@ -1,105 +1,88 @@
 // ==========================================================================
-// PAGE TRANSITION — the mark winds/unwinds across a navigation.
+// PAGE TRANSITION — the outgoing half of the native view transition.
 //
-// This is a server-rendered multi-page site, so a transition has to span a
-// real document swap. It is done in two halves that meet at the navigation:
+// The swap itself is the browser's (`@view-transition { navigation: auto }`
+// in input.css): it holds the old page until the new one can paint, then the
+// stylesheet animates one into the other. Links are left alone, so nothing
+// here delays a navigation by a single frame.
 //
-//   leaving   veil drops, blades UNWIND into the assembled logo, then we
-//             set a sessionStorage flag and hand over to the browser
-//   arriving  the inline gate in _transition.ejs has already put the veil up
-//             at first paint (so the new page never flashes in), the blades
-//             wind back out, and the veil lifts
-//
-// The first-visit preloader is a separate system and is left alone: it only
-// runs when there is no transition flag, so the two never overlap.
+// What this module adds on the way out:
+//   - the picture that should fly into the next page is named, and a note is
+//     left for the arriving page (views/partials/_transition.ejs) to name
+//     its partner: a competition card's image into the event header, and the
+//     header back into its card
+//   - the custom cursor and the hover preview are hidden, so they are not
+//     frozen into the snapshot of the page that slides away
+//   - the music begins to fade (public/js/audio.js)
+//   - a hairline runs across the top while the next page is on its way, so
+//     a click on a slow connection still answers at once
 // ==========================================================================
 
-const FLAG = 'engi26.pt';
-const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const KEY = 'engi26.vt';
+const NAME = 'event-media';
 
-// Long enough for the veil (320ms) plus the last blade's unwind, so the new
-// document is requested behind a fully-covered screen.
-const COVER_MS = REDUCED_MOTION ? 160 : 500;
-// No deliberate hold on arrival: the module already loads after the document,
-// and CSS holds the mark assembled until then (.pt-arriving), so any extra
-// wait here just extends a pause the viewer is already sitting through.
-const REVEAL_HOLD_MS = 0;
+const named = new Set();
+const name = (el) => {
+  if (!el) return;
+  el.style.viewTransitionName = NAME;
+  named.add(el);
+};
+const note = (v) => { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch { /* private mode */ } };
 
-const wait = (ms) => new Promise(r => setTimeout(r, ms));
+const slugOf = (path) => (String(path).match(/\/events\/([^/]+)/) || [])[1] || '';
+const isList = (path) => /\/competitions\/?(index\.html)?$/.test(path);
 
 export function initPageTransition() {
-  const veil = document.querySelector('[data-js="page-transition"]');
-  if (!veil) return;
-
   const root = document.documentElement;
-  let leaving = false;
-
-  // ---- arriving half -----------------------------------------------------
-  // Normally the inline gate in _transition.ejs has already played the reveal
-  // by now — it runs at DOMContentLoaded instead of waiting for this module,
-  // which sits behind the whole three/gsap/lenis graph. This branch is the
-  // fallback for when that script did not run.
-  if (!window.__engiPtArrival) {
-    let arriving = false;
-    try {
-      arriving = sessionStorage.getItem(FLAG) === '1';
-      if (arriving) sessionStorage.removeItem(FLAG);
-    } catch { /* private mode: just skip the reveal */ }
-
-    if (arriving) {
-      veil.classList.add('is-active');
-      requestAnimationFrame(async () => {
-        await wait(REVEAL_HOLD_MS);
-        veil.classList.add('is-revealing');
-        await wait(REDUCED_MOTION ? 120 : 380);
-        veil.classList.remove('is-active', 'is-revealing');
-        root.classList.remove('pt-arriving');
-      });
-    } else {
-      // No transition inbound — make sure the gate class can never strand the
-      // veil over the page (e.g. a restored bfcache entry).
-      root.classList.remove('pt-arriving');
-    }
-  }
-
-  // ---- leaving half ------------------------------------------------------
-  async function leaveTo(url) {
-    if (leaving) return;
-    leaving = true;
-    try { sessionStorage.setItem(FLAG, '1'); } catch { /* non-fatal */ }
-    // The music fades out under the veil (public/js/audio.js) instead of
-    // being cut off when the document goes; the next page fades it back in.
-    document.dispatchEvent(new CustomEvent('e26:music:leave'));
-    veil.classList.add('is-active', 'is-covering');
-    await wait(COVER_MS);
-    window.location.href = url;
-  }
+  const here = location.pathname;
+  const onEvent = !!slugOf(here) && !!document.querySelector('[data-vt-media]');
 
   document.addEventListener('click', (e) => {
-    // Let the browser handle anything that isn't a plain left-click.
     if (e.defaultPrevented || e.button !== 0) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
     const a = e.target.closest?.('a[href]');
     if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
-
     let url;
     try { url = new URL(a.href, location.href); } catch { return; }
     if (url.origin !== location.origin) return;
-    // Same-document jumps (deck cards, #top, the scroll rail) are not
-    // navigations — those belong to initFanDeck and the anchor handlers.
-    if (url.pathname === location.pathname && url.search === location.search) return;
+    if (url.pathname === here && url.search === location.search) return;
 
-    e.preventDefault();
-    leaveTo(url.href);
+    // A competition card: its picture becomes the event page's header.
+    const card = a.closest('[data-vt-slug]');
+    if (card) {
+      name(card.querySelector('img'));
+      note({ to: 'event', path: url.pathname });
+    } else if (onEvent && isList(url.pathname)) {
+      // Back to the list from an event page: the header returns to its card.
+      name(document.querySelector('[data-vt-media]'));
+      note({ to: 'list', slug: slugOf(here) });
+    }
+    root.classList.add('is-navigating');
   });
 
-  // Coming back via bfcache would otherwise restore the page with the veil
-  // still painted over it.
+  // The browser's own back button never passes through the click above. The
+  // Navigation API (where there is one) says where the page is going.
+  window.addEventListener('pageswap', (e) => {
+    if (!e.viewTransition) return;
+    const dest = e.activation?.entry?.url;
+    if (onEvent && dest && !named.size) {
+      try {
+        if (isList(new URL(dest).pathname)) {
+          name(document.querySelector('[data-vt-media]'));
+          note({ to: 'list', slug: slugOf(here) });
+        }
+      } catch { /* malformed URL: no flight, the sheet still runs */ }
+    }
+    root.classList.add('vt-leaving');
+    document.dispatchEvent(new CustomEvent('e26:music:leave'));
+  });
+
+  // Restored from the back/forward cache: undo everything the leaving half
+  // did, or the page comes back with its cursor hidden and a picture named.
   window.addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
-    leaving = false;
-    veil.classList.remove('is-active', 'is-covering', 'is-revealing');
-    root.classList.remove('pt-arriving');
+    root.classList.remove('is-navigating', 'vt-leaving');
+    named.forEach((el) => { el.style.viewTransitionName = ''; });
+    named.clear();
   });
 }

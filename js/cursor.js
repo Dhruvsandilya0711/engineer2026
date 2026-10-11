@@ -77,6 +77,7 @@ export function initCursor() {
     t.x = e.clientX;
     t.y = e.clientY;
     wake();
+    if (!raf && !document.hidden) raf = requestAnimationFrame(loop);
 
     // Restore the native caret over anything you type into.
     const overText = e.target instanceof Element && e.target.closest(TEXTUAL);
@@ -106,7 +107,12 @@ export function initCursor() {
     ring.style.transform = `translate3d(${r.x}px, ${r.y}px, 0) translate(-50%, -50%)`;
     glow.style.transform = `translate3d(${g.x}px, ${g.y}px, 0) translate(-50%, -50%)`;
 
-    raf = requestAnimationFrame(loop);
+    // Once every layer has caught up with a parked pointer the loop rests,
+    // rather than rewriting three identical transforms sixty times a second;
+    // the next pointer move starts it again.
+    const settled = Math.abs(t.x - g.x) + Math.abs(t.y - g.y) < 0.1
+      && Math.abs(t.x - r.x) + Math.abs(t.y - r.y) < 0.1;
+    raf = settled ? null : requestAnimationFrame(loop);
   }
 
   const onDown = () => root.classList.add('is-down');

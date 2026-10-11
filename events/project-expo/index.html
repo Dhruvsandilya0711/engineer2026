@@ -19,10 +19,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=384d9b2">
-  <link rel="icon" href="/engineer2026/favicon.ico?v=384d9b2" sizes="any">
-  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=384d9b2">
-  <link href="/engineer2026/src/output.css?v=384d9b2" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=e48b109">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=e48b109" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=e48b109">
+  <link href="/engineer2026/src/output.css?v=e48b109" rel="stylesheet">
+  
+  
 </head>
 <body class="bg-void text-paper font-body antialiased">
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -185,87 +187,71 @@
 
 
 <!-- ==========================================================================
-     PAGE TRANSITION — the ENGINEER '26 mark, shattered into blades that wind
-     into a spiral and unwind back out. Modelled on the Cognizance loader the
-     brief references: dark blades pinwheeling around a bright core, each with
-     a lit leading edge, over a radial bloom.
+     PAGE TRANSITIONS — native cross-document view transitions.
 
-     Every blade is the SAME logo image clipped to its own angular wedge, so
-     the mark is genuinely torn apart rather than approximated — assembled, the
-     wedges reconstruct the logo exactly. `mix-blend-mode: screen` drops the
-     artwork's black field, so the white line art floats on the veil.
+     The browser keeps the old page on screen until the new one can paint,
+     then the new page rises over it as a sheet while the old one recedes
+     (public/src/input.css, "Page transitions"). Nothing covers the screen
+     and nothing waits on a timer: the swap starts the moment the next page
+     is ready, which is what makes it feel like one continuous site.
 
-     Driven by public/js/page-transition.js. Included from _nav.ejs, so it is
-     present on every page.
+     A competition card's picture flies into the event page's header and
+     back again (public/js/page-transition.js names it on the way out; the
+     listener below names its partner on the way in).
+
+     Browsers without cross-document view transitions simply navigate, as
+     any site does. Included from _nav.ejs, so every page has it.
      ========================================================================== -->
 
-
-<script nonce="SNNuZbksb3PyVjZCQ1OkhQ==">
+<script nonce="frxULtZDbQah82OfpyV6fQ==">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
     document.documentElement.classList.add('js');
-    var KEY = 'engi26.pt', arriving = false;
-    try {
-      arriving = sessionStorage.getItem(KEY) === '1';
-      if (arriving) sessionStorage.removeItem(KEY);
-    } catch (e) {}
-    if (!arriving) return;
 
-    var doc = document;
-    doc.documentElement.classList.add('pt-arriving');
-    // Tell page-transition.js the arrival is already handled here.
-    window.__engiPtArrival = true;
+    var KEY = 'engi26.vt';
+    var norm = function (p) { return String(p || '').replace(/index\.html$/, '').replace(/\/+$/, ''); };
 
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function done(veil) {
-      veil.classList.remove('is-active', 'is-revealing');
-      doc.documentElement.classList.remove('pt-arriving');
-    }
-    function play() {
-      var veil = doc.getElementById('page-transition');
-      if (!veil) { doc.documentElement.classList.remove('pt-arriving'); return; }
-      veil.classList.add('is-active');
-      if (reduced) { setTimeout(function () { done(veil); }, 120); return; }
-      requestAnimationFrame(function () {
-        veil.classList.add('is-revealing');
-        setTimeout(function () { done(veil); }, 380);
+    window.addEventListener('pagereveal', function (e) {
+      var note = null;
+      try { note = JSON.parse(sessionStorage.getItem(KEY) || 'null'); sessionStorage.removeItem(KEY); } catch (err) {}
+      var vt = e.viewTransition;
+      if (!vt) return;
+
+      // Back/forward through history runs the sheet the other way.
+      var act = window.navigation && window.navigation.activation;
+      if (act && act.navigationType === 'traverse' && act.from && act.entry && act.entry.index < act.from.index) {
+        vt.types.add('back');
+      }
+
+      // The partner of the picture the last page sent: the event page's
+      // header image, or (coming back) the card that opened it, if that card
+      // is on screen to receive it.
+      var el = null;
+      if (note && note.to === 'event' && norm(note.path) === norm(location.pathname)) {
+        el = document.querySelector('[data-vt-media]');
+      } else if (note && note.to === 'list' && note.slug) {
+        el = document.querySelector('[data-vt-slug="' + note.slug + '"] img');
+        if (el) {
+          var r = el.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > innerHeight) el = null;
+        }
+      }
+      if (!el) return;
+      // A header image that arrives by flight is already in place: skip its
+      // own wipe-in, which would otherwise clip the picture as it lands.
+      var fig = el.closest('[data-img-reveal]');
+      if (fig) fig.classList.add('is-in', 'is-instant');
+      el.style.viewTransitionName = 'event-media';
+      // Unnamed once it has landed, unless the page is already leaving again
+      // (a quick second navigation ends this transition early, and the
+      // leaving page may have just named the same picture to fly it on).
+      vt.finished.finally(function () {
+        if (!document.documentElement.classList.contains('vt-leaving')) el.style.viewTransitionName = '';
       });
-    }
-    if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', play);
-    else play();
+    });
   })();
 </script>
-<div id="page-transition" class="pt" data-js="page-transition" aria-hidden="true">
-  <span class="pt__bloom"></span>
-  <div class="pt__mark">
-    
-    <span class="pt__blade" style="--i: 0; --n: 12; clip-path: polygon(50% 50%, 50.00% -46.00%, 62.53% -45.18%, 74.85% -42.73%, 86.74% -38.69%, 98.00% -33.14%);"></span>
-    
-    <span class="pt__blade" style="--i: 1; --n: 12; clip-path: polygon(50% 50%, 98.00% -33.14%, 108.44% -26.16%, 117.88% -17.88%, 126.16% -8.44%, 133.14% 2.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 2; --n: 12; clip-path: polygon(50% 50%, 133.14% 2.00%, 138.69% 13.26%, 142.73% 25.15%, 145.18% 37.47%, 146.00% 50.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 3; --n: 12; clip-path: polygon(50% 50%, 146.00% 50.00%, 145.18% 62.53%, 142.73% 74.85%, 138.69% 86.74%, 133.14% 98.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 4; --n: 12; clip-path: polygon(50% 50%, 133.14% 98.00%, 126.16% 108.44%, 117.88% 117.88%, 108.44% 126.16%, 98.00% 133.14%);"></span>
-    
-    <span class="pt__blade" style="--i: 5; --n: 12; clip-path: polygon(50% 50%, 98.00% 133.14%, 86.74% 138.69%, 74.85% 142.73%, 62.53% 145.18%, 50.00% 146.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 6; --n: 12; clip-path: polygon(50% 50%, 50.00% 146.00%, 37.47% 145.18%, 25.15% 142.73%, 13.26% 138.69%, 2.00% 133.14%);"></span>
-    
-    <span class="pt__blade" style="--i: 7; --n: 12; clip-path: polygon(50% 50%, 2.00% 133.14%, -8.44% 126.16%, -17.88% 117.88%, -26.16% 108.44%, -33.14% 98.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 8; --n: 12; clip-path: polygon(50% 50%, -33.14% 98.00%, -38.69% 86.74%, -42.73% 74.85%, -45.18% 62.53%, -46.00% 50.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 9; --n: 12; clip-path: polygon(50% 50%, -46.00% 50.00%, -45.18% 37.47%, -42.73% 25.15%, -38.69% 13.26%, -33.14% 2.00%);"></span>
-    
-    <span class="pt__blade" style="--i: 10; --n: 12; clip-path: polygon(50% 50%, -33.14% 2.00%, -26.16% -8.44%, -17.88% -17.88%, -8.44% -26.16%, 2.00% -33.14%);"></span>
-    
-    <span class="pt__blade" style="--i: 11; --n: 12; clip-path: polygon(50% 50%, 2.00% -33.14%, 13.26% -38.69%, 25.15% -42.73%, 37.47% -45.18%, 50.00% -46.00%);"></span>
-    
-  </div>
-</div>
 
 
 
@@ -700,7 +686,7 @@
 </footer>
 
 
-  <script type="module" src="/engineer2026/js/motion.js?v=384d9b2"></script>
-  <script type="module" src="/engineer2026/js/page.js?v=384d9b2"></script>
+  <script type="module" src="/engineer2026/js/motion.js?v=e48b109"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=e48b109"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@
 // Pauses when off-screen or the tab is hidden.
 // ==========================================================================
 
-import { scrollState, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=384d9b2';
+import { scrollState, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=e48b109';
 
 const RAD = Math.PI / 180;
 
@@ -53,6 +53,11 @@ export function initGalleryFlow() {
   const tilt = { x: 0, tx: 0, y: 0, ty: 0 };
   const drag = { on: false, locked: false, sx: 0, sy: 0, lx: 0, mom: 0 };
   let raf = null, running = false;
+  // How much of the section is on screen (0..1), from the observer below
+  // rather than measured in the frame: a getBoundingClientRect() there, after
+  // Lenis and GSAP had written their styles, forced an early layout every
+  // frame. `flowIn` eases toward it, so the observer's steps never show.
+  let inView = 0, flowIn = 0, flowInWritten = -1, poxWritten = '';
 
   function paint() {
     ring.style.transform =
@@ -65,34 +70,44 @@ export function initGalleryFlow() {
   paint(); // initial render (covers the reduced-motion static case)
 
   function frame() {
-    const r = section.getBoundingClientRect();
-    const vh = window.innerHeight || 1;
-    const cover = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-    const inView = Math.max(0, Math.min(1, cover / Math.min(r.height, vh)));
+    flowIn += (inView - flowIn) * 0.15;
 
     if (drag.on) {
       vel = drag.mom;               // carry the throw velocity for release
     } else {
       const sv = Math.max(-70, Math.min(70, scrollState.velocity || 0));
-      const drive = (BASE * (0.3 + 0.7 * inView) + sv * COUPLE + held * HOLD) * k();
+      const drive = (BASE * (0.3 + 0.7 * flowIn) + sv * COUPLE + held * HOLD) * k();
       vel += (drive - vel) * 0.07;  // ease toward target -> momentum + settle
       angle += vel;
     }
 
     tilt.x += (tilt.tx - tilt.x) * 0.06;
     tilt.y += (tilt.ty - tilt.y) * 0.06;
-    if (!isSmall) stage.style.setProperty('--pox', (tilt.y * 9).toFixed(2));
+    // Custom properties are only written when they change: --flow-in is
+    // inherited by the whole gallery, so every write restyled all of it.
+    if (!isSmall) {
+      const pox = (tilt.y * 9).toFixed(2);
+      if (pox !== poxWritten) { poxWritten = pox; stage.style.setProperty('--pox', pox); }
+    }
 
     // Skip the writes when genuinely still (reduced-motion idle) to save cycles.
     if (Math.abs(vel) > 0.0008 || held || drag.on || Math.abs(tilt.tx - tilt.x) > 0.01) {
       paint();
     }
-    section.style.setProperty('--flow-in', inView.toFixed(3));
+    if (Math.abs(flowIn - flowInWritten) > 0.004) {
+      flowInWritten = flowIn;
+      section.style.setProperty('--flow-in', flowIn.toFixed(3));
+    }
     raf = requestAnimationFrame(frame);
   }
 
   const vis = new IntersectionObserver((entries) => {
-    const on = entries[0]?.isIntersecting;
+    const e = entries[entries.length - 1];
+    const on = e?.isIntersecting;
+    if (e) {
+      const vh = e.rootBounds?.height || window.innerHeight || 1;
+      inView = Math.max(0, Math.min(1, e.intersectionRect.height / Math.min(e.boundingClientRect.height || 1, vh)));
+    }
     if (on && !running) {
       running = true;
       radius = measureRadius();
@@ -100,7 +115,7 @@ export function initGalleryFlow() {
     } else if (!on && running) {
       running = false; cancelAnimationFrame(raf); raf = null;
     }
-  }, { threshold: 0 });
+  }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
   vis.observe(section);
 
   window.addEventListener('resize', () => { radius = measureRadius(); }, { passive: true });
