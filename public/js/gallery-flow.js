@@ -180,6 +180,15 @@ export function initGalleryFlow() {
   bind('[data-js="gflow-prev"]', 1);
   bind('[data-js="gflow-next"]', -1);
 
+  // Held while a page transition covers the screen (page-transition.js),
+  // and picked up again if the page comes back from the back/forward cache.
+  document.addEventListener('e26:leave', () => {
+    if (running) { running = false; cancelAnimationFrame(raf); raf = null; }
+  });
+  document.addEventListener('e26:resume', () => {
+    if (!running && !document.hidden && inView > 0) { running = true; raf = requestAnimationFrame(frame); }
+  });
+
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && running) { running = false; cancelAnimationFrame(raf); raf = null; }
     else if (!document.hidden && !running) { running = true; raf = requestAnimationFrame(frame); }

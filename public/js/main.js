@@ -22,7 +22,7 @@ import { initDots } from '/js/dots.js';
 import { initGalleryFlow } from '/js/gallery-flow.js';
 import { initGalleryLightbox } from '/js/gallery-lightbox.js';
 import { initPreloader } from '/js/preloader.js';
-import { initPageTransition } from '/js/page-transition.js';
+import { initPageTransition, pageRevealed } from '/js/page-transition.js';
 import { mountNeuralMark } from '/js/neural-mark.js';
 import { mountSignalGame } from '/js/signal-game.js';
 import { mountLeaderboard } from '/js/leaderboard.js';
@@ -251,6 +251,21 @@ function initFanDeck() {
   initAudio(entryDone);
   const ctx = await initScroll();
 
+  registerReveals(ctx);
+  registerParallax(ctx);
+  registerImageDrift(ctx);
+  registerSeams(ctx);
+  registerEventsRail();
+  initFanDeck();
+  initGalleryLightbox();
+  initDots(ctx);
+
+  // The 3D and the other per-frame scenes start once an arriving page's
+  // transition veil has lifted (at once otherwise): compiling shaders and
+  // creating GL contexts while the blades fly is what made the reveal
+  // stutter. The fields fade in when they mount (input.css).
+  await pageRevealed();
+
   // Mount every declared 3D moment. Skipped wholesale without WebGL — the page
   // is still complete, just without the fields.
   if (hasWebGL()) mountFields({ scroll: scrollState });
@@ -260,17 +275,8 @@ function initFanDeck() {
   const subject = mountNeuralMark();
   mountSignalGame();
   mountLeaderboard();
-
-  registerReveals(ctx);
-  registerParallax(ctx);
-  registerImageDrift(ctx);
-  registerSeams(ctx);
   registerNarrative(ctx, subject);
-  registerEventsRail();
-  initFanDeck();
   initGalleryFlow();
-  initGalleryLightbox();
-  initDots(ctx);
 
   await entryDone;
   ctx?.ScrollTrigger.refresh();

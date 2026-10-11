@@ -1,68 +1,124 @@
 <!-- ==========================================================================
-     PAGE TRANSITIONS — native cross-document view transitions.
+     PAGE TRANSITION — the ENGINEER '26 mark, shattered into blades that wind
+     into a spiral and unwind back out. Modelled on the Cognizance loader the
+     brief references: dark blades pinwheeling around a bright core, each with
+     a lit leading edge, over a radial bloom.
 
-     The browser keeps the old page on screen until the new one can paint,
-     then the new page rises over it as a sheet while the old one recedes
-     (public/src/input.css, "Page transitions"). Nothing covers the screen
-     and nothing waits on a timer: the swap starts the moment the next page
-     is ready, which is what makes it feel like one continuous site.
+     Every blade is the SAME logo image clipped to its own angular wedge, so
+     the mark is genuinely torn apart rather than approximated — assembled, the
+     wedges reconstruct the logo exactly. The artwork carries its cyan edge
+     glow baked in (engineer26-mark-glow.png), so no blade needs a CSS filter:
+     each one is a plain image moved by transform and opacity, which the
+     compositor animates on its own however busy the page is.
 
-     A competition card's picture flies into the event page's header and
-     back again (public/js/page-transition.js names it on the way out; the
-     listener below names its partner on the way in).
-
-     Browsers without cross-document view transitions simply navigate, as
-     any site does. Included from _nav.ejs, so every page has it.
+     Driven by public/js/page-transition.js. Included from _nav.ejs, so it is
+     present on every page.
      ========================================================================== -->
-<%# Parser-blocking and near the top of <body>, so it runs before the first
-    paint: `pagereveal` fires just before the new page is first rendered, and
-    a listener added later would miss it. %>
+<%
+  // Wedge geometry. Each blade owns 360/N degrees; the polygon is the pie slice
+  // walked in a few steps so the outer edge follows the arc rather than cutting
+  // a chord across it. R overshoots the box so corners stay covered.
+  const BLADES = 12, R = 96, ARC_STEPS = 4;
+  const wedge = (i) => {
+    const a0 = (i * 360 / BLADES) - 90;
+    const a1 = ((i + 1) * 360 / BLADES) - 90;
+    const pts = ['50% 50%'];
+    for (let s = 0; s <= ARC_STEPS; s++) {
+      const a = (a0 + (a1 - a0) * (s / ARC_STEPS)) * Math.PI / 180;
+      pts.push((50 + R * Math.cos(a)).toFixed(2) + '% ' + (50 + R * Math.sin(a)).toFixed(2) + '%');
+    }
+    return pts.join(', ');
+  };
+%>
+<%# Parser-blocking gate: if this load is the far side of a transition, mark the
+    document before the veil paints, so the arriving page is covered from the
+    very first frame instead of flashing in and then being hidden.
+
+    It also PLAYS the reveal, and plays it as soon as the document has been
+    parsed (readyState "interactive"). It used to wait for DOMContentLoaded,
+    which also waits for every module script to download and run, three.js
+    included: the viewer sat on the held logo for all of that. Nothing here
+    needs those libraries.
+
+    window.__ptRevealed resolves once the veil is gone. The page's 3D scenes
+    wait for it (main.js, page.js), so compiling shaders never competes with
+    the reveal for the GPU; they fade in after it. %>
 <script nonce="<%= nonce %>">
   (function () {
     // Tells the stylesheet script is running, so motion-only hidden poses
     // (headline masks, the hero entrance) apply. With JS off they never do.
-    document.documentElement.classList.add('js');
+    var doc = document, root = doc.documentElement;
+    root.classList.add('js');
+    var KEY = 'engi26.pt', arriving = false;
+    try {
+      arriving = sessionStorage.getItem(KEY) === '1';
+      if (arriving) sessionStorage.removeItem(KEY);
+    } catch (e) {}
+    if (!arriving) { window.__ptRevealed = Promise.resolve(); return; }
 
-    var KEY = 'engi26.vt';
-    var norm = function (p) { return String(p || '').replace(/index\.html$/, '').replace(/\/+$/, ''); };
+    root.classList.add('pt-arriving');
+    // Tells page-transition.js the arrival is already handled here.
+    window.__engiPtArrival = true;
+    var revealed;
+    window.__ptRevealed = new Promise(function (r) { revealed = r; });
 
-    window.addEventListener('pagereveal', function (e) {
-      var note = null;
-      try { note = JSON.parse(sessionStorage.getItem(KEY) || 'null'); sessionStorage.removeItem(KEY); } catch (err) {}
-      var vt = e.viewTransition;
-      if (!vt) return;
-
-      // Back/forward through history runs the sheet the other way.
-      var act = window.navigation && window.navigation.activation;
-      if (act && act.navigationType === 'traverse' && act.from && act.entry && act.entry.index < act.from.index) {
-        vt.types.add('back');
-      }
-
-      // The partner of the picture the last page sent: the event page's
-      // header image, or (coming back) the card that opened it, if that card
-      // is on screen to receive it.
-      var el = null;
-      if (note && note.to === 'event' && norm(note.path) === norm(location.pathname)) {
-        el = document.querySelector('[data-vt-media]');
-      } else if (note && note.to === 'list' && note.slug) {
-        el = document.querySelector('[data-vt-slug="' + note.slug + '"] img');
-        if (el) {
-          var r = el.getBoundingClientRect();
-          if (r.bottom < 0 || r.top > innerHeight) el = null;
-        }
-      }
-      if (!el) return;
-      // A header image that arrives by flight is already in place: skip its
-      // own wipe-in, which would otherwise clip the picture as it lands.
-      var fig = el.closest('[data-img-reveal]');
-      if (fig) fig.classList.add('is-in', 'is-instant');
-      el.style.viewTransitionName = 'event-media';
-      // Unnamed once it has landed, unless the page is already leaving again
-      // (a quick second navigation ends this transition early, and the
-      // leaving page may have just named the same picture to fly it on).
-      vt.finished.finally(function () {
-        if (!document.documentElement.classList.contains('vt-leaving')) el.style.viewTransitionName = '';
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // The blades' flight plus the veil's fade (input.css), with a frame spare.
+    var REVEAL_MS = reduced ? 180 : 620;
+    var played = false;
+    function play() {
+      if (played) return;
+      played = true;
+      var veil = doc.getElementById('page-transition');
+      if (!veil) { root.classList.remove('pt-arriving'); revealed(); return; }
+      // Hand the held, assembled mark from the gate class to the veil itself
+      // and start the flight in the same frame, from that same pose.
+      veil.classList.add('is-active');
+      requestAnimationFrame(function () {
+        root.classList.remove('pt-arriving');
+        veil.classList.add('is-revealing');
+        setTimeout(function () {
+          veil.classList.remove('is-active', 'is-revealing');
+          revealed();
+        }, REVEAL_MS);
       });
-    });
+    }
+    if (doc.readyState === 'loading') {
+      doc.addEventListener('readystatechange', function () { if (doc.readyState !== 'loading') play(); });
+      // Belt and braces: never leave the page covered.
+      setTimeout(play, 4000);
+    } else {
+      play();
+    }
   })();
 </script>
+<%# Fetch the next page ahead, so the document is already here when the cover
+    finishes and the new page paints at once. Chrome and Edge prefetch a link
+    the pointer rests on (or the finger presses), into a cache the navigation
+    then uses directly; browsers without speculation rules get a plain
+    prefetch from public/js/page-transition.js. Photos (the gallery opens them
+    in a lightbox), downloads and anything under /api or /ticket are left out. %>
+<script type="speculationrules" nonce="<%= nonce %>">
+{"prefetch": [{
+  "source": "document",
+  "where": { "and": [
+    { "href_matches": "/*" },
+    { "not": { "href_matches": "/api/*" } },
+    { "not": { "href_matches": "/ticket/*" } },
+    { "not": { "selector_matches": "[download], [target=_blank], .gflow__link, a[href$='.jpg'], a[href$='.png'], a[href$='.webp'], a[href$='.pdf']" } }
+  ] },
+  "eagerness": "moderate"
+}]}
+</script>
+<div id="page-transition" class="pt" data-js="page-transition" aria-hidden="true">
+  <span class="pt__bloom"></span>
+  <div class="pt__mark">
+    <% for (let i = 0; i < BLADES; i++) { %>
+    <span class="pt__blade" style="--i: <%= i %>; --n: <%= BLADES %>; clip-path: polygon(<%= wedge(i) %>);"></span>
+    <% } %>
+    <%# The whole mark in one piece, over the blades while they are assembled:
+        twelve clipped wedges leave hairline seams in the glow where their
+        edges meet, and this hides them on the held frame. %>
+    <span class="pt__whole"></span>
+  </div>
+</div>
