@@ -28,7 +28,7 @@
 // runs when there is no transition flag, so the two never overlap.
 // ==========================================================================
 
-import { stopScroll, startScroll } from '/engineer2026/js/scroll.js?v=80f296e';
+import { stopScroll, startScroll } from '/engineer2026/js/scroll.js?v=ddf5afb';
 
 const FLAG = 'engi26.pt';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
