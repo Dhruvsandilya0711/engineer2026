@@ -5,11 +5,11 @@
 // this file deliberately owns neither, so there is one implementation of each.
 // ==========================================================================
 
-export { initCursor } from '/engineer2026/js/cursor.js?v=ddf5afb';
-export { initClickTone, gainTick } from '/engineer2026/js/click-sfx.js?v=ddf5afb';
-export { initAudio } from '/engineer2026/js/audio.js?v=ddf5afb';
+export { initCursor } from '/engineer2026/js/cursor.js?v=3299070';
+export { initClickTone, gainTick } from '/engineer2026/js/click-sfx.js?v=3299070';
+export { initAudio } from '/engineer2026/js/audio.js?v=3299070';
 
-import { scrollTo } from '/engineer2026/js/scroll.js?v=ddf5afb';
+import { scrollTo } from '/engineer2026/js/scroll.js?v=3299070';
 
 export const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
