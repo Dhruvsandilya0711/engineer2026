@@ -292,6 +292,30 @@
       "coordinators": null
     },
     {
+      "slug": "sci-biz-tech-quiz",
+      "name": "Sci-Biz-Tech Quiz",
+      "category": "Quiz",
+      "track": "technical",
+      "organisedBy": null,
+      "image": null,
+      "featured": false,
+      "registration": "open",
+      "registrationUrl": "https://forms.gle/iorvSPMkFAU7GSd9A",
+      "description": "A quiz across science, business and technology, for teams of up to three. Open to every year.",
+      "registrationDeadline": null,
+      "prizes": "₹15,000 prize pool",
+      "rules": [
+        "Teams of up to 3.",
+        "Open to students of all years.",
+        "Registration fee: ₹200 per team."
+      ],
+      "timeline": null,
+      "eligibility": "Open to all years.",
+      "teamSize": "Up to 3 per team",
+      "faq": null,
+      "coordinators": null
+    },
+    {
       "slug": "workshops",
       "name": "Workshops",
       "category": "Workshop",
@@ -371,9 +395,11 @@
       "description": "Competitive gaming on both main days of the fest.",
       "registrationDeadline": null,
       "prizes": null,
-      "rules": null,
+      "rules": [
+        "Gaming events are open only to participants who are also registered for at least one event in the competitions brochure."
+      ],
       "timeline": null,
-      "eligibility": null,
+      "eligibility": "Participants registered for at least one event in the competitions brochure.",
       "teamSize": null,
       "faq": null,
       "coordinators": null
