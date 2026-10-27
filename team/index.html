@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="The team behind ENGINEER '26 at NITK Surathkal.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=ad703f1">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=ad703f1" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=ad703f1">
+  <link href="/engineer2026/src/output.css?v=ad703f1" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="ambient" data-priority="2" data-density="0.9" data-tone="nebula" data-signals="6" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <!-- ==========================================================================
+     Primary navigation — fixed top bar, transparent over the hero, resolves
+     to a solid charcoal bar after ~80px of scroll (public/js/main.js).
+     Links out to the real routes: /competitions /schedule /team /sponsors /register
+     all exist and are served from index.js. "About" is the one in-page anchor.
+     ========================================================================== -->
+<header id="site-nav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300" data-js="nav">
+  <div class="rail h-20 flex items-center justify-between">
+    <a href="/engineer2026/" class="flex items-center gap-3 shrink-0" aria-label="ENGINEER '26 home">
+      <img class="nav-mark" src="/engineer2026/images/cognitrixx-mark-512.png" alt="ENGINEER '26 logo" width="512" height="501">
+      <span class="font-display font-semibold text-sm tracking-wide hidden sm:inline">ENGINEER&nbsp;'26</span>
+    </a>
+
+    
+    <nav aria-label="Site" class="hidden lg:block">
+      <!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+
+<ul class="baybar baybar--bar">
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-1);">
+    <a href="/engineer2026/"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">01</span>
+        <span class="bay__label">Home</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-2);">
+    <a href="/engineer2026/about"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">02</span>
+        <span class="bay__label">About</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
+    <a href="/engineer2026/competitions"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">03</span>
+        <span class="bay__label">Competitions</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
+    <a href="/engineer2026/schedule"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">04</span>
+        <span class="bay__label">Schedule</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-5);">
+    <a href="/engineer2026/team"
+       class="bay is-active"
+       
+       aria-current="page">
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">05</span>
+        <span class="bay__label">Team</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-6);">
+    <a href="/engineer2026/sponsors"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">06</span>
+        <span class="bay__label">Sponsors</span>
+      </span>
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <a href="/engineer2026/register" class="btn-register hidden sm:inline-flex" data-js="magnetic">Register</a>
+      <button type="button" class="hud-menu hud-menu--bar lg:hidden"
+        data-js="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+        <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<div class="scroll-progress" data-js="scroll-progress" aria-hidden="true"></div>
+
+
+<!-- ==========================================================================
+     SCROLL RAIL — the word SCROLL set vertically down the left edge, with a
+     bead running the track beside it.
+
+     Included from _nav.ejs so every page gets it. Near the bottom it flips to
+     TOP and runs the bead upward; it is a real <button> throughout, so the
+     affordance is also the control (public/js/site.js → initScrollRail).
+     ========================================================================== -->
+<button type="button" class="scroll-rail" data-js="scroll-rail" aria-label="Scroll down">
+  <span class="scroll-rail__word" data-js="scroll-rail-word">Scroll</span>
+  <span class="scroll-rail__track" aria-hidden="true"><span class="scroll-rail__bead"></span></span>
+</button>
+
+
+
+<!-- ==========================================================================
+     PAGE TRANSITION — the ENGINEER '26 mark, shattered into blades that wind
+     into a spiral and unwind back out. Modelled on the Cognizance loader the
+     brief references: dark blades pinwheeling around a bright core, each with
+     a lit leading edge, over a radial bloom.
+
+     Every blade is the SAME logo image clipped to its own angular wedge, so
+     the mark is genuinely torn apart rather than approximated — assembled, the
+     wedges reconstruct the logo exactly. The artwork carries its cyan edge
+     glow baked in (engineer26-mark-glow.png), so no blade needs a CSS filter:
+     each one is a plain image moved by transform and opacity, which the
+     compositor animates on its own however busy the page is.
+
+     Driven by public/js/page-transition.js. Included from _nav.ejs, so it is
+     present on every page.
+     ========================================================================== -->
+
+
+<script nonce="BC+LmNCvIPcHp4k+5GetcQ==">
+  (function () {
+    // Tells the stylesheet script is running, so motion-only hidden poses
+    // (headline masks, the hero entrance) apply. With JS off they never do.
+    var doc = document, root = doc.documentElement;
+    root.classList.add('js');
+    var KEY = 'engi26.pt', arriving = false;
+    try {
+      var at = Number(sessionStorage.getItem(KEY));
+      sessionStorage.removeItem(KEY);
+      arriving = at > 0 && Date.now() - at < 12000;
+    } catch (e) {}
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav && nav.type === 'back_forward') arriving = true;
+    } catch (e) {}
+    if (!arriving) {
+      window.__ptRevealStart = window.__ptRevealed = Promise.resolve();
+      return;
+    }
+
+    root.classList.add('pt-arriving');
+    // Tells page-transition.js and preloader.js the arrival is handled here.
+    window.__engiPtArrival = true;
+    // Mid-session, the homepage's boot sequence never plays: it is the
+    // site's entrance, not a page change.
+    try { sessionStorage.setItem('engi26.loaded', '1'); } catch (e) {}
+    var started, revealed;
+    window.__ptRevealStart = new Promise(function (r) { started = r; });
+    window.__ptRevealed = new Promise(function (r) { revealed = r; });
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // The blades' flight plus the veil's fade (input.css), with a frame spare.
+    var REVEAL_MS = reduced ? 180 : 620;
+    var played = false;
+    function begin() {
+      root.classList.remove('pt-arriving');
+      // The homepage hero's entrance (see _entry.ejs) starts with the reveal.
+      if (!root.classList.contains('hero-go')) {
+        window.__heroGoAt = performance.now();
+        root.classList.add('hero-go');
+      }
+      started();
+    }
+    function play() {
+      if (played) return;
+      played = true;
+      var veil = doc.getElementById('page-transition');
+      if (!veil) { begin(); revealed(); return; }
+      // Hand the held, assembled mark from the gate class to the veil itself
+      // and start the flight in the same frame, from that same pose.
+      veil.classList.add('is-active');
+      requestAnimationFrame(function () {
+        veil.classList.add('is-revealing');
+        begin();
+        setTimeout(function () {
+          veil.classList.remove('is-active', 'is-revealing');
+          revealed();
+        }, REVEAL_MS);
+      });
+    }
+    if (doc.readyState === 'loading') {
+      doc.addEventListener('readystatechange', function () { if (doc.readyState !== 'loading') play(); });
+      // Belt and braces: never leave the page covered.
+      setTimeout(play, 4000);
+    } else {
+      play();
+    }
+  })();
+</script>
+
+<script type="speculationrules" nonce="BC+LmNCvIPcHp4k+5GetcQ==">
+{"prefetch": [{
+  "source": "document",
+  "where": { "and": [
+    { "href_matches": "/*" },
+    { "not": { "href_matches": "/engineer2026/api/*" } },
+    { "not": { "href_matches": "/engineer2026/ticket/*" } },
+    { "not": { "selector_matches": "[download], [target=_blank], .gflow__link, a[href$='.jpg'], a[href$='.png'], a[href$='.webp'], a[href$='.pdf']" } }
+  ] },
+  "eagerness": "moderate"
+}]}
+</script>
+<div id="page-transition" class="pt" data-js="page-transition" aria-hidden="true">
+  <span class="pt__bloom"></span>
+  <div class="pt__mark">
+    
+    <span class="pt__blade" style="--i: 0; --n: 12; clip-path: polygon(50% 50%, 50.00% -46.00%, 62.53% -45.18%, 74.85% -42.73%, 86.74% -38.69%, 98.00% -33.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 1; --n: 12; clip-path: polygon(50% 50%, 98.00% -33.14%, 108.44% -26.16%, 117.88% -17.88%, 126.16% -8.44%, 133.14% 2.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 2; --n: 12; clip-path: polygon(50% 50%, 133.14% 2.00%, 138.69% 13.26%, 142.73% 25.15%, 145.18% 37.47%, 146.00% 50.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 3; --n: 12; clip-path: polygon(50% 50%, 146.00% 50.00%, 145.18% 62.53%, 142.73% 74.85%, 138.69% 86.74%, 133.14% 98.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 4; --n: 12; clip-path: polygon(50% 50%, 133.14% 98.00%, 126.16% 108.44%, 117.88% 117.88%, 108.44% 126.16%, 98.00% 133.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 5; --n: 12; clip-path: polygon(50% 50%, 98.00% 133.14%, 86.74% 138.69%, 74.85% 142.73%, 62.53% 145.18%, 50.00% 146.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 6; --n: 12; clip-path: polygon(50% 50%, 50.00% 146.00%, 37.47% 145.18%, 25.15% 142.73%, 13.26% 138.69%, 2.00% 133.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 7; --n: 12; clip-path: polygon(50% 50%, 2.00% 133.14%, -8.44% 126.16%, -17.88% 117.88%, -26.16% 108.44%, -33.14% 98.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 8; --n: 12; clip-path: polygon(50% 50%, -33.14% 98.00%, -38.69% 86.74%, -42.73% 74.85%, -45.18% 62.53%, -46.00% 50.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 9; --n: 12; clip-path: polygon(50% 50%, -46.00% 50.00%, -45.18% 37.47%, -42.73% 25.15%, -38.69% 13.26%, -33.14% 2.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 10; --n: 12; clip-path: polygon(50% 50%, -33.14% 2.00%, -26.16% -8.44%, -17.88% -17.88%, -8.44% -26.16%, 2.00% -33.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 11; --n: 12; clip-path: polygon(50% 50%, 2.00% -33.14%, 13.26% -38.69%, 25.15% -42.73%, 37.47% -45.18%, 50.00% -46.00%);"></span>
+    
+    
+    <span class="pt__whole"></span>
+  </div>
+</div>
+
+
+
+<div class="audio-dock" data-js="audio-dock">
+  <div class="gain" data-js="gain" role="slider" tabindex="0"
+       aria-label="Music volume" aria-orientation="vertical"
+       aria-valuemin="0" aria-valuemax="7" aria-valuenow="7" aria-valuetext="100%">
+    <span class="gain__rail" aria-hidden="true"></span>
+    <span class="gain__readout" data-js="gain-readout" aria-hidden="true">100</span>
+    <span class="gain__stack" aria-hidden="true">
+      
+      <span class="gain__seg" data-seg="7"></span><span class="gain__seg" data-seg="6"></span><span class="gain__seg" data-seg="5"></span><span class="gain__seg" data-seg="4"></span><span class="gain__seg" data-seg="3"></span><span class="gain__seg" data-seg="2"></span><span class="gain__seg" data-seg="1"></span>
+    </span>
+  </div>
+  <button type="button" class="audio-toggle" data-js="audio-toggle"
+          aria-pressed="false" aria-label="Unmute background music" title="Unmute music"></button>
+</div>
+
+<!-- mobile drawer -->
+<div id="mobile-drawer" class="drawer fixed inset-0 z-50 bg-void translate-x-full lg:hidden" data-js="drawer">
+  
+  <img class="drawer__mark" src="/engineer2026/images/cognitrixx-mark-1024.webp" alt="" aria-hidden="true" width="1024" height="1002" loading="lazy" decoding="async">
+  <div class="flex items-center justify-between px-6 h-20 relative">
+    <span class="font-display font-semibold text-sm tracking-wide">ENGINEER&nbsp;'26</span>
+    <button type="button" class="hud-menu is-close"
+      data-js="nav-close" aria-label="Close menu">
+      <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+  
+  <nav aria-label="Mobile" class="flex flex-col px-6 mt-6">
+    <!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+
+<ul class="baybar baybar--drawer">
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-1);">
+    <a href="/engineer2026/"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">01</span>
+        <span class="bay__label">Home</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-2);">
+    <a href="/engineer2026/about"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">02</span>
+        <span class="bay__label">About</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
+    <a href="/engineer2026/competitions"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">03</span>
+        <span class="bay__label">Competitions</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
+    <a href="/engineer2026/schedule"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">04</span>
+        <span class="bay__label">Schedule</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-5);">
+    <a href="/engineer2026/team"
+       class="bay is-active"
+       data-js="drawer-link"
+       aria-current="page">
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">05</span>
+        <span class="bay__label">Team</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-6);">
+    <a href="/engineer2026/sponsors"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">06</span>
+        <span class="bay__label">Sponsors</span>
+      </span>
+    </a>
+  </li>
+  
+</ul>
+
+    <a href="/engineer2026/register" class="btn-register drawer__cta mt-8" data-js="drawer-link">Register</a>
+  </nav>
+  <p class="drawer__foot" aria-hidden="true">Cognitrixx &mdash; Rewire Reality</p>
+</div>
+
+
+  <main class="relative z-10 pt-28 pb-20">
+    <div class="rail">
+
+      
+      
+      <!-- ==========================================================================
+     PAGE HERO — framed inner-page header in the homepage deck-card idiom.
+
+     Reuses the deck-card head (num / name / slab / line / go) on top of a
+     .hud-frame plate, so every inner page opens with the same angular HUD
+     instrument the homepage deck cards use.
+
+     Locals:
+       accent   "var(--bay-3)"   accent for the frame + head. A TOKEN, not a
+                                 literal triple: it lands in both --accent and
+                                 rgb(), so it must resolve to "r, g, b".
+       num      "01"             index chip
+       nav      "Events"         short name chip (matches the nav label)
+       kicker   "Cognitrixx / …" eyebrow line
+       title    HTML             the <h1> inner (may include a gradient span)
+       meta     HTML (optional)  right-aligned meta block
+       go       {href,label}     (optional) head link, label may be HTML
+       cls      "page-hero--gold" (optional) extra class on the frame
+     ========================================================================== -->
+<header class="hud-frame page-hero page-hero--gold" style="--accent: 242, 192, 104">
+  <div class="hud-frame__inner" data-spotlight style="--spot: 242, 192, 104">
+    
+    <span class="page-hero__scan" aria-hidden="true"></span>
+    <div class="deck-card__head">
+      <span class="deck-card__num">04</span>
+      <span class="deck-card__name">Team</span>
+      <span class="deck-card__slab" aria-hidden="true"></span>
+      <span class="deck-card__line" aria-hidden="true"></span>
+      
+    </div>
+    <div class="page-hero__body">
+      <p class="eyebrow mb-4" style="color: rgb(242, 192, 104)"><span data-scramble="750">Cognitrixx / the people</span></p>
+      
+      <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <h1 class="page-hero__title" data-split>The network<br><span class="text-gradient-gold">behind it.</span></h1>
+        
+        <div class="shrink-0 lg:text-right"><p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase"><span class="text-paper">32</span> members<br><span class="text-[var(--paper-faint)]">ENGINEER '26 &middot; NITK Surathkal</span></p></div>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+      
+        <!-- ============ THE TREE ============
+             data/team.json → tree, drawn as the organising team sketched it:
+             a spine from the Convenor, three wings whose rows line up across
+             the page, a base row on the same three columns, and the
+             secretaries in a closing row. No panel behind it
+             and no connector lines: the cards float on the page's own field,
+             and on a desktop the tree is wider than the text rail so the
+             cards can be big. On a phone it folds into one column, two cards
+             to a row. -->
+        
+        <section class="tree" aria-label="ENGINEER '26 team">
+          <ol class="tree__spine">
+            
+            <li class="tree__tier">
+              
+              <ul class="tree__group" aria-label="Convenor">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 1">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AR</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Akash Raut</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Convenor</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AR</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Runs the show. Literally.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Akash Raut</p>
+              <p class="tcard__post">Convenor</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </li>
+            
+            <li class="tree__tier">
+              
+              <ul class="tree__group" aria-label="Chief Coordinators">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 2">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">PM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Prajwal Meshram</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Chief Coordinator</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">PM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Herds chaos into a schedule.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Prajwal Meshram</p>
+              <p class="tcard__post">Chief Coordinator</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 3">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">DM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Dhananjay Mode</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Chief Coordinator</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">DM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Plan A, B and C. All ready.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Dhananjay Mode</p>
+              <p class="tcard__post">Chief Coordinator</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </li>
+            
+            <li class="tree__tier">
+              
+              <ul class="tree__group" aria-label="Head of Marketing">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 4">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">CD</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Chaitanya Deshmukh</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Marketing</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">CD</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Sells the hype. Delivers it too.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Chaitanya Deshmukh</p>
+              <p class="tcard__post">Head of Marketing</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Head of Growth">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 5">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">NR</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Nikhil Ragnekar</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Growth</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">NR</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Numbers only go up.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Nikhil Ragnekar</p>
+              <p class="tcard__post">Head of Growth</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Head of Marketing">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 6">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">VS</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Vedant Sabnis</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Marketing</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">VS</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Heard about ENGINEER? Blame him.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Vedant Sabnis</p>
+              <p class="tcard__post">Head of Marketing</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </li>
+            
+          </ol>
+
+          <div class="tree__wings">
+            
+            
+            
+            <div class="tree__cell tree__cell--left is-inward">
+              
+              <ul class="tree__group" aria-label="Head of Finance">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 7">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">SP</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Sambhav Powar</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Finance</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">SP</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Every rupee has a receipt.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Sambhav Powar</p>
+              <p class="tcard__post">Head of Finance</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Head of Technology">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 8">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">SP</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Soham Palkrit</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Technology</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">SP</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">It works on his machine. And yours.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Soham Palkrit</p>
+              <p class="tcard__post">Head of Technology</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--centre is-empty">
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--right is-inward">
+              
+              <ul class="tree__group" aria-label="Chief Advisor &amp; Head, ENGI-Care">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 9">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">DS</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Dhruv Sandilya</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Chief Advisor &amp; Head, ENGI-Care</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">DS</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Doing good never looked this good.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Dhruv Sandilya</p>
+              <p class="tcard__post">Chief Advisor &amp; Head, ENGI-Care</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Chief of Staff">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 10">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">S</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Samanyu</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Chief of Staff</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">S</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Knows where everyone is. Always.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Samanyu</p>
+              <p class="tcard__post">Chief of Staff</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--left is-inward">
+              
+              <ul class="tree__group" aria-label="Head of Creative">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 11">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Atharva Muthal</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Creative</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Makes pixels behave.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Atharva Muthal</p>
+              <p class="tcard__post">Head of Creative</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Head of Curation">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 12">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">SJ</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Soham Jain</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Curation</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">SJ</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Only the best make the cut.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Soham Jain</p>
+              <p class="tcard__post">Head of Curation</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--centre is-empty">
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--right is-inward">
+              
+              <ul class="tree__group" aria-label="Heads of Media">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 13">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">K</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Karthik Thippeswamy</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Media &amp; Digital Strategy</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">K</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Caught you on camera. Looking good.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Karthik Thippeswamy</p>
+              <p class="tcard__post">Head of Media &amp; Digital Strategy</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 14">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Abhishek M</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Media</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Every frame, on brand.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Abhishek M</p>
+              <p class="tcard__post">Head of Media</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--left">
+              
+              <ul class="tree__group" aria-label="Heads of Production">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 15">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">HK</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Harsh S K</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Production</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">HK</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Lights, stage, zero excuses.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Harsh S K</p>
+              <p class="tcard__post">Head of Production</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 16">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">SG</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Satwik Gurav</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Production</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">SG</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Builds the stage you’ll remember.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Satwik Gurav</p>
+              <p class="tcard__post">Head of Production</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--centre">
+              
+              <ul class="tree__group" aria-label="Head of Logistics">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 17">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">SR</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Shatayu Raut</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Logistics</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">SR</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Moves mountains. Mostly chairs.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Shatayu Raut</p>
+              <p class="tcard__post">Head of Logistics</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--right">
+              
+              <ul class="tree__group" aria-label="Head of Operations">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 18">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AK</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Aniket Kakad</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Operations</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AK</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">If it ran smoothly, that was him.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Aniket Kakad</p>
+              <p class="tcard__post">Head of Operations</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Head, ENGI-Force">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 19">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">TM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Thanish P M</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head, ENGI-Force</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">TM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Keeps the peace, keeps it moving.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Thanish P M</p>
+              <p class="tcard__post">Head, ENGI-Force</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--left">
+              
+              <ul class="tree__group" aria-label="Heads, ENGI-Stalls">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 20">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">SH</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Shivakumar Hiremath</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head, ENGI-Stalls</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">SH</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Stalls up, stomachs full.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Shivakumar Hiremath</p>
+              <p class="tcard__post">Head, ENGI-Stalls</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 21">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AN</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Abhishek H N</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head, ENGI-Stalls</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AN</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Turns a lawn into a market.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Abhishek H N</p>
+              <p class="tcard__post">Head, ENGI-Stalls</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--centre">
+              
+              <ul class="tree__group" aria-label="Head of Hospitality">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 22">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">ME</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Mohan Kumar M E</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Hospitality</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">ME</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Welcome mat, rolled out.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Mohan Kumar M E</p>
+              <p class="tcard__post">Head of Hospitality</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--right">
+              
+              <ul class="tree__group" aria-label="Heads of Hospitality">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 23">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AP</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Anuj Patil</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Hospitality</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AP</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Keeps the stars happy.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Anuj Patil</p>
+              <p class="tcard__post">Head of Hospitality</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 24">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">KG</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Karthik Gurikar</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Hospitality</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">KG</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Your stay, sorted.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Karthik Gurikar</p>
+              <p class="tcard__post">Head of Hospitality</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+          </div>
+
+          <div class="tree__base">
+            
+            <div class="tree__cell tree__cell--left">
+              
+              <ul class="tree__group" aria-label="Heads, ENGI-Gaming">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 25">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">GR</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Ganesh Madhav Rajesh</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head, ENGI-Gaming</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">GR</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">GG before you even queue.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Ganesh Madhav Rajesh</p>
+              <p class="tcard__post">Head, ENGI-Gaming</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 26">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AA</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Adhil Ali</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head, ENGI-Gaming</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AA</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Lag is not an excuse.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Adhil Ali</p>
+              <p class="tcard__post">Head, ENGI-Gaming</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--centre">
+              
+              <ul class="tree__group" aria-label="Head of Outreach">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 27">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AS</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Aditi Sinhal</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Outreach</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AS</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Your inbox has already met her.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Aditi Sinhal</p>
+              <p class="tcard__post">Head of Outreach</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+            <div class="tree__cell tree__cell--right">
+              
+              <ul class="tree__group" aria-label="Head of Local Marketing">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 28">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">NT</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Nandeesh Trivedi</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head of Local Marketing</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">NT</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Knows every shop in Surathkal.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Nandeesh Trivedi</p>
+              <p class="tcard__post">Head of Local Marketing</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+              <ul class="tree__group" aria-label="Head, ENGI-Talks">
+                
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 29">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">AD</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Aayush Dubey</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Head, ENGI-Talks</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">AD</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Gets legends on the mic.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Aayush Dubey</p>
+              <p class="tcard__post">Head, ENGI-Talks</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+              </ul>
+              
+            </div>
+            
+          </div>
+
+          
+          
+          <div class="tree__foot">
+            
+            <ul class="tree__group" aria-label="General Secretary">
+              
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 30">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">RM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Ramu H M</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">General Secretary</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">RM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Minutes taken. Excuses not.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Ramu H M</p>
+              <p class="tcard__post">General Secretary</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+            </ul>
+            
+            <ul class="tree__group" aria-label="Joint Secretary">
+              
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 31">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">LG</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Likith P Gujjar</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">Joint Secretary</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">LG</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Second in line, first on the job.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Likith P Gujjar</p>
+              <p class="tcard__post">Joint Secretary</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+            </ul>
+            
+            <ul class="tree__group" aria-label="PG Secretary">
+              
+
+<li class="tcard-cell" data-reveal="depth" style="--ci: 32">
+  <article class="tcard" data-js="team-card" data-tilt="6" tabindex="0" aria-expanded="false" style="--spot: 242, 192, 104">
+    <span class="tcard__shadow" aria-hidden="true"></span>
+    <div class="tcard__body">
+      <div class="tcard__flip">
+        <div class="tcard__face tcard__front">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__hint" aria-hidden="true"></span>
+              <div class="tcard__photo">
+                <span class="tcard__orbit" aria-hidden="true"><i></i></span>
+                <span class="tcard__disc">
+                  
+                  <span class="tcard__mono" aria-hidden="true">PM</span>
+                  
+                </span>
+              </div>
+              <p class="tcard__name">Premdeep Mali</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__post">PG Secretary</p>
+              <span class="tcard__shine" aria-hidden="true"></span>
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="tcard__face tcard__back">
+          <div class="tcard__frame">
+            <div class="tcard__in">
+              <span class="tcard__wm" aria-hidden="true">PM</span>
+              <span class="tcard__quote" aria-hidden="true">&ldquo;</span>
+              <p class="tcard__line">Postgrad poise, undergrad energy.</p>
+              <span class="tcard__rule" aria-hidden="true"></span>
+              <p class="tcard__sig">Premdeep Mali</p>
+              <p class="tcard__post">PG Secretary</p>
+              
+              <span class="tcard__glare" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</li>
+
+            </ul>
+            
+          </div>
+          
+        </section>
+
+        <p class="tree-note">Photos coming soon &middot; Corrections go to the ENGINEER '26 organising team</p>
+
+      
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+     FOOTER — minimal, premium.
+
+     The NITK crest sits in the identity block: the brochure carries it on
+     every page, and it is the institutional signal a sponsor or a parent
+     looks for. Extracted from the brochure cover to white-on-transparent
+     line art (public/images/nitk-crest.png) so it reads on the dark ground.
+
+     Contact details are the ones published in the ENGINEER '26 sponsorship
+     brochure (p15). Only the ORG addresses are listed here, never anyone's
+     personal mobile.
+     ========================================================================== -->
+<footer id="footer" class="site-footer relative z-10 border-t border-[var(--hairline)] pt-16 pb-0">
+  <div class="rail grid sm:grid-cols-3 gap-12">
+    <div>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="font-display font-semibold text-sm">ENGINEER&nbsp;'26</span>
+      </div>
+      <p class="font-mono text-xs tracking-[0.15em] uppercase text-[var(--paper-faint)]">Cognitrixx — Rewire Reality</p>
+
+      <div class="flex items-center gap-3 mt-5">
+        <img src="/engineer2026/images/nitk-crest.png" alt="" aria-hidden="true"
+             class="footer-crest" width="256" height="245" loading="lazy" decoding="async">
+        <p class="font-mono text-[0.62rem] leading-[1.5] tracking-[0.08em] uppercase text-[var(--paper-faint)]">
+          National Institute of<br>Technology Karnataka<br>
+          <span class="text-[var(--paper-dim)]">Surathkal</span>
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Navigate</p>
+      <nav class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)]">
+        <a href="/engineer2026/competitions" class="tap-target footer-link">Competitions</a>
+        <a href="/engineer2026/schedule" class="tap-target footer-link">Schedule</a>
+        <a href="/engineer2026/team" class="tap-target footer-link">Team</a>
+        
+        <a href="/engineer2026/sponsors" class="tap-target footer-link">Sponsors</a>
+        <a href="/engineer2026/about" class="tap-target footer-link">About</a>
+        <a href="/engineer2026/" class="tap-target footer-link">Home</a>
+      </nav>
+    </div>
+
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Contact</p>
+      <ul class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
+        <li><a href="mailto:engineerconvenor@nitk.edu.in" class="tap-target footer-link">engineerconvenor@nitk.edu.in</a></li>
+      </ul>
+      <p class="font-mono text-[0.62rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mt-6 mb-3">Follow</p>
+      <ul class="flex flex-wrap gap-x-4 gap-y-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
+        <li><a href="https://www.instagram.com/engineernitk" class="tap-target footer-link" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/engineer-nitk" class="tap-target footer-link" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.facebook.com/EngineerNITK" class="tap-target footer-link" rel="noopener">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <div class="footer-legal rail mt-14 pt-6 border-t border-[var(--hairline)]">
+    <p class="font-mono text-[0.65rem] text-[var(--paper-faint)]">
+      © 2026 ENGINEER, NITK Surathkal.
+    </p>
+    <nav class="footer-legal__links" aria-label="Policies">
+      <a href="/engineer2026/terms" class="tap-target">Terms</a>
+      <a href="/engineer2026/privacy" class="tap-target">Privacy</a>
+    </nav>
+  </div>
+
+  
+  <div class="footer-mega" aria-hidden="true">
+    <div class="footer-mega__mark" data-spotlight></div>
+  </div>
+</footer>
+
+
+  <script type="module" src="/engineer2026/js/motion.js?v=ad703f1"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=ad703f1"></script>
+  <script type="module" src="/engineer2026/js/team.js?v=ad703f1"></script>
+  <script type="module" src="/engineer2026/js/team-lines.js?v=ad703f1"></script>
+</body>
+</html>

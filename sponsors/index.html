@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sponsors — ENGINEER '26 · Cognitrixx</title>
+  <meta name="description" content="The sponsors, industry partners and alumni companies behind ENGINEER, NITK Surathkal's technical festival.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="64x64" href="/engineer2026/images/cognitrixx-icon-64.png?v=ad703f1">
+  <link rel="icon" href="/engineer2026/favicon.ico?v=ad703f1" sizes="any">
+  <link rel="apple-touch-icon" href="/engineer2026/images/apple-touch-icon.png?v=ad703f1">
+  <link href="/engineer2026/src/output.css?v=ad703f1" rel="stylesheet">
+</head>
+<body class="bg-void text-paper font-body antialiased">
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div data-field="ambient" data-priority="2" data-density="1.06" data-tone="nebula" data-signals="9" data-spread="13" data-rotate="0.012" data-depth="18" class="absolute inset-0"></div>
+    <div class="bg-grain absolute inset-0"></div>
+    <div class="scanlines absolute inset-0"></div>
+    <div class="field-vignette absolute inset-0"></div>
+  </div>
+
+  <!-- ==========================================================================
+     Primary navigation — fixed top bar, transparent over the hero, resolves
+     to a solid charcoal bar after ~80px of scroll (public/js/main.js).
+     Links out to the real routes: /competitions /schedule /team /sponsors /register
+     all exist and are served from index.js. "About" is the one in-page anchor.
+     ========================================================================== -->
+<header id="site-nav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300" data-js="nav">
+  <div class="rail h-20 flex items-center justify-between">
+    <a href="/engineer2026/" class="flex items-center gap-3 shrink-0" aria-label="ENGINEER '26 home">
+      <img class="nav-mark" src="/engineer2026/images/cognitrixx-mark-512.png" alt="ENGINEER '26 logo" width="512" height="501">
+      <span class="font-display font-semibold text-sm tracking-wide hidden sm:inline">ENGINEER&nbsp;'26</span>
+    </a>
+
+    
+    <nav aria-label="Site" class="hidden lg:block">
+      <!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+
+<ul class="baybar baybar--bar">
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-1);">
+    <a href="/engineer2026/"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">01</span>
+        <span class="bay__label">Home</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-2);">
+    <a href="/engineer2026/about"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">02</span>
+        <span class="bay__label">About</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
+    <a href="/engineer2026/competitions"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">03</span>
+        <span class="bay__label">Competitions</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
+    <a href="/engineer2026/schedule"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">04</span>
+        <span class="bay__label">Schedule</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-5);">
+    <a href="/engineer2026/team"
+       class="bay"
+       
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">05</span>
+        <span class="bay__label">Team</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-6);">
+    <a href="/engineer2026/sponsors"
+       class="bay is-active"
+       
+       aria-current="page">
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">06</span>
+        <span class="bay__label">Sponsors</span>
+      </span>
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <a href="/engineer2026/register" class="btn-register hidden sm:inline-flex" data-js="magnetic">Register</a>
+      <button type="button" class="hud-menu hud-menu--bar lg:hidden"
+        data-js="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+        <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<div class="scroll-progress" data-js="scroll-progress" aria-hidden="true"></div>
+
+
+<!-- ==========================================================================
+     SCROLL RAIL — the word SCROLL set vertically down the left edge, with a
+     bead running the track beside it.
+
+     Included from _nav.ejs so every page gets it. Near the bottom it flips to
+     TOP and runs the bead upward; it is a real <button> throughout, so the
+     affordance is also the control (public/js/site.js → initScrollRail).
+     ========================================================================== -->
+<button type="button" class="scroll-rail" data-js="scroll-rail" aria-label="Scroll down">
+  <span class="scroll-rail__word" data-js="scroll-rail-word">Scroll</span>
+  <span class="scroll-rail__track" aria-hidden="true"><span class="scroll-rail__bead"></span></span>
+</button>
+
+
+
+<!-- ==========================================================================
+     PAGE TRANSITION — the ENGINEER '26 mark, shattered into blades that wind
+     into a spiral and unwind back out. Modelled on the Cognizance loader the
+     brief references: dark blades pinwheeling around a bright core, each with
+     a lit leading edge, over a radial bloom.
+
+     Every blade is the SAME logo image clipped to its own angular wedge, so
+     the mark is genuinely torn apart rather than approximated — assembled, the
+     wedges reconstruct the logo exactly. The artwork carries its cyan edge
+     glow baked in (engineer26-mark-glow.png), so no blade needs a CSS filter:
+     each one is a plain image moved by transform and opacity, which the
+     compositor animates on its own however busy the page is.
+
+     Driven by public/js/page-transition.js. Included from _nav.ejs, so it is
+     present on every page.
+     ========================================================================== -->
+
+
+<script nonce="txHlvK4c768XP6G1VEaL9g==">
+  (function () {
+    // Tells the stylesheet script is running, so motion-only hidden poses
+    // (headline masks, the hero entrance) apply. With JS off they never do.
+    var doc = document, root = doc.documentElement;
+    root.classList.add('js');
+    var KEY = 'engi26.pt', arriving = false;
+    try {
+      var at = Number(sessionStorage.getItem(KEY));
+      sessionStorage.removeItem(KEY);
+      arriving = at > 0 && Date.now() - at < 12000;
+    } catch (e) {}
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav && nav.type === 'back_forward') arriving = true;
+    } catch (e) {}
+    if (!arriving) {
+      window.__ptRevealStart = window.__ptRevealed = Promise.resolve();
+      return;
+    }
+
+    root.classList.add('pt-arriving');
+    // Tells page-transition.js and preloader.js the arrival is handled here.
+    window.__engiPtArrival = true;
+    // Mid-session, the homepage's boot sequence never plays: it is the
+    // site's entrance, not a page change.
+    try { sessionStorage.setItem('engi26.loaded', '1'); } catch (e) {}
+    var started, revealed;
+    window.__ptRevealStart = new Promise(function (r) { started = r; });
+    window.__ptRevealed = new Promise(function (r) { revealed = r; });
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // The blades' flight plus the veil's fade (input.css), with a frame spare.
+    var REVEAL_MS = reduced ? 180 : 620;
+    var played = false;
+    function begin() {
+      root.classList.remove('pt-arriving');
+      // The homepage hero's entrance (see _entry.ejs) starts with the reveal.
+      if (!root.classList.contains('hero-go')) {
+        window.__heroGoAt = performance.now();
+        root.classList.add('hero-go');
+      }
+      started();
+    }
+    function play() {
+      if (played) return;
+      played = true;
+      var veil = doc.getElementById('page-transition');
+      if (!veil) { begin(); revealed(); return; }
+      // Hand the held, assembled mark from the gate class to the veil itself
+      // and start the flight in the same frame, from that same pose.
+      veil.classList.add('is-active');
+      requestAnimationFrame(function () {
+        veil.classList.add('is-revealing');
+        begin();
+        setTimeout(function () {
+          veil.classList.remove('is-active', 'is-revealing');
+          revealed();
+        }, REVEAL_MS);
+      });
+    }
+    if (doc.readyState === 'loading') {
+      doc.addEventListener('readystatechange', function () { if (doc.readyState !== 'loading') play(); });
+      // Belt and braces: never leave the page covered.
+      setTimeout(play, 4000);
+    } else {
+      play();
+    }
+  })();
+</script>
+
+<script type="speculationrules" nonce="txHlvK4c768XP6G1VEaL9g==">
+{"prefetch": [{
+  "source": "document",
+  "where": { "and": [
+    { "href_matches": "/*" },
+    { "not": { "href_matches": "/engineer2026/api/*" } },
+    { "not": { "href_matches": "/engineer2026/ticket/*" } },
+    { "not": { "selector_matches": "[download], [target=_blank], .gflow__link, a[href$='.jpg'], a[href$='.png'], a[href$='.webp'], a[href$='.pdf']" } }
+  ] },
+  "eagerness": "moderate"
+}]}
+</script>
+<div id="page-transition" class="pt" data-js="page-transition" aria-hidden="true">
+  <span class="pt__bloom"></span>
+  <div class="pt__mark">
+    
+    <span class="pt__blade" style="--i: 0; --n: 12; clip-path: polygon(50% 50%, 50.00% -46.00%, 62.53% -45.18%, 74.85% -42.73%, 86.74% -38.69%, 98.00% -33.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 1; --n: 12; clip-path: polygon(50% 50%, 98.00% -33.14%, 108.44% -26.16%, 117.88% -17.88%, 126.16% -8.44%, 133.14% 2.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 2; --n: 12; clip-path: polygon(50% 50%, 133.14% 2.00%, 138.69% 13.26%, 142.73% 25.15%, 145.18% 37.47%, 146.00% 50.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 3; --n: 12; clip-path: polygon(50% 50%, 146.00% 50.00%, 145.18% 62.53%, 142.73% 74.85%, 138.69% 86.74%, 133.14% 98.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 4; --n: 12; clip-path: polygon(50% 50%, 133.14% 98.00%, 126.16% 108.44%, 117.88% 117.88%, 108.44% 126.16%, 98.00% 133.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 5; --n: 12; clip-path: polygon(50% 50%, 98.00% 133.14%, 86.74% 138.69%, 74.85% 142.73%, 62.53% 145.18%, 50.00% 146.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 6; --n: 12; clip-path: polygon(50% 50%, 50.00% 146.00%, 37.47% 145.18%, 25.15% 142.73%, 13.26% 138.69%, 2.00% 133.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 7; --n: 12; clip-path: polygon(50% 50%, 2.00% 133.14%, -8.44% 126.16%, -17.88% 117.88%, -26.16% 108.44%, -33.14% 98.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 8; --n: 12; clip-path: polygon(50% 50%, -33.14% 98.00%, -38.69% 86.74%, -42.73% 74.85%, -45.18% 62.53%, -46.00% 50.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 9; --n: 12; clip-path: polygon(50% 50%, -46.00% 50.00%, -45.18% 37.47%, -42.73% 25.15%, -38.69% 13.26%, -33.14% 2.00%);"></span>
+    
+    <span class="pt__blade" style="--i: 10; --n: 12; clip-path: polygon(50% 50%, -33.14% 2.00%, -26.16% -8.44%, -17.88% -17.88%, -8.44% -26.16%, 2.00% -33.14%);"></span>
+    
+    <span class="pt__blade" style="--i: 11; --n: 12; clip-path: polygon(50% 50%, 2.00% -33.14%, 13.26% -38.69%, 25.15% -42.73%, 37.47% -45.18%, 50.00% -46.00%);"></span>
+    
+    
+    <span class="pt__whole"></span>
+  </div>
+</div>
+
+
+
+<div class="audio-dock" data-js="audio-dock">
+  <div class="gain" data-js="gain" role="slider" tabindex="0"
+       aria-label="Music volume" aria-orientation="vertical"
+       aria-valuemin="0" aria-valuemax="7" aria-valuenow="7" aria-valuetext="100%">
+    <span class="gain__rail" aria-hidden="true"></span>
+    <span class="gain__readout" data-js="gain-readout" aria-hidden="true">100</span>
+    <span class="gain__stack" aria-hidden="true">
+      
+      <span class="gain__seg" data-seg="7"></span><span class="gain__seg" data-seg="6"></span><span class="gain__seg" data-seg="5"></span><span class="gain__seg" data-seg="4"></span><span class="gain__seg" data-seg="3"></span><span class="gain__seg" data-seg="2"></span><span class="gain__seg" data-seg="1"></span>
+    </span>
+  </div>
+  <button type="button" class="audio-toggle" data-js="audio-toggle"
+          aria-pressed="false" aria-label="Unmute background music" title="Unmute music"></button>
+</div>
+
+<!-- mobile drawer -->
+<div id="mobile-drawer" class="drawer fixed inset-0 z-50 bg-void translate-x-full lg:hidden" data-js="drawer">
+  
+  <img class="drawer__mark" src="/engineer2026/images/cognitrixx-mark-1024.webp" alt="" aria-hidden="true" width="1024" height="1002" loading="lazy" decoding="async">
+  <div class="flex items-center justify-between px-6 h-20 relative">
+    <span class="font-display font-semibold text-sm tracking-wide">ENGINEER&nbsp;'26</span>
+    <button type="button" class="hud-menu is-close"
+      data-js="nav-close" aria-label="Close menu">
+      <span class="hud-menu__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+  
+  <nav aria-label="Mobile" class="flex flex-col px-6 mt-6">
+    <!-- ==========================================================================
+     HUD NAV BAR — the six bays as ONE welded unit.
+
+     Used in two places, deliberately identical: the hero menu, and the fixed
+     header that takes over once the hero scrolls away. Same component, so the
+     navigation never changes identity mid-page.
+
+     Six segments in ONE ROW need desktop width, so the hero/header bar is
+     >=1024px only. Below that the hamburger drawer takes over — and it stacks
+     these same segments vertically, so the phone gets the identical buttons
+     rather than a plain text list.
+
+     Params
+       variant   'hero' | 'bar' | 'drawer' — sizing/placement, same markup.
+       drawerLinks  true inside the drawer: segments also close it.
+       activeNav  id of the current section, highlighted in the bar.
+     ========================================================================== -->
+
+<ul class="baybar baybar--drawer">
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-1);">
+    <a href="/engineer2026/"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">01</span>
+        <span class="bay__label">Home</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-2);">
+    <a href="/engineer2026/about"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">02</span>
+        <span class="bay__label">About</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-3);">
+    <a href="/engineer2026/competitions"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">03</span>
+        <span class="bay__label">Competitions</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-4);">
+    <a href="/engineer2026/schedule"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">04</span>
+        <span class="bay__label">Schedule</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-5);">
+    <a href="/engineer2026/team"
+       class="bay"
+       data-js="drawer-link"
+       >
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">05</span>
+        <span class="bay__label">Team</span>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li class="baybar__cell" style="--bay-accent: var(--bay-6);">
+    <a href="/engineer2026/sponsors"
+       class="bay is-active"
+       data-js="drawer-link"
+       aria-current="page">
+      <span class="bay__slab" aria-hidden="true"></span>
+      <span class="bay__row">
+        <span class="bay__idx">06</span>
+        <span class="bay__label">Sponsors</span>
+      </span>
+    </a>
+  </li>
+  
+</ul>
+
+    <a href="/engineer2026/register" class="btn-register drawer__cta mt-8" data-js="drawer-link">Register</a>
+  </nav>
+  <p class="drawer__foot" aria-hidden="true">Cognitrixx &mdash; Rewire Reality</p>
+</div>
+
+
+  <main class="relative z-10 pt-28 pb-20">
+    <div class="rail">
+
+      
+      <!-- ==========================================================================
+     PAGE HERO — framed inner-page header in the homepage deck-card idiom.
+
+     Reuses the deck-card head (num / name / slab / line / go) on top of a
+     .hud-frame plate, so every inner page opens with the same angular HUD
+     instrument the homepage deck cards use.
+
+     Locals:
+       accent   "var(--bay-3)"   accent for the frame + head. A TOKEN, not a
+                                 literal triple: it lands in both --accent and
+                                 rgb(), so it must resolve to "r, g, b".
+       num      "01"             index chip
+       nav      "Events"         short name chip (matches the nav label)
+       kicker   "Cognitrixx / …" eyebrow line
+       title    HTML             the <h1> inner (may include a gradient span)
+       meta     HTML (optional)  right-aligned meta block
+       go       {href,label}     (optional) head link, label may be HTML
+       cls      "page-hero--gold" (optional) extra class on the frame
+     ========================================================================== -->
+<header class="hud-frame page-hero" style="--accent: var(--bay-6)">
+  <div class="hud-frame__inner" data-spotlight style="--spot: var(--bay-6)">
+    
+    <span class="page-hero__scan" aria-hidden="true"></span>
+    <div class="deck-card__head">
+      <span class="deck-card__num">06</span>
+      <span class="deck-card__name">Sponsors</span>
+      <span class="deck-card__slab" aria-hidden="true"></span>
+      <span class="deck-card__line" aria-hidden="true"></span>
+      
+    </div>
+    <div class="page-hero__body">
+      <p class="eyebrow mb-4" style="color: rgb(var(--bay-6))"><span data-scramble="750">Cognitrixx / sponsors</span></p>
+      
+      <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <h1 class="page-hero__title" data-split>Powering<br><span class="text-gradient-impossible">the system.</span></h1>
+        
+        <div class="shrink-0 lg:text-right"><p class="font-mono text-xs text-[var(--paper-dim)] tracking-[0.1em] uppercase"><span class="text-paper">40</span> sponsors &middot; <span class="text-paper">4</span> industry partners<br><span class="text-[var(--paper-faint)]">Since 2005 &middot; NITK Surathkal</span></p></div>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+      <p class="text-[var(--paper-dim)] max-w-xl mt-6">
+        The brands, labs and companies that have stood behind ENGINEER since 2005.
+      </p>
+
+      <div class="hud-frame mt-6" style="--accent: var(--bay-6)">
+        <div class="hud-frame__inner"><div class="hud-frame__body">
+
+        <!-- ============ SPONSORS ============
+             Brands that have backed ENGINEER in previous editions — the
+             headline wall of this page, so shown at full strength. -->
+        <section aria-labelledby="sponsors">
+          <div class="section-head">
+            <h2 id="sponsors" class="font-display font-semibold text-xl">Our sponsors</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">Previous editions</p>
+          </div>
+          <!-- ==========================================================================
+     LOGO WALL — a row of partner marks.
+
+     The source art sits on white tiles in the sponsorship brochure, which
+     would fight this site's dark ground, so each mark was knocked out to a
+     white-on-transparent silhouette (see the extraction note in
+     data/fest.json). The wall tints them with opacity rather than colour, so
+     one asset serves every context and the row reads as one material.
+
+     It is lit like an instrument panel: the grid lines catch a light that
+     follows the cursor (data-spotlight), a slow sheen crosses the wall, and
+     each tile frames its mark in HUD brackets and names it on hover. The
+     tiles cascade in when the wall scrolls into view.
+
+     Params
+       items    [{ name, logo }]
+       label    optional eyebrow above the wall
+       muted    true to sit the wall back (used for historical rows)
+       size     'lg' for bigger tiles (the headline wall on /sponsors)
+     ========================================================================== -->
+
+
+
+<ul class="logo-wall logo-wall--lg" data-reveal data-spotlight>
+  
+  <li class="logo-wall__cell" style="--i: 0">
+    <span class="logo-wall__idx" aria-hidden="true">01</span>
+    <img src="/engineer2026/images/logos/past/decathlon.png" alt="Decathlon" title="Decathlon"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Decathlon</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 1">
+    <span class="logo-wall__idx" aria-hidden="true">02</span>
+    <img src="/engineer2026/images/logos/past/ather.png" alt="Ather" title="Ather"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Ather</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 2">
+    <span class="logo-wall__idx" aria-hidden="true">03</span>
+    <img src="/engineer2026/images/logos/past/royal-enfield.png" alt="Royal Enfield" title="Royal Enfield"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Royal Enfield</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 3">
+    <span class="logo-wall__idx" aria-hidden="true">04</span>
+    <img src="/engineer2026/images/logos/past/canara-bank.png" alt="Canara Bank" title="Canara Bank"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Canara Bank</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 4">
+    <span class="logo-wall__idx" aria-hidden="true">05</span>
+    <img src="/engineer2026/images/logos/past/reliance-industries.png" alt="Reliance Industries" title="Reliance Industries"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Reliance Industries</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 5">
+    <span class="logo-wall__idx" aria-hidden="true">06</span>
+    <img src="/engineer2026/images/logos/past/monster-energy.png" alt="Monster Energy" title="Monster Energy"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Monster Energy</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 6">
+    <span class="logo-wall__idx" aria-hidden="true">07</span>
+    <img src="/engineer2026/images/logos/past/sbi.png" alt="SBI" title="SBI"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">SBI</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 7">
+    <span class="logo-wall__idx" aria-hidden="true">08</span>
+    <img src="/engineer2026/images/logos/past/zebronics.png" alt="Zebronics" title="Zebronics"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Zebronics</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 8">
+    <span class="logo-wall__idx" aria-hidden="true">09</span>
+    <img src="/engineer2026/images/logos/past/ibm.png" alt="IBM" title="IBM"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">IBM</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 9">
+    <span class="logo-wall__idx" aria-hidden="true">10</span>
+    <img src="/engineer2026/images/logos/past/cisco.png" alt="Cisco" title="Cisco"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Cisco</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 10">
+    <span class="logo-wall__idx" aria-hidden="true">11</span>
+    <img src="/engineer2026/images/logos/past/volvo.png" alt="Volvo" title="Volvo"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Volvo</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 11">
+    <span class="logo-wall__idx" aria-hidden="true">12</span>
+    <img src="/engineer2026/images/logos/past/unacademy.png" alt="Unacademy" title="Unacademy"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Unacademy</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 12">
+    <span class="logo-wall__idx" aria-hidden="true">13</span>
+    <img src="/engineer2026/images/logos/past/times-of-india.png" alt="Times of India" title="Times of India"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Times of India</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 13">
+    <span class="logo-wall__idx" aria-hidden="true">14</span>
+    <img src="/engineer2026/images/logos/past/ms-master.png" alt="MS Master" title="MS Master"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">MS Master</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 14">
+    <span class="logo-wall__idx" aria-hidden="true">15</span>
+    <img src="/engineer2026/images/logos/past/big-fm.png" alt="Big FM" title="Big FM"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Big FM</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 15">
+    <span class="logo-wall__idx" aria-hidden="true">16</span>
+    <img src="/engineer2026/images/logos/past/tata.png" alt="Tata" title="Tata"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Tata</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 16">
+    <span class="logo-wall__idx" aria-hidden="true">17</span>
+    <img src="/engineer2026/images/logos/past/time.png" alt="TIME" title="TIME"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">TIME</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 17">
+    <span class="logo-wall__idx" aria-hidden="true">18</span>
+    <img src="/engineer2026/images/logos/past/bosch.png" alt="Bosch" title="Bosch"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Bosch</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 18">
+    <span class="logo-wall__idx" aria-hidden="true">19</span>
+    <img src="/engineer2026/images/logos/past/intel.png" alt="Intel" title="Intel"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Intel</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 19">
+    <span class="logo-wall__idx" aria-hidden="true">20</span>
+    <img src="/engineer2026/images/logos/past/lic.png" alt="LIC" title="LIC"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">LIC</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 20">
+    <span class="logo-wall__idx" aria-hidden="true">21</span>
+    <img src="/engineer2026/images/logos/past/cfa-institute.png" alt="CFA Institute" title="CFA Institute"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">CFA Institute</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 21">
+    <span class="logo-wall__idx" aria-hidden="true">22</span>
+    <img src="/engineer2026/images/logos/past/sap.png" alt="SAP" title="SAP"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">SAP</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 22">
+    <span class="logo-wall__idx" aria-hidden="true">23</span>
+    <img src="/engineer2026/images/logos/past/hdfc-bank.png" alt="HDFC Bank" title="HDFC Bank"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">HDFC Bank</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 23">
+    <span class="logo-wall__idx" aria-hidden="true">24</span>
+    <img src="/engineer2026/images/logos/past/dell.png" alt="Dell" title="Dell"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Dell</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 24">
+    <span class="logo-wall__idx" aria-hidden="true">25</span>
+    <img src="/engineer2026/images/logos/past/ifms.png" alt="IFMS" title="IFMS"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">IFMS</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 25">
+    <span class="logo-wall__idx" aria-hidden="true">26</span>
+    <img src="/engineer2026/images/logos/past/ra.png" alt="RA" title="RA"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">RA</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 26">
+    <span class="logo-wall__idx" aria-hidden="true">27</span>
+    <img src="/engineer2026/images/logos/past/easemytrip.png" alt="EaseMyTrip" title="EaseMyTrip"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">EaseMyTrip</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 27">
+    <span class="logo-wall__idx" aria-hidden="true">28</span>
+    <img src="/engineer2026/images/logos/past/wells-fargo.png" alt="Wells Fargo" title="Wells Fargo"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Wells Fargo</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 28">
+    <span class="logo-wall__idx" aria-hidden="true">29</span>
+    <img src="/engineer2026/images/logos/past/course-hero.png" alt="Course Hero" title="Course Hero"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Course Hero</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 29">
+    <span class="logo-wall__idx" aria-hidden="true">30</span>
+    <img src="/engineer2026/images/logos/past/helion-studios.png" alt="Helion Studios" title="Helion Studios"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Helion Studios</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 30">
+    <span class="logo-wall__idx" aria-hidden="true">31</span>
+    <img src="/engineer2026/images/logos/past/skmep.png" alt="SKMEP" title="SKMEP"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">SKMEP</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 31">
+    <span class="logo-wall__idx" aria-hidden="true">32</span>
+    <img src="/engineer2026/images/logos/past/icici-bank.png" alt="ICICI Bank" title="ICICI Bank"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">ICICI Bank</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 32">
+    <span class="logo-wall__idx" aria-hidden="true">33</span>
+    <img src="/engineer2026/images/logos/past/devfolio.png" alt="Devfolio" title="Devfolio"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Devfolio</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 33">
+    <span class="logo-wall__idx" aria-hidden="true">34</span>
+    <img src="/engineer2026/images/logos/past/mescom.png" alt="MESCOM" title="MESCOM"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">MESCOM</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 34">
+    <span class="logo-wall__idx" aria-hidden="true">35</span>
+    <img src="/engineer2026/images/logos/past/beardo.png" alt="Beardo" title="Beardo"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Beardo</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 35">
+    <span class="logo-wall__idx" aria-hidden="true">36</span>
+    <img src="/engineer2026/images/logos/past/unstop.png" alt="Unstop" title="Unstop"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Unstop</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 36">
+    <span class="logo-wall__idx" aria-hidden="true">37</span>
+    <img src="/engineer2026/images/logos/past/kreative-keeda.png" alt="Kreative Keeda" title="Kreative Keeda"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Kreative Keeda</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 37">
+    <span class="logo-wall__idx" aria-hidden="true">38</span>
+    <img src="/engineer2026/images/logos/past/moxx-entertainments.png" alt="Moxx Entertainments" title="Moxx Entertainments"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Moxx Entertainments</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 38">
+    <span class="logo-wall__idx" aria-hidden="true">39</span>
+    <img src="/engineer2026/images/logos/past/bank-of-baroda.png" alt="Bank of Baroda" title="Bank of Baroda"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Bank of Baroda</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 39">
+    <span class="logo-wall__idx" aria-hidden="true">40</span>
+    <img src="/engineer2026/images/logos/past/tribevibe.png" alt="TribeVibe" title="TribeVibe"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">TribeVibe</span>
+  </li>
+  
+</ul>
+
+        </section>
+
+        <!-- ============ INDUSTRY & RESEARCH PARTNERS ============
+             Standing collaborations of the host institute rather than fest
+             sponsorships, so they are kept distinct from the wall above. -->
+        <section class="mt-16" aria-labelledby="partners">
+          <div class="section-head">
+            <h2 id="partners" class="font-display font-semibold text-xl">Industry &amp; research partners</h2>
+          </div>
+          <!-- ==========================================================================
+     LOGO WALL — a row of partner marks.
+
+     The source art sits on white tiles in the sponsorship brochure, which
+     would fight this site's dark ground, so each mark was knocked out to a
+     white-on-transparent silhouette (see the extraction note in
+     data/fest.json). The wall tints them with opacity rather than colour, so
+     one asset serves every context and the row reads as one material.
+
+     It is lit like an instrument panel: the grid lines catch a light that
+     follows the cursor (data-spotlight), a slow sheen crosses the wall, and
+     each tile frames its mark in HUD brackets and names it on hover. The
+     tiles cascade in when the wall scrolls into view.
+
+     Params
+       items    [{ name, logo }]
+       label    optional eyebrow above the wall
+       muted    true to sit the wall back (used for historical rows)
+       size     'lg' for bigger tiles (the headline wall on /sponsors)
+     ========================================================================== -->
+
+
+
+<ul class="logo-wall" data-reveal data-spotlight>
+  
+  <li class="logo-wall__cell" style="--i: 0">
+    <span class="logo-wall__idx" aria-hidden="true">01</span>
+    <img src="/engineer2026/images/logos/industry/isro.png" alt="ISRO" title="ISRO"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">ISRO</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 1">
+    <span class="logo-wall__idx" aria-hidden="true">02</span>
+    <img src="/engineer2026/images/logos/industry/qnu-labs.png" alt="QNu Labs" title="QNu Labs"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">QNu Labs</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 2">
+    <span class="logo-wall__idx" aria-hidden="true">03</span>
+    <img src="/engineer2026/images/logos/industry/seg-automotive.png" alt="SEG Automotive" title="SEG Automotive"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">SEG Automotive</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 3">
+    <span class="logo-wall__idx" aria-hidden="true">04</span>
+    <img src="/engineer2026/images/logos/industry/em-microelectronic.png" alt="EM Microelectronic" title="EM Microelectronic"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">EM Microelectronic</span>
+  </li>
+  
+</ul>
+
+
+          <ul class="centre-list mt-10" data-reveal>
+            
+            <li class="centre">
+              <span class="centre__n">01</span>
+              <span class="centre__b">
+                <span class="centre__name">Regional Academic Centre for Space</span>
+                <span class="centre__note">MoU between ISRO &amp; NITK</span>
+              </span>
+            </li>
+            
+            <li class="centre">
+              <span class="centre__n">02</span>
+              <span class="centre__b">
+                <span class="centre__name">Centre for Sustainable Energy Engineering</span>
+                
+              </span>
+            </li>
+            
+            <li class="centre">
+              <span class="centre__n">03</span>
+              <span class="centre__b">
+                <span class="centre__name">Centre for System Design</span>
+                
+              </span>
+            </li>
+            
+            <li class="centre">
+              <span class="centre__n">04</span>
+              <span class="centre__b">
+                <span class="centre__name">NITK Science &amp; Technology Entrepreneurs&#39; Park</span>
+                <span class="centre__note">NITK-STEP</span>
+              </span>
+            </li>
+            
+          </ul>
+        </section>
+
+        <!-- ============ ALUMNI COMPANIES ============ -->
+        <section class="mt-16" aria-labelledby="alumni">
+          <div class="section-head">
+            <h2 id="alumni" class="font-display font-semibold text-xl">Founded by alumni</h2>
+            <p class="font-mono text-xs text-[var(--paper-faint)] tracking-[0.1em] uppercase">250+ startups</p>
+          </div>
+          <!-- ==========================================================================
+     LOGO WALL — a row of partner marks.
+
+     The source art sits on white tiles in the sponsorship brochure, which
+     would fight this site's dark ground, so each mark was knocked out to a
+     white-on-transparent silhouette (see the extraction note in
+     data/fest.json). The wall tints them with opacity rather than colour, so
+     one asset serves every context and the row reads as one material.
+
+     It is lit like an instrument panel: the grid lines catch a light that
+     follows the cursor (data-spotlight), a slow sheen crosses the wall, and
+     each tile frames its mark in HUD brackets and names it on hover. The
+     tiles cascade in when the wall scrolls into view.
+
+     Params
+       items    [{ name, logo }]
+       label    optional eyebrow above the wall
+       muted    true to sit the wall back (used for historical rows)
+       size     'lg' for bigger tiles (the headline wall on /sponsors)
+     ========================================================================== -->
+
+
+
+<ul class="logo-wall logo-wall--muted" data-reveal data-spotlight>
+  
+  <li class="logo-wall__cell" style="--i: 0">
+    <span class="logo-wall__idx" aria-hidden="true">01</span>
+    <img src="/engineer2026/images/logos/alumni/practo.png" alt="Practo" title="Practo"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Practo</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 1">
+    <span class="logo-wall__idx" aria-hidden="true">02</span>
+    <img src="/engineer2026/images/logos/alumni/delhivery.png" alt="Delhivery" title="Delhivery"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Delhivery</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 2">
+    <span class="logo-wall__idx" aria-hidden="true">03</span>
+    <img src="/engineer2026/images/logos/alumni/pinkvilla.png" alt="Pinkvilla" title="Pinkvilla"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Pinkvilla</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 3">
+    <span class="logo-wall__idx" aria-hidden="true">04</span>
+    <img src="/engineer2026/images/logos/alumni/docpulse.png" alt="Docpulse" title="Docpulse"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Docpulse</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 4">
+    <span class="logo-wall__idx" aria-hidden="true">05</span>
+    <img src="/engineer2026/images/logos/alumni/travelyaari.png" alt="Travelyaari" title="Travelyaari"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Travelyaari</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 5">
+    <span class="logo-wall__idx" aria-hidden="true">06</span>
+    <img src="/engineer2026/images/logos/alumni/nestaway.png" alt="NestAway" title="NestAway"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">NestAway</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 6">
+    <span class="logo-wall__idx" aria-hidden="true">07</span>
+    <img src="/engineer2026/images/logos/alumni/koo.png" alt="Koo" title="Koo"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Koo</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 7">
+    <span class="logo-wall__idx" aria-hidden="true">08</span>
+    <img src="/engineer2026/images/logos/alumni/glowpink.png" alt="Glowpink" title="Glowpink"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Glowpink</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 8">
+    <span class="logo-wall__idx" aria-hidden="true">09</span>
+    <img src="/engineer2026/images/logos/alumni/simplilearn.png" alt="Simplilearn" title="Simplilearn"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Simplilearn</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 9">
+    <span class="logo-wall__idx" aria-hidden="true">10</span>
+    <img src="/engineer2026/images/logos/alumni/chai-point.png" alt="Chai Point" title="Chai Point"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Chai Point</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 10">
+    <span class="logo-wall__idx" aria-hidden="true">11</span>
+    <img src="/engineer2026/images/logos/alumni/urgently.png" alt="Urgently" title="Urgently"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Urgently</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 11">
+    <span class="logo-wall__idx" aria-hidden="true">12</span>
+    <img src="/engineer2026/images/logos/alumni/kb-nbfc.png" alt="KB NBFC" title="KB NBFC"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">KB NBFC</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 12">
+    <span class="logo-wall__idx" aria-hidden="true">13</span>
+    <img src="/engineer2026/images/logos/alumni/quest-global.png" alt="Quest Global" title="Quest Global"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Quest Global</span>
+  </li>
+  
+  <li class="logo-wall__cell" style="--i: 13">
+    <span class="logo-wall__idx" aria-hidden="true">14</span>
+    <img src="/engineer2026/images/logos/alumni/capitalmind.png" alt="Capitalmind" title="Capitalmind"
+         loading="lazy" decoding="async">
+    <span class="logo-wall__name" aria-hidden="true">Capitalmind</span>
+  </li>
+  
+</ul>
+
+        </section>
+
+        <div class="mt-16 flex justify-center" data-reveal>
+          <a href="/engineer2026/#footer" class="btn btn-primary" data-js="magnetic">Partner with us</a>
+        </div>
+
+        </div></div></div>
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+     FOOTER — minimal, premium.
+
+     The NITK crest sits in the identity block: the brochure carries it on
+     every page, and it is the institutional signal a sponsor or a parent
+     looks for. Extracted from the brochure cover to white-on-transparent
+     line art (public/images/nitk-crest.png) so it reads on the dark ground.
+
+     Contact details are the ones published in the ENGINEER '26 sponsorship
+     brochure (p15). Only the ORG addresses are listed here, never anyone's
+     personal mobile.
+     ========================================================================== -->
+<footer id="footer" class="site-footer relative z-10 border-t border-[var(--hairline)] pt-16 pb-0">
+  <div class="rail grid sm:grid-cols-3 gap-12">
+    <div>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="font-display font-semibold text-sm">ENGINEER&nbsp;'26</span>
+      </div>
+      <p class="font-mono text-xs tracking-[0.15em] uppercase text-[var(--paper-faint)]">Cognitrixx — Rewire Reality</p>
+
+      <div class="flex items-center gap-3 mt-5">
+        <img src="/engineer2026/images/nitk-crest.png" alt="" aria-hidden="true"
+             class="footer-crest" width="256" height="245" loading="lazy" decoding="async">
+        <p class="font-mono text-[0.62rem] leading-[1.5] tracking-[0.08em] uppercase text-[var(--paper-faint)]">
+          National Institute of<br>Technology Karnataka<br>
+          <span class="text-[var(--paper-dim)]">Surathkal</span>
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Navigate</p>
+      <nav class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)]">
+        <a href="/engineer2026/competitions" class="tap-target footer-link">Competitions</a>
+        <a href="/engineer2026/schedule" class="tap-target footer-link">Schedule</a>
+        <a href="/engineer2026/team" class="tap-target footer-link">Team</a>
+        
+        <a href="/engineer2026/sponsors" class="tap-target footer-link">Sponsors</a>
+        <a href="/engineer2026/about" class="tap-target footer-link">About</a>
+        <a href="/engineer2026/" class="tap-target footer-link">Home</a>
+      </nav>
+    </div>
+
+    <div>
+      <p class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mb-4">Contact</p>
+      <ul class="flex flex-col gap-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
+        <li><a href="mailto:engineerconvenor@nitk.edu.in" class="tap-target footer-link">engineerconvenor@nitk.edu.in</a></li>
+      </ul>
+      <p class="font-mono text-[0.62rem] tracking-[0.15em] uppercase text-[var(--paper-faint)] mt-6 mb-3">Follow</p>
+      <ul class="flex flex-wrap gap-x-4 gap-y-2 font-body text-sm text-[var(--paper-dim)] list-none p-0 m-0">
+        <li><a href="https://www.instagram.com/engineernitk" class="tap-target footer-link" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/engineer-nitk" class="tap-target footer-link" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.facebook.com/EngineerNITK" class="tap-target footer-link" rel="noopener">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <div class="footer-legal rail mt-14 pt-6 border-t border-[var(--hairline)]">
+    <p class="font-mono text-[0.65rem] text-[var(--paper-faint)]">
+      © 2026 ENGINEER, NITK Surathkal.
+    </p>
+    <nav class="footer-legal__links" aria-label="Policies">
+      <a href="/engineer2026/terms" class="tap-target">Terms</a>
+      <a href="/engineer2026/privacy" class="tap-target">Privacy</a>
+    </nav>
+  </div>
+
+  
+  <div class="footer-mega" aria-hidden="true">
+    <div class="footer-mega__mark" data-spotlight></div>
+  </div>
+</footer>
+
+
+  <script type="module" src="/engineer2026/js/motion.js?v=ad703f1"></script>
+  <script type="module" src="/engineer2026/js/page.js?v=ad703f1"></script>
+</body>
+</html>
