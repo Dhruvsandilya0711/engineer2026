@@ -56,7 +56,6 @@ export function mountLeaderboard() {
   const row = (r, i, metric) => {
     const tr = document.createElement('tr');
     if (r.name.toLowerCase() === (get(NAME_KEY) || '').toLowerCase()) tr.classList.add('is-you');
-    if (closed && i === 0) tr.classList.add('is-winner');
     tr.innerHTML =
       `<td class="lb-rank">${String(i + 1).padStart(2, '0')}</td>` +
       `<td class="lb-name"></td>` +
@@ -89,14 +88,6 @@ export function mountLeaderboard() {
           continue;
         }
         rows.forEach((r, i) => tbody.append(row(r, i, metric)));
-        // The winners line follows the server's count, so it can never
-        // disagree with the table under it.
-        const win = host.querySelector(`[data-js="lb-win-${metric}"]`);
-        const winV = host.querySelector(`[data-js="lb-win-${metric}-v"]`);
-        if (closed && win && rows[0]) {
-          win.textContent = rows[0].name;
-          if (winV) winV.textContent = metric === 'streak' ? '×' + rows[0].streak : rows[0].score + ' pts';
-        }
       }
     } catch (_) {
       // No API (the static mirror): the frozen result rendered into the page

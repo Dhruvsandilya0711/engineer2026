@@ -23,7 +23,7 @@
 // reduced-motion state: nothing here can leave content hidden.
 // ==========================================================================
 
-import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=ad703f1';
+import { initScroll, REDUCED_MOTION } from '/engineer2026/js/scroll.js?v=74a30a2';
 
 const root = document.documentElement;
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
