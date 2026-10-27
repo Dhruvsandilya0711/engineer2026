@@ -3099,6 +3099,49 @@ a.act__n:hover { color: var(--color-cyan); }
   border-color: color-mix(in oklab, var(--color-success) 45%, transparent);
 }
 
+/* ---- final results ---------------------------------------------------
+   The boards froze at the close; this is the result, stated before the
+   tables so nobody has to read a table to find the winners. */
+.lb__final { padding: 1rem 0 0.2rem; }
+.lb__final-lede, .lb__final-foot {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--paper-dim);
+  max-width: 62ch;
+}
+.lb__final-lede b { color: var(--paper); font-weight: 500; }
+.lb__final-foot { margin-top: 0.85rem; font-size: 0.72rem; color: var(--paper-faint); }
+.lb__winners {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1px;
+  margin-top: 0.9rem;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+}
+.lb__winner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 1rem;
+  background: color-mix(in oklab, var(--color-amber) 6%, var(--color-void));
+}
+.lb__winner-k {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+.lb__winner-n {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--paper);
+  overflow-wrap: anywhere;
+}
+.lb__winner-v { font-family: var(--font-mono); font-size: 0.72rem; color: var(--paper-dim); font-variant-numeric: tabular-nums; }
+
 /* ---- prize rules ----------------------------------------------------
    A disclosure rather than a block of standing text: two ₹2,500 prizes
    need terms on the page, but almost nobody reads them before playing and
@@ -3187,6 +3230,8 @@ a.act__n:hover { color: var(--color-cyan); }
 .lb-name { color: var(--paper-dim); overflow-wrap: anywhere; }
 .lb-val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--paper); }
 .lb__table tr.is-you .lb-name { color: var(--color-cyan); }
+.lb__table tr.is-winner { background: color-mix(in oklab, var(--color-amber) 7%, transparent); }
+.lb__table tr.is-winner .lb-rank, .lb__table tr.is-winner .lb-name { color: var(--color-amber); }
 .lb-empty, .lb__err { color: var(--paper-faint); font-size: 0.8rem; text-align: center; padding: 1.5rem 0; }
 
 .lb__panel { margin-top: 1.25rem; border: 1px solid var(--hairline-strong); padding: 1rem; }

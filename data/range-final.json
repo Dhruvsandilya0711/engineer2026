@@ -1,0 +1,30 @@
+{
+  "_note": "Signal Range final results, frozen at the close (25 Oct 2026, 18:00 IST = 12:30 UTC). Built from the server's board with runs submitted after the close and runs held as automated left out. Rendered into the page so the result shows wherever the API does not run (the static mirror); the live server recomputes the same filter from the database.",
+  "closesAt": "2026-10-25T12:30:00Z",
+  "boards": {
+    "score": [
+      { "name": "saisharan", "score": 1960, "streak": 24 },
+      { "name": "ak1", "score": 1912, "streak": 21 },
+      { "name": "robocon", "score": 1483, "streak": 20 },
+      { "name": "ak", "score": 1152, "streak": 17 },
+      { "name": "CHINMAY", "score": 1011, "streak": 20 },
+      { "name": "Aldebaran x 3 lol", "score": 719, "streak": 15 },
+      { "name": "tetrAldebaran", "score": 697, "streak": 12 },
+      { "name": "Aldebaran x again", "score": 566, "streak": 11 },
+      { "name": "Aldebaran x", "score": 475, "streak": 11 },
+      { "name": "ak2", "score": 468, "streak": 9 }
+    ],
+    "streak": [
+      { "name": "saisharan", "score": 1382, "streak": 25 },
+      { "name": "ak1", "score": 1162, "streak": 22 },
+      { "name": "robocon", "score": 1483, "streak": 20 },
+      { "name": "CHINMAY", "score": 1011, "streak": 20 },
+      { "name": "ak", "score": 918, "streak": 18 },
+      { "name": "Aldebaran x 3 lol", "score": 719, "streak": 15 },
+      { "name": "Y.Karthikeya", "score": 363, "streak": 13 },
+      { "name": "ak2", "score": 435, "streak": 12 },
+      { "name": "akshayak", "score": 318, "streak": 12 },
+      { "name": "tetrAldebaran", "score": 697, "streak": 12 }
+    ]
+  }
+}
