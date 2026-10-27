@@ -38,6 +38,9 @@ export function mountLeaderboard() {
   };
 
   let busy = false;
+  // The boards froze at the close (prize rule 9). The page is rendered final,
+  // and the server says so too; either is enough to stop submitting.
+  let closed = host.classList.contains('is-final');
 
   const say = (text, tone = '') => {
     msg.textContent = text;
@@ -52,7 +55,8 @@ export function mountLeaderboard() {
   // ---- boards ------------------------------------------------------------
   const row = (r, i, metric) => {
     const tr = document.createElement('tr');
-    if (r.name.toLowerCase() === (get(NAME_KEY) || '').toLowerCase()) tr.className = 'is-you';
+    if (r.name.toLowerCase() === (get(NAME_KEY) || '').toLowerCase()) tr.classList.add('is-you');
+    if (closed && i === 0) tr.classList.add('is-winner');
     tr.innerHTML =
       `<td class="lb-rank">${String(i + 1).padStart(2, '0')}</td>` +
       `<td class="lb-name"></td>` +
@@ -68,20 +72,38 @@ export function mountLeaderboard() {
       const res = await fetch('/api/range/leaderboard?limit=10', { headers: { accept: 'application/json' } });
       const data = await res.json();
       if (!data.ok) throw new Error('bad response');
+      if (data.closed) closed = true;
+      // A closed board that comes back empty means the store is not the
+      // real one (the database unreachable, a dev machine): keep the frozen
+      // result the page was rendered with rather than blank it.
+      const rendered = bodies.score.querySelector('.lb-rank');
+      if (closed && rendered && !(data.boards.score || []).length) return;
       for (const metric of ['score', 'streak']) {
         const tbody = bodies[metric];
         tbody.replaceChildren();
         const rows = data.boards[metric] || [];
         if (!rows.length) {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td class="lb-empty" colspan="3">No runs yet — be first.</td>`;
+          tr.innerHTML = `<td class="lb-empty" colspan="3">${closed ? 'No runs counted.' : 'No runs yet — be first.'}</td>`;
           tbody.append(tr);
           continue;
         }
         rows.forEach((r, i) => tbody.append(row(r, i, metric)));
+        // The winners line follows the server's count, so it can never
+        // disagree with the table under it.
+        const win = host.querySelector(`[data-js="lb-win-${metric}"]`);
+        const winV = host.querySelector(`[data-js="lb-win-${metric}-v"]`);
+        if (closed && win && rows[0]) {
+          win.textContent = rows[0].name;
+          if (winV) winV.textContent = metric === 'streak' ? '×' + rows[0].streak : rows[0].score + ' pts';
+        }
       }
     } catch (_) {
-      host.querySelector('[data-js="lb-error"]')?.removeAttribute('hidden');
+      // No API (the static mirror): the frozen result rendered into the page
+      // stands. Only an empty board is worth an error.
+      if (!bodies.score.querySelector('.lb-rank')) {
+        host.querySelector('[data-js="lb-error"]')?.removeAttribute('hidden');
+      }
     }
   }
 
@@ -150,6 +172,11 @@ export function mountLeaderboard() {
     if (run.score <= 0 && run.streak <= 0) return;   // nothing worth saving
 
     open(`${run.score} pts · best streak ×${run.streak} · ${run.hits}/${run.shots} hits`);
+
+    if (closed) {
+      say('The boards closed at 18:00 IST on 25 October — this run is not recorded.');
+      return;
+    }
 
     // A run played without a server-issued seed cannot be verified, so it
     // cannot go on the board. Say why rather than failing silently.

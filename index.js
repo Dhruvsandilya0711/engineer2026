@@ -25,6 +25,7 @@ import {
   initLeaderboardStore, leaderboardMode, hasStableSalt,
   hashIp, validateName, rateLimit, saveRun, topRuns, rankFor, hideRun,
   issueSession, verifySession, sessionUsed, reviewQueue,
+  BOARD_CLOSES_AT, boardClosed,
 } from './lib/leaderboard.js';
 import { checkClient, checkPace, reviewReasons } from './lib/antibot.js';
 // The SAME simulation the browser runs. Replaying a submitted trace through
@@ -159,6 +160,9 @@ const teamData = JSON.parse(readFileSync(path.join(__dirname, 'data/team.json'),
 // provenance note — none of it is estimated here.
 const fest = JSON.parse(readFileSync(path.join(__dirname, 'data/fest.json'), 'utf-8'));
 const proshows = JSON.parse(readFileSync(path.join(__dirname, 'data/proshows.json'), 'utf-8'));
+// The Signal Range's frozen final results, rendered into the homepage so they
+// show on the static mirror too, where there is no API to ask.
+const rangeFinal = JSON.parse(readFileSync(path.join(__dirname, 'data/range-final.json'), 'utf-8'));
 
 // The line-up heading depends on whether anything is signed for '26 yet, so
 // derive it rather than hard-coding a claim that will quietly go stale.
@@ -299,6 +303,7 @@ app.get('/', (req, res) => {
     fest,
     tracks,
     proshows: proshowState,
+    rangeFinal,
   });
 });
 
@@ -732,6 +737,8 @@ app.get('/ticket/:orderId', async (req, res) => {
 // reaches the board. See lib/leaderboard.js for what this does and does not
 // defend against.
 
+const CLOSED_MSG = 'The boards closed at 18:00 IST on 25 October 2026. Runs are no longer recorded.';
+
 const clientIp = (req) =>
   (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
   || req.socket?.remoteAddress || '';
@@ -743,7 +750,7 @@ app.get('/api/range/leaderboard', async (req, res) => {
       topRuns('score', limit),
       topRuns('streak', limit),
     ]);
-    res.json({ ok: true, verified: true, boards: { score, streak } });
+    res.json({ ok: true, verified: true, closed: boardClosed(), closesAt: BOARD_CLOSES_AT, boards: { score, streak } });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'Leaderboard unavailable.' });
   }
@@ -752,6 +759,9 @@ app.get('/api/range/leaderboard', async (req, res) => {
 // A run begins by asking for a seed. Rate-limited on its own so a client
 // cannot mint thousands of sessions looking for a soft one.
 app.post('/api/range/session', async (req, res) => {
+  // After the close the game still plays, as practice: no seed, so nothing
+  // the board would take.
+  if (boardClosed()) return res.status(403).json({ ok: false, closed: true, error: CLOSED_MSG });
   try {
     // An automated browser gets no seed, so it can still play but never
     // has a run the board will take.
@@ -767,6 +777,7 @@ app.post('/api/range/session', async (req, res) => {
 
 app.post('/api/range/score', async (req, res) => {
   try {
+    if (boardClosed()) return res.status(403).json({ ok: false, closed: true, errors: { form: CLOSED_MSG } });
     const body = req.body || {};
 
     const client = checkClient(body.env);

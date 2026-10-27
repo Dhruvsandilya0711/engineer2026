@@ -33,7 +33,7 @@
         <h3 class="sg-start__t" data-js="sg-start-title">Ready to transmit?</h3>
         <p class="sg-start__sum" data-js="sg-start-summary" hidden></p>
 
-        <label class="sg-start__lab" for="sg-name">Name for the leaderboard</label>
+        <label class="sg-start__lab" for="sg-name">Your name</label>
         <input class="sg-start__input" id="sg-name" data-js="sg-name" type="text"
                maxlength="20" placeholder="Your name" autocomplete="nickname" spellcheck="false">
         <p class="sg-start__err" data-js="sg-name-err" role="alert"></p>
@@ -46,8 +46,8 @@
           <span class="signal-range__hint" data-js="sg-word-release">release</span> to fire. Three misses ends the run.
         </p>
         <p class="sg-start__privacy">
-          Your name is shown publicly on the leaderboard below. Finished runs are
-          submitted automatically.
+          The prize boards closed at 18:00 IST on 25 October 2026. Play on for
+          fun — runs are no longer recorded.
         </p>
       </div>
     </div>
@@ -126,16 +126,47 @@
        trace to work out what it actually scores. Patching the game changes
        nothing that reaches this table. What it does NOT stop is a bot
        computing good inputs offline — see lib/leaderboard.js. -->
-  <div class="lb" data-js="range-board">
+  <div class="lb is-final" data-js="range-board">
     <div class="lb__head">
       <div>
-        <h3 class="lb__title">Range leaderboard</h3>
+        <h3 class="lb__title">Final results</h3>
         <p class="lb__prize">
           <span class="lb__amt">&#8377;2,500</span> highest score &middot;
           <span class="lb__amt">&#8377;2,500</span> longest streak
         </p>
       </div>
-      <p class="lb__badge lb__badge--ok" title="Every run on this board was replayed and scored by the server from the player's own inputs.">Server-verified</p>
+      <p class="lb__badge" title="The boards froze at 18:00 IST on 25 October 2026. No run is recorded after that.">Board closed</p>
+    </div>
+
+    <%# FINAL. The boards froze at the close (prize rule 9). The rows below are
+        the frozen result in data/range-final.json, so it reads the same on the
+        static mirror; on the live server public/js/leaderboard.js replaces them
+        with the database's own count, which applies the same cut. %>
+    <%
+      const finalBoards = (typeof rangeFinal !== 'undefined' && rangeFinal) ? rangeFinal.boards : { score: [], streak: [] };
+      const topScore = finalBoards.score[0], topStreak = finalBoards.streak[0];
+    %>
+    <div class="lb__final" data-js="lb-final">
+      <p class="lb__final-lede">
+        Closed at <b>18:00 IST, 25 October 2026</b>. Runs submitted after the close
+        and runs held as automated play are not counted.
+      </p>
+      <div class="lb__winners">
+        <div class="lb__winner">
+          <span class="lb__winner-k">Highest score &middot; &#8377;2,500</span>
+          <span class="lb__winner-n" data-js="lb-win-score"><%= topScore ? topScore.name : '—' %></span>
+          <span class="lb__winner-v" data-js="lb-win-score-v"><%= topScore ? topScore.score + ' pts' : '' %></span>
+        </div>
+        <div class="lb__winner">
+          <span class="lb__winner-k">Longest streak &middot; &#8377;2,500</span>
+          <span class="lb__winner-n" data-js="lb-win-streak"><%= topStreak ? topStreak.name : '—' %></span>
+          <span class="lb__winner-v" data-js="lb-win-streak-v"><%= topStreak ? '×' + topStreak.streak : '' %></span>
+        </div>
+      </div>
+      <p class="lb__final-foot">
+        Winners claim in person at the fest with a college ID, and reproduce a
+        comparable run on a supervised device before the prize is paid (rule 7).
+      </p>
     </div>
 
     <%# PRIZE RULES. Cash is on the line, so every clause here describes what
@@ -146,7 +177,7 @@
     <details class="lb__rules">
       <summary class="lb__rules-sum">
         Prize rules
-        <span class="lb__rules-hint">closes 25 Oct 2026, 18:00 IST</span>
+        <span class="lb__rules-hint">closed 25 Oct 2026, 18:00 IST</span>
       </summary>
       <div class="lb__rules-body">
         <ol class="lb__rules-list">
@@ -195,9 +226,9 @@
             both prizes is final.
           </li>
           <li>
-            <b>Closing.</b> The boards freeze at <b>18:00 IST on 25 October 2026</b>.
-            Winners are contacted on the email given at registration and must claim
-            in person at the fest with a college ID.
+            <b>Closing.</b> The boards froze at <b>18:00 IST on 25 October 2026</b>.
+            Runs submitted after that are not counted. Winners must claim in person
+            at the fest with a college ID.
           </li>
         </ol>
         <p class="lb__rules-foot">
@@ -221,7 +252,16 @@
         <tr><th scope="col">#</th><th scope="col">Name</th><th scope="col"><%= m === 'streak' ? 'Streak' : 'Score' %></th></tr>
       </thead>
       <tbody data-js="lb-body-<%= m %>">
+        <% if (!finalBoards[m].length) { %>
         <tr><td class="lb-empty" colspan="3">Loading…</td></tr>
+        <% } %>
+        <% finalBoards[m].forEach(function (r, i) { %>
+        <tr<%- i === 0 ? ' class="is-winner"' : '' %>>
+          <td class="lb-rank"><%= String(i + 1).padStart(2, '0') %></td>
+          <td class="lb-name"><%= r.name %></td>
+          <td class="lb-val"><%= m === 'streak' ? '×' + r.streak : r.score %></td>
+        </tr>
+        <% }); %>
       </tbody>
     </table>
     <% }); %>
