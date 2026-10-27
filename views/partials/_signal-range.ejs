@@ -129,7 +129,7 @@
   <div class="lb is-final" data-js="range-board">
     <div class="lb__head">
       <div>
-        <h3 class="lb__title">Final results</h3>
+        <h3 class="lb__title">Final standings</h3>
         <p class="lb__prize">
           <span class="lb__amt">&#8377;2,500</span> highest score &middot;
           <span class="lb__amt">&#8377;2,500</span> longest streak
@@ -151,21 +151,25 @@
         Closed at <b>18:00 IST, 25 October 2026</b>. Runs submitted after the close
         and runs held as automated play are not counted.
       </p>
+      <%# NO PRIZE AWARDED. Rule 7: before either prize is paid, the leading
+          entrant reproduces a comparable run on a supervised device at the
+          fest. Nobody completed that check, so neither prize is paid out and
+          the tables below are standings, not winners. %>
       <div class="lb__winners">
         <div class="lb__winner">
           <span class="lb__winner-k">Highest score &middot; &#8377;2,500</span>
-          <span class="lb__winner-n" data-js="lb-win-score"><%= topScore ? topScore.name : '—' %></span>
-          <span class="lb__winner-v" data-js="lb-win-score-v"><%= topScore ? topScore.score + ' pts' : '' %></span>
+          <span class="lb__winner-n">Not awarded</span>
         </div>
         <div class="lb__winner">
           <span class="lb__winner-k">Longest streak &middot; &#8377;2,500</span>
-          <span class="lb__winner-n" data-js="lb-win-streak"><%= topStreak ? topStreak.name : '—' %></span>
-          <span class="lb__winner-v" data-js="lb-win-streak-v"><%= topStreak ? '×' + topStreak.streak : '' %></span>
+          <span class="lb__winner-n">Not awarded</span>
         </div>
       </div>
       <p class="lb__final-foot">
-        Winners claim in person at the fest with a college ID, and reproduce a
-        comparable run on a supervised device before the prize is paid (rule 7).
+        Rule 7 requires the leading entrant to reproduce a comparable run on a
+        supervised device at the fest before a prize is paid. No entrant completed
+        that verification, so neither prize is awarded. The organising committee's
+        decision is final (rule 8).
       </p>
     </div>
 
@@ -256,7 +260,7 @@
         <tr><td class="lb-empty" colspan="3">Loading…</td></tr>
         <% } %>
         <% finalBoards[m].forEach(function (r, i) { %>
-        <tr<%- i === 0 ? ' class="is-winner"' : '' %>>
+        <tr>
           <td class="lb-rank"><%= String(i + 1).padStart(2, '0') %></td>
           <td class="lb-name"><%= r.name %></td>
           <td class="lb-val"><%= m === 'streak' ? '×' + r.streak : r.score %></td>
